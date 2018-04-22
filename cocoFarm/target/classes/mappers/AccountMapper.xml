@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cocoFarm.dao.AccountDao">
+<!-- 	<resultMap type="web.dto.Member" id="Member"> -->
+<!-- 		<result property="idx" column="idx"/> -->
+<!-- 		<result property="name" column="name"/> -->
+<!-- 		<result property="email" column="email"/> -->
+<!-- 		<result property="phone" column="phone"/> -->
+<!-- 		<result property="joinDate" column="join_date"/> -->
+<!-- 	</resultMap> -->
+<!-- 	<select id="selectAll" resultMap="Member"> -->
+<!-- 		select * from MEMBER order by IDX -->
+<!-- 	</select> -->
+<!-- 	<insert id="insert" parameterType="web.dto.Member"> -->
+<!-- 		insert into MEMBER ( IDX, PHONE, EMAIL, NAME) values (SEQ_TB_MEMBER_IDX.nextval, #{phone}, #{email}, #{name}) -->
+<!-- 	</insert> -->
+<!-- 	<delete id="delete" parameterType="web.dto.Member"> -->
+<!-- 		delete from Member where IDX = ${idx} -->
+<!-- 	</delete> -->
+	<resultMap type="cocoFarm.dto.Account" id="Account">
+		<result property="idx" column="idx"/>
+		<result property="id" column="id"/>
+		<result property="pw" column="pw"/>
+		<result property="regDate" column="reg_date"/>
+	</resultMap>
+	<insert id="signUp" parameterType="cocoFarm.dto.Account">
+		insert into ACCOUNT (ID,PW) values(#{id}, #{pw})
+	</insert>
+	<select id="signIn" parameterType="cocoFarm.dto.Account" resultMap="Account">
+		select * from ACCOUNT where ID=#{id} and PW=#{pw}
+	</select>
+	<select id="accountList" parameterType="cocoFarm.dto.Account" resultMap="Account">
+		select * from ACCOUNT
+	</select>
+	<delete id="delAccount" parameterType="String">
+		delete from ACCOUNT where IDX=${idx}
+	</delete>
+</mapper>
