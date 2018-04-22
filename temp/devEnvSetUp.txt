@@ -1,0 +1,43 @@
+eclipse -> UTF-8!!!!
+.setting org.eclipse.wst.common.component -> check context-root
+org.eclipse.wst.common.project.facet.core -> check jst.java
+
+1. edit project's buildpath  (check eclipse's jre setting) +remove test build path
+2. edit pom.xml java version
+	+dependencies
+	
+check.Maven Dependencies
+	mybatis-spring-1.3.2.jar
+	mybatis - 3.4.6.jar
+	spring-jdbc-3.2.18.RELEASE.jar
+	ojdbc6-12.1.0.2.jar
+
+3. + src/main/resources +mybatis-config.xml (file name can be changed) +dtd
+4. + src/main/resource/mappers +MemberMapper.xml (file name and folder structure can be changed? ref root-context.xml)
+
+5. root-context.xml add mybatis as bean +namespace
+	username/password
+-1. dataSource setting - DB connection information
+-2. SqlSessionFactory setting - MyBatis operation object
+-3. assign DAO - MyBatis interface	--multiple DAO????
+
+6. servlet-context.xml base-package=" ->change + namespace
+
+edit log4j.xml <logger name =
+
+Mapper
+	id="dao.methodname"
+	resultType="return datatype from query"
+	resultMap="defined datatype(ResultMap)"
+	parameterType="real type to send query"
+	parameterMap=".."
+
+7. dao interface
+	1: dao package (root-context.xml MapperScannerConfigurer class property.value="package.daofolder(package)" )
+	2: dao directory pattern (root-context.xml sqlSessionFactory mapperLocation value="dto mappper.xml pattern(directory)")
+	3: mapperPackage/mapperPattren.xml (ex. MemberMapper.xml) ->mapper namespace from interface
+
+8. controller
+	-> @Controller class
+	-> @RequestMapping(value="url", method=RequestMethod.Get(or POST) )
+9. view..
