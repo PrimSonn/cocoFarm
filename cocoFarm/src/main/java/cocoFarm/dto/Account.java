@@ -13,7 +13,8 @@ public class Account {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj.getClass().isInstance(this)) {
+		
+		if(obj!=null&&obj.getClass().isInstance(this)) {
 			String id = ((Account)obj).getId();
 			String pw = ((Account)obj).getPw();
 			if(id!=null&&pw!=null) {
@@ -28,7 +29,7 @@ public class Account {
 	
 	@Override
 	public String toString() {
-		return "Member [idx: "+idx+" ,id: "+id+" ,pw: "+pw+" ,regDate: "+regDate+"]";
+		return "Account [idx: "+idx+" ,id: "+id+" ,pw: "+pw+" ,regDate: "+regDate+"]";
 	}
 	
 	public int getIdx() {
