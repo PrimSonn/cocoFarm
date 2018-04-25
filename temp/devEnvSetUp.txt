@@ -1,3 +1,6 @@
+Server(Tomcat).comtext.xml
+	<Context allowCasualMultipartParsing="true">
+
 eclipse -> UTF-8!!!!
 .setting org.eclipse.wst.common.component -> check context-root
 org.eclipse.wst.common.project.facet.core -> check jst.java

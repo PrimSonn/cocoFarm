@@ -1,5 +1,6 @@
 package cocoFarm.Sign.controller;
 
+import javax.security.auth.login.AccountNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -28,11 +29,9 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/In", method=RequestMethod.POST)
 	public ModelAndView SignInPost (ModelAndView m, Account account, HttpServletRequest request) {
-		System.out.println(account);
+		
 		Account getAcc = accDao.signIn(account);
-		System.out.println("getAcc: "+getAcc);
-		System.out.println("bool: "+ getAcc.equals(account));
-		if(getAcc.equals(account)) {
+		if(account.equals(getAcc)) {
 			request.getSession().setAttribute("idx", getAcc.getIdx());
 			m.setViewName("redirect:/Main");
 		}else {
@@ -50,6 +49,7 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/Up", method=RequestMethod.POST)
 	public ModelAndView SignUpPost (ModelAndView m, Account account) {
+		
 //		System.out.println(account);//-------------------test
 		if(account.getPw()!=null&&account.getId()!=null&&account.getPw().length()>7) {
 			accDao.signUp(account);
@@ -62,6 +62,7 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/Out", method=RequestMethod.GET)
 	public ModelAndView SignOut(ModelAndView m, HttpServletRequest request) {
+		
 		request.getSession().invalidate();
 		m.setViewName("redirect:/Door");
 		return m;
