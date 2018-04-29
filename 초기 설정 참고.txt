@@ -1,3 +1,8 @@
+﻿JDK:1.8
+JRE:1.8
+DBMS: oracle 11g express edition
+WAS: Tomcat v9.0
+
 
 설정사항
  이클립스 작업 관련 모든 인코딩을 UTF-8!!!
@@ -6,6 +11,7 @@
 
 웹 어플리케이션 서버
 	TOMCAT V9.0
+		혹시 서버 설정을 새로 했다면 URIEncoding = "UTF-8" 확인
 	Modules - path : "/"
 
 프로젝트 이름 cocoFarm
@@ -63,3 +69,42 @@ servlet-context.xml
 혹시 빠진 내용 있나 확인.
 
 다 하고 HelloWorld 테스트 해보기
+
+
+
+
+Server(Tomcat).comtext.xml
+	<Context allowCasualMultipartParsing="true"> --> 나중에 필요하면 추가 할 것.
+
+
+ - 페이지 구현 기초 -
+
+컨트롤러:
+	@Autowired 설정(서비스 인터페이스에)
+	@Controller 설정
+	@RequestMapping 설정
+	(+logger 설정)
+	.jsp 지정
+
+서비스
+	서비스 인터페이스 작성
+	작성한 서비스 인터페이스를 implements 하는 클래스 생성
+		@Service 설정
+		@Autowired 설정(dao에)
+		메소드 작성
+
+dao (Data access object)
+	dao 인터페이스 작성
+	mybatis Mapper 를 이름 규칙에 맞게 작성
+		property 의 id 를 메소드에 연결. resultType, parameterType 등을 알맞게 작성
+
+dto (Data transfer object)
+	단순한 object.
+	필드에 속성이름을 테이블의 속성명과 맞춰 작성
+	getter/setter 설정
+
+jsp
+	controller 에서 설정한 경로로 작성
+	controller 에서 보낸 객체를 받아서 입력
+
+이후 필요에 따라 메소드를 추가하거나 xml의 내용을 추가하거나.. 클래스를 추가하거나
