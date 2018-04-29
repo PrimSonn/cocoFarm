@@ -1,0 +1,19 @@
+﻿
+마스터 데이터 : 거래단계 구분, 계정, 계정 형태 구분
+
+판매 구성
+쪽지 구성
+자유게시판
+그외 기능 확인
+
+ToDo (diagram)
+	data architecture
+	data flow
+	process mapping
+	process slicing/dicing
+
+else
+	System description
+
+	physical table design
+

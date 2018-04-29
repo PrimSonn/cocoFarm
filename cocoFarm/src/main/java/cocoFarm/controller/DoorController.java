@@ -1,4 +1,4 @@
-package cocoFarm.door.controller;
+package cocoFarm.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class DoorController {
+public class DoorController {// 예시로 등록해 둠, 지우고 진행할 것.
 
 	private static final Logger logger= LoggerFactory.getLogger(DoorController.class);
 	

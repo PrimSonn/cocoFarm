@@ -11,6 +11,10 @@
 	<h3>SignUp</h3>
 	<br>
 	<hr>
+	
+				<!-- ************** 예시로 남겨둔 파일. 지우고 시작할 것.************** -->
+	
+	
 	<form action='Up'method='post'>
 		<label for='id'>ID: <input type="text"name='id'></label><br>
 		<label for='pw'>PW(length>7): <input type="text"name='pw'><br></label>

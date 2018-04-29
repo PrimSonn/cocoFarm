@@ -1,4 +1,4 @@
-package cocoFarm.main.controller;
+package cocoFarm.controller;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import cocoFarm.dto.Account;
 
 
 @Controller
-public class CocoMain {
+public class CocoMain {// 예시로 등록해 둠, 지우고 진행할 것.
 
 	@Autowired AccountDao accDao;
 	private static final Logger logger= LoggerFactory.getLogger(CocoMain.class);
@@ -26,6 +26,9 @@ public class CocoMain {
 	public ModelAndView cocoMain(ModelAndView m) {
 		
 		List<Account> list=accDao.accountList();
+		for(Account acc: list) {
+			System.out.println(acc);
+		}
 		m.addObject("accountList", accDao.accountList());
 		m.setViewName("/Main/Page");
 		return m;

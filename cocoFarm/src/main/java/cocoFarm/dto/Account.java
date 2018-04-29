@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Account {
+public class Account {// 예시로 등록해 둠, 지우고 진행할 것.
 	
 	private int idx;
 	private String id;
@@ -13,8 +13,7 @@ public class Account {
 	
 	@Override
 	public boolean equals(Object obj) {
-		
-		if(obj!=null&&obj.getClass().isInstance(this)) {
+		if(obj.getClass().isInstance(this)) {
 			String id = ((Account)obj).getId();
 			String pw = ((Account)obj).getPw();
 			if(id!=null&&pw!=null) {

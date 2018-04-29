@@ -1,6 +1,5 @@
-package cocoFarm.Sign.controller;
+package cocoFarm.controller;
 
-import javax.security.auth.login.AccountNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -15,7 +14,7 @@ import cocoFarm.dao.AccountDao;
 import cocoFarm.dto.Account;
 
 @Controller
-public class Sign {
+public class Sign {// 예시로 등록해 둠, 지우고 진행할 것.
 	
 	@Autowired AccountDao accDao;
 	private static final Logger logger= LoggerFactory.getLogger(Sign.class);
@@ -29,9 +28,11 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/In", method=RequestMethod.POST)
 	public ModelAndView SignInPost (ModelAndView m, Account account, HttpServletRequest request) {
-		
+		System.out.println(account);
 		Account getAcc = accDao.signIn(account);
-		if(account.equals(getAcc)) {
+		System.out.println("getAcc: "+getAcc);
+		System.out.println("bool: "+ getAcc.equals(account));
+		if(getAcc.equals(account)) {
 			request.getSession().setAttribute("idx", getAcc.getIdx());
 			m.setViewName("redirect:/Main");
 		}else {
@@ -49,7 +50,6 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/Up", method=RequestMethod.POST)
 	public ModelAndView SignUpPost (ModelAndView m, Account account) {
-		
 //		System.out.println(account);//-------------------test
 		if(account.getPw()!=null&&account.getId()!=null&&account.getPw().length()>7) {
 			accDao.signUp(account);
@@ -62,7 +62,6 @@ public class Sign {
 	
 	@RequestMapping(value="/Sign/Out", method=RequestMethod.GET)
 	public ModelAndView SignOut(ModelAndView m, HttpServletRequest request) {
-		
 		request.getSession().invalidate();
 		m.setViewName("redirect:/Door");
 		return m;

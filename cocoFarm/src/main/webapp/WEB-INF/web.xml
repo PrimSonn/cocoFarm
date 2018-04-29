@@ -27,14 +27,6 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<filter>
-		<filter-name>bouncer</filter-name>
-		<filter-class>filter.Bouncer</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>bouncer</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>

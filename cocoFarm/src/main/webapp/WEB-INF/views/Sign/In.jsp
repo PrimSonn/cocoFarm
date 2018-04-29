@@ -11,6 +11,8 @@
 	<h3>SignIn</h3>
 	<br>
 	<hr>
+				<!-- ************** 예시로 남겨둔 파일. 지우고 시작할 것.************** -->
+	
 	<form action='In'method='post'>
 		<label for='id'>ID: <input type="text"name='id'></label><br>
 		<label for='pw'>PW: <input type="text"name='pw'><br></label>

@@ -19,6 +19,13 @@ function deleteId(idx){
 	form.submit();
 }
 </script>
+
+
+			<!-- ************** 예시로 남겨둔 파일. 지우고 시작할 것.************** -->
+
+
+
+
 </head>
 <body>
 <div>

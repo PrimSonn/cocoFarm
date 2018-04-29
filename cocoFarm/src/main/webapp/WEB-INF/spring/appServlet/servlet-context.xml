@@ -21,7 +21,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="cocoFarm" />
+	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 	
 	
 	
