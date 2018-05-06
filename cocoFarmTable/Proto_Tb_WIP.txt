@@ -251,7 +251,7 @@ PURCHASE
 	STATE			number(2,0)		(구매의 상태 처리용. 배송중,, 구매취소 등등)
 	PATMENT_TIME	timestamp (3) with local time zone (결제시간 '밀리초' 까지 넣는걸로 정함.)
 	IS_Refunded		number(1,0)		(구매 상태와는 별개로 환불상태에 대한 처리를 하여 어느시점에서 환불이 일어났는지 기록)
-	REFUNDED_TIME	timestamp (3) with local time zone (결제시간 '밀리초' 까지 넣는걸로 정함.)
+	REFUNDED_TIME	timestamp (3) with local time zone (환불시간 '밀리초' 까지 넣는걸로 정함.)
 
 	PAYMENT_TYPE	number(2,0)		(결제 방식..일단은 넣어 둠. 비즈니스 코드 테이블이 하나 필요)
 	PAYMENT_NAME	nvarchar2(20)	(결제한 이름)
