@@ -3,34 +3,43 @@ JRE:1.8
 DBMS: oracle 11g express edition
 WAS: Tomcat v9.0
 
+-- 아래 '알아서 복사' 라는건 학원에서 한 스프링 예제 프로젝트에서 적당한 부분을 복붙하라는 뜻..
 
 설정사항
  이클립스 작업 관련 모든 인코딩을 UTF-8!!!
  이클립스 JRE, JDK 버전 1.8 (8)
  오라클 인코딩도 UTF-8
 
+
 웹 어플리케이션 서버
 	TOMCAT V9.0
 		혹시 서버 설정을 새로 했다면 URIEncoding = "UTF-8" 확인
 	Modules - path : "/"
 
+
 프로젝트 이름 cocoFarm
 	-Spring Legacy Project - Spring MVC project
 	-a.b.c 로 생성했음 (중요하지 않음, 아마도)
+
 
 프로젝트 우클릭 - properties - Java Build Path 항목 검색
 	-> Source 탭의 cocoFarm///test 폴더를 가리키는 항목 삭제 (중요하지는 않음)
 		-> 각종 test 폴더 삭제 (필요 없음)
 	-> Libraries 탭의 JRE 버전 1.8로 수정
 
+
 src/main/resources 에 mybatisConfig.xml 추가 및 내용 복사 (이름 규칙을 바꾼다면 이부분도 수정)
+
 src/main/resources 에 log4j.xml 추가 및 내용 복사
+
+
 
 .settings 폴더 내 파일들 확인사항
 	.setting/org.eclipse.wst.common.component 의 항목
 		<wb-module deploy-name="cocoFarm">
 		<property name="context-root" value="/"/>
 	.setting/org.eclipse.wst.common.project.facet.core 의 항목중 jst.java 의 버전 1.8로 수정 (혹시 모르니 인코딩도 확인)
+
 
 pom.xml 내용 알아서 복사..혹은 작성
 	확인사항:
@@ -40,7 +49,9 @@ pom.xml 내용 알아서 복사..혹은 작성
 			Properties:
 				java-version: 1.8
 
+
 web.xml 의 내용도 알아서 복사 .. 혹은 알아서 인코딩 필터 추가
+
 
 root-context
 알아서 복사... 하거나 작성
@@ -50,26 +61,30 @@ root-context
 	myBatis config 위치 지정 (bean id="SqlSessionFactory"......의 property중 수정)
 		<property name="configLocation" value="classpath:mybatisConfig.xml" />
 	mybatis Mapper 형식 (bean id="SqlSessionFactory"......의 property중 수정)
-		<property name="mapperLocations" value="classpath:/cocoFarm/dao/*Mapper.xml" /> (혹시 이후에 Mapper 패턴을 바꾼다면 이부분 수정)
+		<property name="mapperLocations" value="classpath:/cocoFarm/dao/*Mapper.xml" /> (혹시 이후에 Mapper 패턴을 바꾼다면 이부분 수정 )---  중요!!!!!!! Mapper 이름규칙이 다르면 작동 안됨. dao 같은 것도 마찬가지
 	dao 위치 지정 (bean class="org.mybatis.spring.mapper.Mapper......... 의 property)
 		<property name="basePackage" value="cocoFarm.dao"></property>
+
 
 servlet-context.xml
 다시 알아서 복사하거나 수정.
 확인사항:
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 
+
 폴더 구조 맞추기
 +이름규칙!!!! 자기 페이지 명에 따른 class 파일과 mapper, jsp 그리고 각종 변수명 정해야 함.
+
 
 접속 확인(세션관리)
 	세션 Attribute에 아이디(혹은 차후 인덱스가 될 수도 있음)를 키 "id"에 저장
 	세션 Attribute에 계정 형태 를 키 "lv"에 저장 (혹은 저장을 안하고 매번 확인하게 할 수도 있음: 중간에 아이디의 형태를 바꾸는 경우의 처리 방식에 따라서)
 
+
 혹시 빠진 내용 있나 확인.
 
-다 하고 HelloWorld 테스트 해보기
 
+다 하고 HelloWorld 테스트 해보기(작업 전에 적당한 URL하나 테스트 하기)
 
 
 
