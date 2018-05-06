@@ -227,39 +227,40 @@ SALE_INQUIRE
 영수증도 여기서 함께 처리(isRefunded)
 
 PURCHASE
-	#IDX			number(12,0)	(기본키 인조식별자)
-	ACC_IDX			number(8,0)		(계정번호 참조 외래키)
-	SALE_IDX		number(9,0)		(판매글번호 참조 외래키)
+	#IDX					number(12,0)	(기본키 인조식별자)
+	PURCHASED_ACC_IDX		number(8,0)		(구매한 계정번호 참조 외래키)
+	SALE_IDX				number(9,0)		(판매글번호 참조 외래키)
 	
 									------ 판매글은 수정이 가능한 구조이기 때문에 글 내용 중 필요한 부분을 저장 ----------
-	TITLE			nvarchar2(40)		(글제목 40자)
-	PRICE			number(7,0)			(구매 가격 천만원 미만)
-	AMOUNT			number(7,0)			(수량 천만 단위 미만. 다양한 용량단위를 처리하게..)
-	UNIT			nvarchar2(10)		(단위.	파는 단위를 알아서 입력하게 처리하는 방식)
-	PRODUCER		nvarchar2(20)		(생산자 20자 까지)
-	ORIGIN			nvarchar2(40)		(생산지 40자 이하 - 만일 이것도 시 군 구 별로 막 나눠서 처리하려면 속성을 분리)
+	SOLD_ACC_IDX			number(8,0)			(판매한 계정번호 참조 외래키)
+	TITLE					nvarchar2(40)		(글제목 40자)
+	PRICE					number(7,0)			(구매 가격 천만원 미만)
+	AMOUNT					number(7,0)			(수량 천만 단위 미만. 다양한 용량단위를 처리하게..)
+	UNIT					nvarchar2(10)		(단위.	파는 단위를 알아서 입력하게 처리하는 방식)
+	PRODUCER				nvarchar2(20)		(생산자 20자 까지)
+	ORIGIN					nvarchar2(40)		(생산지 40자 이하 - 만일 이것도 시 군 구 별로 막 나눠서 처리하려면 속성을 분리)
 
 	CONTENT1							(내용 추가용 속성 예시)
 	CONTENT2
 	CONTENT3
 
-	IMG				varchar2(100 char)	(이미지 위치 예시)
-	IMG2			varchar2(100 char)
-	IMG3			varchar2(100 char)
+	IMG						varchar2(100 char)	(이미지 위치 예시)
+	IMG2					varchar2(100 char)
+	IMG3					varchar2(100 char)
 									--------------------------------------------------------------------------------------
 
-	STATE			number(2,0)		(구매의 상태 처리용. 배송중,, 구매취소 등등)
-	PATMENT_TIME	timestamp (3) with local time zone (결제시간 '밀리초' 까지 넣는걸로 정함.)
-	IS_Refunded		number(1,0)		(구매 상태와는 별개로 환불상태에 대한 처리를 하여 어느시점에서 환불이 일어났는지 기록)
-	REFUNDED_TIME	timestamp (3) with local time zone (환불시간 '밀리초' 까지 넣는걸로 정함.)
+	STATE					number(2,0)		(구매의 상태 처리용. 배송중,, 구매취소 등등)
+	PATMENT_TIME			timestamp (3) with local time zone (결제시간 '밀리초' 까지 넣는걸로 정함.)
+	IS_Refunded				number(1,0)		(구매 상태와는 별개로 환불상태에 대한 처리를 하여 어느시점에서 환불이 일어났는지 기록)
+	REFUNDED_TIME			timestamp (3) with local time zone (환불시간 '밀리초' 까지 넣는걸로 정함.)
 
-	PAYMENT_TYPE	number(2,0)		(결제 방식..일단은 넣어 둠. 비즈니스 코드 테이블이 하나 필요)
-	PAYMENT_NAME	nvarchar2(20)	(결제한 이름)
-	PAYMENT_PHONE	number(14,0)	(결제시 입력한 연락처)
+	PAYMENT_TYPE			number(2,0)		(결제 방식..일단은 넣어 둠. 비즈니스 코드 테이블이 하나 필요)
+	PAYMENT_NAME			nvarchar2(20)	(결제한 이름)
+	PAYMENT_PHONE			number(14,0)	(결제시 입력한 연락처)
 	
-	DELIVERY_LOC	nvarchar2(50)	(결제시 따로 입력할 배송지 - 만약 시/군/구 와 세부주소를 구분해서 처리하고 싶다면 속성 분리. 일단은 그냥 다 한번에 넣어둠.)
-	RECEIVER_NAME	nvarchar2(20)	(받는분 이름)
-	RECEIVER_PHONE	number(14,0)	(받는사람 연락처)
+	DELIVERY_LOC			nvarchar2(50)	(결제시 따로 입력할 배송지 - 만약 시/군/구 와 세부주소를 구분해서 처리하고 싶다면 속성 분리. 일단은 그냥 다 한번에 넣어둠.)
+	RECEIVER_NAME			nvarchar2(20)	(받는분 이름)
+	RECEIVER_PHONE			number(14,0)	(받는사람 연락처)
 
 
 
