@@ -23,7 +23,7 @@ ACCOUNT
 	PHONE2			number(14,0)	(전화번호 2개를 입력하게 하려면 추가하는 속성. 혹시 모르니 일단 여유를 둔 자리수)
 
 	POSTNUM			number(8,0)		(몇 년에 한번씩 만만하면 바꾸는게 우편번호니까 여유를 두고 8자. 그 외에는 자리수에 별 의미는 없음)
-	PRIVINCE		nvarchar2(4)	('도'. 설마 '도' 가 5글자 짜리가 새로 생기지는 않을 테니까)
+	PROVINCE		nvarchar2(4)	('도'. 설마 '도' 가 5글자 짜리가 새로 생기지는 않을 테니까)
 	CITY			nvarchar2(8)	(시/군/구 일단 8자)
 	DETAILED_ADDR	nvarchar2(50)	(시/군/구 이후 주소)
 
