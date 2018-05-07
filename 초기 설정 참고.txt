@@ -15,7 +15,7 @@ WAS: Tomcat v9.0
 	TOMCAT V9.0
 		혹시 서버 설정을 새로 했다면 URIEncoding = "UTF-8" 확인
 	Modules - path : "/"
-
+	Port: 8001 -> 크게 안중요할 것 같지만 혹시 나중에 뭔가 꼬이면 안되니까.
 
 프로젝트 이름 cocoFarm
 	-Spring Legacy Project - Spring MVC project
