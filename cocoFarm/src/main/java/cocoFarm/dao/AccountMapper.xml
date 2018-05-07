@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cocoFarm.dao.AccountDao">
-
-
-
 	<!-- 예시로 등록해 둔 파일. 지우고 진행할 것. -->
 
-
-	<resultMap type="cocoFarm.dto.Account" id="Account">
-		<result property="idx" column="idx"/>
-		<result property="id" column="id"/>
-		<result property="pw" column="pw"/>
-		<result property="regDate" column="reg_date"/>
-	</resultMap>
-	<insert id="signUp" parameterType="cocoFarm.dto.Account">
-		insert into ACCOUNT (ID,PW) values(#{id}, #{pw})
-	</insert>
-	<select id="signIn" parameterType="cocoFarm.dto.Account" resultMap="Account">
-		select * from ACCOUNT where ID=#{id} and PW=#{pw}
-	</select>
-	<select id="accountList" parameterType="cocoFarm.dto.Account" resultMap="Account">
-		select * from ACCOUNT
-	</select>
-	<delete id="delAccount" parameterType="String">
-		delete from ACCOUNT where IDX=${idx}
-	</delete>
 </mapper>
