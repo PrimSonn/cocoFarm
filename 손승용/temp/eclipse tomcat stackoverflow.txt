@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/41558366/configure-an-ssl-connector-for-tomcat-invoked-by-eclipse
