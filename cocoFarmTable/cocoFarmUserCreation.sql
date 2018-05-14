@@ -1,6 +1,6 @@
 /*
-	ID:WAZUA
-	PW:WAZUA
+	ID:cocoFarm
+	PW:cocoFarm
 */
 create user cocoFarm identified by cocoFarm;
 grant CREATE SESSION, CONNECT, RESOURCE, UNLIMITED TABLESPACE, CREATE SEQUENCE, CREATE PROCEDURE to cocoFarm identified by cocoFarm;
