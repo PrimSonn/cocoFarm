@@ -81,6 +81,7 @@ drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
 
 drop trigger BUSINESS_INFO_TRG;
+drop sequence BUSINESS_INFO_SEQ;
 drop table BUSINESS_INFO cascade constraints;
 
 drop table BUSINESS_INFO_TYPE cascade constraints;
@@ -437,6 +438,7 @@ comment on column BUSINESS_INFO.IDX is '인덱스 - not null unique : 후보키 
 
 
 --drop trigger BUSINESS_INFO_TRG;
+--drop sequence BUSINESS_INFO_SEQ;
 --drop table BUSINESS_INFO cascade constraints;
 
 
