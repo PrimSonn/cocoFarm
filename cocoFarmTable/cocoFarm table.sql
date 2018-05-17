@@ -5,8 +5,7 @@
 /*
 --DD 출력
 select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
-from all_tab_cols T
-inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='cocoFarm' order by T.TABLE_NAME;
+from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
 
 --USER_TABLES.TABLE_NAME
 --USER_SEQUENCES.SEQUENCE_NAME
@@ -27,7 +26,7 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 
 --drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
-drop trigger TODAYS_FARMER_EDIT_TRG;
+--drop trigger TODAYS_FARMER_EDIT_TRG;
 drop table TODAYS_FARMER cascade constraints;
 
 --drop trigger ACC_SUPPORT_ANS_TRG;
@@ -322,9 +321,7 @@ create table BUSINESS_INFO (
 	,CORPORATION_NAME				nvarchar2(20)	not null
 	,REPRESENTATIVE					nvarchar2(20)	not null
 
-	,BUSINESS_PROVINCE				nvarchar2(4)	not null
-	,BUSINESS_CITY					nvarchar2(7)	not null
-	,BUSINESS_DONG					nvarchar2(7)	not null
+	,BUSINESS_ADDR					nvarchar2(4)	not null
 	,BUSINESS_DETAILED_ADDR			nvarchar2(50)	not null
 
 	,HEADHQUARTER_ADDR				nvarchar2(20)	not null
@@ -360,11 +357,7 @@ comment on column BUSINESS_INFO.CORPORATION_NAME is '법인명/단체명';
 
 comment on column BUSINESS_INFO.REPRESENTATIVE is '대표자';
 
-comment on column BUSINESS_INFO.BUSINESS_PROVINCE is '사업장 소재지- 도';
-
-comment on column BUSINESS_INFO.BUSINESS_CITY is '사업장 소재지 - 시';
-
-comment on column BUSINESS_INFO.BUSINESS_DONG is '사업장 소재지 - 동';
+comment on column BUSINESS_INFO.BUSINESS_ADDR is '사업장 세부주소 앞 까지';
 
 comment on column BUSINESS_INFO.BUSINESS_DETAILED_ADDR is '사업장 소재지 - 세부주소';
 
@@ -1298,10 +1291,6 @@ comment on column ANNOUNCEMENT.LAST_EDITED is '';
 --drop trigger ANNOUNCEMENT_TRG;
 --drop sequence ANNOUNCEMENT_SEQ;
 --drop table ANNOUNCEMENT cascade constraints;
-
-
----------------------------------------------- 여타 게시판 추가 예정(게시판은 다 비슷비슷하게 나올 듯?) ----------------------------------------------------
-
 
 ---------------------------------------------- 사이트 배너 관리 ----------------------------------------------------
 
