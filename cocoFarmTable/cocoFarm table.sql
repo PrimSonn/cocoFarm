@@ -13,6 +13,10 @@ from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAM
 --USER_INDEXES.INDEX_NAME
 */
 
+-------------------------------------------------------------
+
+drop trigger SITE_IMG_TRG;
+drop sequence SITE_IMG_SEQ;
 drop table SITE_IMG_SETTING cascade constraints;
 
 drop table SITE_IMG_TYPE cascade constraints;
@@ -46,6 +50,8 @@ drop table MESSAGE_TYPE cascade constraints;
 
 drop table PAYMENT_TYPE cascade constraints;
 
+drop table AUCTION_DUE_TYPE cascade constraints;
+
 drop trigger CART_TRG;
 drop sequence CART_SEQ;
 drop table CART cascade constraints;
@@ -61,6 +67,8 @@ drop trigger SALE_OPTION_WRITTENTIME_TRG;
 drop trigger SALE_OPT_UPDATE_TRG;
 drop table SALE_OPTION cascade constraints;
 
+drop table SALE_HIT cascade constraints;
+
 drop trigger SALE_LAST_EDITED_TRG;
 drop trigger SALE_TRG;
 drop sequence SALE_SEQ;
@@ -74,6 +82,8 @@ drop table CATEGORY cascade constraints;
 
 drop trigger BUSINESS_INFO_TRG;
 drop table BUSINESS_INFO cascade constraints;
+
+drop table BUSINESS_INFO_TYPE cascade constraints;
 
 --drop table ENTREPRENEUR_SCORE;
 
@@ -315,15 +325,45 @@ comment on column ENTREPRENEUR_SCORE.SCORE_COUNT is '';
 --drop table ENTREPRENEUR_SCORE cascade constraints;
 
 */
+------------------------------------------------  사업자 등록증 타입  ----------------------------------------------------
+-- 일단 기본값 코드 0: 일반 넣어둠
+
+create table BUSINESS_INFO_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(50) not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint	BUSINESS_INFO_TYPE_PK primary key (CODE) 
+);
+
+insert into BUSINESS_INFO_TYPE (CODE, NAME, DESCRIPTION) values ( 0, '일반', '기본값 설정. 혹시 기능을 안 쓰게 되었을 때 모듈에 이상이 없게 해둠');
+commit;
+
+comment on table BUSINESS_INFO_TYPE is '사업자 등록증 타입 코드 테이블';
+
+comment on column BUSINESS_INFO_TYPE.CODE is '사업자 등록증 타입 비즈니스 코드';
+
+comment on column BUSINESS_INFO_TYPE.NAME is '사업자 등록증 타입 이름';
+
+comment on column BUSINESS_INFO_TYPE.DESCRIPTION is '사업자 등록증 타입 설명';
+
+
+--drop table BUSINESS_INFO_TYPE cascade constraints;
+
+
+
 ------------------------------------------------  사업자 정보  ----------------------------------------------------
 -- 사업자 등록증에 등록일자가 따로 있으면, 우리쪽에 정보를 입력한 시점을 기록하는 등록일자와 구분해서 하나 더 속성을 추가해야함.
 
 create table BUSINESS_INFO (
 
-	ACC_IDX							number(8,0)		not null
-	,BUSINESS_LICENSE_CODE			number(10,0)	not null
+	ACC_IDX							number(8,0)
+	,BUSINESS_LICENSE_CODE			number(10,0)
 	,CORPORATION_NAME				nvarchar2(20)	not null
 	,REPRESENTATIVE					nvarchar2(20)	not null
+
+	,TYPE_CODE						number(2,0)		default 0 not null
 
 	,BUSINESS_ADDR					nvarchar2(4)	not null
 	,BUSINESS_DETAILED_ADDR			nvarchar2(50)	not null
@@ -334,30 +374,44 @@ create table BUSINESS_INFO (
 	,BUSINESS_CATEGORY				nvarchar2(25)	not null
 	,BUSINESS_TYPE					nvarchar2(25)	not null
 
-	,REG_DATE						timestamp (0) with local time zone	not null
+	,REG_DATE						nvarchar2(20)	not null
+
+	,LICENSE_IMG					nvarchar2(200)	not null
+
+	,INFO_REG_DATE					timestamp (0) with local time zone	not null
+	,IDX							number(8,0)		not null unique
 
 	,constraint BUSINESS_INFO_PK primary key (ACC_IDX, BUSINESS_LICENSE_CODE)
+	,constraint FK_BUSINESS_INFO_TYPE foreign key (TYPE_CODE) references BUSINESS_INFO_TYPE (CODE)
 	,constraint FK_BUSINESS_INFO_ACCOUNT_IDX foreign key (ACC_IDX) references ACCOUNT (IDX) on delete cascade
 );
+
+create sequence BUSINESS_INFO_SEQ start with 1 increment by 1;
 
 create trigger BUSINESS_INFO_TRG
 	before insert on BUSINESS_INFO 
 	for each row
-	when (NEW.REG_DATE is null)
 begin
-	:NEW.REG_DATE := SYSTIMESTAMP;
+	if(:NEW.INFO_REG_DATE is null) then
+		:NEW.INFO_REG_DATE := SYSTIMESTAMP;
+	end if;
+	if(:NEW.IDX is null) then
+		:NEW.IDX := BUSINESS_INFO_SEQ.nextval;
+	end if;
 end;
 /
---트리거 설명: REG_DATE 가 없을 때 시스템 시간을 넣음
+--트리거 설명: INFO_REG_DATE 가 없을 때 시스템 시간을 넣음, IDX 넣어줌
 
 
-comment on table BUSINESS_INFO is '사업자 등록 정보 - 전체가 null안됨';
+comment on table BUSINESS_INFO is '사업자 등록 정보 - 전체가 null안됨 (사업자 등록증 등록일 제외)';
 
 comment on column BUSINESS_INFO.ACC_IDX is '계정번호 참조 외래키 + 복합 기본키 = 계정마다 서로 다른 여러 개의 사업자 정보를 등록 가능.';
 
 comment on column BUSINESS_INFO.BUSINESS_LICENSE_CODE is '사업자 번호 + 복합 기본키';
 
 comment on column BUSINESS_INFO.CORPORATION_NAME is '법인명/단체명';
+
+comment on column BUSINESS_INFO.TYPE_CODE is '사업자 등록증 타입 - 기본값 처리해둠';
 
 comment on column BUSINESS_INFO.REPRESENTATIVE is '대표자';
 
@@ -373,7 +427,13 @@ comment on column BUSINESS_INFO.BUSINESS_CATEGORY is '사업의 업태';
 
 comment on column BUSINESS_INFO.BUSINESS_TYPE is '사업의 종류';
 
-comment on column BUSINESS_INFO.REG_DATE is '등록일 - 트리거있음';
+comment on column BUSINESS_INFO.REG_DATE is '사업자 등록증 등록일 - null 허용!';
+
+comment on column BUSINESS_INFO.LICENSE_IMG is '사업자 등록증 이미지. 받은 이미지가 없을 때 기본값 이미지를 넣어두고 null처리를 해서 넣을수도 있음';
+
+comment on column BUSINESS_INFO.INFO_REG_DATE is '등록일 - 트리거있음';
+
+comment on column BUSINESS_INFO.IDX is '인덱스 - not null unique : 후보키 - 자동인덱스 생성';
 
 
 --drop trigger BUSINESS_INFO_TRG;
@@ -454,10 +514,9 @@ create table SALE(
 	IDX				number(9,0)
 	,ACC_IDX		number(8,0)		not null
 	,TITLE			nvarchar2(40)	not null
-
--- 원산지 일단 한 속성에 몰아서 처리함. 어차피 한개 속성에 뭉쳐서 처리한다면 원산지를 개별 옵션에 주는걸 추천..
 	,ORIGIN			nvarchar2(60)	not null
 
+	,HIT			number(8,0)		default 0 not null
 	,WRITTEN_TIME	timestamp (0) with local time zone	not null
 	,LAST_EDITED	timestamp (0) with local time zone
 
@@ -474,6 +533,7 @@ create table SALE(
 	,constraint SALE_PK primary key (IDX)
 	,constraint FK_SALE_ACC_IDX foreign key (ACC_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_SALE_ISDEL_TYPE foreign key (ISDEL) references ISDEL_TYPE (CODE)
+	,constraint SALE_HIT_CHECKER check (HIT>=0)
 );
 
 create sequence SALE_SEQ start with 1 increment by 1;
@@ -509,7 +569,9 @@ comment on column SALE.ACC_IDX is '판매글 올린이 idx - 외래키 null안�
 
 comment on column SALE.TITLE is '판매글제목 - null 안됨';
 
-comment on column SALE.origin is '원산지. - null안됨';
+comment on column SALE.ORIGIN is '원산지. - null안됨';
+
+comment on column SALE.HIT is '조회수 처리용';
 
 comment on column SALE.WRITTEN_TIME is '글 쓴 시간 - 트리거 있음';
 
@@ -530,6 +592,30 @@ comment on column SALE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, 
 --drop trigger SALE_TRG;
 --drop sequence SALE_SEQ;
 --drop table SALE cascade constraints;
+
+
+---------------------------------------------- 판매글  조회수 중복 제거 처리용 테이블 ----------------------------------------------------
+--안써도 전혀 문제 없음
+
+create table SALE_HIT (
+
+	SALE_IDX			number(9,0)
+	,ACCOUNT_IDX		number(8,0)
+
+	,constraint SALE_HIT_PK primary key (SALE_IDX, ACCOUNT_IDX)
+	,constraint SALE_HIT_SALE_FK foreign key (SALE_IDX) references SALE (IDX) on delete cascade
+	,constraint SALE_HIT_ACC_FK foreign key (ACCOUNT_IDX) references ACCOUNT (IDX) on delete cascade
+);
+
+
+comment on table SALE_HIT is '판매글 조회수 중복처리 테이블';
+
+comment on column SALE_HIT.SALE_IDX is '판매글번호 - 복합기본키 + 외래키';
+
+comment on column SALE_HIT.ACCOUNT_IDX is '계정번호 - 복합기본키 + 외래키';
+
+
+--drop table SALE_HIT cascade constraints;
 
 
 ---------------------------------------------- 판매 옵션 ----------------------------------------------------
@@ -715,7 +801,6 @@ end;
 --drop table SALE_RECOMMEND cascade constraints;
 
 */
----------------------------------------------- 판매글  조회수..? ----------------------------------------------------
 
 ---------------------------------------------- 판매글에 대한 문의글 ----------------------------------------------------
 
@@ -880,7 +965,68 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 	환불 여부
 	환불 시간
 */
----------------------------------------------- 결제 타입 ----------------------------------------------------
+
+-----------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
+
+create table AUCTION_DUE_TYPE (
+
+	CODE			number(2,0)
+	,DUE_TIME		interval day (3) to second	not null
+
+	,NAME			nvarchar2(15)	not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint AUCTION_DUE_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일', '3일짜리 경매')
+	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일', '7일짜리 경매')
+	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일', '28일짜리 경매')
+select 1 from dual;
+
+
+comment on table AUCTION_DUE_TYPE is '경매 만료시간 제어용 테이블(서브타입)';
+
+comment on column AUCTION_DUE_TYPE.CODE is '만료시간 비즈니스 코드 - 기본키';
+
+comment on column AUCTION_DUE_TYPE.DUE_TIME is '시간(길이)';
+
+comment on column AUCTION_DUE_TYPE.NAME is '타입 이름';
+
+comment on column AUCTION_DUE_TYPE.DESCRIPTION is '타입 설명';
+
+
+--drop table AUCTION_DUE_TYPE cascade constraints;
+
+
+-----------------------------------------------  경매 상태 타입  -------------------------------------------------------
+
+-----------------------------------------------  경매  -------------------------------------------------------
+
+/*
+create table AUCTION (
+
+
+
+
+);
+*/
+
+
+---------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
+
+/*
+
+SITE_MAIN_AUCTION
+	#AUCT_IDX		number(8,0)
+
+몇개까지 노출할 것인지를 DB 수준에서 관리하지 않는 구조. 5개로 그냥 고정해버린다면 아예 속성 5개 짜리 1개 행 테이블로 만들어 버릴 수도 있음.
+*/
+
+-----------------------------------------------  입찰  -------------------------------------------------------
+
+---------------------------------------------- 결제 타입 -----------------------------------------------------
 -- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯?
 
 create table PAYMENT_TYPE (
@@ -891,6 +1037,7 @@ create table PAYMENT_TYPE (
 
 	,constraint PAYMENT_TYPE_PK primary key (CODE)
 );
+
 
 comment on table PAYMENT_TYPE is '결제타입(코드) 테이블';
 
@@ -904,15 +1051,8 @@ comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 --drop table PAYMENT_TYPE cascade constraints;
 
 
------------------------------------------------  경매  -------------------------------------------------------
-/*
-create table
-
-*/
-
-
------------------------------------------------  입찰  -------------------------------------------------------
 -----------------------------------------------  구매  -------------------------------------------------------
+
 -----------------------------------------------  배송  -------------------------------------------------------
 
 ------------------------------------------------  쪽지 타입 -------------------------------------------------
@@ -1136,7 +1276,7 @@ create table TODAYS_FARMER_PICK (
 	FARM_ACC_IDX	number(8,0)
 	
 	,constraint PK_TODAY_FARM_PICK primary key (FARM_ACC_IDX)
-	,constraint FK_TODAY_FARM_FK foreign key (FARM_ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+	,constraint FK_TODAY_FARM_FK foreign key (FARM_ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
 comment on table TODAYS_FARMER_PICK is '오늘의 농부 선택';
@@ -1356,17 +1496,7 @@ comment on column SITE_IMG_SETTING.TYPE_CODE is '이미지 타입';
 
 comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + 파일이름) 원래 이름은 쓸데 없을듯, UUID 사용하기';
 
-
+--drop trigger SITE_IMG_TRG;
+--drop sequence SITE_IMG_SEQ;
 --drop table SITE_IMG_SETTING cascade constraints;
 
-
----------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
-
-/*
-
-
-SITE_MAIN_AUCTION
-	#AUCT_IDX		number(8,0)
-
-몇개까지 노출할 것인지를 DB 수준에서 관리하지 않는 구조. 5개로 그냥 고정해버린다면 아예 속성 5개 짜리 1개 행 테이블로 만들어 버릴 수도 있음.
-*/
