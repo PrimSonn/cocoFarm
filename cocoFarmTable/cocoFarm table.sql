@@ -5,11 +5,21 @@
 /*
 --DD 출력
 select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
-from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
+from all_tab_cols T
+inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='cocoFarm' order by T.TABLE_NAME;
 
+--USER_TABLES.TABLE_NAME
+--USER_SEQUENCES.SEQUENCE_NAME
+--USER_TRIGGERS.TRIGGER_NAME
+--USER_INDEXES.INDEX_NAME
 */
 
 --drop table SITE_IMG_SETTING cascade constraints
+
+drop trigger ANNOUNCEMENT_EDITED_TRG;
+drop trigger ANNOUNCEMENT_TRG;
+drop sequence ANNOUNCEMENT_SEQ;
+drop table ANNOUNCEMENT cascade constraints;
 
 drop trigger TODAYS_FARM_COMM_TRG;
 drop sequence TODAYS_FARM_COMM_SEQ;
@@ -739,6 +749,7 @@ end;
 --drop table SALE_RECOMMEND cascade constraints;
 
 */
+---------------------------------------------- 판매글  조회수..? ----------------------------------------------------
 
 ---------------------------------------------- 판매글에 대한 문의글 ----------------------------------------------------
 
@@ -746,7 +757,7 @@ create table SALE_INQUIRE(
 
 	IDX				number(11,0)
 	,SALE_IDX		number(9,0)		not null
-	,WRITER			number(8,0)		not null
+	,WRITER_IDX		number(8,0)		not null
 
 	,TITLE			nvarchar2(40)	not null
 	,CONTENT		nvarchar2(2000)
@@ -759,7 +770,7 @@ create table SALE_INQUIRE(
 
 	,constraint SALE_INQUIRE_PK primary key (IDX)
 	,constraint FK_SALE_INQUIRE_SALE_IDX foreign key (SALE_IDX) references SALE (IDX) on delete cascade
-	,constraint FK_SALE_INQUIRE_ACC_IDX foreign key (WRITER) references ACCOUNT (IDX) on delete cascade
+	,constraint FK_SALE_INQUIRE_ACC_IDX foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_SALE_INQUIRE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
 
@@ -795,7 +806,7 @@ comment on column SALE_INQUIRE.IDX is '판매 문의 번호 - 인조식별자, �
 
 comment on column SALE_INQUIRE.SALE_IDX is '대상 판매글 - 외래키 (판매글.IDX). null 안됨';
 
-comment on column SALE_INQUIRE.WRITER is '글쓴이 - 외래키 (계정.IDX). null 안됨';
+comment on column SALE_INQUIRE.WRITER_IDX is '글쓴이 - 외래키 (계정.IDX). null 안됨';
 
 comment on column SALE_INQUIRE.TITLE is '제목 - null 안됨';
 
@@ -1159,7 +1170,7 @@ create table TODAYS_FARMER_COMMENT (
 
 	IDX						number(10,0)
 	,TODAYS_FARMER_IDX		number(8,0)		not null
-	,WRITER					number(8,0)		not null
+	,WRITER_IDX					number(8,0)		not null
 	,CONTENT				nvarchar2(400)	not null
 
 	,WRITTEN_TIME			timestamp (0) with local time zone not null
@@ -1171,7 +1182,7 @@ create table TODAYS_FARMER_COMMENT (
 
 	,constraint TODAYS_FARM_COMM_PK primary key (IDX)
 	,constraint FK_TODAYS_FARM_COMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
-	,constraint FK_FARM_COMM_WRITER foreign key (WRITER) references ACCOUNT (IDX) on delete cascade
+	,constraint FK_FARM_COMM_WRITER foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_TODAYS_FARM_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
 
@@ -1208,7 +1219,7 @@ comment on column TODAYS_FARMER_COMMENT.IDX is '오늘의 농부 댓글번호 - 
 
 comment on column TODAYS_FARMER_COMMENT.TODAYS_FARMER_IDX is '오늘의 농부 글번호 - 외래키. null 안됨';
 
-comment on column TODAYS_FARMER_COMMENT.WRITER is '글쓴이 - 외래키 null안됨';
+comment on column TODAYS_FARMER_COMMENT.WRITER_IDX is '글쓴이 - 외래키 null안됨';
 
 comment on column TODAYS_FARMER_COMMENT.CONTENT is '글내용';
 
@@ -1224,6 +1235,69 @@ comment on column TODAYS_FARMER_COMMENT.ISDEL is '삭제 확인 코드 - 외래�
 --drop trigger TODAYS_FARM_COMM_TRG;
 --drop sequence TODAYS_FARM_COMM_SEQ;
 --drop table TODAYS_FARMER_COMMENT cascade constraints;
+
+
+------------------------------------------------  공지사항 ----------------------------------------------------
+
+create table ANNOUNCEMENT (
+
+	IDX					number(4,0)
+	,WRITER_IDX			number(8,0) not null
+	,TITLE				nvarchar2(50) not null
+	,CONTENT			nvarchar2(2000)
+	,WRITTEN_TIME		timestamp(0) with local time zone not null
+	,LAST_EDITED		timestamp(0) with local time zone
+
+	,constraint ANNOUNCEMENT_PK primary key (IDX)
+	,constraint FK_WRITER_IDX_ACC foreign key (WRITER_IDX) references ACCOUNT (IDX)
+);
+
+create sequence ANNOUNCEMENT_SEQ start with 1 increment by 1;
+
+create trigger ANNOUNCEMENT_TRG
+	before insert on ANNOUNCEMENT
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := ANNOUNCEMENT_SEQ.nextval;
+	end if;
+	if  (:NEW.WRITTEN_TIME is null) then
+		:NEW.WRITTEN_TIME := SYSTIMESTAMP;
+	end if;
+end;
+/
+--트리거 설명: 공지사항 인덱스/작성시각 처리 트리거
+
+create trigger ANNOUNCEMENT_EDITED_TRG
+	before update of TITLE, CONTENT on ANNOUNCEMENT
+	for each row
+begin
+	if(:NEW.LAST_EDITED is null) then
+		:NEW.LAST_EDITED := SYSTIMESTAMP;
+	end if;
+end;
+/
+--트리거 설명: 최종 작성시각 처리용 (만약 내용이 길이가 부족해서 nclob로 데이터 타입을 바꾸면 트리거 처리 불가능
+
+comment on table ANNOUNCEMENT is '공지사항';
+
+comment on column ANNOUNCEMENT.IDX is '공지사항번호 - 기본키, 인조식별자';
+
+comment on column ANNOUNCEMENT.WRITER_IDX is '작성자 번호 - 외래키 null안됨. 작성자 타입에 따른 규칙은 어플리케이션에서 구현';
+
+comment on column ANNOUNCEMENT.TITLE is '제목 - null 안됨';
+
+comment on column ANNOUNCEMENT.CONTENT is '내용';
+
+comment on column ANNOUNCEMENT.WRITTEN_TIME is '작성시각 - null안됨 트리거있음';
+
+comment on column ANNOUNCEMENT.LAST_EDITED is '';
+
+
+--drop trigger ANNOUNCEMENT_EDITED_TRG;
+--drop trigger ANNOUNCEMENT_TRG;
+--drop sequence ANNOUNCEMENT_SEQ;
+--drop table ANNOUNCEMENT cascade constraints;
 
 
 ---------------------------------------------- 여타 게시판 추가 예정(게시판은 다 비슷비슷하게 나올 듯?) ----------------------------------------------------
