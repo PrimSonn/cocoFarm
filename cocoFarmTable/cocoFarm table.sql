@@ -13,7 +13,9 @@ from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAM
 --USER_INDEXES.INDEX_NAME
 */
 
---drop table SITE_IMG_SETTING cascade constraints
+drop table SITE_IMG_SETTING cascade constraints;
+
+drop table SITE_IMG_TYPE cascade constraints;
 
 drop trigger ANNOUNCEMENT_EDITED_TRG;
 drop trigger ANNOUNCEMENT_TRG;
@@ -26,7 +28,9 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 
 --drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
---drop trigger TODAYS_FARMER_EDIT_TRG;
+drop table TODAYS_FARMER_PICK;
+
+drop trigger TODAYS_FARMER_EDIT_TRG;
 drop table TODAYS_FARMER cascade constraints;
 
 --drop trigger ACC_SUPPORT_ANS_TRG;
@@ -213,7 +217,7 @@ create table ACCOUNT (
 	,TYPE_CODE			number(2,0)		not null
 	,ISDEL				number(1,0)		default 0 not null
 
-	,THUMB_LOC			varchar2(100 char)
+	,THUMB_IMG			varchar2(200 char)
 	,REG_DATE			timestamp (0) with local time zone	not null
 
 	,constraint ACCOUNT_PK primary key (IDX)
@@ -264,7 +268,7 @@ comment on column ACCOUNT.TYPE_CODE is '계정타입 - 외래키, null 안됨(�
 
 comment on column ACCOUNT.ISDEL is '삭제 확인 코드 - 외래키 null 안됨 기본값:0';
 
-comment on column ACCOUNT.THUMB_LOC is '썸네일 위치 디렉토리 이름';
+comment on column ACCOUNT.THUMB_IMG is '썸네일 위치 디렉토리+파일 이름';
 
 comment on column ACCOUNT.REG_DATE is '계정 등록일 - null안됨, 트리거 있음';
 
@@ -459,8 +463,8 @@ create table SALE(
 
 	,CONTENT		nvarchar2(1000)
 
-	,IMG_FACE		varchar2(100 char)
-	,IMG_MAIN		varchar2(100 char)
+	,FACE_IMG		varchar2(200 char)
+	,MAIN_IMG		varchar2(200 char)
 
 -- 아래는 평균점수, 쿼리를 편하게 처리하기 위해 추가할 만한 중복 데이터. 쓰려면 주석해제하고 쓰기. 트리거 이용 금지(삭제시 문제유발). procedure을 이용하거나 application에서 무결성을 지키기 위한 로직 만들기.
 --	,AVG_SCORE		number(3,2)
@@ -513,9 +517,9 @@ comment on column SALE.LAST_EDITED is '마지막 수정 시간 - 트리거 있�
 
 comment on column SALE.CONTENT is '부가설명(글내용)';
 
-comment on column SALE.IMG_FACE is '대표이지미 파일 위치 (디렉토리와 이름을 모두 포함해서 저장하기, 원래이름은 필요없음)';
+comment on column SALE.FACE_IMG is '대표이지미 파일 위치 (디렉토리와 이름을 모두 포함해서 저장하기, 원래이름은 필요없음)';
 
-comment on column SALE.IMG_MAIN is '본문이미지 파일 위치 (디렉토리와 이름을 모두 포함해서 저장하기, 원래이름은 필요없음)';
+comment on column SALE.MAIN_IMG is '본문이미지 파일 위치 (디렉토리와 이름을 모두 포함해서 저장하기, 원래이름은 필요없음)';
 
 --comment on column SALE.AVG_SCORE is '평균점수 - 중복데이터, 무결성 주의';
 
@@ -576,6 +580,7 @@ begin
 end;
 /
 --트리거 설명: 판매옵션 내용이 마지막으로 수정된 시각 저장.
+
 
 comment on table SALE_OPTION is '판매 옵션 목록 테이블';
 
@@ -645,21 +650,14 @@ create table PURCHASE(
 	,PRICE					number(7,0)		not null
 	,AMOUNT					number(7,0)		not null
 	,UNIT					nvarchar2(10)	not null
-	,PRODUCER				nvarchar2(20)	not null
-	,ORIGIN					nvarchar2(40)	not null
 
--- 내용 추가용 예시 속성.. 지우고 적당히 추가해서 쓰거나 아니면 일단 연습용으로 그냥 쓰거나..
-	,CONTENT1				nvarchar2(1000)
-	,CONTENT2				nvarchar2(1000)
-	,CONTENT3				nvarchar2(1000)
 
 -- 구매한 이미지 처리용 예시 속성(거래 기록으로 남겨둘 부분). 일단 넣어두긴 하는데 이쪽 설계의 세부 사안을 만들어야 제대로 결정할 수 있는 부분 - 예를들어 판매글이 지워지고 이미지는 남는가, 변경되면? 이런거.
 	,IMG					varchar2(100 char)
-	,IMG2					varchar2(100 char)
-	,IMG3					varchar2(100 char)
 
 	,STATE					number(2,0)		not null
 
+------------------------------------------------------------------
 	,PAYMENT_TIME			timestamp (3) with local time zone	not null
 	,PAYMENT_TYPE			number(2,0)		not null
 	,PAYMENT_NAME			nvarchar2(20)	not null
@@ -667,44 +665,19 @@ create table PURCHASE(
 
 	,IS_Refunded			number(1,0)		default 0 not null
 	,REFUNDED_TIME			timestamp (3) with local time zone
+--------------------------------------------------------------------
 
 	,DELIVERY_LOC			nvarchar2(50)	not null
 	,RECEIVER_NAME			nvarchar2(20)	not null
 	,RECEIVER_PHONE			number(14,0)
 
-	,constraint PURCHASE_PK primary key (IDX)
-	,constraint FK_PURCHASE_ACCOUNT foreign key (PURCHASED_ACC) references ACCOUNT (IDX) on delete cascade
--- 영수증 처리를 해야 하는데 cascade 하는게 맞는지 잘 모르겠음. 애초에 계정 삭제 상황에 대한 부분이 제대로 설계가 안되어 있음.
 
-	,constraint FK_PURCHASE_SALE foreign key (SALE_IDX) references SALE (IDX) on delete set null
--- 판매글 지우고 나서 null 로 일단 두는데 어플리케이션에서 null 처리는 알아서...
-
-	,constraint FK_PURCHASE_SOLDACC foreign key (SOLD_ACC) references ACCOUNT (IDX) on delete set null
--- 판 계정이 삭제되면 null 로 세팅하긴 하는데 계정 삭제에 대해서 좀 설계를 해야 함. (사실 그냥 모른척 해도 되고)
 
 	,constraint PURCHASE_UNIQUE unique (IDX, PURCHASED_ACC, SALE_IDX)
 -- 아래 평가 댓글 역정규화 외래키 용 unique.
 );
 
-create sequence PURCHASE_SEQ start with 1 increment by 1;
 
-create or replace trigger PURCHASE_TRG
-	before insert on PURCHASE
-	for each row
-begin
-	if :NEW.IDX is null
-		then :NEW.IDX := PURCHASE_SEQ.nextval;
-	end if;
-	if :NEW.PAYMENT_TIME is null
-		then :NEW.PAYMENT_TIME := SYSTIMESTAMP;
-	end if;
-end;
-/
-
-
---drop trigger PURCHASE_TRG;
---drop sequence PURCHASE_SEQ;
---drop table PURCHASE cascade constraints;
 */
 
 ---------------------------------------------- 판매 평가 댓글 (삭제중) ----------------------------------------------------
@@ -932,6 +905,12 @@ comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 
 
 -----------------------------------------------  경매  -------------------------------------------------------
+/*
+create table
+
+*/
+
+
 -----------------------------------------------  입찰  -------------------------------------------------------
 -----------------------------------------------  구매  -------------------------------------------------------
 -----------------------------------------------  배송  -------------------------------------------------------
@@ -956,6 +935,9 @@ comment on column MESSAGE_TYPE.NAME is '쪽지 타입 이름 - null 안됨';
 
 comment on column MESSAGE_TYPE.DESCRIPTION is '쪽지 타입 설명';
 
+insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (0, '일반', 'default 값 처리용 일반 타입(더미, 그냥 써도 됨)');
+commit;
+
 
 --drop table MESSAGE_TYPE cascade constraints;
 
@@ -975,7 +957,7 @@ create table MESSAGE (
 	,IS_READ			number(1,0)			default 0 not null
 	,READ_TIME			timestamp(0) with local time zone
 
-	,TYPE_CODE			number(2,0)			not null
+	,TYPE_CODE			number(2,0)			default 0 not null
 
 	,ISDEL				number(1,0)			default 0 not null
 
@@ -1087,7 +1069,7 @@ create table TODAYS_FARMER (
 	ACC_IDX			number(8,0)
 
 	,TITLE			nvarchar2(30)	not null
-	,CONTENT		nclob
+	,CONTENT		nvarchar2(2000)
 --(내용 nclob. 각종html 을 넣다보면 매우 길어질 거라 생각해서 nclob. 대신 문자열로 바꾸기 위해서 to_nclob 함수 이용. 불편하고 쓸데없다 싶으면 nvarchar2 로 변경:최대 2000자)
 	,WRITTEN_TIME	timestamp (0) with local time zone default SYSTIMESTAMP not null
 	
@@ -1096,7 +1078,8 @@ create table TODAYS_FARMER (
 
 --	,RECOMMEND		number(8,0)	(매번 전체조회를 피하기 위해 넣을 수 있는 속성, 무결성 관리를 하려면 별도의 뷰를 생성하고 트리거를 쓰는 짓을 해야 되서 일단 보류)
 
-	,IMG			varchar2(100 char)
+	,THUMB_IMG		varchar2(200 char)
+	,MAIN_IMG		varchar2(200 char)	
 --이미지를 제대로 여럿 넣으려면 별도의 테이블 쓰기
 
 	,ISDEL			number(1,0) default 0 not null
@@ -1107,9 +1090,8 @@ create table TODAYS_FARMER (
 	,constraint FK_TODAYS_FARMER_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
 
-/* nclob/clob 에 update 트리거 불가능..,
 create trigger TODAYS_FARMER_EDIT_TRG
-	before update of TITLE, CONTENT, IMG on TODAYS_FARMER
+	before update of TITLE, CONTENT, THUMB_IMG, MAIN_IMG  on TODAYS_FARMER
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
@@ -1117,7 +1099,7 @@ begin
 end;
 /
 --트리거 설명: 오늘의 농부 마지막 수정시각 처리
-*/
+
 
 comment on table TODAYS_FARMER is '오늘의 농부';
 
@@ -1135,13 +1117,35 @@ comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리�
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
 
-comment on column TODAYS_FARMER.IMG is '이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
+comment on column TODAYS_FARMER.THUMB_IMG is '썸네일 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
+
+comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
 comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, null안됨';
 
 
 --drop trigger TODAYS_FARMER_EDIT_TRG;
 --drop table TODAYS_FARMER cascade constraints;
+
+
+------------------------------------------------  오늘의 농부 픽(관리자의 메인 노출 설정)  ----------------------------------------------------
+--갯수 조절 안됨, 예외처리 사항이라 일단은 그냥 둠.
+
+create table TODAYS_FARMER_PICK (
+	
+	FARM_ACC_IDX	number(8,0)
+	
+	,constraint PK_TODAY_FARM_PICK primary key (FARM_ACC_IDX)
+	,constraint FK_TODAY_FARM_FK foreign key (FARM_ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+);
+
+comment on table TODAYS_FARMER_PICK is '오늘의 농부 선택';
+
+comment on column TODAYS_FARMER_PICK.FARM_ACC_IDX is '선택된 오늘의 농부 - 기본키 + 외래키 (오늘의 농부 기본키)';
+
+
+--drop table TODAYS_FARMER_PICK cascade constraint;;
+
 
 ------------------------------------------------  오늘의 농부 추천(보류: 일단 추천식으로 가정)  ----------------------------------------------------
 /*
@@ -1163,7 +1167,7 @@ create table TODAYS_FARMER_COMMENT (
 
 	IDX						number(10,0)
 	,TODAYS_FARMER_IDX		number(8,0)		not null
-	,WRITER_IDX					number(8,0)		not null
+	,WRITER_IDX				number(8,0)		not null
 	,CONTENT				nvarchar2(400)	not null
 
 	,WRITTEN_TIME			timestamp (0) with local time zone not null
@@ -1292,23 +1296,69 @@ comment on column ANNOUNCEMENT.LAST_EDITED is '';
 --drop sequence ANNOUNCEMENT_SEQ;
 --drop table ANNOUNCEMENT cascade constraints;
 
----------------------------------------------- 사이트 배너 관리 ----------------------------------------------------
+----------------------------------------------  사이트 형상(이미지) 타입  ----------------------------------------------
+-- 사이트 이미지 관리 테이블 서브타입 비즈니스 코드.
+-- 일단 1번:배너 넣어둠
 
-/*
-당장은 이런 테이블의 필요성이 전혀 느껴지지 않아서 일단 코멘트 처리해둠.
-만약 사이트의 여러 이미지를 등록해두고, 저장된 위치를 DB에서 불러오는 리스너를 이용한다던가 하는 걸 만든다면,
-게다가 관리자 쪽에서 여러 개를 추가하면 다시 jsp에서 참조하는 parameter 를 바꿔주는 장치를 만든다면 쓸 만한 테이블.
-아니면 프로토타입에 굳이 넣을 필요가 없음(나중에도).
+create table SITE_IMG_TYPE (
+
+	CODE				number(2,0)
+	,NAME				nvarchar2(50) not null
+	,DESCRIPTION		nvarchar2(400)
+	
+	,constraint SITE_IMG_TYPE_PK primary key (CODE)
+);
+
+insert into SITE_IMG_TYPE (CODE, NAME, DESCRIPTION) values (1, '배너', '동적으로 배너 설정, 1, 배너 이미지 받기. 2, 컨텍스트 저장값 수정. 3,이 값 수정');
+commit;
+
+comment on table SITE_IMG_TYPE is '사이트 형상(이미지) 타입';
+
+comment on column SITE_IMG_TYPE.CODE is '사이트 이미지 타입 코드. 예) 1:배너';
+
+comment on column SITE_IMG_TYPE.NAME is '사이트 이미지 타입 이름';
+
+comment on column SITE_IMG_TYPE.DESCRIPTION is '사이트 이미지 타입 설명';
+
+
+--drop table SITE_IMG_TYPE cascade constraints;
+
+
+---------------------------------------------- 사이트 형상(이미지만) 관리 ----------------------------------------------------
 
 create table SITE_IMG_SETTING (
 
-	BANNER_LOC		varchar2(100 char)
-	,constraint SITE_IMG_SET_PK primary key (BANNER_LOC)
+	IDX					number(4,0)
+	,TYPE_CODE			number(2,0)	not null
+	,IMG_LOCATION		varchar2(200 char) not null
+	
+	,constraint SITE_IMG_SET_PK primary key (IDX)
+	,constraint SITE_IMGSET_TYPE_FK foreign key (TYPE_CODE) references SITE_IMG_TYPE (CODE)
 );
-*/
+
+create sequence SITE_IMG_SEQ start with 1 increment by 1;
+
+create trigger SITE_IMG_TRG
+	before insert on SITE_IMG_SETTING
+	for each row
+	when (NEW.IDX is null)
+begin
+	:NEW.IDX := SITE_IMG_SEQ.nextval;
+end;
+/
+--트리거 설명: 인덱스 설정 트리거
+
+comment on table SITE_IMG_SETTING is '사이트 형상(이미지) 관리';
+
+comment on column SITE_IMG_SETTING.IDX is '이미지 번호';
+
+comment on column SITE_IMG_SETTING.TYPE_CODE is '이미지 타입';
+
+comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + 파일이름) 원래 이름은 쓸데 없을듯, UUID 사용하기';
 
 
---drop table SITE_IMG_SETTING cascade constraints
+--drop table SITE_IMG_SETTING cascade constraints;
+
 
 ---------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
 
