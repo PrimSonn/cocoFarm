@@ -58,6 +58,8 @@ drop table BID cascade constraints;
 
 drop table BID_STATE_TYPE cascade constraints;
 
+drop table AUCTION_CATEGORY_MAP cascade constraints;
+
 drop trigger AUCTION_IDX_REGT_TRG;
 drop sequence AUCTION_SEQ;
 drop table AUCTION cascade constraints;
@@ -730,7 +732,7 @@ comment on column SALE_OPT_CATEGORY.SALE_IDX is '대상 옵션의 판매글 번�
 
 comment on column SALE_OPT_CATEGORY.OPT_NAME is '대상 옵션의 이름 - 복합 기본키 + 복합 외래키';
 
-comment on column SALE_OPT_CATEGORY.CATEGORY_IDX is '카테고리 - 복합 기본키 + 외래키';
+comment on column SALE_OPT_CATEGORY.CATEGORY_IDX is '카테고리 노드 번호 - 복합 기본키 + 외래키';
 
 --drop table SALE_OPT_CATEGORY;
 
@@ -1065,8 +1067,8 @@ create table AUCTION (
 
 	,REG_TIME				timestamp(3) with local time zone	not null
 	,DUE_TIME_CODE			number(2,0)			not null
-
 	,START_PRICE			number(9,0)			not null
+
 	,TITLE					nvarchar2(40)		not null
 	,CONTENT				nvarchar2(2000)		not null
 	,ITEM_IMG				varchar2(200 char)	not null
@@ -1075,6 +1077,7 @@ create table AUCTION (
 
 --	,HIGHEST_BID				number(11,0)
 -- 처리의 편의를 위한 중복값, 넣을까 고민중
+
 	,constraint AUCTION_PK primary key (IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint AUCTION_DUE_TYPE_FK	foreign key (DUE_TIME_CODE) references AUCTION_DUE_TYPE (CODE)
@@ -1126,6 +1129,27 @@ comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외
 --drop trigger AUCTION_IDX_REGT_TRG;
 --drop sequence AUCTION_SEQ;
 --drop table AUCTION cascade constraints;
+
+
+-----------------------------------------------  경매 카테고리 매핑 -------------------------------------------------------
+
+create table AUCTION_CATEGORY_MAP (
+
+	AUCTION_IDX
+	,CATEGORY_IDX
+
+	,constraint AUCTION_CATEGORY_MAP_PK primary key (AUCTION_IDX, CATEGORY_IDX)
+);
+
+
+comment on table AUCTION_CATEGORY_MAP is '경매 카테고리 맵';
+
+comment on column AUCTION_CATEGORY_MAP.AUCTION_IDX is '경매글 번호 - 복합기본키 + 외래키 (경매.경매글 번호)';
+
+comment on column AUCTION_CATEGORY_MAP.CATEGORY_IDX is '카테고리 노드 번호 - 복합기본키 + 외래키';
+
+
+--drop table AUCTION_CATEGORY_MAP cascade constraints;
 
 
 -----------------------------------------------  경매 물품 이미지 -------------------------------------------------------
