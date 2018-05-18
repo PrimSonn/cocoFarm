@@ -21,6 +21,8 @@ drop table SITE_IMG_SETTING cascade constraints;
 
 drop table SITE_IMG_TYPE cascade constraints;
 
+drop table SITE_MAIN_AUCTION cascade constraints;
+
 drop trigger ANNOUNCEMENT_EDITED_TRG;
 drop trigger ANNOUNCEMENT_TRG;
 drop sequence ANNOUNCEMENT_SEQ;
@@ -32,7 +34,7 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 
 --drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
-drop table TODAYS_FARMER_PICK;
+drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop trigger TODAYS_FARMER_EDIT_TRG;
 drop table TODAYS_FARMER cascade constraints;
@@ -49,6 +51,18 @@ drop table MESSAGE cascade constraints;
 drop table MESSAGE_TYPE cascade constraints;
 
 drop table PAYMENT_TYPE cascade constraints;
+
+drop trigger BID_INSERT_TRG;
+drop sequence BID_SEQ;
+drop table BID cascade constraints;
+
+drop table BID_STATE_TYPE cascade constraints;
+
+drop trigger AUCTION_IDX_REGT_TRG;
+drop sequence AUCTION_SEQ;
+drop table AUCTION cascade constraints;
+
+drop table AUCTION_STATE_TYPE;
 
 drop table AUCTION_DUE_TYPE cascade constraints;
 
@@ -123,17 +137,7 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 확인용 플래그 이름은 'IS내용'.
 예시) ISDEL - 지워졌나? 0:false(안지워짐) 1:true(지워짐)
 
-
-쪽지
-idx pk
-주는사람 foreign key references ACCOUNT.IDX
-받는사람 foreign key references ACCOUNT.IDX
-
-제목
-내용
-시간
-읽음?
-타입?
+코드 계통은 시퀀스 없음.
 
 */
 
@@ -339,7 +343,9 @@ create table BUSINESS_INFO_TYPE (
 );
 
 insert into BUSINESS_INFO_TYPE (CODE, NAME, DESCRIPTION) values ( 0, '일반', '기본값 설정. 혹시 기능을 안 쓰게 되었을 때 모듈에 이상이 없게 해둠');
+
 commit;
+
 
 comment on table BUSINESS_INFO_TYPE is '사업자 등록증 타입 코드 테이블';
 
@@ -509,11 +515,13 @@ comment on column CATEGORY_MAP.DESCRIPTION is '관계 설명';
 --drop table CATEGORY_MAP cascade constraints;
 
 
+---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
+
 ---------------------------------------------- 판매글 (거래 중개) ----------------------------------------------------
 
 create table SALE(
 
-	IDX				number(9,0)
+	IDX				number(10,0)
 	,ACC_IDX		number(8,0)		not null
 	,TITLE			nvarchar2(40)	not null
 	,ORIGIN			nvarchar2(60)	not null
@@ -563,6 +571,7 @@ end;
 /
 --트리거 설명: update 시 해당 행에 LAST_EDITED 값을 시스템 시간으로 처리.
 
+
 comment on table SALE is '판매 목록';
 
 comment on column SALE.IDX is '판매글 번호 - 기본키 인조식별자. 트리거 있음';
@@ -601,7 +610,7 @@ comment on column SALE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, 
 
 create table SALE_HIT (
 
-	SALE_IDX			number(9,0)
+	SALE_IDX			number(10,0)
 	,ACCOUNT_IDX		number(8,0)
 
 	,constraint SALE_HIT_PK primary key (SALE_IDX, ACCOUNT_IDX)
@@ -624,7 +633,7 @@ comment on column SALE_HIT.ACCOUNT_IDX is '계정번호 - 복합기본키 + 외�
 
 create table SALE_OPTION (
 
-	SALE_IDX		number(9,0)
+	SALE_IDX		number(10,0)
 	,NAME			nvarchar2(25)
 	,DESCRIPTION	nvarchar2(200)
 
@@ -705,7 +714,7 @@ comment on column SALE_OPTION.ISDEL is '삭제 확인 코드 - 외래키, 기본
 
 create table SALE_OPT_CATEGORY (
 
-	SALE_IDX			number(9,0)
+	SALE_IDX			number(10,0)
 	,OPT_NAME			nvarchar2(25)
 	,CATEGORY_IDX		number(3,0)
 
@@ -713,6 +722,7 @@ create table SALE_OPT_CATEGORY (
 	,constraint FK_OPT_CATMAP_SALEOPT foreign key (SALE_IDX, OPT_NAME) references SALE_OPTION (SALE_IDX, NAME) on delete cascade
 	,constraint FK_OPT_CATMAP_CATNODE foreign key (CATEGORY_IDX) references CATEGORY (IDX)
 );
+
 
 comment on table SALE_OPT_CATEGORY is '판매옵션 카테고리 매핑 - 복수 카테고리 허용';
 
@@ -809,7 +819,7 @@ end;
 create table SALE_INQUIRE(
 
 	IDX				number(11,0)
-	,SALE_IDX		number(9,0)		not null
+	,SALE_IDX		number(10,0)		not null
 	,WRITER_IDX		number(8,0)		not null
 
 	,TITLE			nvarchar2(40)	not null
@@ -853,6 +863,7 @@ end;
 /
 --트리거 설명: 판매 문의글에 대해 응답이 있으면 자동으로 응답시각 처리.
 
+
 comment on table SALE_INQUIRE is '판매글에 대한 문의글';
 
 comment on column SALE_INQUIRE.IDX is '판매 문의 번호 - 인조식별자, 기본키';
@@ -887,7 +898,7 @@ create table CART (
 
 	IDX				number(9,0) not null unique
 	,ACC_IDX		number(8,0)
-	,SALE_IDX		number(9,0)
+	,SALE_IDX		number(10,0)
 	,SALE_OPT_NAME	nvarchar2(25)
 	,COUNT			number(7,0)		not null
 	
@@ -914,6 +925,7 @@ begin
 end;
 /
 --트리거 설명: 장바구니 인덱스/추가시간 처리 트리거
+
 
 comment on table CART is '장바구니';
 
@@ -968,6 +980,8 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 	환불 시간
 */
 
+-----------------------------------------------  경매 수수료 타입  -------------------------------------------------------
+
 -----------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
 
 create table AUCTION_DUE_TYPE (
@@ -987,14 +1001,16 @@ insert all
 	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일', '28일짜리 경매')
 select 1 from dual;
 
+commit;
+
 
 comment on table AUCTION_DUE_TYPE is '경매 만료시간 제어용 테이블(서브타입)';
 
 comment on column AUCTION_DUE_TYPE.CODE is '만료시간 비즈니스 코드 - 기본키';
 
-comment on column AUCTION_DUE_TYPE.DUE_TIME is '시간(길이)';
+comment on column AUCTION_DUE_TYPE.DUE_TIME is '시간(길이) - null 안됨';
 
-comment on column AUCTION_DUE_TYPE.NAME is '타입 이름';
+comment on column AUCTION_DUE_TYPE.NAME is '타입 이름 - null 안됨';
 
 comment on column AUCTION_DUE_TYPE.DESCRIPTION is '타입 설명';
 
@@ -1004,29 +1020,202 @@ comment on column AUCTION_DUE_TYPE.DESCRIPTION is '타입 설명';
 
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
 
+create table AUCTION_STATE_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(30)	not null
+	,DESCRIPTION	nvarchar2(400)
+	
+	,constraint AUCTION_STATE_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'진행중','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'진행중 취소 시작','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'진행중 취소됨','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'낙찰 시작','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (5,'만료: 유효입찰 없음','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (6,'낙찰 완료 대기중','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (7,'만료: 입찰자의 거래 거부','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (8,'낙찰 완료','')
+select 1 from dual;
+
+commit;
+
+
+comment on table AUCTION_STATE_TYPE is '경매 상태 제어용 코드 테이블';
+
+comment on column AUCTION_STATE_TYPE.CODE is '코드 - 기본키';
+
+comment on column AUCTION_STATE_TYPE.NAME is '상태 이름 - null 불가';
+
+comment on column AUCTION_STATE_TYPE.DESCRIPTION is '설명';
+
+
+--drop table AUCTION_STATE_TYPE cascade constraints;
+
+
 -----------------------------------------------  경매  -------------------------------------------------------
 
-/*
+
 create table AUCTION (
 
+	IDX						number(10,0)
+	,WRITTER_IDX			number(8,0)			not null
 
+	,REG_TIME				timestamp(3) with local time zone	not null
+	,DUE_TIME_CODE			number(2,0)			not null
 
+	,START_PRICE			number(9,0)			not null
+	,TITLE					nvarchar2(40)		not null
+	,CONTENT				nvarchar2(2000)		not null
+	,ITEM_IMG				varchar2(200 char)	not null
 
+	,STATE_CODE				number(2,0)			not null
+
+--	,HIGHEST_BID				number(11,0)
+-- 처리의 편의를 위한 중복값, 넣을까 고민중
+	,constraint AUCTION_PK primary key (IDX)
+	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
+	,constraint AUCTION_DUE_TYPE_FK	foreign key (DUE_TIME_CODE) references AUCTION_DUE_TYPE (CODE)
+	,constraint AUCTION_STATE_FK foreign key (STATE_CODE) references AUCTION_STATE_TYPE (CODE)
+	,constraint AUCTION_PRICE_CHECK check (START_PRICE >0)
 );
-*/
+
+create sequence AUCTION_SEQ start with 1 increment by 1;
+
+create trigger AUCTION_IDX_REGT_TRG
+	before insert on AUCTION
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := AUCTION_SEQ.nextval;
+	end if;
+	if (:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 1;
+	end if;
+	:NEW.REG_TIME := SYSTIMESTAMP;
+end;
+/
+--트리거 설명: IDX 삽입, 상태코드 삽입, REG_TIME 무조건 시스템시간으로 삽입 (입력값 덮어쓰기)
 
 
----------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
+comment on table AUCTION is '경매';
 
-/*
+comment on column AUCTION.IDX is '경매번호 - 기본키, 인조식별자. 트리거 있음';
 
-SITE_MAIN_AUCTION
-	#AUCT_IDX		number(8,0)
+comment on column AUCTION.WRITTER_IDX is '작성자 인덱스 - 외래키. null 불가';
 
-몇개까지 노출할 것인지를 DB 수준에서 관리하지 않는 구조. 5개로 그냥 고정해버린다면 아예 속성 5개 짜리 1개 행 테이블로 만들어 버릴 수도 있음.
-*/
+comment on column AUCTION.REG_TIME is '작성시간 - null 불가. 트리거 있음';
+
+comment on column AUCTION.DUE_TIME_CODE is '경매 기간 타입 - 외래키. null불가';
+
+comment on column AUCTION.START_PRICE is '시작가격 - null 불가. 0이상';
+
+comment on column AUCTION.TITLE is '글제목 - null 불가';
+
+comment on column AUCTION.CONTENT is '글내용 - null 불가';
+
+comment on column AUCTION.ITEM_IMG is '경매물품 사진 - null 불가';
+
+comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외래키. null불가. 트리거 있음';
+
+--comment on column AUCTION.HIGHEST_BID is '최고 입찰액 - 중복값, 처리의 편의를 위해 넣을까 하는 속성';
+
+
+--drop trigger AUCTION_IDX_REGT_TRG;
+--drop sequence AUCTION_SEQ;
+--drop table AUCTION cascade constraints;
+
+
+-----------------------------------------------  경매 물품 이미지 -------------------------------------------------------
+
+-----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
+
+create table BID_STATE_TYPE (
+
+	CODE				number(2,0)
+	,NAME				nvarchar2(30)	not null
+	,DESCRIPTION		nvarchar2(400)
+
+	,constraint BID_STATE_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰 후 경매 만료 대기중, 최고입찰')
+select 1 from dual;
+
+
+comment on table BID_STATE_TYPE is '경매 상태 타입 코드 테이블';
+
+comment on column BID_STATE_TYPE.CODE is '경매 상태 코드 - 기본키';
+
+comment on column BID_STATE_TYPE.NAME is '경매 상태 이름 - null 불가';
+
+comment on column BID_STATE_TYPE.DESCRIPTION is '경매 상태 설명';
+
+
+--drop table BID_STATE_TYPE cascade constraints;
+
 
 -----------------------------------------------  입찰  -------------------------------------------------------
+--계정 삭제 과정 처리 조심. (예외사항이라 일단은 무시함)
+
+create table BID (
+
+	IDX				number(12,0)
+	,AUCTION_IDX	number(10,0)	not null
+	,BIDDER_IDX		number(8,0)		not null
+	,AMOUNT			number(11,0)	not null
+
+	,STATE_CODE		number(2,0)		not null
+
+	,BID_TIME		timestamp(3) with local time zone not null
+
+	,constraint BID_PK primary key (IDX)
+	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
+	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
+	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
+	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
+);
+
+create sequence BID_SEQ start with 1 increment by 1;
+
+create trigger BID_INSERT_TRG
+	before insert on BID
+	for each row
+begin
+	if(:NEW.IDX is null) then
+		:NEW.IDX := BID_SEQ.nextval;
+	end if;
+	if(:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 1;
+	end if;
+	:NEW.BID_TIME := SYSTIMESTAMP;
+end;
+/
+-- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
+
+
+comment on table BID is '입찰 테이블';
+
+comment on column BID.IDX is '입찰번호 - 기본키, 인조식별자. 트리거 있음';
+
+comment on column BID.AUCTION_IDX is '대상 경매 번호 - 외래키. null불가';
+
+comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키. null불가';
+
+comment on column BID.AMOUNT is '입찰액 - null불가. 0이상';
+
+comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. null불가. 트리거 있음';
+
+comment on column BID.BID_TIME is '입찰 시각 - null불가. 트리거 있음';
+
+
+--drop trigger BID_INSERT_TRG;
+--drop sequence BID_SEQ;
+--drop table BID cascade constraints;
+
 
 ---------------------------------------------- 결제 타입 -----------------------------------------------------
 -- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯?
@@ -1053,9 +1242,15 @@ comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 --drop table PAYMENT_TYPE cascade constraints;
 
 
------------------------------------------------  구매  -------------------------------------------------------
+-----------------------------------------------  구매 영수증  -------------------------------------------------------
+
+
 
 -----------------------------------------------  배송  -------------------------------------------------------
+
+
+
+
 
 ------------------------------------------------  쪽지 타입 -------------------------------------------------
 -- 일단 쪽지 조회를 쉽게 처리하기 위해 넣은 테이블. 추가적인 타입을 지정하면서 여러 용도로 사용 가능
@@ -1069,6 +1264,11 @@ create table MESSAGE_TYPE (
 	,constraint PK_MESSAGE_TYPE primary key (CODE)
 );
 
+insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (0, '일반', 'default 값 처리용 일반 타입(더미, 그냥 써도 됨)');
+
+commit;
+
+
 comment on table MESSAGE_TYPE is '쪽지 타입 비즈니스 코드 테이블';
 
 comment on column MESSAGE_TYPE.CODE is '쪽지 타입 코드 - 기본키 시퀀스없음';
@@ -1076,9 +1276,6 @@ comment on column MESSAGE_TYPE.CODE is '쪽지 타입 코드 - 기본키 시퀀�
 comment on column MESSAGE_TYPE.NAME is '쪽지 타입 이름 - null 안됨';
 
 comment on column MESSAGE_TYPE.DESCRIPTION is '쪽지 타입 설명';
-
-insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (0, '일반', 'default 값 처리용 일반 타입(더미, 그냥 써도 됨)');
-commit;
 
 
 --drop table MESSAGE_TYPE cascade constraints;
@@ -1125,6 +1322,7 @@ begin
 end;
 /
 --트리거 설명: 인덱스 없으면 시퀀스 넣어줌, 작성시각 없으면 시스템 시각 넣어줌
+
 
 comment on table MESSAGE is '쪽지';
 
@@ -1281,6 +1479,7 @@ create table TODAYS_FARMER_PICK (
 	,constraint FK_TODAY_FARM_FK foreign key (FARM_ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
+
 comment on table TODAYS_FARMER_PICK is '오늘의 농부 선택';
 
 comment on column TODAYS_FARMER_PICK.FARM_ACC_IDX is '선택된 오늘의 농부 - 기본키 + 외래키 (오늘의 농부 기본키)';
@@ -1418,6 +1617,7 @@ end;
 /
 --트리거 설명: 최종 작성시각 처리용 (만약 내용이 길이가 부족해서 nclob로 데이터 타입을 바꾸면 트리거 처리 불가능
 
+
 comment on table ANNOUNCEMENT is '공지사항';
 
 comment on column ANNOUNCEMENT.IDX is '공지사항번호 - 기본키, 인조식별자';
@@ -1438,6 +1638,25 @@ comment on column ANNOUNCEMENT.LAST_EDITED is '';
 --drop sequence ANNOUNCEMENT_SEQ;
 --drop table ANNOUNCEMENT cascade constraints;
 
+
+---------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
+--몇개까지 노출할 것인지를 DB 수준에서 관리하지 않는 구조. 5개로 그냥 고정해버린다면 아예 속성 5개 짜리 1개 행 테이블로 만들어 버릴 수도 있음.
+
+create table SITE_MAIN_AUCTION (
+
+	AUCTION_IDX		number(10,0)
+	,REG_TIME		timestamp(0) default SYSTIMESTAMP
+	
+	,constraint SITE_MAIN_AUCT_PK primary key (AUCTION_IDX)
+	,constraint FK_SITE_MAIN_AUCTION foreign key (AUCTION_IDX) references AUCTION (IDX)
+);
+
+
+
+
+--drop table SITE_MAIN_AUCTION cascade constraints;
+
+
 ----------------------------------------------  사이트 형상(이미지) 타입  ----------------------------------------------
 -- 사이트 이미지 관리 테이블 서브타입 비즈니스 코드.
 -- 일단 1번:배너 넣어둠
@@ -1452,7 +1671,9 @@ create table SITE_IMG_TYPE (
 );
 
 insert into SITE_IMG_TYPE (CODE, NAME, DESCRIPTION) values (1, '배너', '동적으로 배너 설정, 1, 배너 이미지 받기. 2, 컨텍스트 저장값 수정. 3,이 값 수정');
+
 commit;
+
 
 comment on table SITE_IMG_TYPE is '사이트 형상(이미지) 타입';
 
@@ -1489,6 +1710,7 @@ begin
 end;
 /
 --트리거 설명: 인덱스 설정 트리거
+
 
 comment on table SITE_IMG_SETTING is '사이트 형상(이미지) 관리';
 
