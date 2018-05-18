@@ -1546,6 +1546,7 @@ create table TODAYS_FARMER_COMMENT (
 	,constraint FK_TODAYS_FARM_COMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 	,constraint FK_FARM_COMM_WRITER foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_TODAYS_FARM_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
+	,constraint FK_FARM_IDX_IDX foreign key (SUPER_COMMENT) references TODAYS_FARMER_COMMENT (IDX)
 );
 
 create sequence TODAYS_FARM_COMM_SEQ start with 1 increment by 1;
