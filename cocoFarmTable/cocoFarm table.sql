@@ -62,6 +62,7 @@ drop table AUCTION_CATEGORY_MAP cascade constraints;
 
 drop trigger AUCTION_IDX_REGT_TRG;
 drop sequence AUCTION_SEQ;
+drop index AUCTION_ISDEL_ACC_IDX;
 drop table AUCTION cascade constraints;
 
 drop table AUCTION_STATE_TYPE;
@@ -88,6 +89,7 @@ drop table SALE_HIT cascade constraints;
 drop trigger SALE_LAST_EDITED_TRG;
 drop trigger SALE_TRG;
 drop sequence SALE_SEQ;
+drop index SALE_ISDEL_ACC_IDX;
 drop table SALE cascade constraints;
 
 drop table CATEGORY_MAP cascade constraints;
@@ -122,29 +124,27 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 /*
 
-비즈니스 코드, 서브타입 분류 코드 등은 엔티티 내부 TYPE 이름 속성으로 들어감.
+비즈니스 코드, 서브타입 분류 코드 등은 테이블 내부에 "속성명_CODE" 속성으로 들어감.
 비즈니스 코드, 서브타입 분류 정보 테이블은 '원형타입이름_TYPE' 으로 처리함.
+코드 계통은 시퀀스 없음.
 
-서브타입 추가 속성용 테이블 이름:
-
-식별 번호: IDX
+"IDX" 속성 -  인조식별자 사용 속성, 기본키 혹은 후보키(not null + unique).
 인조식별자 : sequence.nextval 을 이용해서 정수로 처리. cash 는 기본값이 15이었던듯. 사이클이나 최대 크기를 따로 고려 안함.
 
 트리거 있음: 주로 새 인스턴스(행) 입력시(insert) 자동으로 특정 속성 기입. 아닐때도 있으니 확인.
 
 식별관계: 외래키가 not null 처리됨 - 참조대상의 존재에 의존적일 때.
-외래키 속성 이름은 주로 '대상테이블_속성이름' 으로 했음.
+외래키 속성 이름은 주로 '대상테이블_속성이름' 으로 하거나, 속성의 역할을 명시적으로 나타내도록 함.
 
-확인용 플래그(indicator)는 number(1,0)에 check으로 1,0 만 허용. - 기본값(default) 확인하기!!
 확인용 플래그 이름은 'IS내용'.
+확인용 플래그(indicator)는 number(1,0)에 check으로 1,0 만 허용. - 기본값(default) 확인하기!!
 예시) ISDEL - 지워졌나? 0:false(안지워짐) 1:true(지워짐)
-
-코드 계통은 시퀀스 없음.
 
 */
 
 ------------------------------------------------  삭제상태 코드 ----------------------------------------------------
 -- 삭제상태 코드 정리용.. 신경 안써도 됨. 뭔가 특별한 상태값을 더 추가하고 싶으면 이용하기
+--예를들어 관리자의 블라인드 처리를 2번으로 둔다거나..
 
 create table ISDEL_TYPE (
 
@@ -218,7 +218,7 @@ commit;
 
 create table ACCOUNT (
 
-	IDX					number(8,0)
+	IDX					number(8,0)		unique
 	,ID					nchar(15)		not null unique
 	,PW					nchar(30)		not null
 	,NAME				nvarchar2(20)	not null
@@ -232,12 +232,12 @@ create table ACCOUNT (
 	,DETAILED_ADDR		nvarchar2(50)
 
 	,TYPE_CODE			number(2,0)		not null
-	,ISDEL				number(1,0)		default 0 not null
+	,ISDEL				number(1,0)		default 0
 
 	,THUMB_IMG			varchar2(200 char)
 	,REG_DATE			timestamp (0) with local time zone	not null
 
-	,constraint ACCOUNT_PK primary key (IDX)
+	,constraint ACCOUNT_PK primary key (ISDEL, IDX)
 	,constraint FK_ACC_ISDEL_TYPE foreign key (ISDEL) references ISDEL_TYPE (CODE)
 	,constraint FK_ACCOUNT_ACCTYPE foreign key (TYPE_CODE) references ACCOUNT_TYPE (CODE)
 );
@@ -261,7 +261,7 @@ end;
 
 comment on table ACCOUNT is '계정 테이블';
 
-comment on column ACCOUNT.IDX is '게정번호- 기본키, 인조식별자 - 트리거 있음';
+comment on column ACCOUNT.IDX is '게정번호- 복합기본키. 유일성(unique). 인조식별자 - 트리거 있음';
 
 comment on column ACCOUNT.ID is '계정 아이디 - null 안됨, unique';
 
@@ -283,7 +283,7 @@ comment on column ACCOUNT.DETAILED_ADDR is '세부주소';
 
 comment on column ACCOUNT.TYPE_CODE is '계정타입 - 외래키, null 안됨(식별관계)';
 
-comment on column ACCOUNT.ISDEL is '삭제 확인 코드 - 외래키 null 안됨 기본값:0';
+comment on column ACCOUNT.ISDEL is '삭제 확인 코드 - 복합기본키+ 외래키 null 안됨 기본값:0';
 
 comment on column ACCOUNT.THUMB_IMG is '썸네일 위치 디렉토리+파일 이름';
 
@@ -416,7 +416,7 @@ comment on table BUSINESS_INFO is '사업자 등록 정보 - 전체가 null안�
 
 comment on column BUSINESS_INFO.ACC_IDX is '계정번호 참조 외래키 + 복합 기본키 = 계정마다 서로 다른 여러 개의 사업자 정보를 등록 가능.';
 
-comment on column BUSINESS_INFO.BUSINESS_LICENSE_CODE is '사업자 번호 + 복합 기본키';
+comment on column BUSINESS_INFO.BUSINESS_LICENSE_CODE is '사업자 번호 - 복합 기본키';
 
 comment on column BUSINESS_INFO.CORPORATION_NAME is '법인명/단체명';
 
@@ -451,13 +451,14 @@ comment on column BUSINESS_INFO.IDX is '인덱스 - not null unique : 후보키 
 
 
 ---------------------------------------------- 카테고리 노드 ----------------------------------------------------
+-- 개별 카테고리 타입 개체. 예시: '사람' '당근' '채소' '과일'..
 
 create table CATEGORY (
 
 	IDX					number(3,0)
 	,NAME				nvarchar2(15) not null
 	,DESCRIPTION		nvarchar2(1000)
-	
+
 	,constraint CATEGORY_PK primary key (IDX)
 );
 
@@ -489,7 +490,7 @@ comment on column CATEGORY.DESCRIPTION is '카테고리 노드 설명';
 
 
 ---------------------------------------------- 카테고리 맵 ----------------------------------------------
--- 트리가 아니라 그래프 구조로 바꿈. 순환구조 허용됨.
+-- 카테고리 타입 관 관계의 표현. 트리가 아니라 그래프 구조로 바꿈. 순환구조 허용됨.
 
 create table CATEGORY_MAP (
 
@@ -518,12 +519,13 @@ comment on column CATEGORY_MAP.DESCRIPTION is '관계 설명';
 
 
 ---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
+--그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.
 
 ---------------------------------------------- 판매글 (거래 중개) ----------------------------------------------------
 
 create table SALE(
 
-	IDX				number(10,0)
+	IDX				number(10,0)	unique
 	,ACC_IDX		number(8,0)		not null
 	,TITLE			nvarchar2(40)	not null
 	,ORIGIN			nvarchar2(60)	not null
@@ -532,7 +534,7 @@ create table SALE(
 	,WRITTEN_TIME	timestamp (0) with local time zone	not null
 	,LAST_EDITED	timestamp (0) with local time zone
 
-	,CONTENT		nvarchar2(1000)
+	,CONTENT		nvarchar2(2000)
 
 	,FACE_IMG		varchar2(200 char)
 	,MAIN_IMG		varchar2(200 char)
@@ -540,13 +542,17 @@ create table SALE(
 -- 아래는 평균점수, 쿼리를 편하게 처리하기 위해 추가할 만한 중복 데이터. 쓰려면 주석해제하고 쓰기. 트리거 이용 금지(삭제시 문제유발). procedure을 이용하거나 application에서 무결성을 지키기 위한 로직 만들기.
 --	,AVG_SCORE		number(3,2)
 
-	,ISDEL			number(1,0) default 0 not null
+	,ISDEL			number(1,0) default 0
+--	,DEL_TIME		timestamp (0) with local time zone
 -- 이렇게 삭제 처리시 옵션도 같이 삭제처리를 이렇게 하고 조회를 막아야함. (필요하면 VIEW를 만들어 사용)
-	,constraint SALE_PK primary key (IDX)
+
+	,constraint SALE_PK primary key (IDX, ISDEL)
 	,constraint FK_SALE_ACC_IDX foreign key (ACC_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_SALE_ISDEL_TYPE foreign key (ISDEL) references ISDEL_TYPE (CODE)
 	,constraint SALE_HIT_CHECKER check (HIT>=0)
 );
+
+create index SALE_ISDEL_ACC_IDX on SALE (ISDEL, ACC_IDX);
 
 create sequence SALE_SEQ start with 1 increment by 1;
 
@@ -565,7 +571,7 @@ end;
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, WRITTEN_TIME 가 없을 때 시스템 시간을 넣음
 
 create trigger SALE_LAST_EDITED_TRG
-	before update on SALE
+	before update of TITLE, ORIGIN, CONTENT, FACE_IMG, MAIN_IMG on SALE
 	for each row
 begin
 	:NEW.LAST_EDITED := SYSTIMESTAMP;
@@ -576,7 +582,7 @@ end;
 
 comment on table SALE is '판매 목록';
 
-comment on column SALE.IDX is '판매글 번호 - 기본키 인조식별자. 트리거 있음';
+comment on column SALE.IDX is '판매글 번호 - 복합기본키. 유일성. 인조식별자. 트리거 있음';
 
 comment on column SALE.ACC_IDX is '판매글 올린이 idx - 외래키 null안됨 : 식별관계';
 
@@ -598,12 +604,15 @@ comment on column SALE.MAIN_IMG is '본문이미지 파일 위치 (디렉토리�
 
 --comment on column SALE.AVG_SCORE is '평균점수 - 중복데이터, 무결성 주의';
 
-comment on column SALE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, null안됨';
+comment on column SALE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, 기본값:0, null안됨';
+
+--comment on column SALE.DEL_TIME is '삭제시간 처리용 속성';
 
 
 --drop trigger SALE_LAST_EDITED_TRG;
 --drop trigger SALE_TRG;
 --drop sequence SALE_SEQ;
+--drop index SALE_ISDEL_ACC_IDX;
 --drop table SALE cascade constraints;
 
 
@@ -636,7 +645,7 @@ comment on column SALE_HIT.ACCOUNT_IDX is '계정번호 - 복합기본키 + 외�
 create table SALE_OPTION (
 
 	SALE_IDX		number(10,0)
-	,NAME			nvarchar2(25)
+	,NAME			char(25)
 	,DESCRIPTION	nvarchar2(200)
 
 	,PRICE			number(7,0)		not null
@@ -650,14 +659,14 @@ create table SALE_OPTION (
 	,WRITTEN_TIME	timestamp(0) with local time zone not null
 	,LAST_EDITED	timestamp(0) with local time zone
 
-	,ISDEL			number(1,0)		default 0 not null
+	,ISDEL			number(1,0)		default 0
 
-	,constraint SALE_OPTION_PK primary key (SALE_IDX, NAME)
+	,constraint SALE_OPTION_PK primary key (ISDEL, SALE_IDX, NAME)
+	,constraint SALE_OPTION_UNIQUE unique (SALE_IDX, NAME)
 	,constraint FK_SALE_OPT_SALE foreign key (SALE_IDX) references SALE (IDX) on delete cascade
 	,constraint FK_SALE_OPT_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 	,constraint SALE_OPT_PRICE_CHECK check ( PRICE > 0 )
 	,constraint SALE_OPT_AMOUNT_CHECK check ( START_AMOUNT > 0 and LEFT_AMOUNT >= 0 )
-
 );
 
 create trigger SALE_OPTION_WRITTENTIME_TRG
@@ -683,9 +692,9 @@ end;
 
 comment on table SALE_OPTION is '판매 옵션 목록 테이블';
 
-comment on column SALE_OPTION.SALE_IDX is '판매글 번호 - 복합기본키 + 외래키 판매글번호 참조 : 식별관계';
+comment on column SALE_OPTION.SALE_IDX is '판매글 번호 - 복합기본키 + 외래키 (판매글.글번호) + 복합유일성(이름,판매글번호)';
 
-comment on column SALE_OPTION.NAME is '판매 옵션 이름 - 복합기본키 : 같은 판매글에 같은 이름의 옵션 불허 - 만약 허용하려면 인조식별자 쓰기';
+comment on column SALE_OPTION.NAME is '판매 옵션 이름 - 복합기본키 : 같은 판매글에 같은 이름의 옵션 불허(중요!) - 만약 허용하려면 인조식별자 쓰기 (변경 필요시 미리 말해주세요)';
 
 comment on column SALE_OPTION.DESCRIPTION is '판매 옵션 설명';
 
@@ -717,7 +726,7 @@ comment on column SALE_OPTION.ISDEL is '삭제 확인 코드 - 외래키, 기본
 create table SALE_OPT_CATEGORY (
 
 	SALE_IDX			number(10,0)
-	,OPT_NAME			nvarchar2(25)
+	,OPT_NAME			char(25)
 	,CATEGORY_IDX		number(3,0)
 
 	,constraint SALE_OPT_CAT_PK primary key (SALE_IDX, OPT_NAME, CATEGORY_IDX)
@@ -821,7 +830,7 @@ end;
 create table SALE_INQUIRE(
 
 	IDX				number(11,0)
-	,SALE_IDX		number(10,0)		not null
+	,SALE_IDX		number(10,0)
 	,WRITER_IDX		number(8,0)		not null
 
 	,TITLE			nvarchar2(40)	not null
@@ -831,9 +840,10 @@ create table SALE_INQUIRE(
 	,ANSWER			nvarchar2(2000)
 	,ANSWER_TIME	timestamp (0) with local time zone
 
-	,ISDEL			number(1,0)		default 0 not null
+	,ISDEL			number(1,0)		default 0
 
-	,constraint SALE_INQUIRE_PK primary key (IDX)
+	,constraint SALE_INQUIRE_PK primary key (ISDEL, SALE_IDX, IDX)
+	,constraint SALE_INQ_UNIQUE unique (IDX, SALE_IDX)
 	,constraint FK_SALE_INQUIRE_SALE_IDX foreign key (SALE_IDX) references SALE (IDX) on delete cascade
 	,constraint FK_SALE_INQUIRE_ACC_IDX foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_SALE_INQUIRE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
@@ -868,9 +878,9 @@ end;
 
 comment on table SALE_INQUIRE is '판매글에 대한 문의글';
 
-comment on column SALE_INQUIRE.IDX is '판매 문의 번호 - 인조식별자, 기본키';
+comment on column SALE_INQUIRE.IDX is '판매 문의 번호 - 인조식별자, 복합기본키. 복합유일성(판매글+문의글번호)';
 
-comment on column SALE_INQUIRE.SALE_IDX is '대상 판매글 - 외래키 (판매글.IDX). null 안됨';
+comment on column SALE_INQUIRE.SALE_IDX is '대상 판매글 - 외래키 (판매글.IDX). 복합기본키. 복합유일성(판매글+문의글번호)';
 
 comment on column SALE_INQUIRE.WRITER_IDX is '글쓴이 - 외래키 (계정.IDX). null 안됨';
 
@@ -884,7 +894,7 @@ comment on column SALE_INQUIRE.ANSWER is '응답 - 당연히 해당 글이 속�
 
 comment on column SALE_INQUIRE.ANSWER_TIME is '응답 시각 - 트리거 있음';
 
-comment on column SALE_INQUIRE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, null안됨';
+comment on column SALE_INQUIRE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, 복합기본키';
 
 
 --drop trigger SALE_INQUIRE_ANSWER_TRG;
@@ -901,7 +911,7 @@ create table CART (
 	IDX				number(9,0) not null unique
 	,ACC_IDX		number(8,0)
 	,SALE_IDX		number(10,0)
-	,SALE_OPT_NAME	nvarchar2(25)
+	,SALE_OPT_NAME	char(25)
 	,COUNT			number(7,0)		not null
 	
 	,ADDED_TIME		timestamp(0) with local time zone
@@ -931,7 +941,7 @@ end;
 
 comment on table CART is '장바구니';
 
-comment on column CART.IDX is '식별번호 - 후보키 인조식별자. 순전히 쿼리를 쉽게 하기 위한 도구로 넣음';
+comment on column CART.IDX is '식별번호 - 후보키(null안됨+유일) 인조식별자. 순전히 쿼리를 쉽게 하기 위한 도구로 넣음. 그냥 기본키를 이용하는걸 더 추천..';
 
 comment on column CART.ACC_IDX is '계정번호 - 복합기본키 + 외래키 (계정.계정번호)';
 
@@ -939,7 +949,7 @@ comment on column CART.SALE_IDX is '해당 옵션의 판매글 번호 - 복합�
 
 comment on column CART.SALE_OPT_NAME is '해당 옵션의 이름 - 복합기본키 + 외래키 (판매옵션.옵션이름)';
 
-comment on column CART.COUNT is '갯수, 실제 남은 숫자는 비교를 안하니 조심. - application에서 무결성을 확인 해야 하는 부분';
+comment on column CART.COUNT is '갯수, 실제 남은 숫자는 비교를 안하니 조심!. - application에서 무결성을 확인 해야 하는 부분 (예외처리 사항)';
 
 comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 
@@ -1062,7 +1072,7 @@ comment on column AUCTION_STATE_TYPE.DESCRIPTION is '설명';
 
 create table AUCTION (
 
-	IDX						number(10,0)
+	IDX						number(10,0)		unique
 	,WRITTER_IDX			number(8,0)			not null
 
 	,REG_TIME				timestamp(3) with local time zone	not null
@@ -1073,17 +1083,19 @@ create table AUCTION (
 	,CONTENT				nvarchar2(2000)		not null
 	,ITEM_IMG				varchar2(200 char)	not null
 
-	,STATE_CODE				number(2,0)			not null
+	,STATE_CODE				number(2,0)
 
 --	,HIGHEST_BID				number(11,0)
 -- 처리의 편의를 위한 중복값, 넣을까 고민중
 
-	,constraint AUCTION_PK primary key (IDX)
+	,constraint AUCTION_PK primary key (STATE_CODE, IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint AUCTION_DUE_TYPE_FK	foreign key (DUE_TIME_CODE) references AUCTION_DUE_TYPE (CODE)
 	,constraint AUCTION_STATE_FK foreign key (STATE_CODE) references AUCTION_STATE_TYPE (CODE)
 	,constraint AUCTION_PRICE_CHECK check (START_PRICE >0)
 );
+
+create index AUCTION_ISDEL_ACC_IDX on AUCTION (STATE_CODE, WRITTER_IDX);
 
 create sequence AUCTION_SEQ start with 1 increment by 1;
 
@@ -1105,7 +1117,7 @@ end;
 
 comment on table AUCTION is '경매';
 
-comment on column AUCTION.IDX is '경매번호 - 기본키, 인조식별자. 트리거 있음';
+comment on column AUCTION.IDX is '경매번호 - 유일성. 복합기본키, 인조식별자. 트리거 있음';
 
 comment on column AUCTION.WRITTER_IDX is '작성자 인덱스 - 외래키. null 불가';
 
@@ -1121,13 +1133,14 @@ comment on column AUCTION.CONTENT is '글내용 - null 불가';
 
 comment on column AUCTION.ITEM_IMG is '경매물품 사진 - null 불가';
 
-comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외래키. null불가. 트리거 있음';
+comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 복합기본키. 외래키. 트리거 있음';
 
 --comment on column AUCTION.HIGHEST_BID is '최고 입찰액 - 중복값, 처리의 편의를 위해 넣을까 하는 속성';
 
 
 --drop trigger AUCTION_IDX_REGT_TRG;
 --drop sequence AUCTION_SEQ;
+--drop index AUCTION_ISDEL_ACC_IDX;
 --drop table AUCTION cascade constraints;
 
 
@@ -1135,8 +1148,8 @@ comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외
 
 create table AUCTION_CATEGORY_MAP (
 
-	AUCTION_IDX
-	,CATEGORY_IDX
+	AUCTION_IDX		number(10,0)
+	,CATEGORY_IDX	number(3,0)
 
 	,constraint AUCTION_CATEGORY_MAP_PK primary key (AUCTION_IDX, CATEGORY_IDX)
 );
@@ -1153,6 +1166,41 @@ comment on column AUCTION_CATEGORY_MAP.CATEGORY_IDX is '카테고리 노드 번�
 
 
 -----------------------------------------------  경매 물품 이미지 -------------------------------------------------------
+
+-----------------------------------------------  경매 만료 대기열  -------------------------------------------------------
+
+create table AUCTION_DUE_QUE (
+
+	AUCTION_IDX		number(10,0)
+	,DUE_TIME		timestamp(3)
+
+	,constraint AUCTION_DUE_QUE_PK primary key (AUCTION_IDX)
+	,constraint AUCTION_DUE_QUE_FK foreign key (AUCTION_IDX) references AUCTION (IDX)
+);
+
+create index AUCTION_DUE_QUE_INDEX on AUCTION_DUE_QUE (DUE_TIME desc);
+
+create trigger AUCTION_DUE_QUE_TRG
+	after insert on AUCTION
+	for each row
+begin
+	insert into AUCTION_DUE_QUE (AUCTION_IDX, DUE_TIME) values ( :NEW.IDX, :NEW.REG_TIME + (select DUE_TIME from AUCTION_DUE_TYPE where CODE = :NEW.DUE_TIME_CODE) );
+end;
+/
+--트리거 설명: 경매 등록시 만료 대기열에 자동으로 만료시간을 계산하여 등록.
+
+comment on AUCTION_DUE_QUE is '만료 처리를 위해 만료되지 않은 경매들을 모아둔 테이블. 스케쥴러든 타이머든 써서 이 대기열을 처리.';
+
+comment on AUCTION_DUE_QUE.AUCTION_IDX is '대상 경매 인덱스. 기본키 + 외래키';
+
+comment on AUCTION_DUE_QUE.DUE_TIME is '예정 만료시각 - 트리거 있음';
+
+
+-----------------------------------------------  경매 낙찰 대기열  -------------------------------------------------------
+--낙찰 처리를 하기 위해 낙찰 대기중인 경매만 모아둔 테이블. 여기서 확인하고 
+
+
+
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
 
@@ -1187,21 +1235,23 @@ comment on column BID_STATE_TYPE.DESCRIPTION is '경매 상태 설명';
 
 create table BID (
 
-	IDX				number(12,0)
-	,AUCTION_IDX	number(10,0)	not null
-	,BIDDER_IDX		number(8,0)		not null
-	,AMOUNT			number(11,0)	not null
+	IDX				number(12,0)	not null unique
+	,AUCTION_IDX	number(10,0)
+	,BIDDER_IDX		number(8,0)
+	,AMOUNT			number(11,0)
 
 	,STATE_CODE		number(2,0)		not null
 
 	,BID_TIME		timestamp(3) with local time zone not null
 
-	,constraint BID_PK primary key (IDX)
+	,constraint BID_PK primary key (AUCTION_IDX, BIDDER_IDX, AMOUNT)
 	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
 	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
 );
+
+create index BID_BIDDER_STATE_INDEX on BID (AUCTION_IDX, STATE_CODE);
 
 create sequence BID_SEQ start with 1 increment by 1;
 
@@ -1223,13 +1273,13 @@ end;
 
 comment on table BID is '입찰 테이블';
 
-comment on column BID.IDX is '입찰번호 - 기본키, 인조식별자. 트리거 있음';
+comment on column BID.IDX is '입찰번호 - 후보키. 인조식별자. 트리거 있음. 삭제나 수정 처리시 쉽게 접근하기 위한 속성, 안쓰는게 더 나은 방법이긴 한데, 써도 무방.';
 
-comment on column BID.AUCTION_IDX is '대상 경매 번호 - 외래키. null불가';
+comment on column BID.AUCTION_IDX is '대상 경매 번호 - 복합기본키. 외래키.';
 
-comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키. null불가';
+comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 복합기본키. 외래키.';
 
-comment on column BID.AMOUNT is '입찰액 - null불가. 0이상';
+comment on column BID.AMOUNT is '입찰액 - 복합기본키. 0이상';
 
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. null불가. 트리거 있음';
 
@@ -1268,13 +1318,33 @@ comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 
 -----------------------------------------------  구매 영수증  -------------------------------------------------------
 
-
+/*
+누가 : 산 계정
+언제 : 시간저장
+어디서:
+무엇음:	입찰 구입(보증금)
+		일반 판매 구입
+		경매 물품 구입
+			죄다 외부 테이블로 빼야할듯..
+				일반구입: 일반구매 내역 테이블 만들기
+				입찰 구입: 그냥 입찰 자체를 이용
+				경매 물품 대금: 추가 외부 테이블
+어떻게: 지불타입
+왜: 필요없어
+영수증에 상태값 - 구매전 구매후 환불전 환불후
+*/
 
 -----------------------------------------------  배송  -------------------------------------------------------
 
-
-
-
+/*
+누가: 배송을 보낼 계정 + 받을계정
+언제: 배송시작시간 + 만료시간(만료시간도 테이블)
+어디서:
+무엇을:	입반구입
+		경매 물품 구입
+어떻게: 배송타입 추가???
+왜: 필요없어
+*/
 
 ------------------------------------------------  쪽지 타입 -------------------------------------------------
 -- 일단 쪽지 조회를 쉽게 처리하기 위해 넣은 테이블. 추가적인 타입을 지정하면서 여러 용도로 사용 가능
@@ -1309,9 +1379,9 @@ comment on column MESSAGE_TYPE.DESCRIPTION is '쪽지 타입 설명';
 
 create table MESSAGE (
 
-	IDX					number(12,0)
+	IDX					number(12,0)		unique
 	,SENDER_IDX			number(8,0)			not null
-	,RECEIVER_IDX		number(8,0)			not null
+	,RECEIVER_IDX		number(8,0)
 
 	,TITLE				nvarchar2(200)		not null
 	,CONTENT			nvarchar2(1000)
@@ -1322,14 +1392,16 @@ create table MESSAGE (
 
 	,TYPE_CODE			number(2,0)			default 0 not null
 
-	,ISDEL				number(1,0)			default 0 not null
+	,ISDEL				number(1,0)			default 0
 
-	,constraint MESSAGE_PK primary key (IDX)
+	,constraint MESSAGE_PK primary key (ISDEL, RECEIVER_IDX, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
 	,constraint FK_MESSAGE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
+
+create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (ISDEL, SENDER_IDX);
 
 create sequence MESSAGE_SEQ start with 1 increment by 1;
 
@@ -1350,11 +1422,11 @@ end;
 
 comment on table MESSAGE is '쪽지';
 
-comment on column MESSAGE.IDX is '쪽지번호 - 기본키, 인조식별자';
+comment on column MESSAGE.IDX is '쪽지번호 - 유일성. 복합기본키, 인조식별자';
 
 comment on column MESSAGE.SENDER_IDX is '보낸사람 - 외래키 (계정.계정번호) null안됨';
 
-comment on column MESSAGE.RECEIVER_IDX is '받는사람 - 외래키 (계정.계정번호) null안됨';
+comment on column MESSAGE.RECEIVER_IDX is '받는사람 - 복합기본키. 외래키 (계정.계정번호)';
 
 comment on column MESSAGE.TITLE is '제목 - null 안됨';
 
@@ -1368,7 +1440,7 @@ comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확�
 
 comment on column MESSAGE.TYPE_CODE is '메세지 타입 - 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 외래키, 기본값:0, null안됨';
+comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, 기본값:0';
 
 
 --drop trigger MESSAGE_TRG;
@@ -1492,6 +1564,21 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드 - 외래키, 기�
 --drop table TODAYS_FARMER cascade constraints;
 
 
+------------------------------------------------  오늘의 농부 추천(보류: 일단 추천식으로 가정)  ----------------------------------------------------
+/*
+create table TODAYS_FARMER_RECOMMEND (
+
+	RECOMMEND_ACC			number(8,0)
+	,TODAYS_FARMER_IDX		number(8,0)
+	
+	,constraint TODAYS_FARM_RECOMM_PK primary key (RECOMMEND_ACC, TODAYS_FARMER_IDX)
+	,constraint FK_TODAYS_FARM_REC_ACC foreign key (RECOMMEND_ACC) references ACCOUNT (IDX) on delete cascade
+	,constraint FK_TODAYS_FARM_RECOMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
+);
+
+--drop table TODAYS_FARMER_RECOMMEND cascade constraints;
+*/
+
 ------------------------------------------------  오늘의 농부 픽(관리자의 메인 노출 설정)  ----------------------------------------------------
 --갯수 조절 안됨, 예외처리 사항이라 일단은 그냥 둠.
 
@@ -1512,26 +1599,12 @@ comment on column TODAYS_FARMER_PICK.FARM_ACC_IDX is '선택된 오늘의 농부
 --drop table TODAYS_FARMER_PICK cascade constraint;;
 
 
-------------------------------------------------  오늘의 농부 추천(보류: 일단 추천식으로 가정)  ----------------------------------------------------
-/*
-create table TODAYS_FARMER_RECOMMEND (
-
-	RECOMMEND_ACC			number(8,0)
-	,TODAYS_FARMER_IDX		number(8,0)
-	
-	,constraint TODAYS_FARM_RECOMM_PK primary key (RECOMMEND_ACC, TODAYS_FARMER_IDX)
-	,constraint FK_TODAYS_FARM_REC_ACC foreign key (RECOMMEND_ACC) references ACCOUNT (IDX) on delete cascade
-	,constraint FK_TODAYS_FARM_RECOMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
-);
-
---drop table TODAYS_FARMER_RECOMMEND cascade constraints;
-*/
 ------------------------------------------------  오늘의 농부 댓글 ----------------------------------------------------
 
 create table TODAYS_FARMER_COMMENT (
 
-	IDX						number(10,0)
-	,TODAYS_FARMER_IDX		number(8,0)		not null
+	IDX						number(10,0)	unique
+	,TODAYS_FARMER_IDX		number(8,0)
 	,WRITER_IDX				number(8,0)		not null
 	,CONTENT				nvarchar2(400)	not null
 
@@ -1542,7 +1615,7 @@ create table TODAYS_FARMER_COMMENT (
 
 	,ISDEL					number(1,0) default 0 not null
 
-	,constraint TODAYS_FARM_COMM_PK primary key (IDX)
+	,constraint TODAYS_FARM_COMM_PK primary key (TODAYS_FARMER_IDX, IDX)
 	,constraint FK_TODAYS_FARM_COMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 	,constraint FK_FARM_COMM_WRITER foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_TODAYS_FARM_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
@@ -1578,9 +1651,9 @@ end;
 
 comment on table TODAYS_FARMER_COMMENT is '오늘의 농부 댓글';
 
-comment on column TODAYS_FARMER_COMMENT.IDX is '오늘의 농부 댓글번호 - 기본키, 인조식별자';
+comment on column TODAYS_FARMER_COMMENT.IDX is '오늘의 농부 댓글번호 - 유일성. 복합기본키, 인조식별자';
 
-comment on column TODAYS_FARMER_COMMENT.TODAYS_FARMER_IDX is '오늘의 농부 글번호 - 외래키. null 안됨';
+comment on column TODAYS_FARMER_COMMENT.TODAYS_FARMER_IDX is '오늘의 농부 글번호 - 복합기본키. 외래키.';
 
 comment on column TODAYS_FARMER_COMMENT.WRITER_IDX is '글쓴이 - 외래키 null안됨';
 
@@ -1677,8 +1750,6 @@ create table SITE_MAIN_AUCTION (
 );
 
 
-
-
 --drop table SITE_MAIN_AUCTION cascade constraints;
 
 
@@ -1716,11 +1787,11 @@ comment on column SITE_IMG_TYPE.DESCRIPTION is '사이트 이미지 타입 설�
 
 create table SITE_IMG_SETTING (
 
-	IDX					number(4,0)
-	,TYPE_CODE			number(2,0)	not null
-	,IMG_LOCATION		varchar2(200 char) not null
+	IDX					number(4,0)			unique
+	,TYPE_CODE			number(2,0)			not null
+	,IMG_LOCATION		varchar2(200 char)	not null
 	
-	,constraint SITE_IMG_SET_PK primary key (IDX)
+	,constraint SITE_IMG_SET_PK primary key (TYPE_CODE, IDX)
 	,constraint SITE_IMGSET_TYPE_FK foreign key (TYPE_CODE) references SITE_IMG_TYPE (CODE)
 );
 
@@ -1739,11 +1810,12 @@ end;
 
 comment on table SITE_IMG_SETTING is '사이트 형상(이미지) 관리';
 
-comment on column SITE_IMG_SETTING.IDX is '이미지 번호';
+comment on column SITE_IMG_SETTING.IDX is '이미지 번호 - 복합기본키. 유일성.';
 
-comment on column SITE_IMG_SETTING.TYPE_CODE is '이미지 타입';
+comment on column SITE_IMG_SETTING.TYPE_CODE is '이미지 타입 - 복합기본키. 외래키(이미지타입.코드)';
 
 comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + 파일이름) 원래 이름은 쓸데 없을듯, UUID 사용하기';
+
 
 --drop trigger SITE_IMG_TRG;
 --drop sequence SITE_IMG_SEQ;
