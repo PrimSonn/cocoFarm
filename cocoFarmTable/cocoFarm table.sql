@@ -91,7 +91,7 @@ drop sequence SALE_INQUIRE_SEQ;
 drop table SALE_INQUIRE cascade constraints;
 
 drop trigger SALE_OPT_CAT_UPDATE_TRG;
-drop trigger SALE_OPT_INSERT_TRG;
+drop trigger SALE_OPT_CAT_INSERT_TRG;
 drop table SALE_OPT_CATEGORY cascade constraints;
 
 drop trigger SALE_OPT_INSERT_TRG;
@@ -528,7 +528,7 @@ create table CATEGORY_MAP (
 	,constraint PROD_CAT_MAP_CHECKER check (SUPER_CATEGORY <> SUB_CATEGORY)
 );
 
-insert into CATEGORY_MAP (SUPER_CATEGORY, SUB_CATEGORY, DESCRIPTION) values (-1, 0, '혹시 카테고리 계층 구현중 문제가 없도록 넣어두는 기본값')
+insert into CATEGORY_MAP (SUPER_CATEGORY, SUB_CATEGORY, DESCRIPTION) values (-1, 0, '혹시 카테고리 계층 구현중 문제가 없도록 넣어두는 기본값');
 
 comment on table CATEGORY_MAP is '카테고리 맵 (카테고리간 관계 설정)';
 
@@ -725,7 +725,7 @@ create trigger SALE_OPT_SALE_EDIT_TRG
 	after update of LAST_EDITED on SALE_OPTION
 	for each row
 begin
-	update SALE set LAST_EDITED = SYSTIMESTAMP where SALE_IDX = :NEW.SALE_IDX;
+	update SALE set LAST_EDITED = SYSTIMESTAMP where IDX = :NEW.SALE_IDX;
 end;
 /
 --트리거 설명: 판매옵션 마지막 수정시각을 변경하거나 추가하면, 판매글의 마지막 수정시각도 변경.
@@ -733,9 +733,12 @@ end;
 create trigger SALE_OPT_INSERT_TRG
 	before insert on SALE_OPTION
 	for each row
+declare
+    COUNTER number;
 begin
-	if ((select count(1) from SALE_OPTION where SALE_IDX = :NEW.SALE_IDX) > 0) then
-		update SALE set LAST_EDITED = SYSTIMESTAMP where SALE_IDX = :NEW.SALE_IDX;
+    select count(1) into COUNTER from SALE_OPTION where SALE_IDX = :NEW.SALE_IDX ;
+	if (COUNTER > 0) then
+		update SALE set LAST_EDITED = SYSTIMESTAMP where IDX = :NEW.SALE_IDX;
 	end if;
 end;
 /
@@ -794,17 +797,20 @@ create trigger SALE_OPT_CAT_UPDATE_TRG
 	after update of CATEGORY_IDX on SALE_OPT_CATEGORY
 	for each row
 begin
-	update SALE_OPTION set LAST_EDITED = SYSTIMESTAMP where SALE_IDX = :NEW.SALE_IDX and NAME = :NEW.OPT_NAME;
+	update SALE_OPTION set LAST_EDITED = SYSTIMESTAMP where IDX = :NEW.SALE_OPT_IDX;
 end;
 /
 --트리거 설명: 카테고리 수정시 해당 옵션의 마지막 수정시각 수정.
 
-create trigger SALE_OPT_INSERT_TRG
+create trigger SALE_OPT_CAT_INSERT_TRG
 	before insert on SALE_OPT_CATEGORY
 	for each row
+declare
+	COUNTER number;
 begin
-	if( (select count(1) from SALE_OPT_CATEGORY where SALE_IDX = :NEW.SALE_IDX and OPT_NAME = :NEW.OPT_NAME) >0) then
-		update SALE_OPTION set LAST_EDITED = SYSTIMESTAMP where SALE_IDX = :NEW.SALE_IDX and NAME = :NEW.OPT_NAME;
+	select count(1) into COUNTER from SALE_OPT_CATEGORY where SALE_OPT_IDX = :NEW.SALE_OPT_IDX;
+	if( COUNTER >0) then
+		update SALE_OPTION set LAST_EDITED = SYSTIMESTAMP where IDX = :NEW.SALE_OPT_IDX;
 	end if;
 end;
 /
@@ -819,7 +825,7 @@ comment on column SALE_OPT_CATEGORY.CATEGORY_IDX is '카테고리 노드 번호 
 
 
 --drop trigger SALE_OPT_CAT_UPDATE_TRG;
---drop trigger SALE_OPT_INSERT_TRG;
+--drop trigger SALE_OPT_CAT_INSERT_TRG;
 --drop table SALE_OPT_CATEGORY cascade constraints;
 
 
@@ -1355,7 +1361,7 @@ comment on column BID_STATE_TYPE.DESCRIPTION is '경매 상태 설명';
 create table BID_CONFIRM_DUE_TYPE (
 
 	CODE			number(2,0)
-	,DUE_TIME		interval day (0) to second (0)	not null
+	,DUE_TIME		interval day (3) to second (0)	not null
 	,NAME			nvarchar2(15)	not null
 	,DESCRIPTION	nvarchar2(400)
 
