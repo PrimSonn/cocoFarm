@@ -8,5 +8,28 @@
 </head>
 <body>
 <h1>Hello World!</h1>
+<hr>
+<h5>test1</h5>
+<form action='test1'method='post'>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<button type='submit'>submit</button>
+</form>
+<hr>
+<h4>test2</h4>
+<form action='test2'method='post'>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<button type='submit'>submit</button>
+</form>
+<h4>test3</h4>
+<form action='test3'method='post'>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
+	<button type='submit'>submit</button>
+</form>
 </body>
 </html>
