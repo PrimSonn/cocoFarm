@@ -82,6 +82,24 @@ public class TestController {
 		return mv;
 	}
 	
+	@RequestMapping (value="test4",method=RequestMethod.POST)
+	public ModelAndView test4(ModelAndView mv, TestDto[] testerArr) {
+		
+		if(testerArr==null) {
+			System.out.println(testerArr==null);
+		}else {
+			System.out.println(testerArr.length);
+			int i=0;
+			for(TestDto dto: testerArr) {
+				
+				System.out.println(++i + "th dto attr: "+ dto.getAttr());
+			}
+		}
+		
+		mv.setViewName("helloWorld");
+		return mv;
+	}
+	
 	@RequestMapping	(value="test1",method=RequestMethod.GET)
 	public ModelAndView testGet1(ModelAndView mv) {
 		mv.setViewName("redirect:/");
@@ -93,6 +111,10 @@ public class TestController {
 		return mv;
 	}@RequestMapping(value="test3",method=RequestMethod.GET)
 	public ModelAndView testGet3(ModelAndView mv, HttpServletRequest request) {
+		mv.setViewName("redirect:/");
+		return mv;
+	}@RequestMapping(value="test4",method=RequestMethod.GET)
+	public ModelAndView testGet4(ModelAndView mv, HttpServletRequest request) {
 		mv.setViewName("redirect:/");
 		return mv;
 	}
