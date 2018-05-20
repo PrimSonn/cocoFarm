@@ -51,16 +51,14 @@ drop table MESSAGE cascade constraints;
 
 drop table MESSAGE_TYPE cascade constraints;
 
-drop table DELIVERY_TYPE cascade constraints;
+drop table DELIVERY_STATE_TYPE cascade constraints;
 
-drop table PAYMENT_TYPE cascade constraints;
+--drop table BID_CONTRACT_QUE cascade constraints;
 
 drop trigger BID_INSERT_TRG;
 drop sequence BID_SEQ;
 drop index BID_BIDDER_STATE_INDEX;
 drop table BID cascade constraints;
-
-drop table BID_CONFIRM_DUE_TYPE cascade constraints;
 
 drop table BID_STATE_TYPE cascade constraints;
 
@@ -79,7 +77,9 @@ drop table AUCTION cascade constraints;
 
 drop table AUCTION_STATE_TYPE cascade constraints;
 
-drop table AUCTION_DUE_TYPE cascade constraints;
+drop table TIME_WINDOW_TYPE cascade constraints;
+
+drop table PAYMENT_TYPE cascade constraints;
 
 drop trigger CART_TRG;
 drop sequence CART_SEQ;
@@ -391,7 +391,7 @@ create table BUSINESS_INFO (
 
 	,TYPE_CODE						number(2,0)		default 0 not null
 
-	,BUSINESS_ADDR					nvarchar2(4)	not null
+	,BUSINESS_ADDR					nvarchar2(20)	not null
 	,BUSINESS_DETAILED_ADDR			nvarchar2(50)	not null
 
 	,HEADHQUARTER_ADDR				nvarchar2(20)	not null
@@ -1042,75 +1042,84 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 --drop table CART cascade constraints;
 
 
---------------------------------------------------------------------------------------------------
-/*
---결제 타입
-구매/입찰 구분자 코드
-경매 보증금/입찰가 구분
-배송
+---------------------------------------------- 결제 타입 -----------------------------------------------------
+-- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯?
 
-영수증
-	산사람
-	판사람
-	결제 타입
-	결제 금액
-	결제 시간
-	배송 참조
-
-경매물품
-	원래글 참조키
-	이름
-	보증금여부?
-	가격
-	환불 여부
-	환불 시간
-	
-판매물품
-	원래 옵션 참조
-	이름
-	가격
-	단위
-	개수
-	환불 여부
-	환불 시간
-*/
-
------------------------------------------------  경매 수수료 타입  -------------------------------------------------------
-
------------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
-
-create table AUCTION_DUE_TYPE (
+create table PAYMENT_TYPE (
 
 	CODE			number(2,0)
-	,DUE_TIME		interval day (3) to second (0)	not null
+	,NAME			nvarchar2(20) not null
+	,DESCRIPTION	nvarchar2(200)
 
-	,NAME			nvarchar2(15)	not null
-	,DESCRIPTION	nvarchar2(400)
-
-	,constraint AUCTION_DUE_TYPE_PK primary key (CODE)
+	,constraint PAYMENT_TYPE_PK primary key (CODE)
 );
 
 insert all
-	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일', '3일짜리 경매')
-	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일', '7일짜리 경매')
-	into AUCTION_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일', '28일짜리 경매')
-select 1 from dual;
+	into PAYMENT_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값 더미', '구현시 쓰지 않더라도 문제가 되지 않도록 넣어두는 기본값')
+select 1 from DUAL;
 
 commit;
 
 
-comment on table AUCTION_DUE_TYPE is '경매 만료시간 제어용 테이블(서브타입)';
+comment on table PAYMENT_TYPE is '결제타입(코드) 테이블';
 
-comment on column AUCTION_DUE_TYPE.CODE is '만료시간 비즈니스 코드 - 기본키';
+comment on column PAYMENT_TYPE.CODE is '결제타입 코드 -트리거나 시퀀스 없음';
 
-comment on column AUCTION_DUE_TYPE.DUE_TIME is '시간(길이) - null 안됨';
+comment on column PAYMENT_TYPE.NAME is '결제타입 코드 이름';
 
-comment on column AUCTION_DUE_TYPE.NAME is '타입 이름 - null 안됨';
-
-comment on column AUCTION_DUE_TYPE.DESCRIPTION is '타입 설명';
+comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 
 
---drop table AUCTION_DUE_TYPE cascade constraints;
+--drop table PAYMENT_TYPE cascade constraints;
+
+
+-----------------------------------------------  경매 수수료 타입  -------------------------------------------------------
+
+-----------------------------------------------  만료시간 타입  -------------------------------------------------------
+-- 프로젝트 내 구현상 상관은 업지만,, 같은 기간을 가지는 만료 타입이라도 대상이 다르면, 새로운 행을 추가하여 참조해야 함. (예를들어 경매와 입찰이 같은 3일짜리라고 해서 같은 행을 참조해서는 안됨)
+
+create table TIME_WINDOW_TYPE (
+
+	CODE				number(2,0)
+	,TIME_WINDOW		interval day (3) to second (3)	not null
+
+	,NAME				nvarchar2(15)	not null
+	,DESCRIPTION		nvarchar2(400)
+
+	,constraint TIME_WINDOW_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 경매', '3일짜리 경매 기한')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 경매', '7일짜리 경매 기한')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일 경매', '28일짜리 경매 기한')
+	
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 03, 'DAY') ,'3일 입찰금 지불기한', '3일짜리 입찰금 지불기한')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (5, numtodsinterval( 04, 'DAY') ,'4일 입찰금 지불기한', '4일짜리 입찰금 지불기한')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (6, numtodsinterval( 05, 'DAY') ,'5일 입찰금 지불기한', '5일짜리 입찰금 지불기한')
+	
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (7, numtodsinterval( 05, 'DAY') ,'5일 내 배송 시작', '배송시작 요구를 한 뒤 5일 안에 배송이 시작되어야 함')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (8, numtodsinterval( 07, 'DAY') ,'7일 내 배송 시작', '배송시작 요구를 한 뒤 7일 안에 배송이 시작되어야 함')
+	
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (9, numtodsinterval( 07, 'DAY') ,'7일 내 수령완료', '배송 시작이 확인된 후 7일 이내 수령확인을 해야 함')
+	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (10, numtodsinterval( 10, 'DAY') ,'10일 내 수령완료', '배송 시작이 확인된 후 10일 이내 수령확인을 해야 함')
+select 1 from DUAL;
+
+commit;
+
+
+comment on table TIME_WINDOW_TYPE is '만료시간 제어용 테이블(일종의 서브타입 묶음)';
+
+comment on column TIME_WINDOW_TYPE.CODE is '만료시간 비즈니스 코드 - 기본키';
+
+comment on column TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
+
+comment on column TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
+
+comment on column TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
+
+
+--drop table TIME_WINDOW_TYPE cascade constraints;
 
 
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
@@ -1159,7 +1168,7 @@ create table AUCTION (
 	,WRITTER_IDX			number(8,0)			not null
 
 	,REG_TIME				timestamp(3) with local time zone	not null
-	,DUE_TIME_CODE			number(2,0)			not null
+	,TIME_WINDOW_CODE		number(2,0)			not null
 	,START_PRICE			number(9,0)			not null
 
 	,TITLE					nvarchar2(40)		not null
@@ -1173,7 +1182,7 @@ create table AUCTION (
 
 	,constraint AUCTION_PK primary key (STATE_CODE, IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
-	,constraint AUCTION_DUE_TYPE_FK	foreign key (DUE_TIME_CODE) references AUCTION_DUE_TYPE (CODE)
+	,constraint TIME_WINDOW_TYPE_FK	foreign key (TIME_WINDOW_CODE) references TIME_WINDOW_TYPE (CODE)
 	,constraint AUCTION_STATE_FK foreign key (STATE_CODE) references AUCTION_STATE_TYPE (CODE)
 	,constraint AUCTION_PRICE_CHECK check (START_PRICE >0)
 );
@@ -1188,6 +1197,9 @@ create trigger AUCTION_IDX_REGT_TRG
 begin
 	if (:NEW.IDX is null) then
 		:NEW.IDX := AUCTION_SEQ.nextval;
+	end if;
+	if (:NEW.TIME_WINDOW_CODE is null) then
+		:NEW.TIME_WINDOW_CODE := 1;
 	end if;
 	if (:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 1;
@@ -1206,7 +1218,7 @@ comment on column AUCTION.WRITTER_IDX is '작성자 인덱스 - 외래키. null 
 
 comment on column AUCTION.REG_TIME is '작성시간 - null 불가. 트리거 있음';
 
-comment on column AUCTION.DUE_TIME_CODE is '경매 기간 타입 - 외래키. null불가';
+comment on column AUCTION.TIME_WINDOW_CODE is '경매 기간 타입 - 외래키. null불가 트리거 있음(기본값:1 - 3일)';
 
 comment on column AUCTION.START_PRICE is '시작가격 - null 불가. 0이상';
 
@@ -1235,6 +1247,8 @@ create table AUCTION_CATEGORY_MAP (
 	,CATEGORY_IDX		number(3,0)
 
 	,constraint AUCTION_CATEGORY_MAP_PK primary key (AUCTION_IDX, CATEGORY_IDX)
+	,constraint AUCTION_CAT_MAP_AUCT_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
+	,constraint AUCTION_CAT_MAP_CAT_FK foreign key (CATEGORY_IDX) references CATEGORY (IDX)
 );
 
 
@@ -1251,36 +1265,39 @@ comment on column AUCTION_CATEGORY_MAP.CATEGORY_IDX is '카테고리 노드 번�
 -----------------------------------------------  경매 물품 이미지 -------------------------------------------------------
 
 -----------------------------------------------  경매 만료 대기열  -------------------------------------------------------
---일종의 중복 데이터, 만료 처리를 용이하게 하기 위한 부분.
+-- 일종의 중복 데이터, 만료 처리를 용이하게 하기 위한 부분.
+-- 경매의 상태값을 참조중 -> 경매의 상태값을 바꾸기 위해서는 이곳의 해당 경매를 참조하는 행을 삭제한 후 바꿀 수 있음 (있다면). 의도치 않게 발생한 안전장치..
+--처리방식에 따라 이런 테이블을 쓰지 않을 수도 있음.
 
 create table AUCTION_DUE_QUE (
 
-	AUCTION_IDX				number(10,0)
+	AUCTION_IDX				number(10,0)	unique
 	,AUCTION_STATE_CODE		number(2,0)
-	,DUE_TIME				timestamp(3)
+	,TIME_WINDOW			timestamp(3) with local time zone
 
 	,constraint AUCTION_DUE_QUE_PK primary key (AUCTION_STATE_CODE, AUCTION_IDX)
 	,constraint AUCTION_DUE_QUE_FK foreign key (AUCTION_STATE_CODE, AUCTION_IDX) references AUCTION (STATE_CODE, IDX) on delete cascade
 );
 
-create index AUCTION_DUE_QUE_INDEX on AUCTION_DUE_QUE (DUE_TIME desc);
+create index AUCTION_DUE_QUE_INDEX on AUCTION_DUE_QUE (TIME_WINDOW desc);
 
 create trigger AUCTION_DUE_QUE_TRG
 	after insert on AUCTION
 	for each row
 begin
-	insert into AUCTION_DUE_QUE (AUCTION_IDX, AUCTION_STATE_CODE, DUE_TIME) values ( :NEW.IDX, :NEW.STATE_CODE, :NEW.REG_TIME + (select DUE_TIME from AUCTION_DUE_TYPE where CODE = :NEW.DUE_TIME_CODE) );
+	insert into AUCTION_DUE_QUE (AUCTION_IDX, AUCTION_STATE_CODE, TIME_WINDOW) values ( :NEW.IDX, :NEW.STATE_CODE, :NEW.REG_TIME + (select TIME_WINDOW from TIME_WINDOW_TYPE where CODE = :NEW.TIME_WINDOW_CODE) );
 end;
 /
 --트리거 설명: 경매 등록시 만료 대기열에 자동으로 만료시간을 계산하여 등록.
 
+
 comment on table AUCTION_DUE_QUE is '만료 처리를 위해 만료되지 않은 경매들을 모아둔 테이블. 스케쥴러든 타이머든 써서 이 대기열을 처리.';
 
-comment on column AUCTION_DUE_QUE.AUCTION_IDX is '대상 경매 인덱스. 복합기본키 + 복합외래키';
+comment on column AUCTION_DUE_QUE.AUCTION_IDX is '대상 경매 인덱스. 복합기본키 + 복합외래키. 유일성';
 
-comment on column AUCTION_DUE_QUE.AUCTION_STATE_CODE is '대상 경매 인덱스. 복합기본키 + 복합외래키';
+comment on column AUCTION_DUE_QUE.AUCTION_STATE_CODE is '대상 경매 상태값. 복합기본키 + 복합외래키';
 
-comment on column AUCTION_DUE_QUE.DUE_TIME is '예정 만료시각 - 트리거 있음';
+comment on column AUCTION_DUE_QUE.TIME_WINDOW is '예정 만료시각 - 트리거 있음';
 
 
 --drop trigger AUCTION_DUE_QUE_TRG;
@@ -1357,41 +1374,10 @@ comment on column BID_STATE_TYPE.DESCRIPTION is '경매 상태 설명';
 
 
 -----------------------------------------------  낙찰 지불 기한 타입 - 경매 만료 후, 최고입찰의 대금의 지불 기한 타입 -------------------------------------------------------
-
-create table BID_CONFIRM_DUE_TYPE (
-
-	CODE			number(2,0)
-	,DUE_TIME		interval day (3) to second (0)	not null
-	,NAME			nvarchar2(15)	not null
-	,DESCRIPTION	nvarchar2(400)
-
-	,constraint BID_CONFIRM_DUE_TYPE_PK primary key (CODE)
-);
-
-insert all
-	into BID_CONFIRM_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 기한', '3일 안에 나머지 보증금을 제외한 입찰 대금을 지불해야 함')
-	into BID_CONFIRM_DUE_TYPE (CODE, DUE_TIME, NAME, DESCRIPTION) values (2, numtodsinterval( 04, 'DAY') ,'4일 기한', '4일 안에 나머지 보증금을 제외한 입찰 대금을 지불해야 함')
-select 1 from DUAL;
-
-commit;
-
-
-comment on table BID_CONFIRM_DUE_TYPE is '낙찰 지불 기한 타입';
-
-comment on column BID_CONFIRM_DUE_TYPE.CODE is '낙찰 지불 기한 코드';
-
-comment on column BID_CONFIRM_DUE_TYPE.DUE_TIME is '낙찰시 대금 지불 기한';
-
-comment on column BID_CONFIRM_DUE_TYPE.NAME is '낙찰 지불 기한 코드 이름';
-
-comment on column BID_CONFIRM_DUE_TYPE.DESCRIPTION is '낙찰 지불 기한 코드 설명';
-
-
---drop table BID_CONFIRM_DUE_TYPE cascade constraints;
-
-
+-- 각종 만료 기한 테이블 통합
 -----------------------------------------------  입찰  -------------------------------------------------------
 --계정 삭제 과정 처리 조심. (예외사항이라 일단은 무시함)
+--낙찰 대기열이 보류중이라 낙찰 시간을 저장하는 속성을 따로 추가해야 할 수도 있음.
 
 create table BID (
 
@@ -1401,17 +1387,24 @@ create table BID (
 	,BID_TIME				timestamp(3) with local time zone not null
 
 	,AMOUNT					number(11,0)
-	,DEPOSIT_RATIO_CODE		number(2,0)		default 1 not null
+	,DEPOSIT_RATIO_CODE		number(2,0)		not null
 
+	,DIPOSIT_AMOUNT			number(10,0)	not null
+	,DIPOSIT_PAID_NAME		nvarchar2(20)	not null
+	,DIPOSIT_PAY_TYPE_CODE	number(2,0)		not null
+	,DIPOSIT_PAY_CODE		nvarchar2(25)	not null
+
+	,CONTRACT_T_WIN_CODE	number(2,0)		not null
 	,STATE_CODE				number(2,0)		not null
-
 
 	,constraint BID_PK primary key (AUCTION_IDX, BIDDER_IDX, AMOUNT)
 	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
-	,constraint BIT_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
+	,constraint BID_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
+	,constraint BID_DIPOSIT_TYPE_FK foreign key (DIPOSIT_PAY_TYPE_CODE) references PAYMENT_TYPE (CODE)
+	,constraint BID_PAY_DUE_FK foreign key (CONTRACT_T_WIN_CODE) references TIME_WINDOW_TYPE (CODE)
 	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
-	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
+	,constraint BID_AMOUNT_CHECK check (AMOUNT >0 and DIPOSIT_AMOUNT >=0)
 );
 
 create index BID_BIDDER_STATE_INDEX on BID (AUCTION_IDX, STATE_CODE);
@@ -1425,13 +1418,25 @@ begin
 	if(:NEW.IDX is null) then
 		:NEW.IDX := BID_SEQ.nextval;
 	end if;
+	if(:NEW.DEPOSIT_RATIO_CODE is null) then
+		:NEW.DEPOSIT_RATIO_CODE :=1;
+	end if;
+	if(:NEW.DIPOSIT_PAY_TYPE_CODE is null) then
+		:NEW.DIPOSIT_PAY_TYPE_CODE :=0;
+	end if;
+	if(:NEW.DIPOSIT_PAY_CODE is null) then
+		:NEW.DIPOSIT_PAY_CODE := '외부 결제번호: 기본값';
+	end if;
+	if(:NEW.CONTRACT_T_WIN_CODE is null) then
+		:NEW.CONTRACT_T_WIN_CODE :=4;
+	end if;
 	if(:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 1;
 	end if;
 	:NEW.BID_TIME := SYSTIMESTAMP;
 end;
 /
--- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
+-- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 보증금비율 코드 삽입, 결제타입 기본값 삽입, 지불기한 코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
 
 
 comment on table BID is '입찰 테이블';
@@ -1446,7 +1451,17 @@ comment on column BID.BID_TIME is '입찰 시각 - null불가. 트리거 있음'
 
 comment on column BID.AMOUNT is '입찰액 - 복합기본키. 0이상';
 
-comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 기본값 1';
+comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 트리거 있음(기본값 1)';
+
+comment on column BID.DIPOSIT_AMOUNT is '낸 보증금 저장용 - 영수증으로서 기록을 하기 위한 부분. null 불가';
+
+comment on column BID.DIPOSIT_PAID_NAME is '보증금 결제자 이름 - null 불가';
+
+comment on column BID.DIPOSIT_PAY_TYPE_CODE is '보증금 결제 타입 - 트리거 있음(기본값0) null 불가';
+
+comment on column BID.DIPOSIT_PAY_CODE is '보증금 결제 번호 (보증금 결제시 결제정보에 있다고 가정) - 트리거 있음(기본값 : 외부결제번호:기본값). null안됨.';
+
+comment on column BID.CONTRACT_T_WIN_CODE is '낙찰시 잔여금액 지불 만료 기한 코드 - 외래키. null불가. 트리거 있음(기본값:4 - 3일내 낙찰금 지불)';
 
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. null불가. 트리거 있음';
 
@@ -1457,68 +1472,92 @@ comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. null불�
 --drop table BID cascade constraints;
 
 
------------------------------------------------  경매 낙찰 대기열  -------------------------------------------------------
---낙찰 처리를 하기 위해 낙찰 대기중인 경매만 모아둔 테이블.
+-----------------------------------------------  (보류)입찰 환불 영수증  -----------------------------------------------
 
+-----------------------------------------------  (보류 - 복구 예정)경매 낙찰 대기열  -------------------------------------------------------
+-- 처리의 용이성을 위한 중복 테이블..
+-- 낙찰 처리를 하기 위해 낙찰 대기중인 경매만 모아둔 테이블. (낙찰을 대기중인 경매와 대상 입찰 정보 + 만료시간)
+-- 어느 경매가 낙찰 대기중이며, 대기중인 대상 입찰(최고입찰) 은 ### 이다. 대기 만료시간은 ### 이다.
+-- 목록 확인, 지불기한이 만료된 입찰이 실제 대기중인 상태였는지 한번 더 확인(예외처리 사항), 지불 대기중인 입찰을 만료시키고 다음 유효 입찰(취소가 안된)을 찾기.
+-- 입찰의 상태값을 참조중 -> 잠조중인 입찰의 상태를 바꾸기 위해서는 이 테이블의 해당 입찰을 참조하는 행을 삭제한 후 바꿔야 함.
+-- 경매의 상태값을 참조중 -> 참조중인 경매의 상태를 바꾸기 위해서는 이 테이블의 해당 입찰을 참조하는 행을 삭제한 후 바꿔야 함.
+-- 경매 기본키: AUCTION_IDX + AUCTION+STATE_CODE 이긴 한데 AUCTION_IDX 가 이미 후보키(역정규화 되어 있음)
+-- 입찰 기본키: AUCTION_IDX, BIDDER_IDX, AMOUNT. 그냥 BID.IDX 만 이용할 수도 있음.
 
+-- insert 동작: 낙찰을 시작하거나, 다음 최고입찰을 찾은 경매의 최고입찰을 찾아서  해당 입찰을 그냥 insert 하면 트리거로 처리하는게 편할 듯.
+-- 이후 목록의 시간들을 확인하고 처리.
+/*
+create table BID_CONTRACT_QUE (
 
----------------------------------------------- 결제 타입 -----------------------------------------------------
--- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯?
+	AUCTION_IDX					number(10,0)	unique
+	,AUCTION_STATE_CODE			number(2,0)
+	,BID_BIDDER_IDX				number(8,0)		not null
+	,BID_AMOUNT					number(11,0)	not null
 
-create table PAYMENT_TYPE (
+	,BID_STATE_CODE				number(2,0)		not null
 
-	CODE			number(2,0)
-	,NAME			nvarchar2(20) not null
-	,DESCRIPTION	nvarchar2(200)
+	,REG_TIME					timestamp(3) with local time zone	not null
+	,PAYMENT_DUE				timestamp(3) with local time zone	not null
 
-	,constraint PAYMENT_TYPE_PK primary key (CODE)
+	,constraint BID_CONTRACT_QUE_PK primary key (AUCTION_IDX, AUCTION_STATE_CODE)
+	,constraint BID_CONTRACT_AUCT_FK foreign key (AUCTION_IDX, AUCTION_STATE_CODE) references AUCTION (IDX, STATE_CODE) on delete cascade
+	,constraint BID_CONTRACT_BID_FK foreign key (AUCTION_IDX, BID_BIDDER_IDX, BID_AMOUNT, BID_STATE_CODE) references BID (AUCTION_IDX, BIDDER_IDX, AMOUNT, STATE_CODE) on delete cascade
 );
+--마지막 외래키 수정 필요
+--insert 시킬때 동작 트리거는 일단 빼 놓음.
 
-insert all
-	into PAYMENT_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값 더미', '구현시 쓰지 않더라도 문제가 되지 않도록 넣어두는 기본값')
-select 1 from DUAL;
+comment on table BID_CONTRACT_QUE is '경매 낙찰 대기열. 모든 속성이 null 불가';
 
-commit;
+comment on column BID_CONTRACT_QUE.AUCTION_IDX is '경매 번호. 복합기본키 + 경매외래키 + 입찰외래키';
+
+comment on column BID_CONTRACT_QUE.AUCTION_STATE_CODE is '경매 상태 코드. 복합기본키 + 경매 외래키';
+
+comment on column BID_CONTRACT_QUE.BID_BIDDER_IDX is '입찰자 번호. 입찰 외래키';
+
+comment on column BID_CONTRACT_QUE.BID_AMOUNT is '입찰액. 입찰 외래키';
+
+comment on column BID_CONTRACT_QUE.BID_STATE_CODE is '입찰 상태. 입찰 외래키';
+
+comment on column BID_CONTRACT_QUE.REG_TIME is '낙찰 대기열 등록시간. 일종의 중복 데이터이지만, 등록시간을 진짜로 보여줘야 한다면 쿼리가 복잡해지기 때문에 넣음';
+
+comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기한 -> 이 테이블의 존재이유.';
 
 
-comment on table PAYMENT_TYPE is '결제타입(코드) 테이블';
+--drop table BID_CONTRACT_QUE cascade constraints;
 
-comment on column PAYMENT_TYPE.CODE is '결제타입 코드 -트리거나 시퀀스 없음';
-
-comment on column PAYMENT_TYPE.NAME is '결제타입 코드 이름';
-
-comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
-
-
---drop table PAYMENT_TYPE cascade constraints;
-
+*/
 
 -----------------------------------------------  배송 상태 타입  -------------------------------------------------------
 
-create table DELIVERY_TYPE (
+create table DELIVERY_STATE_TYPE (
 
 	CODE			number(2,0)
 	,NAME			nvarchar2(15)	not null
 	,DESCRIPTION	nvarchar2(400)
 
-	,constraint DELIVERY_TYPE_PK primary key (CODE)
+	,constraint DELIVERY_STATE_PK primary key (CODE)
 );
 
-insert into DELIVERY_TYPE(CODE, NAME, DESCRIPTION) values (0, '기본값', '구현 방식 여부와 상관 없이 배송 테이블을 이용하기 위해 넣은 기본값');
+insert into DELIVERY_STATE_TYPE(CODE, NAME, DESCRIPTION) values (0, '기본값', '구현 방식 여부와 상관 없이 배송 테이블을 이용하기 위해 넣은 기본값');
 
 commit;
 
-comment on table DELIVERY_TYPE is '배송상태 타입 비즈니스 코드 테이블';
 
-comment on column DELIVERY_TYPE.CODE is '배송상태 타입 코드';
+comment on table DELIVERY_STATE_TYPE is '배송상태 타입 비즈니스 코드 테이블';
 
-comment on column DELIVERY_TYPE.NAME is '배송상태 이름';
+comment on column DELIVERY_STATE_TYPE.CODE is '배송상태 타입 코드';
 
-comment on column DELIVERY_TYPE.DESCRIPTION is '배송상태 설명';
+comment on column DELIVERY_STATE_TYPE.NAME is '배송상태 이름';
+
+comment on column DELIVERY_STATE_TYPE.DESCRIPTION is '배송상태 설명';
 
 
---drop table DELIVERY_TYPE cascade constraints;
+--drop table DELIVERY_STATE_TYPE cascade constraints;
 
+
+-----------------------------------------------  배송 시작 만료기한  -------------------------------------------------------
+-----------------------------------------------  수령 확인 만료기한  -------------------------------------------------------
+--각종 기한에 관한 테이블을 통합
 
 -----------------------------------------------  배송  -------------------------------------------------------
 
@@ -1531,22 +1570,61 @@ comment on column DELIVERY_TYPE.DESCRIPTION is '배송상태 설명';
 어떻게: 배송타입 추가???
 		배송지
 왜:
+
+--결제 타입
+구매/입찰 구분자 코드
+경매 보증금/입찰가 구분
+배송
+
+영수증
+	산사람
+	판사람
+	결제 타입
+	결제 금액
+	결제 시간
+	배송 참조
+
+경매물품
+	원래글 참조키
+	이름
+	보증금여부?
+	가격
+	환불 여부
+	환불 시간
+	
+판매물품
+	원래 옵션 참조
+	이름
+	가격
+	단위
+	개수
+	환불 여부
+	환불 시간
 */
 
-/*----------------------------WIP
+/*
 create table DELIVERY (
 
-	SELLER_IDX
-	BUYER_IDX
-	REG_TIME
+	IDX							number(12,0)
+	,SELLER_IDX					number(8,0)
+	,BUYER_IDX					number(8,0)
+	,REG_TIME					timestamp(0)
 
-	ADDR
-	DETAILED_ADDR
+	,RECEIVER_NAME				nvarchar2(20)
+	,RECEIVER_ADDR				nvarchar2(20)
+	,RECEIVER_DETAILED_ADDR		nvarchar2(50)
+	,RECEIVER_PHONE				number(14,0)
+
+	,STATE_CODE					number(2,0)
+
+	,constraint
 );
 
-*/
+sequence
 
------------------------------------------------  배송 - 실제 배송 시작 대기열  -------------------------------------------------------
+trigger
+*/
+-----------------------------------------------  (보류)배송 - 실제 배송 시작 대기열  -------------------------------------------------------
 
 -----------------------------------------------  배송 - 수령 확인 대기열  -------------------------------------------------------
 
@@ -1967,7 +2045,7 @@ comment on column ANNOUNCEMENT.LAST_EDITED is '';
 create table SITE_MAIN_AUCTION (
 
 	AUCTION_IDX		number(10,0)
-	,REG_TIME		timestamp(0) default SYSTIMESTAMP
+	,REG_TIME		timestamp(0) with local time zone default SYSTIMESTAMP
 	
 	,constraint SITE_MAIN_AUCT_PK primary key (AUCTION_IDX)
 	,constraint FK_SITE_MAIN_AUCTION foreign key (AUCTION_IDX) references AUCTION (IDX)
