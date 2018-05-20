@@ -117,6 +117,8 @@ drop table CATEGORY cascade constraints;
 
 drop table BID_DEPOSIT_TYPE cascade constraints;
 
+drop table MAIN_RECEIPT_STATE_TYPE;
+
 drop table PAYMENT_TYPE cascade constraints;
 
 drop trigger BUSINESS_INFO_TRG;
@@ -501,9 +503,64 @@ comment on column PAYMENT_TYPE.DESCRIPTION is '결제타입 코드 설명';
 --drop table PAYMENT_TYPE cascade constraints;
 
 ---------------------------------------------- 주 영수증 상태 타입 -----------------------------------------------------
+-- 구매취소, 에러 따위를 처리. 별 의미는 없을 듯. 실제 여기까지 구현하리라 생각하지는 않지만 모양상 넣음
+-- 각종 비즈니스코드를 섞으면 절대! 안된다고 해서 그냥 이렇게 여러개로 막 뿌려둠.
+
+create table MAIN_RECEIPT_STATE_TYPE (
+
+	CODE				number(2,0)
+	,NAME				nvarchar2(15)	not null
+	,DESCRIPTION		nvarchar2(400)
+
+	,constraint MAIN_RECEIPT_TYPE_PK primary key (CODE)
+);
+
+
+comment on table MAIN_RECEIPT_STATE_TYPE is '주 영수증 상태 타입 코드 테이블';
+
+comment on column MAIN_RECEIPT_STATE_TYPE.CODE is '주 영수증 상태 코드';
+
+comment on column MAIN_RECEIPT_STATE_TYPE.NAME is '주 영수증 상태 코드 이름';
+
+comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 코드 설명';
+
+
+--drop table MAIN_RECEIPT_STATE_TYPE;
+
+
 ---------------------------------------------- 주 영수증 -----------------------------------------------------
+-- 한번의 결제에 한번 생성. 결제행위 자체를 나타냄. 개별 결제에 여러개의 판매옵션과 입찰, 낙찰 등이 묶일 수 있음
+-- + 개별 영수증의 상태 코드??
+--*********************************** WIP ****************** WIP *************** WIP
+/*
+누가 : 산 계정
+언제 : 시간저장
+어디서:
+무엇음:	입찰 구입(보증금)
+		일반 판매 구입
+		경매 물품 구입
+			죄다 외부 테이블로 빼야할듯..
+				일반구입: 일반구매 내역 테이블 만들기
+				입찰 구입: 입찰 구입 테이블 따로 만들기.
+				경매 물품 대금: 추가 외부 테이블
+어떻게: 지불타입
+왜:
+영수증의 상태값 - 구매전 구매후 환불전 환불후
+*/
 
+/*
+create table MAIN_RECEIPT (
 
+	IDX
+	BUYER
+	PAYMENT_TYPE_CODE
+	AMOUNT
+	CONTRACT_TIME
+
+	STATE_CODE
+);
+
+*/
 
 
 ---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
@@ -1121,25 +1178,6 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 --drop table CART cascade constraints;
 
 
------------------------------------------------  구매 영수증  -------------------------------------------------------
-
-/*
-누가 : 산 계정
-언제 : 시간저장
-어디서:
-무엇음:	입찰 구입(보증금)
-		일반 판매 구입
-		경매 물품 구입
-			죄다 외부 테이블로 빼야할듯..
-				일반구입: 일반구매 내역 테이블 만들기
-				입찰 구입: 입찰 구입 테이블 따로 만들기.
-				경매 물품 대금: 추가 외부 테이블
-어떻게: 지불타입
-왜:
-영수증에 상태값 - 구매전 구매후 환불전 환불후
-*/
-
-
 -----------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
 -- 각종 만료시간 처리를 하나로 합쳤다가, 절대 해서는 안되는 금기사항이라고 해서 다시 분리함..
 
@@ -1159,6 +1197,7 @@ insert all
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 경매', '7일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일 경매', '28일짜리 경매 기한')
 /*
+-- 통합 취소!!
 	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 03, 'DAY') ,'3일 입찰금 지불기한', '3일짜리 입찰금 지불기한')
 	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (5, numtodsinterval( 04, 'DAY') ,'4일 입찰금 지불기한', '4일짜리 입찰금 지불기한')
 	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (6, numtodsinterval( 05, 'DAY') ,'5일 입찰금 지불기한', '5일짜리 입찰금 지불기한')
@@ -1442,7 +1481,7 @@ comment on column CONTRACT_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 -----------------------------------------------  입찰  -------------------------------------------------------
 --계정 삭제 과정 처리 조심. (예외사항이라 일단은 무시함)
 --낙찰 대기열이 보류중이라 낙찰 시간을 저장하는 속성을 따로 추가해야 할 수도 있음.
-
+--*********************** 영수증 관련 수정 필요!
 create table BID (
 
 	IDX						number(12,0)	not null unique
@@ -1668,37 +1707,6 @@ comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 어떻게: 배송타입 추가???
 		배송지
 왜:
-
---결제 타입
-구매/입찰 구분자 코드
-경매 보증금/입찰가 구분
-배송
-
-영수증
-	산사람
-	판사람
-	결제 타입
-	결제 금액
-	결제 시간
-	배송 참조
-
-경매물품
-	원래글 참조키
-	이름
-	보증금여부?
-	가격
-	환불 여부
-	환불 시간
-	
-판매물품
-	원래 옵션 참조
-	이름
-	가격
-	단위
-	개수
-	환불 여부
-	환불 시간
-*/
 
 /*
 create table DELIVERY (
