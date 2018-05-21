@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dto.Product;
 import cocoFarm.util.Paging;
 
-@Service
 public interface ProductService {
 
 	public void insert(Product product);

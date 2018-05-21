@@ -179,22 +179,22 @@ $(document).ready(function() {
 				<div class="border">
 					<h1>농산물 판매 상품 등록 </h1>
 					<div class="border_save">
-					<form action="" method="get">
+					<form action="/product/insert.do" id="insert" method="post">
 						<table>
 						<tr>
 							<th class="td_back1">상품카테고리</th>
 							<td>
-								<SELECT class="category" name="category"  SIZE=1>
-		        					<OPTION VALUE=1 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
-		       						<OPTION VALUE=2>과일/채소</OPTION>
-		        					<OPTION VALUE=3>축산/수산</OPTION>
-		        					<OPTION VALUE=4>가공식품</OPTION>
-		    					</SELECT>
-	    					</td>
+								<SELECT class="category" name="category" SIZE=1>
+        					<OPTION VALUE=1 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
+       						<OPTION VALUE=2>과일/채소</OPTION>
+        					<OPTION VALUE=3>축산/수산</OPTION>
+        					<OPTION VALUE=4>가공식품</OPTION>
+		    				</SELECT>
+	    				</td>
 						</tr>
 						<tr>
 							<th class="td_back2">상품 제목</th>
-							<td><textarea style="resize:none;" placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)" name="title" cols="50" rows="1" 
+							<td><textarea style="resize:none;" placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)" id="title" name="title" cols="50" rows="1" 
     							onblur="onlyNumber(this)"></textarea></td>
 						</tr>
 						<tr>
@@ -204,17 +204,16 @@ $(document).ready(function() {
 						</tr>
 						<tr>
 							<th class="td_back2">대표이미지 등록하기</th>
-							<td><input type="file"></td>
+							<td><input type="file" id="faceImg" name="faceImg"></td>
 						</tr>
 						<tr>
 							<th class="td_back2">상세 설명 이미지 등록</th>
-							<td><input type="file"></td>
+							<td><input type="file" id="mainImg" name="mainImg"></td>
 						</tr>
-						
 						
 						<tr>
 							<th class="td_back2">원산지</th>
-							<td><textarea style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" name="title" cols="50" rows="1"></textarea></td>
+							<td><textarea style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" id="origin" name="origin" cols="50" rows="1"></textarea></td>
 						</tr>
 						
 						<tr>
@@ -268,7 +267,7 @@ $(document).ready(function() {
 						</script>
 						
 							<div class="save_group">
-								<div class="save_button"><a href="#">상품 등록하기</a></div>
+								<div class="save_button"><a href="#" onclick="document.getElementById('insert').submit();">상품 등록하기</a></div>
 								<div class="re_button"><a href="#">다시 작성하기</a></div>
 							</div>
 							</form>

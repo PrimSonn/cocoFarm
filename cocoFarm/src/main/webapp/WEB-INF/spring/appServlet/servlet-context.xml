@@ -13,15 +13,52 @@
 	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+
+<!-- 	<resources mapping="/resources/**,/img/**" location="/resources/,/resources/img/" /> -->
 	<resources mapping="/resources/**" location="/resources/" />
-	<resources mapping="/css/**" location="/resources/css/" />
 	<resources mapping="/img/**" location="/resources/img/" />
+	<resources mapping="/css/**" location="/resources/css/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name='order' value='2'/>
 	</beans:bean>
+	
+	
+	<!-- Apache-tiles -->
+	<beans:bean id='tilesViewResolver' class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass" value='org.springframework.web.servlet.view.tiles3.TilesView'></beans:property>
+		<beans:property name='order' value='1'/>
+	</beans:bean>
+	<beans:bean id='tilesConfigurer' class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions">
+			<beans:list>
+				<beans:value>/WEB-INF/tiles/template.xml</beans:value><!-- configuration XML -->
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	<beans:bean class='org.springframework.web.servlet.view.BeanNameViewResolver'>
+		<beans:property name='order' value='0'/>
+	</beans:bean>
+	
+<!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
+	
+<!-- 	<interceptors> -->	<!-- 나중에 인터셉터 추가시 설정. -->
+<!-- 		<interceptor> -->
+<!-- 			<mapping path="/*" /> -->	<!-- 적용 url -->
+<!-- 			<exclude-mapping path="/*"/> -->	<!-- 예외 url -->
+<!-- 			<beans:bean class="board.interceptor.BoardInterceptor" /> -->	<!-- 인터셉터 클래스 -->
+<!-- 		</interceptor> -->
+<!-- 	</interceptors> -->
+	
+	<!-- MultipartResolver -->	<!-- 다운로드 클래스(스프링 commmons) 설정-->
+<!-- 	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
+<!-- 		<beans:property name="maxInMemorySize" value='1048576' /> -->
+<!-- 		<beans:property name="maxUploadSize" value='10485760' /> -->
+<!-- 	</beans:bean> -->
 	
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 	

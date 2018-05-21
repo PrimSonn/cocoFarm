@@ -14,24 +14,18 @@ public class ProductController {
 	
 	@Autowired ProductService productService;
 	
-	@RequestMapping(value="/product/view.do", method=RequestMethod.GET)
-	public String viewList(Product product, Model model) {
-		
-		return "product/view";
+	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
+	public String insert() {
+		System.out.println("여기?");
+		return "mypage";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product) {
+		System.out.println(product.getTitle());
 		productService.insert(product);
-		
-		return "redirect:/product/view.do?";
-	}
-	
-	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
-	public String updateProduct(Product product) {
-		productService.update(product);
-		
-		return "redirect:/product/view.do?";
+		return "mypage";
+//		return "redirect:/product/insert.do?";
 	}
 	
 }
