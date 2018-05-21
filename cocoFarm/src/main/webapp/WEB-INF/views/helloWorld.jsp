@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<link rel='stylesheet' type='text/css' href='/css/tester.css'>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
@@ -9,6 +10,10 @@
 <body>
 <h1>Hello World!</h1>
 <hr>
+<div class='cssTest'>
+<h5>resources 매핑 테스트</h5>
+<img src='/imgs/etc/join01.png'>
+</div>
 <h5>test1: 스프링에서 단일 오브젝트로 그냥받게 하기</h5>
 <form action='test1'method='post'>
 	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
