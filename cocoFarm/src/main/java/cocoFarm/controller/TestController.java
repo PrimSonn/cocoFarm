@@ -13,6 +13,13 @@ import cocoFarm.dto.TestDto;
 
 @Controller
 public class TestController {
+	
+	@RequestMapping(value="main",method=RequestMethod.GET)
+	public ModelAndView mainGet(ModelAndView mv) {
+		
+		mv.setViewName("Main/cocomain");
+		return mv;
+	}
 
 	@RequestMapping(value="/",method=RequestMethod.GET)
 	public ModelAndView helloWorld(ModelAndView mv) {

@@ -14,7 +14,7 @@
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
-	<resources location="/imgs/" mapping="/imgs/**"/>
+	<resources location="/imgs/" mapping="/img/**"/>
 	<resources location="/css/" mapping="/css/**"/>
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
@@ -24,23 +24,7 @@
 		<beans:property name='order' value='2'/>
 	</beans:bean>
 	
-	
-	<!-- Apache-tiles -->
-	<beans:bean id='tilesViewResolver' class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<beans:property name="viewClass" value='org.springframework.web.servlet.view.tiles3.TilesView'></beans:property>
-		<beans:property name='order' value='1'/>
-	</beans:bean>
-	<beans:bean id='tilesConfigurer' class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
-		<beans:property name="definitions">
-			<beans:list>
-				<beans:value>/WEB-INF/tiles/template.xml</beans:value><!-- configuration XML -->
-			</beans:list>
-		</beans:property>
-	</beans:bean>
-	
-	<beans:bean class='org.springframework.web.servlet.view.BeanNameViewResolver'>
-		<beans:property name='order' value='0'/>
-	</beans:bean>
+
 	
 <!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
 	
