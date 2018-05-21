@@ -7,6 +7,14 @@
 select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
 from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
 
+select TC.TABLE_NAME, TC.COMMENTS TABLE_COMMENTS, TB.COLUMN_NAME, TB.COMMENTS COLUMN_COMMENTS, TB.DATA_TYPE, TB.DATA_LENGTH, TB.DATA_PRECISION, TB.NULLABLE, TB.DATA_DEFAULT, TB.CHARACTER_SET_NAME, TB.CHAR_LENGTH from ALL_TAB_COMMENTS TC
+full outer join
+    (select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
+    from all_tab_cols T 
+    inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME) TB
+on TC.TABLE_NAME = TB.TABLE_NAME
+where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
+
 --USER_TABLES.TABLE_NAME
 --USER_SEQUENCES.SEQUENCE_NAME
 --USER_TRIGGERS.TRIGGER_NAME
@@ -66,6 +74,8 @@ drop table CONTRACT_TIME_WINDOW_TYPE cascade constraints;
 
 drop table BID_STATE_TYPE cascade constraints;
 
+drop table BID_DEPOSITE_RECEIPT;
+
 drop trigger AUCTION_DUE_QUE_TRG;
 drop index AUCTION_DUE_QUE_INDEX;
 drop table AUCTION_DUE_QUE cascade constraints;
@@ -116,6 +126,12 @@ drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
 
 drop table BID_DEPOSIT_TYPE cascade constraints;
+
+drop trigger MAIN_RECEIPT_TRG;
+drop sequence MAIN_RECEIPT_SEQ;
+drop table MAIN_RECEIPT;
+
+drop table LIST_RECPT_STATE_TYPE;
 
 drop table MAIN_RECEIPT_STATE_TYPE;
 
@@ -515,6 +531,10 @@ create table MAIN_RECEIPT_STATE_TYPE (
 	,constraint MAIN_RECEIPT_TYPE_PK primary key (CODE)
 );
 
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값', '일단 넣는 기본값');
+
+commit;
+
 
 comment on table MAIN_RECEIPT_STATE_TYPE is '주 영수증 상태 타입 코드 테이블';
 
@@ -531,7 +551,6 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 ---------------------------------------------- 주 영수증 -----------------------------------------------------
 -- 한번의 결제에 한번 생성. 결제행위 자체를 나타냄. 개별 결제에 여러개의 판매옵션과 입찰, 낙찰 등이 묶일 수 있음
 -- + 개별 영수증의 상태 코드??
---*********************************** WIP ****************** WIP *************** WIP
 /*
 누가 : 산 계정
 언제 : 시간저장
@@ -548,24 +567,103 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 영수증의 상태값 - 구매전 구매후 환불전 환불후
 */
 
-/*
 create table MAIN_RECEIPT (
 
-	IDX
-	BUYER
-	PAYMENT_TYPE_CODE
-	AMOUNT
-	CONTRACT_TIME
+	IDX					number(13,0)
+	,BUYER_IDX			number(8,0)
+	,PAYMENT_TYPE_CODE	number(2,0)		not null
+	,MONEY_AMOUNT		number(11,0)	not null
+	,PAID_NAME			nvarchar2(15)	not null
+	,PAID_CODE			nvarchar2(20)
+	
+	,CONTRACT_TIME		timestamp(3) with local time zone not null
+	
+	,STATE_CODE			number(2,0)		not null
 
-	STATE_CODE
+	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
+	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
+	,constraint M_RECEIPT_PAY_TYPE_FK foreign key (PAYMENT_TYPE_CODE) references PAYMENT_TYPE (CODE)
+	,constraint M_RECEIPT_STATE_FK foreign key (STATE_CODE) references MAIN_RECEIPT_STATE_TYPE (CODE)
+	,constraint M_RECEIPT_MONEY_CHECK check (MONEY_AMOUNT >0)
 );
 
-*/
+create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
+
+create trigger MAIN_RECEIPT_TRG
+	before insert on MAIN_RECEIPT
+	for each row
+begin
+	if(:NEW.IDX is null) then
+		:NEW.IDX := MAIN_RECEIPT_SEQ.nextval;
+	end if;
+	if(:NEW.PAYMENT_TYPE_CODE is null) then
+		:NEW.PAYMENT_TYPE_CODE := 0;
+	end if;
+	if(:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 0;
+	end if;
+	:NEW.CONTRACT_TIME := SYSTIMESTAMP;
+end;
+/
+--트리거 설명: 인덱스, 결제타입, 상태코드 없으면 삽입. 결제시간 강제입력(덮어쓰기).
+
+
+comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
+
+comment on column MAIN_RECEIPT.IDX is '주 영수증 번호 - 복합기본키, 인조식별자, 트리거있음';
+
+comment on column MAIN_RECEIPT.BUYER_IDX is '영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가';
+
+comment on column MAIN_RECEIPT.PAYMENT_TYPE_CODE is '결제타입 - 외래키. null불가. 트리거있음 (기본값 : 0) 안 써도 문제없이 작동하게 해둠';
+
+comment on column MAIN_RECEIPT.MONEY_AMOUNT is '돈돈돈 - null불가, 0이상';
+
+comment on column MAIN_RECEIPT.PAID_NAME is '결제자 이름 - null불가. 결제정보에서 가져올 수 있다면 가져오고 없으면 적당히 넣기';
+
+comment on column MAIN_RECEIPT.PAID_CODE is '결제 코드 번호 - null 가능. 뭔가 결제정보에 추가적인 정보를 저장해야 한다면 여기에 넣기';
+
+comment on column MAIN_RECEIPT.CONTRACT_TIME is '결제시간 - null불가. 트리거있음 (강제로 insert 당시 시스템 시간을 넣음) 입찰과 관련되서 밀리초 까지 넣음';
+
+comment on column MAIN_RECEIPT.STATE_CODE is '주 영수증 상태 코드 - null불가. 트리거있음(기본값 0)';
+
+
+--drop trigger MAIN_RECEIPT_TRG;
+--drop sequence MAIN_RECEIPT_SEQ;
+--drop table MAIN_RECEIPT;
+
+
+---------------------------------------------- 영수증 목록(영수증의 개별적인 목록: 옵션목록, 입찰 보증금, 낙찰금) 상태 코드 -----------------------------------------------------
+-- 구조상 주 영수증 아래 상세 내역에 해당하는 개별 영수증이 따라붙기 때문에 생기는 코드.
+
+create table LIST_RECPT_STATE_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(20)
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint LIST_RECPT_STATE_PK primary key (CODE)
+);
+
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값', '구현시 기능을 쓰지 않아도 작동하게 하기 위한 기본값');
+
+commit;
+
+
+comment on table LIST_RECPT_STATE_TYPE is '영수증의 개별 목록에 대한 상태값';
+
+comment on column LIST_RECPT_STATE_TYPE.CODE is '영수증 개별 목록 상태 코드';
+
+comment on column LIST_RECPT_STATE_TYPE.NAME is '영수증 개별 목록 상태 코드 이름';
+
+comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '영수증 개별 목록 상태 코드 설명';
+
+
+--drop table LIST_RECPT_STATE_TYPE;
 
 
 ---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
---그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.
------------------------------------------------  경매 수수료 타입  -------------------------------------------------------
+-----------------------------------------------  경매 수수료 타입  ------------------------------------------------------
+--그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.-
 
 -----------------------------------------------  입찰 보증금 타입 -------------------------------------------------------
 --보증금 처리 방식을 정하는 로직을 만들 수 있게 하는 테이블. 트리거 처리를 할 예정이라 웹어플리케이션 쪽에서는 신경 쓰지 않아도 됨. (뭔가 구현할 수도 있고..)
@@ -1228,6 +1326,11 @@ comment on column AUCTION_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 --drop table AUCTION_TIME_WINDOW_TYPE cascade constraints;
 
 
+-----------------------------------------------  경매 입찰 최소 단위 타입  -------------------------------------------------------
+
+
+
+
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
 
 create table AUCTION_STATE_TYPE (
@@ -1283,8 +1386,7 @@ create table AUCTION (
 
 	,STATE_CODE				number(2,0)
 
---	,HIGHEST_BID				number(11,0)
--- 처리의 편의를 위한 중복값, 넣을까 고민중
+	,HIGHEST_BID				number(11,0)
 
 	,constraint AUCTION_PK primary key (STATE_CODE, IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
@@ -1336,7 +1438,7 @@ comment on column AUCTION.ITEM_IMG is '경매물품 사진 - null 불가';
 
 comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 복합기본키. 외래키. 트리거 있음';
 
---comment on column AUCTION.HIGHEST_BID is '최고 입찰액 - 중복값, 처리의 편의를 위해 넣을까 하는 속성';
+comment on column AUCTION.HIGHEST_BID is '최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐';
 
 
 --drop trigger AUCTION_IDX_REGT_TRG;
@@ -1409,6 +1511,54 @@ comment on column AUCTION_DUE_QUE.TIME_WINDOW is '예정 만료시각 - 트리�
 --drop trigger AUCTION_DUE_QUE_TRG;
 --drop index AUCTION_DUE_QUE_INDEX;
 --drop table AUCTION_DUE_QUE cascade constraints;
+
+
+----------------------------------------------- 입찰 보증금 영수증 --------------------------------------------------------
+-- 입찰 정보의 변화나 처리에 무관하게 존재해야 하기 때문에 영수증을 입찰에서 분리. 입찰 보증금 영수증 -> 입찰 발생
+
+
+create table BID_DEPOSITE_RECEIPT (
+
+--	IDX						number(13,0) not null unique,
+	AUCTION_IDX				number(11,0)
+	,MAIN_RECPT_IDX			number(13,0)
+	,MAIN_RECPT_BUYER		number(8,0)
+	,DEPOSIT_AMOUNT			number(10,0)		not null
+
+	,WRITTER_IDX			number(8,0)
+	,TITLE					nvarchar2(40)		not null
+	,ITEM_IMG				varchar2(200 char)	not null
+	
+	,STATE_CODE				number(2,0)			not null
+	
+	,constraint BID_DEPOST_RECPT_PK primary key (AUCTION_IDX, MAIN_RECPT_IDX, MAIN_RECPT_BUYER) 
+	,constraint BID_DEPO_RECPT_AUCT_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete set null
+	,constraint BID_DEPO_RECPT_WRTR_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete set null
+	,constraint BID_DEPO_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE) on delete cascade
+	,constraint BID_DEPOSITE_CHECK check (DEPOSIT_AMOUNT >0)
+);
+
+--create sequence BID_DEPO_RECPT_SEQ start with 1 increment by 1;
+--create trigger..
+
+comment on table BID_DEPOSITE_RECEIPT is '입찰 보증금 영수증';
+
+comment on column BID_DEPOSITE_RECEIPT.AUCTION_IDX is '입찰 대상 경매 번호 - null 가능. 외래키';
+
+comment on column BID_DEPOSITE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합기본키. 외래키';
+
+comment on column BID_DEPOSITE_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매자 - 복합기본키, 외래키';
+
+comment on column BID_DEPOSITE_RECEIPT.DEPOSIT_AMOUNT is '보증금 액수 - null불가';
+
+comment on column BID_DEPOSITE_RECEIPT.WRITTER_IDX is '입찰 대상 경매 등록자 아이디 - 외래키, null 가능: 대상 계정 삭제시 영수증 보존';
+
+comment on column BID_DEPOSITE_RECEIPT.TITLE is '입찰 대상 경매 제목: 복제값 저장용';
+
+comment on column BID_DEPOSITE_RECEIPT.ITEM_IMG is '입찰 대상 경매 이미지: 복제값 저장용';
+
+
+--drop table BID_DEPOSITE_RECEIPT;
 
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
@@ -1487,30 +1637,27 @@ create table BID (
 	IDX						number(12,0)	not null unique
 	,AUCTION_IDX			number(10,0)
 	,BIDDER_IDX				number(8,0)
+	,MAIN_RECPT_IDX			number(13,0)
 	,BID_TIME				timestamp(3) with local time zone not null
 
-	,AMOUNT					number(11,0)
+	,AMOUNT					number(11,0)	not null
 	,DEPOSIT_RATIO_CODE		number(2,0)		not null
-
-	,DIPOSIT_AMOUNT			number(10,0)	not null
-	,DIPOSIT_PAID_NAME		nvarchar2(20)	not null
-	,DIPOSIT_PAY_TYPE_CODE	number(2,0)		not null
-	,DIPOSIT_PAY_CODE		nvarchar2(25)	not null
 
 	,CONTRACT_T_WIN_CODE	number(2,0)		not null
 	,STATE_CODE				number(2,0)		not null
 
-	,constraint BID_PK primary key (AUCTION_IDX, BIDDER_IDX, AMOUNT)
+	,constraint BID_PK primary key (AUCTION_IDX, BIDDER_IDX, MAIN_RECPT_IDX)
+	,constraint BID_RECPT_FK foreign key (AUCTION_IDX, BIDDER_IDX, MAIN_RECPT_IDX) references BID_DEPOSITE_RECEIPT (AUCTION_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX) on delete cascade
 	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint BID_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
-	,constraint BID_DIPOSIT_TYPE_FK foreign key (DIPOSIT_PAY_TYPE_CODE) references PAYMENT_TYPE (CODE)
 	,constraint BID_PAY_T_W_FK foreign key (CONTRACT_T_WIN_CODE) references CONTRACT_TIME_WINDOW_TYPE (CODE)
 	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
-	,constraint BID_AMOUNT_CHECK check (AMOUNT >0 and DIPOSIT_AMOUNT >=0)
+	,constraint BID_AUCTION_UNIQUE unique (AUCTION_IDX, AMOUNT)
+	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
 );
 
-create index BID_BIDDER_STATE_INDEX on BID (AUCTION_IDX, STATE_CODE);
+create index BID_BIDDER_STATE_INDEX on BID (AUCTION_IDX, BIDDER_IDX, STATE_CODE);
 
 create sequence BID_SEQ start with 1 increment by 1;
 
@@ -1524,12 +1671,6 @@ begin
 	if(:NEW.DEPOSIT_RATIO_CODE is null) then
 		:NEW.DEPOSIT_RATIO_CODE :=1;
 	end if;
-	if(:NEW.DIPOSIT_PAY_TYPE_CODE is null) then
-		:NEW.DIPOSIT_PAY_TYPE_CODE :=0;
-	end if;
-	if(:NEW.DIPOSIT_PAY_CODE is null) then
-		:NEW.DIPOSIT_PAY_CODE := '외부 결제번호: 기본값';
-	end if;
 	if(:NEW.CONTRACT_T_WIN_CODE is null) then
 		:NEW.CONTRACT_T_WIN_CODE :=1;
 	end if;
@@ -1542,31 +1683,25 @@ end;
 -- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 보증금비율 코드 삽입, 결제타입 기본값 삽입, 지불기한 코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
 
 
-comment on table BID is '입찰 테이블';
+comment on table BID is '입찰 테이블 - 전체 속성 null 불가';
 
-comment on column BID.IDX is '입찰번호 - 후보키. 인조식별자. 트리거 있음. 삭제나 수정 처리시 쉽게 접근하기 위한 속성, 안쓰는게 더 나은 방법이긴 한데, 써도 무방.';
+comment on column BID.IDX is '입찰번호 - 후보키. 인조식별자. 트리거 있음. 각종 처리를 쉽게 하귀 위한 속성';
 
-comment on column BID.AUCTION_IDX is '대상 경매 번호 - 복합기본키. 외래키.';
+comment on column BID.AUCTION_IDX is '대상 경매 번호 - 복합기본키. 외래키(보증금 영수증). + 외래키 (경매)';
 
-comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 복합기본키. 외래키.';
+comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 복합기본키. 외래키(보증금 영수증). + 외래키 (계정)';
 
-comment on column BID.BID_TIME is '입찰 시각 - null불가. 트리거 있음';
+comment on column BID.MAIN_RECPT_IDX is '주 영수증 번호 - 복합기본키, 외래키(보증금 영수증)';
 
-comment on column BID.AMOUNT is '입찰액 - 복합기본키. 0이상';
+comment on column BID.BID_TIME is '입찰 시각 - 트리거 있음';
+
+comment on column BID.AMOUNT is '입찰액 - 0이상';
 
 comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 트리거 있음(기본값 1)';
 
-comment on column BID.DIPOSIT_AMOUNT is '낸 보증금 저장용 - 영수증으로서 기록을 하기 위한 부분. null 불가';
+comment on column BID.CONTRACT_T_WIN_CODE is '낙찰시 잔여금액 지불 만료 기한 코드 - 외래키. 트리거 있음(기본값:1 - 3일내 낙찰금 지불)';
 
-comment on column BID.DIPOSIT_PAID_NAME is '보증금 결제자 이름 - null 불가';
-
-comment on column BID.DIPOSIT_PAY_TYPE_CODE is '보증금 결제 타입 - 트리거 있음(기본값0) null 불가';
-
-comment on column BID.DIPOSIT_PAY_CODE is '보증금 결제 번호 (보증금 결제시 결제정보에 있다고 가정) - 트리거 있음(기본값 : 외부결제번호:기본값). null안됨.';
-
-comment on column BID.CONTRACT_T_WIN_CODE is '낙찰시 잔여금액 지불 만료 기한 코드 - 외래키. null불가. 트리거 있음(기본값:1 - 3일내 낙찰금 지불)';
-
-comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. null불가. 트리거 있음';
+comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거 있음';
 
 
 --drop trigger BID_INSERT_TRG;
@@ -2137,6 +2272,13 @@ create table SITE_MAIN_AUCTION (
 	,constraint SITE_MAIN_AUCT_PK primary key (AUCTION_IDX)
 	,constraint FK_SITE_MAIN_AUCTION foreign key (AUCTION_IDX) references AUCTION (IDX)
 );
+
+
+comment on table SITE_MAIN_AUCTION is '메인 노출 경매 설정';
+
+comment on column SITE_MAIN_AUCTION.AUCTION_IDX is '경매번호. 기본키 + 외래키';
+
+comment on column SITE_MAIN_AUCTION.REG_TIME is '등록시간. 기본값 시스템시간';
 
 
 --drop table SITE_MAIN_AUCTION cascade constraints;
