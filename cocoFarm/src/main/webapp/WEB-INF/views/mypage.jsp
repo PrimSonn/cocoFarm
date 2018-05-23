@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>농산물 판매 상품 등록</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script type="text/javascript"
@@ -29,7 +29,7 @@ function onlyNumber(obj){
 $(document).ready(function() {
 	var textCountLimit = 15;
 	var textCountLimit2=40;
-    $('textarea[name=editor]').keyup(function() {
+    $('textarea[name=optionName]').keyup(function() {
         // 텍스트영역의 길이를 체크
         var textLength = $(this).val().length;
  
@@ -51,7 +51,7 @@ $(document).ready(function() {
 function func1(sVal){
 	var sel =document.getElementById("option");
 var str1 ='<ul>'
-	+'<li><p>옵션제목 </p><textarea name="editor" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
+	+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
 	+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
 	+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
 	+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
@@ -194,12 +194,12 @@ $(document).ready(function() {
 						</tr>
 						<tr>
 							<th class="td_back2">상품 제목</th>
-							<td><textarea style="resize:none;" placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)" id="title" name="title" cols="50" rows="1" 
+							<td><textarea id="title" name="title" style="resize:none;" placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)" cols="50" rows="1" 
     							onblur="onlyNumber(this)"></textarea></td>
 						</tr>
 						<tr>
 							<th class="td_back4">상품 부가 설명</th>
-							<td><textarea rows="10" cols="80" id="content" name="content" ></textarea></td>
+							<td><textarea id="content" name="content" rows="10" cols="80" ></textarea></td>
 							<!-- <td><textarea style="resize:none;" placeholder="ex)제철과입니다." name="title" cols="50" rows="5"></textarea></td> -->
 						</tr>
 						<tr>
@@ -210,10 +210,9 @@ $(document).ready(function() {
 							<th class="td_back2">상세 설명 이미지 등록</th>
 							<td><input type="file" id="mainImg" name="mainImg"></td>
 						</tr>
-						
 						<tr>
 							<th class="td_back2">원산지</th>
-							<td><textarea style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" id="origin" name="origin" cols="50" rows="1"></textarea></td>
+							<td><textarea id="origin" name="origin" style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" cols="50" rows="1"></textarea></td>
 						</tr>
 						
 						<tr>
@@ -225,24 +224,22 @@ $(document).ready(function() {
 									<li>판매 옵션 개수 :</li>
 									<li>
 										<select name="option" onchange="func1(this.value);">   
-			       						<option value="1" SELECTED>1개</option>
-			        					<option value="2" >2개</option>
-			        					<option value="3" >3개</option>
-			    						</select>
-		    						</li>
+		       						<option value="1" SELECTED>1개</option>
+		        					<option value="2" >2개</option>
+		        					<option value="3" >3개</option>
+		    						</select>
+	    						</li>
 								</ul>
 							</div>
-							
 							
 							<div id="option_boby">
 								<ul>
-									<li><p>옵션제목 </p><textarea name="editor" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>
-									<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>	
-									<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>	
-									<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>
+									<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>
+									<li><p>총판매수량 </p><textarea name="startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>	
+									<li><p>단위 </p><textarea name="unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>	
+									<li><p>단위당가격 </p><textarea name="price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>
 								</ul>
 							</div>
-							
 							</td>
 							
 						</tr>

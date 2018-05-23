@@ -9,8 +9,21 @@
 	<!-- systimestamp: 밀리초까지 계산 -->
 	<insert id="insert" parameterType="cocoFarm.dto.Product">
 		INSERT INTO SALE( idx, acc_idx, title, origin, hit, written_time, last_edited, content, face_img, main_img)
-		VALUES( sale_seq.nextval, 0, #{title }, #{origin },0,systimestamp,systimestamp, #{content },0,0)
+		VALUES(
+			sale_seq.nextval,
+			#{accIdx },
+			#{title },
+			#{origin },
+			0,
+			systimestamp,
+			systimestamp,
+			#{content },
+			#{faceImg },
+			0 )
 		<!-- 		VALUES( sale_seq.nextval, #{accIdx }, #{productTitle }, #{origin }, #{writtenTime }, #{lastEdited }, #{content }, #{faceImg }, #{mainImg } ) -->
+		<selectKey resultType="int" keyProperty="idx" order="AFTER">
+			SELECT sale_seq.currval FROM DUAL
+		</selectKey>
 	</insert>
 
 

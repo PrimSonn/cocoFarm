@@ -13,8 +13,6 @@
 	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-
-<!-- 	<resources mapping="/resources/**,/img/**" location="/resources/,/resources/img/" /> -->
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/img/**" location="/resources/img/" />
 	<resources mapping="/css/**" location="/resources/css/" />
@@ -25,7 +23,6 @@
 		<beans:property name="suffix" value=".jsp" />
 		<beans:property name='order' value='2'/>
 	</beans:bean>
-	
 	
 	<!-- Apache-tiles -->
 	<beans:bean id='tilesViewResolver' class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -54,11 +51,11 @@
 <!-- 		</interceptor> -->
 <!-- 	</interceptors> -->
 	
-	<!-- MultipartResolver -->	<!-- 다운로드 클래스(스프링 commmons) 설정-->
-<!-- 	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
-<!-- 		<beans:property name="maxInMemorySize" value='1048576' /> -->
-<!-- 		<beans:property name="maxUploadSize" value='10485760' /> -->
-<!-- 	</beans:bean> -->
+	<!-- MultipartResolver 다운로드 클래스(스프링 commmons) 설정 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxInMemorySize" value='1048576' />
+		<beans:property name="maxUploadSize" value='10485760' />
+	</beans:bean>
 	
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 	

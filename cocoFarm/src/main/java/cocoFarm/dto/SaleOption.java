@@ -3,8 +3,9 @@ package cocoFarm.dto;
 import java.util.Date;
 
 public class SaleOption {
+	private int idx;		// SALE pk idx
 	private int saleIdx;
-	private String name;
+	private String optionName;
 	private String description;
 	private int price;
 	private String unit;
@@ -14,18 +15,24 @@ public class SaleOption {
 	private Date writtenTime;
 	private Date lastEdited;
 	private int isdel;
-	
+
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
 	public int getSaleIdx() {
 		return saleIdx;
 	}
 	public void setSaleIdx(int saleIdx) {
 		this.saleIdx = saleIdx;
 	}
-	public String getName() {
-		return name;
+	public String getOptionName() {
+		return optionName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setOptionName(String optionName) {
+		this.optionName = optionName;
 	}
 	public String getDescription() {
 		return description;
@@ -83,6 +90,18 @@ public class SaleOption {
 	}
 	@Override
 	public String toString() {
-		return "SaleOption: [";
+		return "SaleOption [idx=" + idx
+				+ ", saleIdx=" + saleIdx
+				+ ", optionName=" + optionName
+				+ ", description=" + description
+				+ ", price=" + price
+				+ ", unit=" + unit
+				+ ", startAmount=" + startAmount
+				+ ", leftAmount=" + leftAmount
+				+ ", lastsoldTime=" + lastsoldTime
+				+ ", writtenTime=" + writtenTime
+				+ ", lastEdited=" + lastEdited
+				+ ", isdel=" + isdel
+				+ "]";
 	}
 }

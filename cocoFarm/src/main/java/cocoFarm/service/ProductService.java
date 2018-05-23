@@ -2,14 +2,13 @@ package cocoFarm.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import cocoFarm.dto.Product;
+import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
 public interface ProductService {
 
-	public void insert(Product product);
+	public void insert(Product product, SaleOption saleOption);
 	
 	public void update(Product product);
 	

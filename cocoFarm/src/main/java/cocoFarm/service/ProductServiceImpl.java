@@ -6,13 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cocoFarm.dao.ProductDao;
+import cocoFarm.dao.SaleOptionDao;
 import cocoFarm.dto.Product;
+import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired ProductDao productDao;
+	@Autowired SaleOptionDao saleOptionDao;
 	
 	@Override
 	public List getlist() {
@@ -27,8 +30,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void insert(Product product) {
+	public void insert(Product product, SaleOption saleOption) {
 		productDao.insert(product);
+//		System.out.println(product);
+//		System.out.println(">>>>>>>>>>>> idx = " + product.getIdx());
+		saleOption.setIdx(product.getIdx());
+		saleOptionDao.insert(saleOption);
 	}
 	
 	@Override

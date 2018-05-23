@@ -83,6 +83,17 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "[Product] idx: " + getIdx();
+		return "Product [idx=" + idx
+				+ ", accIdx=" + accIdx
+				+ ", title=" + title
+				+ ", origin=" + origin
+				+ ", hit=" + hit
+				+ ", writtenTime=" + writtenTime
+				+ ", lastEdited=" + lastEdited
+				+ ", content=" + content
+				+ ", faceImg=" + faceImg
+				+ ", mainImg=" + mainImg
+				+ ", isdel=" + isdel
+				+ "]";
 	}
 }
