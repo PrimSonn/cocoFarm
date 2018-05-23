@@ -71,6 +71,11 @@ drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
 
 drop table DELIVERY_STATE_TYPE cascade constraints;
 
+drop trigger BID_CONTRACT_RECPT_TRG;
+drop sequence BID_CONTRACT_RECPT_SEQ;
+drop index BID_CONTRCT_RECPT_INDX;
+drop table BID_CONTRACT_RECEIPT cascade constraints;
+
 drop trigger BID_CONTRACT_QUE_TRG;
 drop table BID_CONTRACT_QUE cascade constraints;
 
@@ -271,6 +276,12 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 
 
 ------------------------------------------------  계정 상태 코드 추가  ----------------------------------------------------
+
+create table ACCOUNT_STATE_TYPE (
+
+	CODE		number(2,0)
+	,NAME		
+);
 
 ------------------------------------------------  계정  ----------------------------------------------------
 --세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (String), +옵션사항 "name" : NAME (String) ]
@@ -695,6 +706,36 @@ comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '목록 영수증 상태 
 
 --drop table LIST_RECPT_STATE_TYPE;
 
+---------------------------------------------- 목록 영수증 타입-----------------------------------------------------
+---------------------------------------------- 보류: 목록 영수증 -----------------------------------------------------
+/*
+create table LIST_RECEIPT (
+
+	IDX						number(13,0)
+
+	,MAIN_RECPT_BUYER		number(8,0)		not null
+	,MAIN_RECPT_IDX			number(13,0)	not null
+
+--	,LIST_TYPE
+--	,SALE_OPTION_IDX		number(11,0)
+--	,AUCTION_IDX
+
+	,NAME					nvarchar2(25)	not null
+	,PRICE					number(13,0)	not null
+
+	,STATE_CODE				number(2,0)		not null
+
+	,REFUND_TARGET_IDX		number(13,0)
+
+	,constraint LIST_RECEIPTT_PK primary key (IDX)
+	,constraint LIST_RECEIPT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
+	,constraint LIST_RECPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
+	,constraint LIST_RECPT_REFUND_FK foreign key (REFUND_TARGET_IDX) references LIST_RECEIPT (IDX)
+	,constraint LIST_RECPT_CHECK check (AMOUNT >0 and PRICE >0)
+);
+
+
+*/
 
 ---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
 -----------------------------------------------  경매 수수료 타입  ------------------------------------------------------
@@ -740,11 +781,12 @@ comment on column BID_DEPOSIT_TYPE.DESCRIPTION is '보증금 타입 설명';
 
 ---------------------------------------------- 카테고리 노드 ----------------------------------------------------
 -- 개별 카테고리 타입 개체. 예시: '사람' '당근' '채소' '과일'..
+-- 1,2,3 번 카테고리 번호 기본값으로 넣어둠.
 
 create table CATEGORY (
 
 	IDX					number(3,0)
-	,NAME				nvarchar2(15) not null
+	,NAME				nvarchar2(15)		not null
 	,DESCRIPTION		nvarchar2(1000)
 
 	,constraint CATEGORY_PK primary key (IDX)
@@ -765,6 +807,12 @@ end;
 insert all
 	into CATEGORY (IDX, NAME, DESCRIPTION) values (-1, '기본값', '구현시 사용하지 않더라도 문제가 없도록 넣어두는 기본값.')
 	into CATEGORY (IDX, NAME, DESCRIPTION) values (0, '기타/일반', '구현시 사용하지 않더라도 문제가 없도록 넣어두는 기본값.')
+select 1 from DUAL;
+
+insert all
+	into CATEGORY (NAME) values ('과일/채소')
+	into CATEGORY (NAME) values ('축산/수산')
+	into CATEGORY (NAME) values ('가공식품')
 select 1 from DUAL;
 
 commit;
@@ -859,6 +907,9 @@ begin
 	if (:NEW.WRITTEN_TIME is null) then
 		:NEW.WRITTEN_TIME := SYSDATE;
 	end if;
+	if (:NEW.LAST_EDITED is null) then
+		:NEW.LAST_EDITED := SYSDATE;
+	end if;
 	if (:NEW.ISDEL is null) then
 		:NEW.ISDEL := 0;
 	end if;
@@ -940,11 +991,11 @@ comment on column SALE_HIT.ACCOUNT_IDX is '계정번호 - 복합기본키 + 외�
 
 
 ---------------------------------------------- 판매 옵션 ----------------------------------------------------
--- 현재 한 개의 판매글에 같은 이름의 옵션 설정을 막아둠.
+-- 구매 관련해서 나중에 조회를 편하게 하기 위해 기본키를 바꿈, 그리고 옵션 이름에 대한 unique 설정 해제. (이름 중복 가능)
 
 create table SALE_OPTION (
 
-	IDX				number(11,0)
+	IDX				number(11,0)	unique
 	,SALE_IDX		number(10,0)	not null
 	,NAME			nvarchar2(25)	not null
 	,DESCRIPTION	nvarchar2(200)
@@ -962,8 +1013,7 @@ create table SALE_OPTION (
 
 	,ISDEL			number(1,0)		not null
 
-	,constraint SALE_OPTION_PK primary key (IDX)
-	,constraint SALE_OPTION_UNIQUE unique (SALE_IDX, NAME)
+	,constraint SALE_OPTION_PK primary key (SALE_IDX, IDX)
 	,constraint FK_SALE_OPT_SALE foreign key (SALE_IDX) references SALE (IDX) on delete cascade
 	,constraint FK_SALE_OPT_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 	,constraint SALE_OPT_PRICE_CHECK check ( PRICE > 0 )
@@ -984,6 +1034,9 @@ begin
 	if (:NEW.WRITTEN_TIME is null) then
 		:NEW.WRITTEN_TIME := SYSDATE;
 	end if;
+		if (:NEW.LAST_EDITED is null) then
+		:NEW.LAST_EDITED := SYSDATE;
+	end if;
 	if (:NEW.UNIT is null) then
 		:NEW.UNIT := '개';
 	end if;
@@ -995,7 +1048,7 @@ end;
 --트리거 설명: 판매옵션 번호 자동추가, 판매옵션 들어간 시간 저장. (혹시 나중에 판매글마다 별개로 추가 할 수 있으므로..) 판매단위 기본값 '개'. ISDEL 기본값 0
 
 create trigger SALE_OPT_UPDATE_TRG
-	before update of NAME, DESCRIPTION, PRICE, UNIT on SALE_OPTION
+	before update of NAME, DESCRIPTION, PRICE, UNIT, ISDEL on SALE_OPTION
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
@@ -1030,11 +1083,11 @@ end;
 
 comment on table SALE_OPTION is '판매 옵션 목록 테이블';
 
-comment on column SALE_OPTION.IDX is '옵션번호 - 기본키, 인조식별자.';
+comment on column SALE_OPTION.IDX is '옵션번호 - 후보키. 복합기본키, 인조식별자.';
 
-comment on column SALE_OPTION.SALE_IDX is '판매글 번호 - 외래키 (판매글.글번호) + 복합유일성(이름,판매글번호)';
+comment on column SALE_OPTION.SALE_IDX is '판매글 번호 - 복합기본키, 외래키(판매글.글번호))';
 
-comment on column SALE_OPTION.NAME is '판매 옵션 이름 - null불가 같은 판매글에 같은 이름의 옵션 불허(중요!) - (변경 필요시 미리 말해주세요)';
+comment on column SALE_OPTION.NAME is '판매 옵션 이름 - null불가';
 
 comment on column SALE_OPTION.DESCRIPTION is '판매 옵션 설명';
 
@@ -1385,7 +1438,6 @@ end;
 -----------------------------------------------  일반 구매: 배송대상  -----------------------------------------------
 -- 영수증과 통합.
 
-
 -----------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
 -- 각종 만료시간 처리를 하나로 합쳤다가, 절대 해서는 안되는 금기사항이라고 해서 다시 분리함..
 
@@ -1437,8 +1489,6 @@ comment on column AUCTION_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 
 
 -----------------------------------------------  경매 입찰 최소 단위 타입  -------------------------------------------------------
-
-
 
 
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
@@ -1621,6 +1671,7 @@ comment on column AUCTION_DUE_QUE.TIME_WINDOW is '예정 만료시각 - 트리�
 
 ----------------------------------------------- 입찰 보증금 영수증 --------------------------------------------------------
 -- 입찰 정보의 변화나 처리에 무관하게 존재해야 하기 때문에 영수증을 입찰에서 분리. 입찰 보증금 영수증 -> 입찰 발생
+-- 목록 영수증들을 통합하려다 어차피 복잡하기는 매한가지라 그냥 나뉜채로 둠.
 
 create table BID_DEPOSITE_RECEIPT (
 
@@ -1631,7 +1682,6 @@ create table BID_DEPOSITE_RECEIPT (
 	,DEPOSIT_AMOUNT			number(10,0)		not null
 
 	,TITLE					nvarchar2(40)		not null
-	,ITEM_IMG				varchar2(200 char)	not null
 	
 	,STATE_CODE				number(2,0)			not null
 
@@ -1640,12 +1690,12 @@ create table BID_DEPOSITE_RECEIPT (
 	,constraint BID_DEPOST_RECPT_PK primary key (IDX) 
 	,constraint BID_DEPOST_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint BID_DEPO_RECPT_AUCT_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete set null
-	,constraint BID_DEPO_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE) on delete cascade
+	,constraint BID_DEPO_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint BID_REFUND_FK foreign key (REFUND_TARGET_IDX) references BID_DEPOSITE_RECEIPT (IDX)
 	,constraint BID_DEPOSITE_CHECK check (DEPOSIT_AMOUNT >0)
 );
 
-create index BID_DEPO_RECPT_INDEX on BID_DEPOSITE_RECEIPT (AUCTION_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX);
+create index BID_DEPO_RECPT_INDEX on BID_DEPOSITE_RECEIPT (MAIN_RECPT_BUYER, MAIN_RECPT_IDX);
 
 create sequence BID_DEPO_RECPT_SEQ start with 1 increment by 1;
 
@@ -1665,17 +1715,17 @@ end;
 
 comment on table BID_DEPOSITE_RECEIPT is '입찰 보증금 영수증';
 
+comment on column BID_DEPOSITE_RECEIPT.IDX is '입찰 보증금 영수증 번호 - 기본키, 인조식별자';
+
 comment on column BID_DEPOSITE_RECEIPT.AUCTION_IDX is '입찰 대상 경매 번호 - null 가능. 외래키';
 
 comment on column BID_DEPOSITE_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매자 - 복합외래키. null불가';
 
 comment on column BID_DEPOSITE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합외래키. null불가';
 
-comment on column BID_DEPOSITE_RECEIPT.DEPOSIT_AMOUNT is '보증금 액수 - null불가';
+comment on column BID_DEPOSITE_RECEIPT.DEPOSIT_AMOUNT is '보증금 액수 - null불가. 0이상';
 
 comment on column BID_DEPOSITE_RECEIPT.TITLE is '입찰 대상 경매 제목: 복제값 저장용. null불가';
-
-comment on column BID_DEPOSITE_RECEIPT.ITEM_IMG is '입찰 대상 경매 이미지: 복제값 저장용. null불가';
 
 comment on column BID_DEPOSITE_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
 
@@ -1839,12 +1889,6 @@ comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거
 
 -----------------------------------------------  (보류)입찰 환불 영수증  -----------------------------------------------
 
------------------------------------------------  낙찰금 영수증  -----------------------------------------------
-
------------------------------------------------  낙찰  -----------------------------------------------
-
------------------------------------------------  경매: 배송대상  -----------------------------------------------
-
 -----------------------------------------------  경매 낙찰 대기열  -------------------------------------------------------
 -- 처리의 용이성을 위한 중복 테이블. (낙찰금 지불 만료 기한 처리)
 -- 낙찰 처리를 하기 위해 낙찰 대기중인 경매(최고입찰)만 모아둔 테이블. (낙찰을 대기중인 경매와 대상 입찰 정보 + 만료시간)
@@ -1890,6 +1934,78 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 --drop trigger BID_CONTRACT_QUE_TRG;
 --drop table BID_CONTRACT_QUE cascade constraints;
 
+
+-----------------------------------------------  낙찰금 영수증  -----------------------------------------------
+
+create table BID_CONTRACT_RECEIPT (
+
+	IDX						number(13,0)
+
+	,AUCTION_IDX			number(11,0)
+	,BID_AMOUNT				number(11,0)
+
+	,MAIN_RECPT_BUYER		number(8,0)			not null
+	,MAIN_RECPT_IDX			number(13,0)		not null
+	,CONTRACT_AMOUNT		number(10,0)		not null
+
+	,STATE_CODE				number(2,0)			not null
+
+	,REFUND_TARGET_IDX		number(13,0)
+
+	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
+	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
+	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
+	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
+	,constraint CONT_REFUND_FK foreign key (REFUND_TARGET_IDX) references BID_CONTRACT_RECEIPT (IDX)
+	,constraint CONTRACT_UNIQUE unique (AUCTION_IDX, BID_AMOUNT)
+	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
+);
+
+create index BID_CONTRCT_RECPT_INDX on BID_CONTRACT_RECEIPT (MAIN_RECPT_BUYER, MAIN_RECPT_IDX);
+
+create sequence BID_CONTRACT_RECPT_SEQ start with 1 increment by 1;
+
+create trigger BID_CONTRACT_RECPT_TRG
+	before insert on BID_CONTRACT_RECEIPT
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := BID_CONTRACT_RECPT_SEQ.nextval;
+	end if;
+		if (:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 0;
+	end if;
+end;
+/
+
+
+comment on table BID_CONTRACT_RECEIPT is '낙찰금 영수증';
+
+comment on column BID_CONTRACT_RECEIPT.IDX is '낙찰금 영수증 번호 - 기본키, 인조식별자';
+
+comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
+
+comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
+
+comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매자 - 복합외래키. null불가';
+
+comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합외래키. null불가';
+
+comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
+
+comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
+
+comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 IDX null가능';
+
+
+--drop trigger BID_CONTRACT_RECPT_TRG;
+--drop sequence BID_CONTRACT_RECPT_SEQ;
+--drop index BID_CONTRCT_RECPT_INDX;
+--drop table BID_CONTRACT_RECEIPT cascade constraints;
+
+-----------------------------------------------  낙찰  -----------------------------------------------
+
+-----------------------------------------------  경매: 배송대상  -----------------------------------------------
 
 -----------------------------------------------  배송 상태 타입  -------------------------------------------------------
 
