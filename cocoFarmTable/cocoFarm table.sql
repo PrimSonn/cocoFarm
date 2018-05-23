@@ -59,17 +59,8 @@ drop table MESSAGE cascade constraints;
 
 drop table MESSAGE_TYPE cascade constraints;
 
-drop trigger DELIVERY_B_INSRT_TRG;
-drop sequence DELIVERY_SEQ;
-drop index DELIVERY_BUYER_INDEX;
-drop index DELIVERY_SELLER_INDEX;
-drop table DELIVERY cascade constraints;
-
-drop table DELIV_RECV_T_WIN_TYPE cascade constraints;
-
-drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
-
-drop table DELIVERY_STATE_TYPE cascade constraints;
+drop trigger BID_CONTRACT_TRG;
+drop table BID_CONTRACT cascade constraints;
 
 drop trigger BID_CONTRACT_RECPT_TRG;
 drop sequence BID_CONTRACT_RECPT_SEQ;
@@ -80,7 +71,7 @@ drop trigger BID_CONTRACT_QUE_TRG;
 drop table BID_CONTRACT_QUE cascade constraints;
 
 drop trigger BID_INSERT_TRG;
-drop sequence BID_SEQ;
+--drop sequence BID_SEQ;
 drop index BID_BIDDER_STATE_INDEX;
 drop table BID cascade constraints;
 
@@ -107,6 +98,10 @@ drop table AUCTION cascade constraints;
 drop table AUCTION_STATE_TYPE cascade constraints;
 
 drop table AUCTION_TIME_WINDOW_TYPE cascade constraints;
+
+drop trigger SALE_EVAL_TRG;
+drop index SALE_EVAL_INDEX;
+drop table SALE_EVALUATION cascade constraints;
 
 drop trigger SALE_OPT_RECPT_TRG;
 drop sequence SALE_OPT_RECPT_SEQ;
@@ -155,6 +150,18 @@ drop trigger MAIN_RECEIPT_TRG;
 drop sequence MAIN_RECEIPT_SEQ;
 drop table MAIN_RECEIPT;
 
+drop trigger DELIVERY_B_INSRT_TRG;
+drop sequence DELIVERY_SEQ;
+drop index DELIVERY_BUYER_INDEX;
+drop index DELIVERY_SELLER_INDEX;
+drop table DELIVERY cascade constraints;
+
+drop table DELIV_RECV_T_WIN_TYPE cascade constraints;
+
+drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
+
+drop table DELIVERY_STATE_TYPE cascade constraints;
+
 drop table LIST_RECPT_STATE_TYPE;
 
 drop table MAIN_RECEIPT_STATE_TYPE;
@@ -172,6 +179,8 @@ drop table BUSINESS_INFO_TYPE cascade constraints;
 drop trigger ACCOUNT_TRG;
 drop sequence ACCOUNT_SEQ;
 drop table ACCOUNT cascade constraints;
+
+drop table ACCOUNT_STATE_TYPE cascade constraints;
 
 drop table ACCOUNT_TYPE cascade constraints;
 
@@ -279,9 +288,32 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 
 create table ACCOUNT_STATE_TYPE (
 
-	CODE		number(2,0)
-	,NAME		
+	CODE			number(2,0)
+	,NAME			nvarchar2(20)	not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint ACC_STATE_TYPE_PK primary key (CODE)
 );
+
+insert all
+	into ACCOUNT_STATE_TYPE (CODE, NAME) values (0,'기본값')
+	into ACCOUNT_STATE_TYPE (CODE, NAME) values (1,'삭제됨')
+select 1 from DUAL;
+
+commit;
+
+
+comment on table ACCOUNT_STATE_TYPE is '';
+
+comment on column ACCOUNT_STATE_TYPE.CODE is '';
+
+comment on column ACCOUNT_STATE_TYPE.CODE is '';
+
+comment on column ACCOUNT_STATE_TYPE.CODE is '';
+
+
+--drop table ACCOUNT_STATE_TYPE cascade constraints;
+
 
 ------------------------------------------------  계정  ----------------------------------------------------
 --세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (String), +옵션사항 "name" : NAME (String) ]
@@ -308,7 +340,7 @@ create table ACCOUNT (
 	,REG_DATE			timestamp (0) with local time zone	not null
 
 	,constraint ACCOUNT_PK primary key (ISDEL, IDX)
-	,constraint FK_ACC_ISDEL_TYPE foreign key (ISDEL) references ISDEL_TYPE (CODE)
+	,constraint FK_ACC_ISDEL_TYPE foreign key (ISDEL) references ACCOUNT_STATE_TYPE (CODE)
 	,constraint FK_ACCOUNT_ACCTYPE foreign key (TYPE_CODE) references ACCOUNT_TYPE (CODE)
 );
 
@@ -359,7 +391,7 @@ comment on column ACCOUNT.DETAILED_ADDR is '세부주소';
 
 comment on column ACCOUNT.TYPE_CODE is '계정타입 - 외래키, null 안됨(식별관계) 기본값 3(트리거, 일반계정)';
 
-comment on column ACCOUNT.ISDEL is '삭제 확인 코드 - 복합기본키+ 외래키 null 안됨 기본값:0(트리거)';
+comment on column ACCOUNT.ISDEL is '상태 확인 코드 - 복합기본키+ 외래키 null 안됨 기본값:0(트리거)';
 
 comment on column ACCOUNT.THUMB_IMG is '썸네일 위치 디렉토리+파일 이름';
 
@@ -449,7 +481,7 @@ create table BUSINESS_INFO (
 	,CORPORATION_NAME				nvarchar2(20)	not null
 	,REPRESENTATIVE					nvarchar2(20)	not null
 
-	,TYPE_CODE						number(2,0)		default 0 not null
+	,TYPE_CODE						number(2,0)		not null
 
 	,BUSINESS_ADDR					nvarchar2(20)	not null
 	,BUSINESS_DETAILED_ADDR			nvarchar2(50)	not null
@@ -477,11 +509,14 @@ create trigger BUSINESS_INFO_TRG
 	before insert on BUSINESS_INFO 
 	for each row
 begin
-	if(:NEW.INFO_REG_DATE is null) then
-		:NEW.INFO_REG_DATE := SYSTIMESTAMP;
-	end if;
 	if(:NEW.IDX is null) then
 		:NEW.IDX := BUSINESS_INFO_SEQ.nextval;
+	end if;
+	if(:NEW.TYPE_CODE is null) then
+		:NEW.TYPE_CODE := 0;
+	end if;
+	if(:NEW.INFO_REG_DATE is null) then
+		:NEW.INFO_REG_DATE := SYSTIMESTAMP;
 	end if;
 end;
 /
@@ -736,6 +771,213 @@ create table LIST_RECEIPT (
 
 
 */
+
+-----------------------------------------------  배송 상태 타입  -------------------------------------------------------
+
+create table DELIVERY_STATE_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(15)	not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint DELIVERY_STATE_PK primary key (CODE)
+);
+
+insert into DELIVERY_STATE_TYPE(CODE, NAME, DESCRIPTION) values (0, '기본값', '구현 방식 여부와 상관 없이 배송 테이블을 이용하기 위해 넣은 기본값');
+
+commit;
+
+
+comment on table DELIVERY_STATE_TYPE is '배송상태 타입 비즈니스 코드 테이블';
+
+comment on column DELIVERY_STATE_TYPE.CODE is '배송상태 타입 코드';
+
+comment on column DELIVERY_STATE_TYPE.NAME is '배송상태 이름';
+
+comment on column DELIVERY_STATE_TYPE.DESCRIPTION is '배송상태 설명';
+
+
+--drop table DELIVERY_STATE_TYPE cascade constraints;
+
+
+-----------------------------------------------  배송 시작 만료기한  -------------------------------------------------------
+
+create table DELIVERY_TIME_WINDOW_TYPE (
+
+	CODE				number(2,0)
+	,TIME_WINDOW		interval day (3) to second (3)	not null
+
+	,NAME				nvarchar2(15)	not null
+	,DESCRIPTION		nvarchar2(400)
+
+	,constraint DELIVERY_T_W_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into DELIVERY_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 05, 'DAY') ,'5일 내 배송 시작', '배송시작 요구를 한 뒤 5일 안에 배송이 시작되어야 함')
+	into DELIVERY_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 내 배송 시작', '배송시작 요구를 한 뒤 7일 안에 배송이 시작되어야 함')
+select 1 from DUAL;
+
+commit;
+
+
+comment on table DELIVERY_TIME_WINDOW_TYPE is '배송 시작 만료시간 제어용 테이블(일종의 서브타입 묶음)';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.CODE is '배송 시작 만료시간 비즈니스 코드 - 기본키';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
+
+
+--drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
+
+
+-----------------------------------------------  수령 확인 만료기한  -------------------------------------------------------
+
+create table DELIV_RECV_T_WIN_TYPE (
+
+	CODE				number(2,0)
+	,TIME_WINDOW		interval day (3) to second (3)	not null
+
+	,NAME				nvarchar2(15)	not null
+	,DESCRIPTION		nvarchar2(400)
+
+	,constraint DELIV_R_T_W_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into DELIV_RECV_T_WIN_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 07, 'DAY') ,'7일 내 수령 확인', '배송시작 확인 후 7일 안에 수령을 확인해야 함')
+	into DELIV_RECV_T_WIN_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 10, 'DAY') ,'10일 내 수령 확인', '배송시작 확인 후 10일 안에 수령을 확인해야 함')
+select 1 from DUAL;
+
+commit;
+
+
+comment on table DELIVERY_TIME_WINDOW_TYPE is '수령 확인 만료시간 제어용 테이블(일종의 서브타입 묶음)';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.CODE is '수령 확인 만료시간 비즈니스 코드 - 기본키';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
+
+comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
+
+
+--drop table DELIV_RECV_T_WIN_TYPE cascade constraints;
+
+
+-----------------------------------------------  배송  -------------------------------------------------------
+
+/*
+누가: 배송을 보낼 계정 + 받을계정
+언제: 배송시작시간 + 만료시간(만료시간도 테이블)
+어디서:
+무엇을:	입반구입
+		경매 물품 구입
+어떻게: 배송타입 추가???
+		배송지
+왜:
+*/
+
+create table DELIVERY (
+
+	IDX							number(13,0)
+	,SELLER_IDX					number(8,0)		not null
+	,BUYER_IDX					number(8,0)		not null
+	,REG_TIME					timestamp(3) with local time zone	not null
+
+	,RECEIVER_NAME				nvarchar2(20)	not null
+	,RECEIVER_ADDR				nvarchar2(20)	not null
+	,RECEIVER_DETAILED_ADDR		nvarchar2(50)	not null
+	,RECEIVER_PHONE				number(14,0)	not null
+
+	,STATE_CODE					number(2,0)		not null
+
+	,START_TIME_WIN_CODE		number(2,0)		not null
+	,RECEIVE_TIME_WIN_CODE		number(2,0)		not null
+
+	,START_TIME					timestamp(3) with local time zone
+	,RECEIVE_TIME				timestamp(3) with local time zone
+
+	,constraint DELIVERY_PK primary key (IDX)
+	,constraint DELIVERY_SELLER_IDX_FK foreign key (SELLER_IDX) references ACCOUNT (IDX)
+	,constraint DELIVERY_BUYER_IDX_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
+	,constraint DELIVERY_STATE_FK foreign key (STATE_CODE) references DELIVERY_STATE_TYPE (CODE)
+	,constraint DELIVERY_START_T_W_FK foreign key (START_TIME_WIN_CODE) references DELIVERY_TIME_WINDOW_TYPE (CODE)
+	,constraint DELIVERY_RECV_T_W_FK foreign key (RECEIVE_TIME_WIN_CODE) references DELIV_RECV_T_WIN_TYPE (CODE)
+);
+
+create index DELIVERY_SELLER_INDEX on DELIVERY (STATE_CODE, SELLER_IDX);
+
+create index DELIVERY_BUYER_INDEX on DELIVERY (STATE_CODE, BUYER_IDX); 
+
+create sequence DELIVERY_SEQ start with 1 increment by 1;
+
+create trigger DELIVERY_B_INSRT_TRG
+	before insert on DELIVERY
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := DELIVERY_SEQ.nextval;
+	end if;
+	if (:NEW.REG_TIME is null) then
+		:NEW.REG_TIME := SYSTIMESTAMP;
+	end if;
+	if (:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 0;
+	end if;
+	if (:NEW.START_TIME_WIN_CODE is null) then
+		:NEW.START_TIME_WIN_CODE := 1;
+	end if;
+	if (:NEW.RECEIVE_TIME_WIN_CODE is null) then
+		:NEW.RECEIVE_TIME_WIN_CODE := 1;
+	end if;
+end;
+/
+
+
+comment on table DELIVERY is '배송 테이블';
+
+comment on column DELIVERY.IDX is '배송 번호 - 기본키, 인조식별자. 트리거 있음';
+
+comment on column DELIVERY.SELLER_IDX is '판 계정 (물건을 보낼 계정) - 외래키 (계정번호) null불가';
+
+comment on column DELIVERY.BUYER_IDX is '산사람 (물건을 받을 계정) - 외래키 (계정번호) null불가';
+
+comment on column DELIVERY.REG_TIME is '등록시간 - null불가. 트리거 있음';
+
+comment on column DELIVERY.RECEIVER_NAME is '받는사람 이름 - null불가';
+
+comment on column DELIVERY.RECEIVER_ADDR is '받을 주소 - null불가';
+
+comment on column DELIVERY.RECEIVER_DETAILED_ADDR is '받을 상세 주소 - null불가';
+
+comment on column DELIVERY.RECEIVER_PHONE is '받을사람 연락처 - null불가';
+
+comment on column DELIVERY.STATE_CODE is '배송 상태 코드 - null불가. 외래키, 트리거있음(기본값 0)';
+
+comment on column DELIVERY.START_TIME_WIN_CODE is '배송 시작 제한 시간 타입 코드 - null불가. 외래키, 트리거있음(기본값 1)';
+
+comment on column DELIVERY.RECEIVE_TIME_WIN_CODE is '수령 확인 제한 시각 타입 코드 - null불가. 외래키, 트리거있음(기본값 1)';
+
+comment on column DELIVERY.START_TIME is '배송 시작 시간';
+
+comment on column DELIVERY.RECEIVE_TIME is '수령 확인 시간';
+
+
+--drop trigger DELIVERY_B_INSRT_TRG;
+--drop sequence DELIVERY_SEQ;
+--drop index DELIVERY_BUYER_INDEX;
+--drop index DELIVERY_SELLER_INDEX;
+--drop table DELIVERY cascade constraints;
+
+
+-----------------------------------------------  (보류)배송 - 실제 배송 시작 대기열  -------------------------------------------------------
+-----------------------------------------------  (보류)배송 - 수령 확인 대기열  -------------------------------------------------------
 
 ---------------------------------------------- 거래 중개 수수료 타입 ----------------------------------------------------
 -----------------------------------------------  경매 수수료 타입  ------------------------------------------------------
@@ -1390,6 +1632,8 @@ create table SALE_OPTION_RECEIPT (
 
 	IDX						number(13,0)
 
+	,DELIVERY_IDX			number(13,0)
+
 	,MAIN_RECPT_BUYER		number(8,0)		not null
 	,MAIN_RECPT_IDX			number(13,0)	not null
 
@@ -1403,7 +1647,8 @@ create table SALE_OPTION_RECEIPT (
 
 	,REFUND_TARGET_IDX		number(13,0)
 
-	,constraint SALE_OPT_RECIEPT_PK primary key (IDX)
+	,constraint SALE_OPT_RECEIPT_PK primary key (IDX)
+	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX)
 	,constraint SALEOPTRECPT_MRECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_OPTION_IDX) references SALE_OPTION (IDX) on delete set null
 	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
@@ -1429,6 +1674,31 @@ end;
 /
 
 
+comment on table SALE_OPTION_RECEIPT is '판매 옵션 목록 영수증';
+
+comment on column SALE_OPTION_RECEIPT.IDX is '판매 옵션 목록 영수증 번호 - 기본키, 인조식별자.';
+
+comment on column SALE_OPTION_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키, null가능';
+
+comment on column SALE_OPTION_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매자 번호 - 복합외래키 (주 영수증 기본키)';
+
+comment on column SALE_OPTION_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 - 복합외래키 (주 영수증 기본키)';
+
+comment on column SALE_OPTION_RECEIPT.SALE_OPTION_IDX is '판매 옵션 번호 - 외래키';
+
+comment on column SALE_OPTION_RECEIPT.NAME is '판매 옵션 이름 - null불가. 복제값 저장용.';
+
+comment on column SALE_OPTION_RECEIPT.AMOUNT is '판매 옵션 구매 수 - null불가';
+
+comment on column SALE_OPTION_RECEIPT.UNIT is '판매 옵션 단위 - null불가. 복제값 저장용.';
+
+comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불가. 복제값 저장용';
+
+comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
+
+comment on column SALE_OPTION_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 - null 가능';
+
+
 --drop trigger SALE_OPT_RECPT_TRG;
 --drop sequence SALE_OPT_RECPT_SEQ;
 --drop index SALE_OPT_RECPT_INDEX;
@@ -1437,6 +1707,64 @@ end;
 
 -----------------------------------------------  일반 구매: 배송대상  -----------------------------------------------
 -- 영수증과 통합.
+
+-----------------------------------------------  일반 구매: 판매 평가  -----------------------------------------------
+
+create table SALE_EVALUATION (
+
+	SALE_OPT_RECPT_IDX		number(13,0)	not null
+	,MAIN_RECPT_BUYER		number(8,0)
+	,MAIN_RECPT_IDX			number(13,0)
+
+	,SALE_IDX				number(10,0)	not null
+	,SCORE					number(3,0)		not null
+	,TITLE					nvarchar2(40)	not null
+	,CONTENT				nvarchar2(400)
+	,REG_TIME				date			not null
+	
+	,constraint SALE_EVAL_PK primary key (SALE_OPT_RECPT_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX)
+	,constraint SALE_EVAL_OPT_RCPT_FK foreign key (SALE_OPT_RECPT_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references SALE_OPTION_RECEIPT (IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX) on delete cascade
+	,constraint SALE_EVAL_SALE_FK foreign key (SALE_IDX) references SALE (IDX) on delete cascade
+	,constraint SALE_EVAL_ACC_IDX foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
+	,constraint SALE_EVAL_CHECK check (SCORE <=100 and SCORE >= 0)
+);
+
+create index SALE_EVAL_INDEX on SALE_EVALUATION (SALE_IDX);
+
+create trigger SALE_EVAL_TRG
+	before insert on SALE_EVALUATION
+	for each row 
+	when (NEW.REG_TIME is null)
+begin
+	:NEW.REG_TIME := SYSDATE;
+end;
+/
+
+
+comment on table SALE_EVALUATION is '판매글 평가';
+
+comment on column SALE_EVALUATION.MAIN_RECPT_BUYER is '주 영수증 구매계정..이자 글 쓴 계정 번호 - 복합기본키 + 복합외래키 (일반 구매 영수증 기본키)';
+
+comment on column SALE_EVALUATION.MAIN_RECPT_IDX is '주 영수증 번호 - 복합기본키 + 복합외래키';
+
+comment on column SALE_EVALUATION.SALE_OPT_RECPT_IDX is '일반 구매 영수증 번호 - 복합기본키 + 복합외래키 (일반 구매 영수증 기본키)';
+
+comment on column SALE_EVALUATION.SALE_IDX is '판매글 번호 - 외래키. null불가. 일종의 중복 데이터 이지만 처리의 용이성을 위해 추가.';
+
+comment on column SALE_EVALUATION.SCORE is '점수 - 0이상 100이하 정수. null불가';
+
+comment on column SALE_EVALUATION.TITLE is '제목 - null불가';
+
+comment on column SALE_EVALUATION.CONTENT is '내용 - null가능';
+
+comment on column SALE_EVALUATION.REG_TIME is '등록시간 - 트리거있음(시스템시간) null불가';
+
+--이미지도 추가할 거면 속성 추가하기..
+
+--drop trigger SALE_EVAL_TRG;
+--drop index SALE_EVAL_INDEX;
+--drop table SALE_EVALUATION cascade constraints;
+
 
 -----------------------------------------------  경매 만료시간 타입  -------------------------------------------------------
 -- 각종 만료시간 처리를 하나로 합쳤다가, 절대 해서는 안되는 금기사항이라고 해서 다시 분리함..
@@ -1820,7 +2148,6 @@ create table BID (
 
 	,BIDDER_IDX				number(8,0)		not null
 	,DEPOSIT_RATIO_CODE		number(2,0)		not null
-	,CONTRACT_T_WIN_CODE	number(2,0)		not null
 
 	,STATE_CODE				number(2,0)		not null
 
@@ -1829,7 +2156,6 @@ create table BID (
 	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint BID_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
-	,constraint BID_PAY_T_W_FK foreign key (CONTRACT_T_WIN_CODE) references CONTRACT_TIME_WINDOW_TYPE (CODE)
 	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
 	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
 );
@@ -1847,9 +2173,6 @@ begin
 --	end if;
 	if(:NEW.DEPOSIT_RATIO_CODE is null) then
 		:NEW.DEPOSIT_RATIO_CODE :=1;
-	end if;
-	if(:NEW.CONTRACT_T_WIN_CODE is null) then
-		:NEW.CONTRACT_T_WIN_CODE :=1;
 	end if;
 	if(:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 1;
@@ -1875,8 +2198,6 @@ comment on column BID.BID_TIME is '입찰 시각 - null불가. 트리거 있음:
 comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키 (계정) null불가';
 
 comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 트리거 있음(기본값 1)';
-
-comment on column BID.CONTRACT_T_WIN_CODE is '낙찰시 잔여금액 지불 만료 기한 코드 - 외래키. 트리거 있음(기본값:1 - 3일내 낙찰금 지불)';
 
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1)';
 
@@ -1904,31 +2225,38 @@ create table BID_CONTRACT_QUE (
 
 	AUCTION_IDX					number(10,0)
 	,BID_AMOUNT					number(11,0)	not null
-
+	,CONTRACT_T_WIN_CODE		number(2,0)		not null
+	
 	,PAYMENT_DUE				timestamp(3) with local time zone	not null
 
 	,constraint BID_CONTRACT_QUE_PK primary key (AUCTION_IDX)
 	,constraint BID_CONTRACT_AUCT_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
-	,constraint BID_CONTRACT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
+	,constraint BID_CONTRACT_Q_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
+	,constraint BID_CONTRACT_T_WIN foreign key (CONTRACT_T_WIN_CODE) references CONTRACT_TIME_WINDOW_TYPE (CODE)
 );
 
 create trigger BID_CONTRACT_QUE_TRG
 	before insert on BID_CONTRACT_QUE
 	for each row
 begin
+	if (:NEW.CONTRACT_T_WIN_CODE is null) then
+		:NEW.CONTRACT_T_WIN_CODE := 1;
+	end if;
 	select (TIME_WINDOW +SYSTIMESTAMP) into :NEW.PAYMENT_DUE from CONTRACT_TIME_WINDOW_TYPE
-		where CODE = (select CODE from BID where AUCTION_IDX = :NEW.AUCTION_IDX and AMOUNT = :NEW.BID_AMOUNT) ;
+		where CODE = :NEW.CONTRACT_T_WIN_CODE;
 end;
 /
 
 
 comment on table BID_CONTRACT_QUE is '경매 낙찰 대기열. 모든 속성이 null 불가';
 
-comment on column BID_CONTRACT_QUE.AUCTION_IDX is '경매 번호. 기본키 + 경매 외래키 + 입찰 외래키';
+comment on column BID_CONTRACT_QUE.AUCTION_IDX is '경매 번호. 기본키 + 경매 외래키 + 입찰 외래키. null불가';
 
-comment on column BID_CONTRACT_QUE.BID_AMOUNT is '입찰액. 입찰 외래키';
+comment on column BID_CONTRACT_QUE.BID_AMOUNT is '입찰액. 입찰 외래키 + null불가';
 
-comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기한 -> 이 테이블의 존재이유.';
+comment on column BID_CONTRACT_QUE.CONTRACT_T_WIN_CODE is '낙찰금 지불 기한 타입 코드 - 외래키. null불가 트리거 있음(기본값:1, 3일짜리)';
+
+comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기한 - 트리거 있음. null불가';
 
 
 --drop trigger BID_CONTRACT_QUE_TRG;
@@ -1947,6 +2275,8 @@ create table BID_CONTRACT_RECEIPT (
 	,MAIN_RECPT_BUYER		number(8,0)			not null
 	,MAIN_RECPT_IDX			number(13,0)		not null
 	,CONTRACT_AMOUNT		number(10,0)		not null
+	
+	,TITLE					nvarchar2(40)		not null
 
 	,STATE_CODE				number(2,0)			not null
 
@@ -1993,6 +2323,8 @@ comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -
 
 comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
 
+comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - 복제값 저장용 null불가';
+
 comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
 
 comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 IDX null가능';
@@ -2003,232 +2335,51 @@ comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 --drop index BID_CONTRCT_RECPT_INDX;
 --drop table BID_CONTRACT_RECEIPT cascade constraints;
 
------------------------------------------------  낙찰  -----------------------------------------------
+-----------------------------------------------  낙찰 완료 입찰 정보 -----------------------------------------------
+-- 낙찰된 입찰 목록 (입찰의 서브타입 형태)
+-- 트리거로 정보 관리중: 낙찰금 영수증 발생시 자동으로 입력
 
------------------------------------------------  경매: 배송대상  -----------------------------------------------
+create table BID_CONTRACT (
 
------------------------------------------------  배송 상태 타입  -------------------------------------------------------
+	AUCTION_IDX			number(10,0)
+	,BID_AMOUNT			number(11,0)
 
-create table DELIVERY_STATE_TYPE (
+	,RECPT_IDX			number(13,0)	not null
 
-	CODE			number(2,0)
-	,NAME			nvarchar2(15)	not null
-	,DESCRIPTION	nvarchar2(400)
+	,CONTRACT_TIME		timestamp(3)	not null
 
-	,constraint DELIVERY_STATE_PK primary key (CODE)
+	,constraint BID_CONTRACT_PK primary key (AUCTION_IDX, BID_AMOUNT)
+	,constraint BID_CONTRACT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
+	,constraint BID_CONTRACT_RECPT_FK foreign key (RECPT_IDX) references BID_CONTRACT_RECEIPT (IDX) on delete cascade
 );
 
-insert into DELIVERY_STATE_TYPE(CODE, NAME, DESCRIPTION) values (0, '기본값', '구현 방식 여부와 상관 없이 배송 테이블을 이용하기 위해 넣은 기본값');
-
-commit;
-
-
-comment on table DELIVERY_STATE_TYPE is '배송상태 타입 비즈니스 코드 테이블';
-
-comment on column DELIVERY_STATE_TYPE.CODE is '배송상태 타입 코드';
-
-comment on column DELIVERY_STATE_TYPE.NAME is '배송상태 이름';
-
-comment on column DELIVERY_STATE_TYPE.DESCRIPTION is '배송상태 설명';
-
-
---drop table DELIVERY_STATE_TYPE cascade constraints;
-
-
------------------------------------------------  배송 시작 만료기한  -------------------------------------------------------
-
-create table DELIVERY_TIME_WINDOW_TYPE (
-
-	CODE				number(2,0)
-	,TIME_WINDOW		interval day (3) to second (3)	not null
-
-	,NAME				nvarchar2(15)	not null
-	,DESCRIPTION		nvarchar2(400)
-
-	,constraint DELIVERY_T_W_TYPE_PK primary key (CODE)
-);
-
-insert all
-	into DELIVERY_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 05, 'DAY') ,'5일 내 배송 시작', '배송시작 요구를 한 뒤 5일 안에 배송이 시작되어야 함')
-	into DELIVERY_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 내 배송 시작', '배송시작 요구를 한 뒤 7일 안에 배송이 시작되어야 함')
-select 1 from DUAL;
-
-commit;
-
-
-comment on table DELIVERY_TIME_WINDOW_TYPE is '배송 시작 만료시간 제어용 테이블(일종의 서브타입 묶음)';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.CODE is '배송 시작 만료시간 비즈니스 코드 - 기본키';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
-
-
---drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
-
-
------------------------------------------------  수령 확인 만료기한  -------------------------------------------------------
-
-create table DELIV_RECV_T_WIN_TYPE (
-
-	CODE				number(2,0)
-	,TIME_WINDOW		interval day (3) to second (3)	not null
-
-	,NAME				nvarchar2(15)	not null
-	,DESCRIPTION		nvarchar2(400)
-
-	,constraint DELIV_R_T_W_TYPE_PK primary key (CODE)
-);
-
-insert all
-	into DELIV_RECV_T_WIN_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 07, 'DAY') ,'7일 내 수령 확인', '배송시작 확인 후 7일 안에 수령을 확인해야 함')
-	into DELIV_RECV_T_WIN_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 10, 'DAY') ,'10일 내 수령 확인', '배송시작 확인 후 10일 안에 수령을 확인해야 함')
-select 1 from DUAL;
-
-commit;
-
-
-comment on table DELIVERY_TIME_WINDOW_TYPE is '수령 확인 만료시간 제어용 테이블(일종의 서브타입 묶음)';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.CODE is '수령 확인 만료시간 비즈니스 코드 - 기본키';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
-
-comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
-
-
---drop table DELIV_RECV_T_WIN_TYPE cascade constraints;
-
-
------------------------------------------------  배송  -------------------------------------------------------
-
-/*
-누가: 배송을 보낼 계정 + 받을계정
-언제: 배송시작시간 + 만료시간(만료시간도 테이블)
-어디서:
-무엇을:	입반구입
-		경매 물품 구입
-어떻게: 배송타입 추가???
-		배송지
-왜:
-*/
-
-create table DELIVERY (
-
-	IDX							number(13,0)
-	,SELLER_IDX					number(8,0)		not null
-	,BUYER_IDX					number(8,0)		not null
-	,REG_TIME					timestamp(3) with local time zone	not null
-
-	,RECEIVER_NAME				nvarchar2(20)	not null
-	,RECEIVER_ADDR				nvarchar2(20)	not null
-	,RECEIVER_DETAILED_ADDR		nvarchar2(50)	not null
-	,RECEIVER_PHONE				number(14,0)	not null
-
-	,STATE_CODE					number(2,0)		not null
-
-	,START_TIME_WIN_CODE		number(2,0)		not null
-	,RECEIVE_TIME_WIN_CODE		number(2,0)		not null
-
-	,START_TIME					timestamp(3) with local time zone
-	,RECEIVE_TIME				timestamp(3) with local time zone
-
-	,constraint DELIVERY_PK primary key (IDX)
-	,constraint DELIVERY_SELLER_IDX_FK foreign key (SELLER_IDX) references ACCOUNT (IDX)
-	,constraint DELIVERY_BUYER_IDX_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
-	,constraint DELIVERY_STATE_FK foreign key (STATE_CODE) references DELIVERY_STATE_TYPE (CODE)
-	,constraint DELIVERY_START_T_W_FK foreign key (START_TIME_WIN_CODE) references DELIVERY_TIME_WINDOW_TYPE (CODE)
-	,constraint DELIVERY_RECV_T_W_FK foreign key (RECEIVE_TIME_WIN_CODE) references DELIV_RECV_T_WIN_TYPE (CODE)
-);
-
-create index DELIVERY_SELLER_INDEX on DELIVERY (STATE_CODE, SELLER_IDX);
-
-create index DELIVERY_BUYER_INDEX on DELIVERY (STATE_CODE, BUYER_IDX); 
-
-create sequence DELIVERY_SEQ start with 1 increment by 1;
-
-create trigger DELIVERY_B_INSRT_TRG
-	before insert on DELIVERY
+create trigger BID_CONTRACT_TRG
+	after insert on BID_CONTRACT_RECEIPT
 	for each row
 begin
-	if (:NEW.IDX is null) then
-		:NEW.IDX := DELIVERY_SEQ.nextval;
-	end if;
-	if (:NEW.REG_TIME is null) then
-		:NEW.REG_TIME := SYSTIMESTAMP;
-	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
-	end if;
-	if (:NEW.START_TIME_WIN_CODE is null) then
-		:NEW.START_TIME_WIN_CODE := 1;
-	end if;
-	if (:NEW.RECEIVE_TIME_WIN_CODE is null) then
-		:NEW.RECEIVE_TIME_WIN_CODE := 1;
-	end if;
+	insert into BID_CONTRACT (AUCTION_IDX, BID_AMOUNT, RECPT_IDX, CONTRACT_TIME) values (:NEW.AUCTION_IDX, :NEW.BID_AMOUNT, :NEW.IDX, SYSTIMESTAMP);
 end;
 /
 
 
-comment on table DELIVERY is '배송 테이블';
+comment on table BID_CONTRACT is '낙찰 완료 입찰 목록';
 
-comment on column DELIVERY.IDX is '배송 번호 - 기본키, 인조식별자. 트리거 있음';
+comment on column BID_CONTRACT.AUCTION_IDX is '대상 경매 번호 - 복합기본키 + 복합 외래키 (입찰 기본키)';
 
-comment on column DELIVERY.SELLER_IDX is '판 계정 (물건을 보낼 계정) - 외래키 (계정번호) null불가';
+comment on column BID_CONTRACT.BID_AMOUNT is '입찰액 - 복합기본키 + 복합 외래키 (입찰 기본키)';
 
-comment on column DELIVERY.BUYER_IDX is '산사람 (물건을 받을 계정) - 외래키 (계정번호) null불가';
+comment on column BID_CONTRACT.RECPT_IDX is '낙찰금 지불 영수증 번호 - 외래키. null불가';
 
-comment on column DELIVERY.REG_TIME is '등록시간 - null불가. 트리거 있음';
-
-comment on column DELIVERY.RECEIVER_NAME is '받는사람 이름 - null불가';
-
-comment on column DELIVERY.RECEIVER_ADDR is '받을 주소 - null불가';
-
-comment on column DELIVERY.RECEIVER_DETAILED_ADDR is '받을 상세 주소 - null불가';
-
-comment on column DELIVERY.RECEIVER_PHONE is '받을사람 연락처 - null불가';
-
-comment on column DELIVERY.STATE_CODE is '배송 상태 코드 - null불가. 외래키, 트리거있음(기본값 0)';
-
-comment on column DELIVERY.START_TIME_WIN_CODE is '배송 시작 제한 시간 타입 코드 - null불가. 외래키, 트리거있음(기본값 1)';
-
-comment on column DELIVERY.RECEIVE_TIME_WIN_CODE is '수령 확인 제한 시각 타입 코드 - null불가. 외래키, 트리거있음(기본값 1)';
-
-comment on column DELIVERY.START_TIME is '배송 시작 시간';
-
-comment on column DELIVERY.RECEIVE_TIME is '수령 확인 시간';
+comment on column BID_CONTRACT.CONTRACT_TIME is '낙찰 완료 목록에 등록된 시간 - null불가';
 
 
---drop trigger DELIVERY_B_INSRT_TRG;
---drop sequence DELIVERY_SEQ;
---drop index DELIVERY_BUYER_INDEX;
---drop index DELIVERY_SELLER_INDEX;
---drop table DELIVERY cascade constraints;
+--drop trigger BID_CONTRACT_TRG;
+--drop table BID_CONTRACT cascade constraints;
 
 
------------------------------------------------  (보류)배송 - 실제 배송 시작 대기열  -------------------------------------------------------
-
------------------------------------------------  (보류)배송 - 수령 확인 대기열  -------------------------------------------------------
-
------------------------------------------------  배송 묶음 -------------------------------------------------------
+-----------------------------------------------  경매: 배송대상  -----------------------------------------------
+-----------------------------------------------  (보류)배송 묶음 -------------------------------------------------------
 --배송 대상들과 배송 간 연결
-
-/*
-create table DELIVERY_PACK (
-
-	IDX
-	DELIVERY_IDX
-	
-);
-
-
-*/
-
 
 ------------------------------------------------  쪽지 타입 -------------------------------------------------
 -- 일단 쪽지 조회를 쉽게 처리하기 위해 넣은 테이블. 추가적인 타입을 지정하면서 여러 용도로 사용 가능
@@ -2389,7 +2540,7 @@ create table TODAYS_FARMER (
 
 	ACC_IDX			number(8,0)
 
-	,TITLE			nvarchar2(30)	not null
+	,TITLE			nvarchar2(40)	not null
 	,CONTENT		nvarchar2(2000)
 -- 2000자로 부족하면 clob로 변경하기 (단, clob는 update 트리거 적용 불가)
 	,WRITTEN_TIME	timestamp (0) with local time zone default SYSTIMESTAMP not null
