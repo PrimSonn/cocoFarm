@@ -1606,7 +1606,7 @@ create table SALE_OPTION_RECEIPT (
 	,REFUND_TARGET_IDX		number(13,0)
 
 	,constraint SALE_OPT_RECEIPT_PK primary key (IDX)
-	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX)
+	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint SALEOPTRECPT_MRECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_OPTION_IDX) references SALE_OPTION (IDX) on delete set null
 	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
@@ -2244,6 +2244,8 @@ create table BID_CONTRACT_RECEIPT (
 
 	IDX						number(13,0)
 
+	,DELIVERY_IDX			number(13,0)
+
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
@@ -2258,6 +2260,7 @@ create table BID_CONTRACT_RECEIPT (
 	,REFUND_TARGET_IDX		number(13,0)
 
 	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
+	,constraint BID_CONT_RECPT_DELVRY foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
 	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
@@ -2287,6 +2290,8 @@ end;
 comment on table BID_CONTRACT_RECEIPT is '낙찰금 영수증';
 
 comment on column BID_CONTRACT_RECEIPT.IDX is '낙찰금 영수증 번호 - 기본키, 인조식별자';
+
+comment on columm BID_CONTRACT_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키 , null가능';
 
 comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
 
