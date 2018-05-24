@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 		productDao.insert(product);
 //		System.out.println(product);
 //		System.out.println(">>>>>>>>>>>> idx = " + product.getIdx());
-		saleOption.setIdx(product.getIdx());
+		saleOption.setPkIdx(product.getIdx());
 		saleOptionDao.insert(saleOption);
 	}
 	

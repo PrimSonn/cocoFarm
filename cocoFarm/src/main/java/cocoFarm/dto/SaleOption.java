@@ -3,7 +3,8 @@ package cocoFarm.dto;
 import java.util.Date;
 
 public class SaleOption {
-	private int idx;		// SALE pk idx
+	private int pkIdx;		// SALE pk idx
+	private int idx;
 	private int saleIdx;
 	private String optionName;
 	private String description;
@@ -21,6 +22,12 @@ public class SaleOption {
 	}
 	public void setIdx(int idx) {
 		this.idx = idx;
+	}
+	public int getPkIdx() {
+		return pkIdx;
+	}
+	public void setPkIdx(int pkIdx) {
+		this.pkIdx = pkIdx;
 	}
 	public int getSaleIdx() {
 		return saleIdx;
@@ -90,7 +97,7 @@ public class SaleOption {
 	}
 	@Override
 	public String toString() {
-		return "SaleOption [idx=" + idx
+		return "SaleOption [pkIdx=" + pkIdx
 				+ ", saleIdx=" + saleIdx
 				+ ", optionName=" + optionName
 				+ ", description=" + description

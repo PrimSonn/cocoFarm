@@ -6,15 +6,16 @@
 <mapper namespace="cocoFarm.dao.SaleOptionDao">
 
 	<insert id="insert" parameterType="cocoFarm.dto.SaleOption">
-		INSERT INTO SALE_OPTION( sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel)
+		INSERT INTO SALE_OPTION( idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel)
 		VALUES(
-			#{idx },
+			sale_option_seq.nextval,
+			#{pkIdx },
 			#{optionName },
 			0,
 			#{price },
 			#{unit },
 			#{startAmount },
-			0,
+			#{startAmount },
 			sysdate,
 			sysdate,
 			sysdate,

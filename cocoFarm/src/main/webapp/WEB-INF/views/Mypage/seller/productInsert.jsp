@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <title>농산물 판매 상품 등록</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
@@ -12,8 +13,7 @@
 
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
- src="/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
-
+ src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 /* 숫자만 입력 시키게 하는것 */
@@ -43,25 +43,18 @@ $(document).ready(function() {
     });
 });
 
-
-
-
-
-
 function func1(sVal){
 	var sel =document.getElementById("option");
-var str1 ='<ul>'
-	+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
-	+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
-	+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
-	+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
-	+'</ul>';	
-var str2 =str1+str1;
-var str3 =str1+str2;
+	var str1 ='<ul>'
+		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
+		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+		+'</ul>';	
+	var str2 =str1+str1;
+	var str3 =str1+str2;
 	if(sVal =="1") {
-		
 		document.getElementById("option_boby").innerHTML=str1;
-		
 		
 	}else if (sVal =="2") {
 		document.getElementById("option_boby").innerHTML=str2;
@@ -98,10 +91,6 @@ $(document).ready(function() {
 
 
 </script>
-
-
-
-
 </head>
 <body>
 <div id="mypageheader">
@@ -175,11 +164,13 @@ $(document).ready(function() {
 			
 			</div>
 			
+			
 			<div class="mypage_page01">
 				<div class="border">
 					<h1>농산물 판매 상품 등록 </h1>
 					<div class="border_save">
-					<form action="/product/insert.do" id="insert" method="post">
+					
+					<form action="/product/insert.do" id="insert" method="post" enctype="multipart/form-data">
 						<table>
 						<tr>
 							<th class="td_back1">상품카테고리</th>
@@ -252,7 +243,7 @@ $(document).ready(function() {
 							nhn.husky.EZCreator.createInIFrame({
 							    oAppRef: oEditors,
 							    elPlaceHolder: "content",
-							    sSkinURI: "/smarteditor/SmartEditor2Skin.html",
+							    sSkinURI: "/resources/smarteditor/SmartEditor2Skin.html",
 							    fCreator: "createSEditor2",
 							    htParams : {
 							    	bUseToolbar: false, // 툴바 사용여부

@@ -20,6 +20,13 @@
 		</repository>
 	</repositories>
 	<dependencies>
+		<!-- Apache Tiles 3 -->
+	  <dependency>
+	    <groupId>org.apache.tiles</groupId>
+	    <artifactId>tiles-extras</artifactId>
+	    <version>${org.apache.tiles-version}</version>
+  	</dependency>
+		
 		<!-- mybatis-spring-->
 		<dependency>
 		    <groupId>org.mybatis</groupId>

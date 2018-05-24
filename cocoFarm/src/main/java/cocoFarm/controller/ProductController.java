@@ -26,12 +26,14 @@ public class ProductController {
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
 		System.out.println("insert.do get!");
-		return "mypage";
+		return "Mypage/seller/productInsert";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product, SaleOption saleOption,
 								HttpSession session, MultipartFile file) {
+		
+		System.out.println(UUID.randomUUID().toString());
 		// 고유 식별자
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
@@ -64,7 +66,7 @@ public class ProductController {
 //		System.out.println(saleOption);
 		
 //		return "mypage";
-		return "redirect:/product/insert.do?";
+		return "redirect:/product/insert.do";
 	}
 	
 }
