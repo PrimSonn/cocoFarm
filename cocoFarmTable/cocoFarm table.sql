@@ -59,7 +59,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	DELIVERY: 배송
 
-	BID_DEPOSIT_TYPE: 입찰 보증금 타입 코드
+	BID_DEPOSIT_TYPE: 입찰 보증금 타입 코드 **취소됨**
 
 	CATEGORY: 카테고리 (노드)
 
@@ -91,7 +91,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	AUCTION_DUE_QUE: 경매 만료 대기열
 
-	BID_DEPOSITE_RECEIPT: 입찰 보증금 영수증
+	BID_DEPOSITE_RECEIPT: 입찰 보증금 영수증 **취소됨**
 
 	BID_STATE_TYPE: 입찰 상태 코드
 
@@ -177,10 +177,10 @@ drop table CONTRACT_TIME_WINDOW_TYPE cascade constraints;
 
 drop table BID_STATE_TYPE cascade constraints;
 
-drop sequence BID_DEPO_RECPT_SEQ;
-drop trigger BID_DEPOSITE_RECPT_TRG;
-drop index BID_DEPO_RECPT_INDEX;
-drop table BID_DEPOSITE_RECEIPT cascade constraints;
+--drop sequence BID_DEPO_RECPT_SEQ;
+--drop trigger BID_DEPOSITE_RECPT_TRG;
+--drop index BID_DEPO_RECPT_INDEX;
+--drop table BID_DEPOSITE_RECEIPT cascade constraints;
 
 drop trigger AUCTION_DUE_QUE_TRG;
 drop index AUCTION_DUE_QUE_INDEX;
@@ -242,7 +242,7 @@ drop trigger CATEGORY_TRG;
 drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
 
-drop table BID_DEPOSIT_TYPE cascade constraints;
+--drop table BID_DEPOSIT_TYPE cascade constraints;
 
 drop trigger MAIN_RECEIPT_TRG;
 drop sequence MAIN_RECEIPT_SEQ;
@@ -282,6 +282,8 @@ drop table ACCOUNT_TYPE cascade constraints;
 
 drop table ISDEL_TYPE cascade constraints;
 
+-- 위 삭제 코드를 실행한 후, 코코팜 계정에 남아있는 테이블, 트리거, 시퀀스, 인덱스 등이 하나도 없어야 합니다. (이름 중복 방지)
+-- 혹시 중간에 없애기로 한 테이블이 남아있는지 확인해 주세요.
 
 --purge recyclebin;
 
@@ -413,6 +415,10 @@ comment on column ACCOUNT_STATE_TYPE.CODE is '';
 
 --drop table ACCOUNT_STATE_TYPE cascade constraints;
 
+
+------------------------------------------------  계정 제재 타입  ----------------------------------------------------
+
+------------------------------------------------  계정 제재 목록  ----------------------------------------------------
 
 ------------------------------------------------  계정  ----------------------------------------------------
 --세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (String), +옵션사항 "name" : NAME (String) ]
@@ -1082,9 +1088,10 @@ comment on column DELIVERY.RECEIVE_TIME is '수령 확인 시간';
 -----------------------------------------------  경매 수수료 타입  ------------------------------------------------------
 --그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.-
 
------------------------------------------------  입찰 보증금 타입 -------------------------------------------------------
+-----------------------------------------------  (취소)입찰 보증금 타입 -------------------------------------------------------
 -- 안쓰고 그냥 웹어플리케이션에서 정해진 상수값을 이용해도 됨.
 
+/*
 create table BID_DEPOSIT_TYPE (
 
 	CODE					number(2,0)
@@ -1118,7 +1125,7 @@ comment on column BID_DEPOSIT_TYPE.DESCRIPTION is '보증금 타입 설명';
 
 
 --drop table BID_DEPOSIT_TYPE cascade constraints;
-
+*/
 
 ---------------------------------------------- 카테고리 노드 ----------------------------------------------------
 -- 개별 카테고리 타입 개체. 예시: '사람' '당근' '채소' '과일'..
@@ -2048,10 +2055,10 @@ comment on column AUCTION_DUE_QUE.TIME_WINDOW is '예정 만료시각 - 트리�
 --drop table AUCTION_DUE_QUE cascade constraints;
 
 
------------------------------------------------ 입찰 보증금 영수증 --------------------------------------------------------
+----------------------------------------------- (취소)입찰 보증금 영수증 --------------------------------------------------------
 -- 입찰 정보의 변화나 처리에 무관하게 존재해야 하기 때문에 영수증을 입찰에서 분리. 입찰 보증금 영수증 -> 입찰 발생
 -- 목록 영수증들을 통합하려다 어차피 복잡하기는 매한가지라 그냥 나뉜채로 둠.
-
+/*
 create table BID_DEPOSITE_RECEIPT (
 
 	IDX						number(13,0)
@@ -2115,7 +2122,7 @@ comment on column BID_DEPOSITE_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 --drop trigger BID_DEPOSITE_RECPT_TRG;
 --drop index BID_DEPO_RECPT_INDEX;
 --drop table BID_DEPOSITE_RECEIPT cascade constraints;
-
+*/
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
 -- 0. 입찰중.
@@ -2223,19 +2230,19 @@ create table BID (
 	AUCTION_IDX				number(10,0)
 	,AMOUNT					number(11,0)
 
-	,DEPOSITE_RECPT_IDX		number(13,0)	not null
+--	,DEPOSITE_RECPT_IDX		number(13,0)	not null
 	,BID_TIME				timestamp(3) with local time zone not null
 
 	,BIDDER_IDX				number(8,0)		not null
-	,DEPOSIT_RATIO_CODE		number(2,0)		not null
+--	,DEPOSIT_RATIO_CODE		number(2,0)		not null
 
 	,STATE_CODE				number(2,0)		not null
 
 	,constraint BID_PK primary key (AUCTION_IDX, AMOUNT)
-	,constraint BID_RECPT_FK foreign key (DEPOSITE_RECPT_IDX) references BID_DEPOSITE_RECEIPT (IDX) on delete cascade
+--	,constraint BID_RECPT_FK foreign key (DEPOSITE_RECPT_IDX) references BID_DEPOSITE_RECEIPT (IDX) on delete cascade
 	,constraint BID_AUCTION_FK foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint BID_ACC_IDX_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
-	,constraint BID_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
+--	,constraint BID_DEPO_RETIO_FK foreign key (DEPOSIT_RATIO_CODE) references BID_DEPOSIT_TYPE (CODE)
 	,constraint BID_STATE_TYPE_FK foreign key (STATE_CODE) references BID_STATE_TYPE (CODE)
 	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
 );
@@ -2251,9 +2258,9 @@ begin
 --	if(:NEW.IDX is null) then
 --		:NEW.IDX := BID_SEQ.nextval;
 --	end if;
-	if(:NEW.DEPOSIT_RATIO_CODE is null) then
-		:NEW.DEPOSIT_RATIO_CODE :=1;
-	end if;
+--	if(:NEW.DEPOSIT_RATIO_CODE is null) then
+--		:NEW.DEPOSIT_RATIO_CODE :=1;
+--	end if;
 	if(:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 1;
 	end if;
@@ -2271,13 +2278,13 @@ comment on column BID.AUCTION_IDX is '대상 경매 번호 - 복합기본키. �
 
 comment on column BID.AMOUNT is '입찰액 - 복합 기본키, 0이상';
 
-comment on column BID.DEPOSITE_RECPT_IDX is '주 영수증 번호 - 외래키(보증금 영수증) null불가';
+--comment on column BID.DEPOSITE_RECPT_IDX is '주 영수증 번호 - 외래키(보증금 영수증) null불가';
 
 comment on column BID.BID_TIME is '입찰 시각 - null불가. 트리거 있음: 새 입찰 등록시, 시스템 시각 지정';
 
 comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키 (계정) null불가';
 
-comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 트리거 있음(기본값 1)';
+--comment on column BID.DEPOSIT_RATIO_CODE is '보증금 비율 코드 - 외래키, 트리거 있음(기본값 1)';
 
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1)';
 
@@ -2721,7 +2728,7 @@ comment on column TODAYS_FARMER_PICK.FARM_ACC_IDX is '선택된 오늘의 농부
 
 
 ------------------------------------------------  오늘의 농부 댓글 ----------------------------------------------------
-
+	
 create table TODAYS_FARMER_COMMENT (
 
 	IDX						number(10,0)	unique
@@ -2948,4 +2955,13 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 --drop trigger SITE_IMG_TRG;
 --drop sequence SITE_IMG_SEQ;
 --drop table SITE_IMG_SETTING cascade constraints;
+
+
+----------------------------------------------- 페널티 목록 -----------------------------------------------
+
+
+
+
+
+
 
