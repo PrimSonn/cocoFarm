@@ -7,6 +7,8 @@
 select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
 from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
 
+
+--아래 쿼리 실행하면 코코팜 관련 테이블 정보를 모두 띄워 줍니다.
 select TC.TABLE_NAME, TC.COMMENTS TABLE_COMMENTS, TB.COLUMN_NAME, TB.COMMENTS COLUMN_COMMENTS, TB.DATA_TYPE, TB.DATA_LENGTH, TB.DATA_PRECISION, TB.NULLABLE, TB.DATA_DEFAULT, TB.CHARACTER_SET_NAME, TB.CHAR_LENGTH from ALL_TAB_COMMENTS TC
 full outer join
     (select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
@@ -15,6 +17,9 @@ full outer join
 on TC.TABLE_NAME = TB.TABLE_NAME
 where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
+
+
+
 --USER_TABLES.TABLE_NAME
 --USER_SEQUENCES.SEQUENCE_NAME
 --USER_TRIGGERS.TRIGGER_NAME
@@ -22,6 +27,106 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 */
 
 -------------------------------------------------------------
+
+/*
+테이블 리스트
+
+	ISDEL_TYPE: 삭제상태 코드
+
+	ISDEL_TYPE: 계정 타입 코드
+
+	ACCOUNT_STATE_TYPE: 계정 전용 상태 코드 (삭제 등..)
+
+	ACCOUNT: 계정
+
+	BUSINESS_INFO_TYPE: 사업자 등록증 타입 코드
+
+	BUSINESS_INFO: 사업자 정보
+
+	PAYMENT_TYPE: 결제 타입
+
+	MAIN_RECEIPT_STATE_TYPE: 주 영수증 상태 코드
+
+	MAIN_RECEIPT: 주 영수증
+
+	LIST_RECPT_STATE_TYPE: 목록 영수증 상태 코드
+
+	DELIVERY_STATE_TYPE: 배송 상태 코드
+
+	DELIVERY_TIME_WINDOW_TYPE: 배송 시작 만료 기한 타입 코드
+
+	DELIV_RECV_T_WIN_TYPE: 수령 확인 만료 기한 타입 코드
+
+	DELIVERY: 배송
+
+	BID_DEPOSIT_TYPE: 입찰 보증금 타입 코드
+
+	CATEGORY: 카테고리 (노드)
+
+	CATEGORY_MAP: 카테고리 맵
+
+	SALE: 판매글
+
+	SALE_HIT: 판매글 조회수 중복 처리용 테이블
+
+	SALE_OPTION: 판매 옵션
+
+	SALE_OPT_CATEGORY: 옵션 - 카테고리 맵
+
+	SALE_INQUIRE: 판매글에 대한 문의글
+
+	CART: 장바구니
+
+	SALE_OPTION_RECEIPT: 일반 구매 영수증
+
+	SALE_EVALUATION: 판매글 평가
+
+	AUCTION_TIME_WINDOW_TYPE: 경매 만료시간 타입 코드
+
+	AUCTION_STATE_TYPE: 경매 상태 코드
+
+	AUCTION: 경매
+
+	AUCTION_CATEGORY_MAP: 경매 - 카테고리 맵
+
+	AUCTION_DUE_QUE: 경매 만료 대기열
+
+	BID_DEPOSITE_RECEIPT: 입찰 보증금 영수증
+
+	BID_STATE_TYPE: 입찰 상태 코드
+
+	CONTRACT_TIME_WINDOW_TYPE: 낙찰 지불 기한 타입 코드
+
+	BID: 입찰
+
+	BID_CONTRACT_QUE: 경매 낙찰 대기열
+
+	BID_CONTRACT_RECEIPT: 낙찰금 영수증
+
+	BID_CONTRACT: 낙찰 완료 입찰 정보
+
+	MESSAGE_TYPE: 쪽지 타입
+
+	MESSAGE: 쪽지
+
+	TODAYS_FARMER: 오늘의 농부
+
+	TODAYS_FARMER_PICK: 오늘의 농부 픽
+
+	TODAYS_FARMER_COMMENT: 오늘의 농부 댓글
+
+	ANNOUNCEMENT: 공지사항
+
+	SITE_MAIN_AUCTION: 메인 노출 경매 설정
+
+	SITE_IMG_TYPE: 사이트 이미지 타입 코드
+
+	SITE_IMG_SETTING: 사이트 이미지
+
+*/
+
+-------------------------------------------------------------
+
 
 drop trigger SITE_IMG_TRG;
 drop sequence SITE_IMG_SEQ;
@@ -241,7 +346,7 @@ comment on column ISDEL_TYPE.DESCRIPTION is '상태 설명';
 --drop table ISDEL_TYPE cascade constraints;
 
 
-------------------------------------------------  계정 코드 ----------------------------------------------------
+------------------------------------------------  계정 타입 코드 ----------------------------------------------------
 -- 이런 종류의 비즈니스 코드에 시퀀스 처리를 하는게 좀 이상해서 여기는 시퀀스를 안 넣어둠 (동적으로 타입을 정의하고 제어하는 구조가 아니니까..)
 -- 0:시스템(메세지 처리용) 1:관리자계정 2:사업자계정 3:일반계정
 -- 더미데이터에 관리자 계정 하나 이상 무조건 넣기.
@@ -556,7 +661,7 @@ comment on column BUSINESS_INFO.INFO_REG_DATE is '등록일 - 트리거있음';
 
 
 ---------------------------------------------- 결제 타입 -----------------------------------------------------
--- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯?
+-- 결제형태가 여러개 나올 수 있다는 가정 하에 만듬. 안쓰일듯? - 아임포트에서 여러 가지 결제를 이용하려면 유료..
 
 create table PAYMENT_TYPE (
 
@@ -1872,7 +1977,7 @@ comment on column AUCTION.ITEM_IMG is '경매물품 사진 - null 불가';
 
 comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외래키. 트리거 있음';
 
-comment on column AUCTION.HIGHEST_BID is '최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐';
+comment on column AUCTION.HIGHEST_BID is '현재 최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐';
 
 
 --drop trigger AUCTION_IDX_REGT_TRG;
