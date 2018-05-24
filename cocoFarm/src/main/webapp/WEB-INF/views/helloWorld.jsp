@@ -43,5 +43,7 @@
 	<label for='aa'><input id='aa'type='text'name='attr'></label><br>
 	<button type='submit'>submit</button>
 </form>
+<hr>
+<a href='signIn'><button>SignIn</button></a>
 </body>
 </html>

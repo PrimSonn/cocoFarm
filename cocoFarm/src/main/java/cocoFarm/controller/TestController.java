@@ -3,6 +3,7 @@ package cocoFarm.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +14,30 @@ import cocoFarm.dto.TestDto;
 
 @Controller
 public class TestController {
-	
+
 	@RequestMapping(value="main",method=RequestMethod.GET)
 	public ModelAndView mainGet(ModelAndView mv) {
 		
 		mv.setViewName("Main/cocomain");
+		return mv;
+	}
+
+	@RequestMapping(value="signIn",method=RequestMethod.GET)
+	public ModelAndView testSignIn(ModelAndView mv, HttpSession session) {
+		
+		session.setAttribute("idx", (int)1);
+		session.setAttribute("type", (int)2);
+		
+		mv.setViewName("redirect:auction/bid");
+		return mv;
+	}
+	
+	@RequestMapping(value="auction/bid",method=RequestMethod.GET)
+	public ModelAndView testBid(ModelAndView mv) {
+		
+		
+		
+		mv.setViewName("testBid/BidList");
 		return mv;
 	}
 

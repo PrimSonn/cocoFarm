@@ -8,7 +8,7 @@ select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T
 from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
 
 
---아래 쿼리 실행하면 코코팜 관련 테이블 정보를 모두 띄워 줍니다.
+--아래 쿼리를 실행하면 코코팜 관련 테이블 정보를 모두 띄워 줍니다.
 select TC.TABLE_NAME, TC.COMMENTS TABLE_COMMENTS, TB.COLUMN_NAME, TB.COMMENTS COLUMN_COMMENTS, TB.DATA_TYPE, TB.DATA_LENGTH, TB.DATA_PRECISION, TB.NULLABLE, TB.DATA_DEFAULT, TB.CHARACTER_SET_NAME, TB.CHAR_LENGTH from ALL_TAB_COMMENTS TC
 full outer join
     (select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
@@ -168,6 +168,7 @@ drop table BID_CONTRACT_RECEIPT cascade constraints;
 drop trigger BID_CONTRACT_QUE_TRG;
 drop table BID_CONTRACT_QUE cascade constraints;
 
+drop procedure BIDDER;
 drop trigger BID_INSERT_TRG;
 --drop sequence BID_SEQ;
 drop index BID_BIDDER_STATE_INDEX;
@@ -314,10 +315,14 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 예시) ISDEL - 지워졌나? 0:false(안지워짐) 1:true(지워짐)
 
 */
+------------------------------- 설명 --------------------------------------------------
+
+
+set serveroutput on;
+
 
 ------------------------------------------------  삭제상태 코드 ----------------------------------------------------
--- 삭제상태 코드 정리용.. 신경 안써도 됨. 뭔가 특별한 상태값을 더 추가하고 싶으면 이용하기
---예를들어 관리자의 블라인드 처리를 2번으로 둔다거나..
+-- 계정 전용 삭제상태 처리 테이블. (계시판의 삭제 처리와 분리)
 
 create table ISDEL_TYPE (
 
@@ -390,6 +395,7 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 create table ACCOUNT_STATE_TYPE (
 
 	CODE			number(2,0)
+	,THESHOLD		number(15,0)
 	,NAME			nvarchar2(20)	not null
 	,DESCRIPTION	nvarchar2(400)
 
@@ -404,13 +410,15 @@ select 1 from DUAL;
 commit;
 
 
-comment on table ACCOUNT_STATE_TYPE is '';
+comment on table ACCOUNT_STATE_TYPE is '별도의 계정 상태 (페널티 등) 처리용 테이블';
 
-comment on column ACCOUNT_STATE_TYPE.CODE is '';
+comment on column ACCOUNT_STATE_TYPE.THESHOLD is '상태 처리시 상수 처리용 속성';
 
-comment on column ACCOUNT_STATE_TYPE.CODE is '';
+comment on column ACCOUNT_STATE_TYPE.CODE is '계정 상태 타입 코드';
 
-comment on column ACCOUNT_STATE_TYPE.CODE is '';
+comment on column ACCOUNT_STATE_TYPE.NAME is '계정 상태 타입 이름';
+
+comment on column ACCOUNT_STATE_TYPE.DESCRIPTION is '계정 상태 타입 설명';
 
 
 --drop table ACCOUNT_STATE_TYPE cascade constraints;
@@ -421,7 +429,7 @@ comment on column ACCOUNT_STATE_TYPE.CODE is '';
 ------------------------------------------------  계정 제재 목록  ----------------------------------------------------
 
 ------------------------------------------------  계정  ----------------------------------------------------
---세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (String), +옵션사항 "name" : NAME (String) ]
+--세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (Integer), +옵션사항 "name" : NAME (String) ]
 
 create table ACCOUNT (
 
@@ -961,15 +969,15 @@ select 1 from DUAL;
 commit;
 
 
-comment on table DELIVERY_TIME_WINDOW_TYPE is '수령 확인 만료시간 제어용 테이블(일종의 서브타입 묶음)';
+comment on table DELIV_RECV_T_WIN_TYPE is '수령 확인 만료시간 제어용 테이블(일종의 서브타입 묶음)';
 
-comment on column DELIVERY_TIME_WINDOW_TYPE.CODE is '수령 확인 만료시간 비즈니스 코드 - 기본키';
+comment on column DELIV_RECV_T_WIN_TYPE.CODE is '수령 확인 만료시간 비즈니스 코드 - 기본키';
 
-comment on column DELIVERY_TIME_WINDOW_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
+comment on column DELIV_RECV_T_WIN_TYPE.TIME_WINDOW is '시간(길이) - null 안됨';
 
-comment on column DELIVERY_TIME_WINDOW_TYPE.NAME is '코드 이름 - null 안됨';
+comment on column DELIV_RECV_T_WIN_TYPE.NAME is '코드 이름 - null 안됨';
 
-comment on column DELIVERY_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
+comment on column DELIV_RECV_T_WIN_TYPE.DESCRIPTION is '코드 설명';
 
 
 --drop table DELIV_RECV_T_WIN_TYPE cascade constraints;
@@ -2269,6 +2277,24 @@ end;
 /
 -- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 보증금비율 코드 삽입, 결제타입 기본값 삽입, 지불기한 코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
 
+create procedure BIDDER (in_auction_idx number, in_amount number, in_bidder_idx number, isIn out number)
+is
+	a_amount number;
+	a_timeWindow timestamp;
+begin
+	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) 
+		into a_amount, a_timeWindow  from AUCTION A where IDX = in_auction_idx;
+	if( in_amount > a_amount*1.1 and SYSTIMESTAMP > a_timeWindow) then
+		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
+		select 1 into isIn from DUAL;
+	else
+		select 0 into isIn from DUAL;
+	end if;
+exception when OTHERS then
+	select 0 into isIn from DUAL;
+end;
+/
+-- 입찰 등록용 procedure. 성공시 1 반환 실패시 0 반환
 
 comment on table BID is '입찰 테이블 - 전체 속성 null 불가';
 
@@ -2289,6 +2315,7 @@ comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키 (계정)
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1)';
 
 
+--drop procedure BIDDER;
 --drop trigger BID_INSERT_TRG;
 --drop sequence BID_SEQ;
 --drop index BID_BIDDER_STATE_INDEX;
