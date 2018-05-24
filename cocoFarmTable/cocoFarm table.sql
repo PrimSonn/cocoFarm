@@ -2291,7 +2291,7 @@ comment on table BID_CONTRACT_RECEIPT is '낙찰금 영수증';
 
 comment on column BID_CONTRACT_RECEIPT.IDX is '낙찰금 영수증 번호 - 기본키, 인조식별자';
 
-comment on columm BID_CONTRACT_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키 , null가능';
+comment on column BID_CONTRACT_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키 , null가능';
 
 comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
 
