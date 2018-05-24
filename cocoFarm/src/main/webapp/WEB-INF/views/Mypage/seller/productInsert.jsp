@@ -74,6 +74,7 @@ function func1(sVal){
 
 }
 
+// 네이버 스마트에디터를 사용하는 방법
 function submitContents(elClickedObj) {
     // 에디터의 내용이 textarea에 적용된다.
     oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -88,7 +89,6 @@ $(document).ready(function() {
       submitContents($(this));
    });
 });
-
 
 </script>
 </head>
@@ -176,10 +176,10 @@ $(document).ready(function() {
 							<th class="td_back1">상품카테고리</th>
 							<td>
 								<SELECT class="category" name="category" SIZE=1>
-        					<OPTION VALUE=1 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
-       						<OPTION VALUE=2>과일/채소</OPTION>
-        					<OPTION VALUE=3>축산/수산</OPTION>
-        					<OPTION VALUE=4>가공식품</OPTION>
+        					<OPTION VALUE=0 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
+       						<OPTION VALUE=1>과일/채소</OPTION>
+        					<OPTION VALUE=2>축산/수산</OPTION>
+        					<OPTION VALUE=3>가공식품</OPTION>
 		    				</SELECT>
 	    				</td>
 						</tr>
@@ -255,8 +255,8 @@ $(document).ready(function() {
 						</script>
 						
 							<div class="save_group">
-                        <div><button class="save_button">등록하기</button></div>
-                        <div><button class="re_button">취소하기</button></div>
+              	<div><button class="save_button">등록하기</button></div>
+                <div><button class="re_button">취소하기</button></div>
               </div>
 							</form>
 						

@@ -13,6 +13,8 @@ public interface ProductDao {
 	
 	public void insert(Product product);
 	
+	public void insertCategory(Product product);
+	
 	public void update(Product product);
 	
 }

@@ -77,6 +77,8 @@ public class ProductController {
 		productService.insert(product, saleOption);
 //		System.out.println(saleOption);
 		
+		System.out.println(product.getCategory());
+		
 		return "Mypage/seller/productResult";
 //		return "redirect:/product/insert.do?";
 	}

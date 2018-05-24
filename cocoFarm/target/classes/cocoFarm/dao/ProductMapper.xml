@@ -5,6 +5,8 @@
   
 <mapper namespace="cocoFarm.dao.ProductDao">
 
+	<!-- hash map -->
+
 	<!-- acc_idx: 글쓴이 인덱스 참조하는 속성 (세션) -->
 	<!-- systimestamp: 밀리초까지 계산 -->
 	<insert id="insert" parameterType="cocoFarm.dto.Product">
@@ -26,5 +28,8 @@
 		</selectKey>
 	</insert>
 
+ 	<insert id="insertCategory" parameterType="cocoFarm.dto.Product">
+ 		INSERT INTO CATEGORY( idx, 
+ 	</insert>
 
 </mapper>
