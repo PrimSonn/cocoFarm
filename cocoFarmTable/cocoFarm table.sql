@@ -40,17 +40,10 @@ drop trigger TODAYS_FARM_COMM_TRG;
 drop sequence TODAYS_FARM_COMM_SEQ;
 drop table TODAYS_FARMER_COMMENT cascade constraints;
 
---drop table TODAYS_FARMER_RECOMMEND cascade constraints;
-
 drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop trigger TODAYS_FARMER_EDIT_TRG;
 drop table TODAYS_FARMER cascade constraints;
-
---drop trigger ACC_SUPPORT_ANS_TRG;
---drop trigger ACC_SUPPORT_INSERT_TRG;
---drop sequence ACC_SUPPORT_SEQ;
---drop table ACCOUNT_SUPPORT cascade constraints;
 
 drop trigger MESSAGE_TRG;
 drop sequence MESSAGE_SEQ;
@@ -174,8 +167,6 @@ drop table BUSINESS_INFO cascade constraints;
 
 drop table BUSINESS_INFO_TYPE cascade constraints;
 
---drop table ENTREPRENEUR_SCORE;
-
 drop trigger ACCOUNT_TRG;
 drop sequence ACCOUNT_SEQ;
 drop table ACCOUNT cascade constraints;
@@ -185,6 +176,9 @@ drop table ACCOUNT_STATE_TYPE cascade constraints;
 drop table ACCOUNT_TYPE cascade constraints;
 
 drop table ISDEL_TYPE cascade constraints;
+
+
+--purge recyclebin;
 
 
 ---------------------------- 뭔가 에러가 나면 아래 코드 실행해보기. 매번 할 필요는 없음 ------------------------------------
@@ -984,7 +978,7 @@ comment on column DELIVERY.RECEIVE_TIME is '수령 확인 시간';
 --그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.-
 
 -----------------------------------------------  입찰 보증금 타입 -------------------------------------------------------
---보증금 처리 방식을 정하는 로직을 만들 수 있게 하는 테이블. 트리거 처리를 할 예정이라 웹어플리케이션 쪽에서는 신경 쓰지 않아도 됨. (뭔가 구현할 수도 있고..)
+-- 안쓰고 그냥 웹어플리케이션에서 정해진 상수값을 이용해도 됨.
 
 create table BID_DEPOSIT_TYPE (
 
@@ -1450,42 +1444,6 @@ create table PURCHASE(
 
 */
 
----------------------------------------------- 판매 평가 댓글 (삭제중) ----------------------------------------------------
-/*
--- 성능..및 쿼리문의 작성을 용이하게 하기 위해 역정규화를 해둠. (SALE_IDX,PURCHASED_ACC)
-
-create table SALE_RECOMMEND (
-
-	PURCHASE_IDX		number(12,0)
-	,PURCHASED_ACC		number(8,0)		not null
-	,SALE_IDX			number(9,0)
-	,SCORE				number(3,0)		not null
-
-	,WRITTEN_TIME		timestamp (0) with local time zone	not null
---	,LAST_EDITED		timestamp (0) with local time zone (보류: 마지막 수정 시간 기록하려면 넣기. 이것도 '초' 까지 넣는걸로 정함. 소수점이 필요하면 괄호 안의 숫자 변경. '일'까지만 필요하면 date로 바꾸기)
-
-	,CONTENT			nvarchar2(2000)
-
-	,constraint SALE_RECOMMEND_PK primary key (PURCHASE_IDX)
-	,constraint FK_SALE_RECOMMEND_PURCHASE foreign key (PURCHASE_IDX, PURCHASED_ACC, SALE_IDX) references PURCHASE ( IDX, PURCHASED_ACC, SALE_IDX) on delete cascade
-	,constraint SALE_RECOMMEND_SCORE_CHECK check (SCORE between 1 and 100)
-);
-
-create or replace trigger SALE_RECOMMEND_TRG
-	before insert on SALE_RECOMMEND
-	for each row
-	when (NEW.WRITTEN_TIME is null)
-begin
-	:NEW.WRITTEN_TIME := SYSTIMESTAMP;
-end;
-/
-
-
---drop trigger SALE_RECOMMEND_TRG;
---drop table SALE_RECOMMEND cascade constraints;
-
-*/
-
 ---------------------------------------------- 판매글에 대한 문의글 ----------------------------------------------------
 
 create table SALE_INQUIRE(
@@ -1653,6 +1611,7 @@ create table SALE_OPTION_RECEIPT (
 	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_OPTION_IDX) references SALE_OPTION (IDX) on delete set null
 	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint SALE_OPT_REFUND_FK foreign key (REFUND_TARGET_IDX) references SALE_OPTION_RECEIPT (IDX)
+	,constraint SALE_OPT_RECPT_UNQ unique (IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX)
 	,constraint SALE_OPT_RECPT_CHECK check (AMOUNT >0 and PRICE >0)
 );
 
@@ -1725,7 +1684,7 @@ create table SALE_EVALUATION (
 	,constraint SALE_EVAL_PK primary key (SALE_OPT_RECPT_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX)
 	,constraint SALE_EVAL_OPT_RCPT_FK foreign key (SALE_OPT_RECPT_IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references SALE_OPTION_RECEIPT (IDX, MAIN_RECPT_BUYER, MAIN_RECPT_IDX) on delete cascade
 	,constraint SALE_EVAL_SALE_FK foreign key (SALE_IDX) references SALE (IDX) on delete cascade
-	,constraint SALE_EVAL_ACC_IDX foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
+	,constraint SALE_EVAL_ACC_IDX foreign key (MAIN_RECPT_BUYER) references ACCOUNT (IDX) on delete cascade
 	,constraint SALE_EVAL_CHECK check (SCORE <=100 and SCORE >= 0)
 );
 
@@ -1784,19 +1743,6 @@ insert all
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 경매', '3일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 경매', '7일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일 경매', '28일짜리 경매 기한')
-/*
--- 통합 취소!!
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 03, 'DAY') ,'3일 입찰금 지불기한', '3일짜리 입찰금 지불기한')
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (5, numtodsinterval( 04, 'DAY') ,'4일 입찰금 지불기한', '4일짜리 입찰금 지불기한')
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (6, numtodsinterval( 05, 'DAY') ,'5일 입찰금 지불기한', '5일짜리 입찰금 지불기한')
-	
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (7, numtodsinterval( 05, 'DAY') ,'5일 내 배송 시작', '배송시작 요구를 한 뒤 5일 안에 배송이 시작되어야 함')
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (8, numtodsinterval( 07, 'DAY') ,'7일 내 배송 시작', '배송시작 요구를 한 뒤 7일 안에 배송이 시작되어야 함')
-	
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (9, numtodsinterval( 07, 'DAY') ,'7일 내 수령완료', '배송 시작이 확인된 후 7일 이내 수령확인을 해야 함')
-	into TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (10, numtodsinterval( 10, 'DAY') ,'10일 내 수령완료', '배송 시작이 확인된 후 10일 이내 수령확인을 해야 함')
-*/
-
 select 1 from DUAL;
 
 commit;
@@ -1874,7 +1820,7 @@ create table AUCTION (
 
 	,STATE_CODE				number(2,0)
 
-	,HIGHEST_BID			number(11,0)		not null
+	,HIGHEST_BID			number(11,0)
 
 	,constraint AUCTION_PK primary key (IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
@@ -2039,7 +1985,7 @@ begin
 	end if;
 end;
 /
-
+-- 트리거 : 입찰번호 기본값, 상태코드 기본값(0).
 
 comment on table BID_DEPOSITE_RECEIPT is '입찰 보증금 영수증';
 
@@ -2067,6 +2013,35 @@ comment on column BID_DEPOSITE_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
+-- 0. 입찰중.
+-- 1. 입찰 성공. 경매 진행중
+-- 2. 낙찰 대기중 (최고입찰이 아님)
+-- 3. 낙찰금 지불 대기중 (최고입찰임, 금액 지불 대기중)
+-- 4. 완료
+-- 11. 자기 상위입찰 됨. - 보증금 환불 전
+-- 12. 자기 상위입찰 됨. - 보증금 환불 후
+-- 13. 경매가 취소됨 - 환불 전.
+-- 14. 경매가 취소됨 - 환불 후.
+-- 15. 진행중 입찰 취소 - 보증금 환불 전
+-- 16. 진행중 입찰 취소 - 보증금 환불 후
+-- 21. 경매 완료됨 - 최고입찰이 아님 - 보증금 환불 전
+-- 22. 경매 완료됨 - 최고입찰이 아님 - 보증금 환불 후
+-- 23. 경매 완료 후 취소 - 보증금 환불 없음
+-- 23. 낙찰금 지불 거부
+/*
+입찰 등록:
+	금액 지불(지불 요청 전 입찰액 확인(낙찰금 + 최소입찰 단위 보다 큰가, 경매가 만료되었는가)
+	1. 경매 만료 시한 확인
+	1.1 예외시 환불
+	2. 최고입찰액 + 최소입찰 단위와 입찰액 비교
+	2.1 예외시 환불
+	3. 경매의 최고 입찰액 갱신
+	3.1 예외시 환불
+	4. 입찰 목록에 등록 (최고입찰 목록을 따로 가지고 있다면 여기서 함께 처리)
+	4.1 예외시 환불 + 경매의 최고 입찰액을 돌려놓아야 함
+	5. 자기 상위입찰 여부 확인
+	5.1 자기 상위입찰 이라면 이전의 입찰에 대한 처리 (위의 11.12)
+*/
 
 create table BID_STATE_TYPE (
 
