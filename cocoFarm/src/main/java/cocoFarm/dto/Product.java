@@ -14,7 +14,14 @@ public class Product {
 	private String faceImg;
 	private String mainImg;
 	private int isdel;
+	private int category;
 	
+	public int getCategory() {
+		return category;
+	}
+	public void setCategory(int category) {
+		this.category = category;
+	}
 	public int getIdx() {
 		return idx;
 	}

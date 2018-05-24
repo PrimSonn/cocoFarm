@@ -19,7 +19,7 @@
 			systimestamp,
 			#{content },
 			#{faceImg },
-			0 )
+			#{mainImg } )
 		<!-- 		VALUES( sale_seq.nextval, #{accIdx }, #{productTitle }, #{origin }, #{writtenTime }, #{lastEdited }, #{content }, #{faceImg }, #{mainImg } ) -->
 		<selectKey resultType="int" keyProperty="idx" order="AFTER">
 			SELECT sale_seq.currval FROM DUAL

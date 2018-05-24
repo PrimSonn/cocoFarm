@@ -84,9 +84,9 @@ function submitContents(elClickedObj) {
 }
 
 $(document).ready(function() {
-	$("#btnWrite").click(function() {
-		submitContents($(this));
-	});
+   $(".save_button").click(function() {
+      submitContents($(this));
+   });
 });
 
 
@@ -195,11 +195,11 @@ $(document).ready(function() {
 						</tr>
 						<tr>
 							<th class="td_back2">대표이미지 등록하기</th>
-							<td><input type="file" id="faceImg" name="faceImg"></td>
+							<td><input type="file" id="faceImg" name="upload"></td>
 						</tr>
 						<tr>
 							<th class="td_back2">상세 설명 이미지 등록</th>
-							<td><input type="file" id="mainImg" name="mainImg"></td>
+							<td><input type="file" id="mainImg" name="upload"></td>
 						</tr>
 						<tr>
 							<th class="td_back2">원산지</th>
@@ -255,9 +255,9 @@ $(document).ready(function() {
 						</script>
 						
 							<div class="save_group">
-								<div class="save_button"><a href="#" onclick="document.getElementById('insert').submit();">상품 등록하기</a></div>
-								<div class="re_button"><a href="#">다시 작성하기</a></div>
-							</div>
+                        <div><button class="save_button">등록하기</button></div>
+                        <div><button class="re_button">취소하기</button></div>
+              </div>
 							</form>
 						
 						</div>
