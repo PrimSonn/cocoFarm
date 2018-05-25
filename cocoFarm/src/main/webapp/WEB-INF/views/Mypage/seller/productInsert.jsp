@@ -85,9 +85,28 @@ function submitContents(elClickedObj) {
 }
 
 $(document).ready(function() {
-   $(".save_button").click(function() {
-      submitContents($(this));
-   });
+	$(".save_button").click(function() {
+		if($(".category option:selected").val()==0) {
+		  alert("카테고리를 선택해주세요.");
+		  return false;
+		} else if($.trim($("#title").val())=="") {
+		  alert("제목을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=optionName]").val()==""){
+		  alert("옵션을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=startAmount]").val()==""){
+	    alert("판매수량을 입력해주세요.");
+	    return false;
+		} else if($("textarea[name=unit]").val()==""){
+      alert("단위를 입력해주세요.");
+      return false;
+		} else if($("textarea[name=price]").val()==""){
+      alert("판매가격을 입력해주세요.");
+      return false;
+		}
+		submitContents($(this));
+	});
 });
 
 </script>

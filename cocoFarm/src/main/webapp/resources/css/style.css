@@ -14,7 +14,7 @@
 
 /* layout */
 #header {width: 100%; height:550px; 
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center -350px;}
 
@@ -105,7 +105,7 @@ font-color:#666;
 }
 
 #header_boby .search .search_icon{
-	background: url(../img/main/search_01.png) no-repeat ;
+	background: url(/img/main/search_01.png) no-repeat ;
 	background-size:20px;
 	position: absolute;
 	width: 23px;
@@ -149,7 +149,7 @@ font-color:#666;
 
 /*허수아비 이미지  */
 #header_footimg .scarecrow{
-		background: url(../img/backgroundimg/scarecrow01.png) no-repeat ;
+		background: url(/img/backgroundimg/scarecrow01.png) no-repeat ;
 		background-size: 330px 330px;
 		width: 320px;
 		height: 320px;
@@ -160,7 +160,7 @@ font-color:#666;
 }
 /*캘리 이미지  */
 #header_footimg .calligraphy{
-		background: url(../img/backgroundimg/calligraphy02.png) no-repeat ;
+		background: url(/img/backgroundimg/calligraphy02.png) no-repeat ;
 		
 		width: 320px;
 		height: 320px;
@@ -170,7 +170,7 @@ font-color:#666;
 	top: 200px;	
 }
 #bottom_vimg{
-	background: url(../img/backgroundimg/back_vline.png) no-repeat ;
+	background: url(/img/backgroundimg/back_vline.png) no-repeat ;
 	background-position:center center;
 
 	width: 1920px;
@@ -189,7 +189,7 @@ font-color:#666;
 /* 로그인 페이지  */
 
 #loginheader {width: 100%; height:1100px;
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center 0px;}
 
@@ -339,7 +339,7 @@ position: relative;
 }
  
 .join_box .join_step .box i{
-background: url(../img/join_img/join01.png) no-repeat;
+background: url(/img/join_img/join01.png) no-repeat;
 background-size: 26px 26px;
 border:0px;
 width: 26px;
@@ -353,7 +353,7 @@ vertical-align: top;
 /*배경은 loginheader에서 쓰는거예요!!  */
 
 #mypageheader {width: 100%; height:1100px;
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center 0px;}
 
