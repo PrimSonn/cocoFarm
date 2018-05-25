@@ -27,3 +27,16 @@
 ++더미더미
 
 낙찰
+
+set serveroutput on;
+
+insert into ACCOUNT (ID, PW, NAME) values ('test', 'test', 'test');
+select * from ACCOUNT;
+
+insert into AUCTION (WRITTER_IDX, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID)
+			values (1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
+select * from AUCTION;
+
+exec BIDDER (1, 3400, 1);
+
+select * from BID;

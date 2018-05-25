@@ -2133,13 +2133,13 @@ comment on column BID_DEPOSITE_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 */
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
--- 0. 입찰중.
+-- 0. 입찰중. - 안쓰임
 -- 1. 입찰 성공. 경매 진행중
 -- 2. 낙찰 대기중 (최고입찰이 아님)
 -- 3. 낙찰금 지불 대기중 (최고입찰임, 금액 지불 대기중)
 -- 4. 완료
--- 11. 자기 상위입찰 됨. - 보증금 환불 전
--- 12. 자기 상위입찰 됨. - 보증금 환불 후
+-- 11. 자기 상위입찰 됨. - 보증금 환불 전 (취소)
+-- 12. 자기 상위입찰 됨. - 보증금 환불 후 (보증금 없음)
 -- 13. 경매가 취소됨 - 환불 전.
 -- 14. 경매가 취소됨 - 환불 후.
 -- 15. 진행중 입찰 취소 - 보증금 환불 전
@@ -2174,6 +2174,7 @@ create table BID_STATE_TYPE (
 
 insert all
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰 후 경매 만료 대기중, 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨')
 select 1 from DUAL;
 
 commit;
@@ -2284,17 +2285,24 @@ is
 begin
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) 
 		into a_amount, a_timeWindow  from AUCTION A where IDX = in_auction_idx;
-	if( in_amount > a_amount*1.1 and SYSTIMESTAMP > a_timeWindow) then
-		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
-		select 1 into isIn from DUAL;
+	if (in_amount < a_amount*1.1) then
+		select -1 into isIn from DUAL;
+	elsif ( SYSTIMESTAMP > a_timeWindow) then
+		select -2 into isIn from DUAL;
 	else
-		select 0 into isIn from DUAL;
+		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
+        update BID set STATE_CODE = 11 where BIDDER_IDX = in_bidder_idx and AMOUNT != in_amount;
+        update AUCTION set HIGHEST_BID = in_amount where IDX = in_auction_idx;
+		commit;
+		select 1 into isIn from DUAL;
 	end if;
 exception when OTHERS then
 	select 0 into isIn from DUAL;
 end;
 /
--- 입찰 등록용 procedure. 성공시 1 반환 실패시 0 반환
+-- 입찰 등록용 procedure. 성공시 1 반환, 금액 부족시 -1, 기간 만료시 -2, 에러(주로 경매 번호나 계정 이상) 시 0
+
+
 
 comment on table BID is '입찰 테이블 - 전체 속성 null 불가';
 
@@ -2989,6 +2997,14 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 
 
 
+-------------------------------------------------------------------------------------------------------------
+/*
+insert all
+    into ACCOUNT (ID, PW, NAME) values ('test', 'test', 'test')
+    into ACCOUNT (ID, PW, NAME) values ('test2', 'test', 'test2')
+select 1 from DUAL;
+insert into AUCTION (WRITTER_IDX, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID)
+			values (1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
 
-
+*/
 
