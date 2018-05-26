@@ -8,14 +8,14 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
+
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
-	<resources location="/imgs/" mapping="/img/**"/>
-	<resources location="/css/" mapping="/css/**"/>
+	<resources location="/resources/img/" mapping="/img/**"/>
+	<resources location="/resources/css/" mapping="/css/**"/>
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -23,9 +23,8 @@
 		<beans:property name="suffix" value=".jsp" />
 <!--	<beans:property name='order' value='2'/>	-->
 	</beans:bean>
-	
 
-	
+
 <!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
 	
 <!-- 	<interceptors> -->	<!-- 나중에 인터셉터 추가시 설정. -->

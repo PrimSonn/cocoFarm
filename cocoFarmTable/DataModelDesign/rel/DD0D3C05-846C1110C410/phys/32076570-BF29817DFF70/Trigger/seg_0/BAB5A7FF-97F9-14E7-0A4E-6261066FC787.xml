@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPT_RECPT_TRG" directorySegmentName="seg_0" id="BAB5A7FF-97F9-14E7-0A4E-6261066FC787">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_RECPT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := SALE_OPT_RECPT_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.STATE_CODE is null) then&lt;br/&gt;		:NEW.STATE_CODE := 0;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>71952CC1-303B-1F87-E8CC-4306C1312805</table>
+</TriggerOraclev10g>

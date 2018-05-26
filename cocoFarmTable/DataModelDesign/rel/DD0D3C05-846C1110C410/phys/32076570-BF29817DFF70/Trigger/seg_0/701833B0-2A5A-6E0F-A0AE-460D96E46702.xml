@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="BID_CONTRACT_QUE_TRG" directorySegmentName="seg_0" id="701833B0-2A5A-6E0F-A0AE-460D96E46702">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_QUE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.CONTRACT_T_WIN_CODE is null) then&lt;br/&gt;		:NEW.CONTRACT_T_WIN_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;	select (TIME_WINDOW +SYSTIMESTAMP) into :NEW.PAYMENT_DUE from CONTRACT_TIME_WINDOW_TYPE&lt;br/&gt;		where CODE = :NEW.CONTRACT_T_WIN_CODE;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>C7D2BEE1-7E1C-6EAB-2A88-87AAFABFFE25</table>
+</TriggerOraclev10g>

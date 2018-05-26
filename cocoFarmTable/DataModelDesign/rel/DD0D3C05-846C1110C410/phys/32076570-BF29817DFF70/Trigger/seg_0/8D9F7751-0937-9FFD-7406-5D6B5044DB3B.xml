@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="BUSINESS_ACCOUNT_TRG" directorySegmentName="seg_0" id="8D9F7751-0937-9FFD-7406-5D6B5044DB3B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BUSINESS_ACCOUNT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	update ACCOUNT set TYPE_CODE = 2 where IDX = :NEW.ACC_IDX;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>AFTER</triggerTime>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>1D9F11A0-3F65-751C-A3DD-3528DCE3DE35</table>
+</TriggerOraclev10g>

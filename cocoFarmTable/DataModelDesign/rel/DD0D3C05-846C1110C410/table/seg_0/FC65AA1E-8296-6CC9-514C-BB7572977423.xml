@@ -1,0 +1,91 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FC65AA1E-8296-6CC9-514C-BB7572977423" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_STATE_TYPE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_STATE_TYPE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>경매 상태 타입 코드 테이블</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CODE" id="6DC4E046-793C-0014-17A9-A810943B6BD4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_STATE_TYPE</sourceObjSchema>
+<sourceObjName>CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>경매 상태 코드 - 기본키</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="EF77034E-6362-6B22-985A-E841EC84DBF2">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_STATE_TYPE</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>경매 상태 이름 - null 불가</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="CBB9590D-1CF7-49BF-F3CF-D62AA4AAE44D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_STATE_TYPE</sourceObjSchema>
+<sourceObjName>DESCRIPTION</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>경매 상태 설명</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>400</dataTypeSize>
+<ownDataTypeParameters>400,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="543E7928-90B4-CA58-CFE8-C23F74669F15" name="BID_STATE_TYPE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_STATE_TYPE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6DC4E046-793C-0014-17A9-A810943B6BD4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="308F14E4-6816-C5A9-ABD2-FF6BB415D292" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_STATE_TYPE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_STATE_TYPE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6DC4E046-793C-0014-17A9-A810943B6BD4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="AUCTION_IDX_REGT_TRG" directorySegmentName="seg_0" id="F23C4177-4F11-E3F2-267C-37B66D31A42B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_IDX_REGT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := AUCTION_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.TIME_WINDOW_CODE is null) then&lt;br/&gt;		:NEW.TIME_WINDOW_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.STATE_CODE is null) then&lt;br/&gt;		:NEW.STATE_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;	:NEW.REG_TIME := SYSTIMESTAMP;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>258724D2-90C4-1076-E87C-50D3800A688B</table>
+</TriggerOraclev10g>

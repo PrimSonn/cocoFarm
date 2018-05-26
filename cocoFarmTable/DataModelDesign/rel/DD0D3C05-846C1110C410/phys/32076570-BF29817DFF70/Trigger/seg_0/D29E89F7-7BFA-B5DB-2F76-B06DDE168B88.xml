@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="ANNOUNCEMENT_TRG" directorySegmentName="seg_0" id="D29E89F7-7BFA-B5DB-2F76-B06DDE168B88">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>ANNOUNCEMENT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := ANNOUNCEMENT_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if  (:NEW.WRITTEN_TIME is null) then&lt;br/&gt;		:NEW.WRITTEN_TIME := SYSTIMESTAMP;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>AFDE32D3-2D01-500F-3A93-E8702E0752B7</table>
+</TriggerOraclev10g>

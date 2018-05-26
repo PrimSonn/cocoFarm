@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="BID" directorySegmentName="seg_0" id="9F7A647F-5D95-440B-2AF2-32BA2FBB902B">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>01431B25-2400-02D2-1AED-1481E85CD52E</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="BID_TIME" id="11BBB109-2411-2D0D-16D0-49BFF9AE85A5">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AUCTION_IDX" id="7A6FBD70-8503-8B61-3860-AFD764B69AD6">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AMOUNT" id="AADDB412-88C8-3AB3-027D-29CFB2C6A81C">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BIDDER_IDX" id="C81C9C68-2DBB-A8A6-736F-13B67A8B0DA3">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="STATE_CODE" id="FAEC248D-440F-8A5A-DE46-3372130A6838">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="BID_BIDDER_STATE_INDEX" id="2BDDB8C6-524C-6117-74A8-C7B79F166BAE">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="BID_PK" id="791EBEFC-7115-81B0-74B6-6C13C4D1B344">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="BID_STATE_TYPE_FK" id="22920EB7-0DAD-270F-E439-91DACE21A28A">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="BID_ACC_IDX_FK" id="C92BEB36-424B-5278-EB32-25DBC2093968">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="BID_AUCTION_FK" id="D078B8DD-EE51-8139-299B-56EF9DF70C54">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="BID_PK" id="1AE4A331-C994-DA95-83FE-77E57F50E9B9">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<existingIndex>791EBEFC-7115-81B0-74B6-6C13C4D1B344</existingIndex>
+<indexSegment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

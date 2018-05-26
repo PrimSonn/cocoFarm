@@ -1,0 +1,139 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="BUSINESS_INFO" directorySegmentName="seg_0" id="1D9F11A0-3F65-751C-A3DD-3528DCE3DE35">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>01431B25-2400-02D2-1AED-1481E85CD52E</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="REPRESENTATIVE" id="08782825-17BC-3959-39A1-C60BE718B675">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CORPORATION_NAME" id="159E5CA9-3B3E-E81F-F686-CB239B2477D1">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="REG_DATE" id="7995361C-4C72-337A-3681-A3B10E636A83">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="LICENSE_IMG" id="8D8F2CED-4CE8-FE6E-E1DD-02B8DAFCF381">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="HEADHQUARTER_ADDR" id="8DC59AAA-277C-3B52-E43E-2791146A70C2">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TYPE_CODE" id="910F23A1-89C6-C946-10FE-5076CBA06198">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="INFO_REG_DATE" id="980E5146-39F1-158C-6E4E-E2BD7D53584F">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ACC_IDX" id="C2097245-6402-48A7-8F51-CD1A3DC74C26">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="IDX" id="C3896F30-2C8B-CE74-814B-963B297BA3F0">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUSINESS_CATEGORY" id="C4CDE6D6-E1A2-BDD1-2EEF-58D599A8CA64">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUSINESS_ADDR" id="DBAF262B-1D43-4DC4-894D-A80E8A21229C">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUSINESS_LICENSE_CODE" id="EAE5C782-3B66-A4C5-08C2-F1ACF4C1CE39">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUSINESS_TYPE" id="F1C49BFB-A06C-B7E0-7D16-63AD40962E13">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="HEADHQUARTER_DETAILED_ADDR" id="F2183594-8E07-06EA-7345-1D86C70631C4">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUSINESS_DETAILED_ADDR" id="F447EC2C-4854-2E94-ED09-2E1178AE209E">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="BUSINESS_INFO_PK" id="0159AC7F-5597-2A46-F3AB-37A710782EA4">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_BUSINESS_INFO_ACCOUNT_IDX" id="72A71582-0C67-8010-4C73-0F490E7BABBB">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_BUSINESS_INFO_TYPE" id="D82247B3-4F96-0568-ADA4-FDC840927BDE">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="BUSINESS_INFO_PK" id="E3A1FA4B-33D8-888C-CBA6-B37B6CE2A73C">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<existingIndex>0159AC7F-5597-2A46-F3AB-37A710782EA4</existingIndex>
+<indexSegment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="BUSINESS_INFO_IDX_UN" id="F4B623AB-F7ED-1575-B6B8-9398F07CC730">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<indexSegment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>

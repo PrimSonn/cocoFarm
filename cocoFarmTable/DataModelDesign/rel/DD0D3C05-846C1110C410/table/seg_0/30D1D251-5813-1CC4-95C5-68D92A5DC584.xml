@@ -1,0 +1,139 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="30D1D251-5813-1CC4-95C5-68D92A5DC584" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_CONTRACT">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>낙찰 완료 입찰 목록</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AUCTION_IDX" id="16937A3B-D9E4-12C4-7246-BFA7BA881A49">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>대상 경매 번호 - 복합기본키 + 복합 외래키 (입찰 기본키)</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0B1DA825-1005-50F4-CD17-065F1B3F727A" referredColumn="7A6FBD70-8503-8B61-3860-AFD764B69AD6"/>
+</associations>
+</Column>
+<Column name="BID_AMOUNT" id="1A47852D-8B84-8633-6FE5-1C9FC3B1ADE5">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT</sourceObjSchema>
+<sourceObjName>BID_AMOUNT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰액 - 복합기본키 + 복합 외래키 (입찰 기본키)</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0B1DA825-1005-50F4-CD17-065F1B3F727A" referredColumn="AADDB412-88C8-3AB3-027D-29CFB2C6A81C"/>
+</associations>
+</Column>
+<Column name="RECPT_IDX" id="5DADEB78-2566-163E-07F5-B5B963B3CFE0">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT</sourceObjSchema>
+<sourceObjName>RECPT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>낙찰금 지불 영수증 번호 - 외래키. null불가</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>13</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,13,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6BFB6724-2EA4-47A0-B5D6-6239A6E5A679" referredColumn="5FF71196-A463-4BED-91DE-3AB594F8ABC3"/>
+</associations>
+</Column>
+<Column name="CONTRACT_TIME" id="FD4E87BD-5E47-77A7-3F01-516BEC23DBD0">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT</sourceObjSchema>
+<sourceObjName>CONTRACT_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>낙찰 완료 목록에 등록된 시간 - null불가</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1835142D-BB0D-8811-A7C4-4AD1EC48AA2A" name="BID_CONTRACT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="16937A3B-D9E4-12C4-7246-BFA7BA881A49"/>
+<colUsage columnID="1A47852D-8B84-8633-6FE5-1C9FC3B1ADE5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="26905DE7-6883-352F-C1AB-45281ED7C07A" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_CONTRACT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="16937A3B-D9E4-12C4-7246-BFA7BA881A49"/>
+<colUsage columnID="1A47852D-8B84-8633-6FE5-1C9FC3B1ADE5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="933D8679-268C-72D5-9AB3-EA4D5CEFC789" name="BID_CONTRACT_BID_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="16937A3B-D9E4-12C4-7246-BFA7BA881A49"/>
+<colUsage columnID="1A47852D-8B84-8633-6FE5-1C9FC3B1ADE5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="876284AC-A8C7-C1CB-416A-999128DEC020" name="BID_CONTRACT_RECPT_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5DADEB78-2566-163E-07F5-B5B963B3CFE0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

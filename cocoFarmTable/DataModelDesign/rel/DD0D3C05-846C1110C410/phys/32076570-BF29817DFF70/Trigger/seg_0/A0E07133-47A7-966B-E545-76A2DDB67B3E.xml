@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPT_CAT_UPDATE_TRG" directorySegmentName="seg_0" id="A0E07133-47A7-966B-E545-76A2DDB67B3E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_CAT_UPDATE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>UPDATE</actions>
+<body>begin&lt;br/&gt;	update SALE_OPTION set LAST_EDITED = SYSTIMESTAMP where IDX = :NEW.SALE_OPT_IDX;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>AFTER</triggerTime>
+<columns>90FD994B-08BB-4B08-CF33-872DEAD00116</columns>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>1D46F02B-986C-EFDC-26D3-DBFF51C60ED9</table>
+</TriggerOraclev10g>

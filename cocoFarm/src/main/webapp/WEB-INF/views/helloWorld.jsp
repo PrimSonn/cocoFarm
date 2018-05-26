@@ -12,7 +12,12 @@
 <hr>
 <div class='cssTest'>
 <h5>resources 매핑 테스트</h5>
-<img src='/imgs/etc/join01.png'>
+<img src='/img/etc/join01.png'><br>
+<%
+Integer idx = (Integer)session.getAttribute("idx");
+if(idx!=null){
+	out.print("session Idx: "+idx);
+}%>
 </div>
 <h5>test1: 스프링에서 단일 오브젝트로 그냥받게 하기</h5>
 <form action='test1'method='post'>
@@ -44,6 +49,11 @@
 	<button type='submit'>submit</button>
 </form>
 <hr>
-<a href='signIn'><button>SignIn</button></a>
+<h4>signIn</h4>
+<form action='signIn'method='post'>
+	<label for='idtext'>id: <input id='idtext'type='text'name='idx'></label><br>
+	<label for='typetext'>type: <input id='typetext'type='text'name='type'></label><br>
+	<button type='submit'>SignIn</button>
+</form>
 </body>
 </html>

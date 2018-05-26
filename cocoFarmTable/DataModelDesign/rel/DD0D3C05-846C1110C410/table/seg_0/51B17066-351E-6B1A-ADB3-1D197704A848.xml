@@ -1,0 +1,287 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="51B17066-351E-6B1A-ADB3-1D197704A848" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="MESSAGE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MESSAGE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>쪽지</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="C4C33626-5F9C-2CE0-6C1B-914AE4967F31">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>쪽지번호 - 유일성. 복합기본키, 인조식별자</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>12</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,12,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SENDER_IDX" id="F70FB905-D39A-3357-BE49-439695970ED6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>SENDER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>보낸사람 - 외래키 (계정.계정번호) null안됨</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="56BCD3D6-8D8D-8720-9D5B-A376FD9F3E57" referredColumn="12321AB3-9DB6-C041-940B-41DFFE84B823"/>
+</associations>
+</Column>
+<Column name="RECEIVER_IDX" id="5D3E5506-BB26-8165-E9E7-F0449036DDEF">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>RECEIVER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>받는사람 - 복합기본키. 외래키 (계정.계정번호)</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8B2A75C0-277E-0BC9-9EB1-77DCD3D2C062" referredColumn="12321AB3-9DB6-C041-940B-41DFFE84B823"/>
+</associations>
+</Column>
+<Column name="TITLE" id="5AF3E814-7640-6032-3A92-DA5B2E5A98C0">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>TITLE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>제목 - null 안됨</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CONTENT" id="F1EC6EDA-D27D-940F-D0BD-ABA14A02B44B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>CONTENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>내용</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>1000</dataTypeSize>
+<ownDataTypeParameters>1000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="WRITTEN_TIME" id="B04A867C-000C-68F9-9EAD-C6A894EC4705">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>WRITTEN_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>작성시각 - null안됨 트리거 있음</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="IS_READ" id="4C7291DA-DB19-034F-F98F-7BD806614215">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>IS_READ</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>조회 여부 표시. 1:읽음, 0:안읽음, 기본값:0</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="READ_TIME" id="4D2EB655-FFAC-6033-2574-C6718AAF8827">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>READ_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>읽은 시각 기록 - 조회여부 확인용.</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TYPE_CODE" id="93AE32FE-3817-3A31-18C4-79B11828D81F">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>TYPE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>메세지 타입 - 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8F876DBD-57EE-1E79-2759-2CC7DBA88872" referredColumn="4B84167B-B045-BB74-7F44-08577D18D466"/>
+</associations>
+</Column>
+<Column name="ISDEL" id="4E7320C9-06FD-ADD9-57FB-3BF3002E1CA8">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MESSAGE</sourceObjSchema>
+<sourceObjName>ISDEL</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>삭제 확인 코드 - 복합기본키. 외래키, 기본값:0</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D5557D42-9E65-7709-7848-4F347224988C" referredColumn="69A80C5C-0E53-CC4E-5423-BE33B22B8F43"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="82513BCC-AE0D-E08F-BEE6-01F50900E865" name="MESSAGE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MESSAGE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E7320C9-06FD-ADD9-57FB-3BF3002E1CA8"/>
+<colUsage columnID="5D3E5506-BB26-8165-E9E7-F0449036DDEF"/>
+<colUsage columnID="C4C33626-5F9C-2CE0-6C1B-914AE4967F31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D8A7E105-48F6-AC54-C233-749E0B80EE4A" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="MESSAGE_IDX_UN">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SYS_C0023828</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C4C33626-5F9C-2CE0-6C1B-914AE4967F31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EBBD0B7E-79C1-F8C8-061A-F15A7323F2C5" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="MESSAGE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MESSAGE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E7320C9-06FD-ADD9-57FB-3BF3002E1CA8"/>
+<colUsage columnID="5D3E5506-BB26-8165-E9E7-F0449036DDEF"/>
+<colUsage columnID="C4C33626-5F9C-2CE0-6C1B-914AE4967F31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0D80731F-8C86-3E1E-C7AB-599FF88E7314" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="MESSAGE_SENDER_ISDEL_INDEX">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MESSAGE_SENDER_ISDEL_INDEX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E7320C9-06FD-ADD9-57FB-3BF3002E1CA8"/>
+<colUsage columnID="F70FB905-D39A-3357-BE49-439695970ED6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="64B3049F-ECD4-F00C-16E2-7EB79474BCEF" name="FK_MESSAGE_ISDEL">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E7320C9-06FD-ADD9-57FB-3BF3002E1CA8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CEA2A555-0740-3658-8AB0-08BE7AA47441" name="FK_MESSAGE_MSGTYPE">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="93AE32FE-3817-3A31-18C4-79B11828D81F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C5E9A452-71CC-66F0-51CC-76B70AD5DD71" name="FK_MESSAGE_RECEIVER_ACCIDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5D3E5506-BB26-8165-E9E7-F0449036DDEF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DBD66E86-A493-DBDA-B8CE-5AB1CAF5E48C" name="FK_MESSAGE_SENDER_ACCIDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F70FB905-D39A-3357-BE49-439695970ED6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

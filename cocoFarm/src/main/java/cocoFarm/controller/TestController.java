@@ -22,13 +22,17 @@ public class TestController {
 		return mv;
 	}
 
-	@RequestMapping(value="signIn",method=RequestMethod.GET)
-	public ModelAndView testSignIn(ModelAndView mv, HttpSession session) {
+	@RequestMapping(value="signIn",method=RequestMethod.POST)
+	public ModelAndView testSignIn(ModelAndView mv, HttpSession session, HttpServletRequest request) {
 		
+		String idx = request.getParameter("idx");
+		String type = request.getParameter("type");
+		System.out.println("idx: "+idx+" ,type: "+type);
 		session.setAttribute("idx", (int)1);
 		session.setAttribute("type", (int)2);
 		
-		mv.setViewName("redirect:auction/bid");
+//		mv.setViewName("redirect:auction/bid");
+		mv.setViewName("helloWorld");
 		return mv;
 	}
 	

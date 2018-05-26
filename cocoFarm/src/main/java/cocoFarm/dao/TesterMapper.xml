@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cocoFarm.dao.TesterDao">
-	<!-- 예시로 등록해 둔 파일. 지우고 진행할 것. -->
-	<insert id="Tester" parameterType='cocoFarm.dto.TestDto2'>
-		insert into TESTER (TEST_COL) values ( #{test_col} )
-	</insert>
-</mapper>

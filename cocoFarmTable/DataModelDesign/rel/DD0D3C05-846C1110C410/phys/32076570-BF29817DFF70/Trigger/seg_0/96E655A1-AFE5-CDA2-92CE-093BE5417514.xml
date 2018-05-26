@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_LAST_EDITED_TRG" directorySegmentName="seg_0" id="96E655A1-AFE5-CDA2-92CE-093BE5417514">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_LAST_EDITED_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>UPDATE</actions>
+<body>begin&lt;br/&gt;	:NEW.LAST_EDITED := SYSTIMESTAMP;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<columns>99D3EF19-C6AE-42A3-9B48-8A4268B29E6A, 95E3EF52-F969-7493-1FD8-45EAD41DF0B0, 036BBB2C-54E0-2B4B-CB69-BBD0FE7A1A5F, 8C75CCEE-A1C3-471C-62F6-493E247E4BD1, C2C00F34-F7C3-5ECD-795C-3382FC417D18</columns>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>966460CD-E9EE-E564-0BA2-38C368975F38</table>
+</TriggerOraclev10g>

@@ -1,6 +1,6 @@
 package cocoFarm.dto;
 
-public class TestDto {
+public class TestDto {//helloWorld.jsp 실험용
 
 	private String attr;
 

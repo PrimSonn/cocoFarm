@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_EVAL_TRG" directorySegmentName="seg_0" id="A664990F-EB4F-FAA5-154C-0951995EAF17">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_EVAL_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<actions>INSERT, UPDATE</actions>
+<body>begin&lt;br/&gt;	if inserting then&lt;br/&gt;		:NEW.REG_TIME := SYSDATE;&lt;br/&gt;		if (:NEW.ISDEL is null) then&lt;br/&gt;			:NEW.ISDEL := 0;&lt;br/&gt;		end if;&lt;br/&gt;	end if;&lt;br/&gt;	if updating then&lt;br/&gt;		:NEW.LAST_EDITED := SYSDATE;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<condition>NEW.REG_TIME is null</condition>
+<owner>B076771E-B380-4937-8713-DE917DEE62E9</owner>
+<table>BA2BC643-1BFB-EF5E-1256-D812CC76C081</table>
+</TriggerOraclev10g>

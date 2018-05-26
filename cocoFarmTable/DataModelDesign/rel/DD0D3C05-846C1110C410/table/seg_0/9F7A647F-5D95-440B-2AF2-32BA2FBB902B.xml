@@ -1,0 +1,183 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9F7A647F-5D95-440B-2AF2-32BA2FBB902B" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰 테이블 - 전체 속성 null 불가</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AUCTION_IDX" id="7A6FBD70-8503-8B61-3860-AFD764B69AD6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>대상 경매 번호 - 복합기본키. 외래키 (경매)</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="4482C057-4729-431B-61C9-22A7CE4459C5" referredColumn="8A251644-C578-80B3-E8A9-96C5C3DED155"/>
+</associations>
+</Column>
+<Column name="AMOUNT" id="AADDB412-88C8-3AB3-027D-29CFB2C6A81C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID</sourceObjSchema>
+<sourceObjName>AMOUNT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰액 - 복합 기본키, 0이상</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<constraintName>BID_AMOUNT_CHECK</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="AMOUNT &gt;0"/>
+<implementationDef dbType="Oracle Database 11g" definition="AMOUNT &gt;0"/>
+</checkConstraint>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BID_TIME" id="11BBB109-2411-2D0D-16D0-49BFF9AE85A5">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID</sourceObjSchema>
+<sourceObjName>BID_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰 시각 - null불가. 트리거 있음: 새 입찰 등록시, 시스템 시각 지정</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BIDDER_IDX" id="C81C9C68-2DBB-A8A6-736F-13B67A8B0DA3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID</sourceObjSchema>
+<sourceObjName>BIDDER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰자 계정번호 - 외래키 (계정) null불가</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8861843A-C9DA-01A7-AA0C-D57161F929CD" referredColumn="12321AB3-9DB6-C041-940B-41DFFE84B823"/>
+</associations>
+</Column>
+<Column name="STATE_CODE" id="FAEC248D-440F-8A5A-DE46-3372130A6838">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID</sourceObjSchema>
+<sourceObjName>STATE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1)</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="1BD8B908-F704-61A8-8984-CC73C1A8B76F" referredColumn="6DC4E046-793C-0014-17A9-A810943B6BD4"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1AE4A331-C994-DA95-83FE-77E57F50E9B9" name="BID_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7A6FBD70-8503-8B61-3860-AFD764B69AD6"/>
+<colUsage columnID="AADDB412-88C8-3AB3-027D-29CFB2C6A81C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2BDDB8C6-524C-6117-74A8-C7B79F166BAE" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_BIDDER_STATE_INDEX">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_BIDDER_STATE_INDEX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FAEC248D-440F-8A5A-DE46-3372130A6838"/>
+<colUsage columnID="C81C9C68-2DBB-A8A6-736F-13B67A8B0DA3"/>
+<colUsage columnID="7A6FBD70-8503-8B61-3860-AFD764B69AD6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="791EBEFC-7115-81B0-74B6-6C13C4D1B344" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="BID_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7A6FBD70-8503-8B61-3860-AFD764B69AD6"/>
+<colUsage columnID="AADDB412-88C8-3AB3-027D-29CFB2C6A81C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C92BEB36-424B-5278-EB32-25DBC2093968" name="BID_ACC_IDX_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C81C9C68-2DBB-A8A6-736F-13B67A8B0DA3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D078B8DD-EE51-8139-299B-56EF9DF70C54" name="BID_AUCTION_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7A6FBD70-8503-8B61-3860-AFD764B69AD6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="22920EB7-0DAD-270F-E439-91DACE21A28A" name="BID_STATE_TYPE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FAEC248D-440F-8A5A-DE46-3372130A6838"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

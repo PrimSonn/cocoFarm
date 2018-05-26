@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D57B9919-6CF8-C93A-28D1-42B37A4388CC" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="AUCTION_DUE_QUE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_DUE_QUE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>만료 처리를 위해 만료되지 않은 경매들을 모아둔 테이블. 스케쥴러든 타이머든 써서 이 대기열을 처리.</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AUCTION_IDX" id="70C16CBA-2FC2-77D5-748D-D817EADF1199">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_DUE_QUE</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>대상 경매 인덱스. 기본키</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="39996D7D-076B-2B77-2949-A24D462B1431" referredColumn="8A251644-C578-80B3-E8A9-96C5C3DED155"/>
+</associations>
+</Column>
+<Column name="TIME_WINDOW" id="9AD8E146-B3D1-A12B-1C9E-F46949A97EA5">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_DUE_QUE</sourceObjSchema>
+<sourceObjName>TIME_WINDOW</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<commentInRDBMS>예정 만료시각 - 트리거 있음</commentInRDBMS>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="67521CFA-3C19-97E9-D680-400590D3DA47" name="AUCTION_DUE_QUE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_DUE_QUE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="70C16CBA-2FC2-77D5-748D-D817EADF1199"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1B8591AA-DB35-5FE5-1A34-21397932F4A5" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="AUCTION_DUE_QUE_INDEX">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_DUE_QUE_INDEX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9AD8E146-B3D1-A12B-1C9E-F46949A97EA5" sortOrder="DESC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0E305674-FCF0-7CD2-57DA-313128C69E71" schemaObject="631BC114-A035-D788-B663-5F4822EB5803" name="AUCTION_DUE_QUE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_DUE_QUE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="70C16CBA-2FC2-77D5-748D-D817EADF1199"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2F30E108-9A64-883B-CB3D-60093ED9DFDE" name="AUCTION_DUE_QUE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="70C16CBA-2FC2-77D5-748D-D817EADF1199"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

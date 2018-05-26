@@ -11,6 +11,4 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 		System.out.println("ID: "+event.getApplicationContext().getId());
 		System.out.println("-----------------    WebApplication Started!!!!      -----------------");
 	}
-
-
 }

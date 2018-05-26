@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="TODAYS_FARMER_PICK" directorySegmentName="seg_0" id="23A8D7DD-11D4-B546-CDBA-18B49708F5F7">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>01431B25-2400-02D2-1AED-1481E85CD52E</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="FARM_ACC_IDX" id="63B73DD0-E852-1733-815E-8CF4872386BB">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_TODAY_FARM_PICK" id="CA304CD6-6F84-08C3-5FBE-8ED2E97304D9">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:03 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<schemaObject>631BC114-A035-D788-B663-5F4822EB5803</schemaObject>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_TODAY_FARM_FK" id="DC962F48-279A-5CD2-33AE-016DD9AEFCA6">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_TODAY_FARM_PICK" id="BE1CFCA7-CF63-8483-E69F-AAC42E937C16">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-05-26 19:38:04 UTC</createdTime>
+<ownerDesignName>DataModelDesign</ownerDesignName>
+<segment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</segment>
+<tableSpace>BA1FD8C4-835D-5542-36A0-F33C9BBF6330</tableSpace>
+<existingIndex>CA304CD6-6F84-08C3-5FBE-8ED2E97304D9</existingIndex>
+<indexSegment>9C197E4C-4C23-D9B7-1D19-FF92B0278CEC</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>
