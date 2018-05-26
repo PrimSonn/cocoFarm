@@ -3006,7 +3006,6 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 
 insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
 insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
-select * from ACCOUNT;
 
 --계정 썸네일 있는 계정 2개
 insert into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg');
