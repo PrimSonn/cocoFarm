@@ -605,7 +605,7 @@ create table BUSINESS_INFO (
 	,BUSINESS_CATEGORY				nvarchar2(25)	not null
 	,BUSINESS_TYPE					nvarchar2(25)	not null
 
-	,REG_DATE						nvarchar2(20)	not null
+	,REG_DATE						nvarchar2(20)
 
 	,LICENSE_IMG					nvarchar2(200)	not null
 
@@ -666,7 +666,7 @@ comment on column BUSINESS_INFO.REG_DATE is '사업자 등록증 등록일 - nul
 
 comment on column BUSINESS_INFO.LICENSE_IMG is '사업자 등록증 이미지. 받은 이미지가 없을 때 기본값 이미지를 넣어두고 null처리를 해서 넣을수도 있음';
 
-comment on column BUSINESS_INFO.INFO_REG_DATE is '등록일 - 트리거있음';
+comment on column BUSINESS_INFO.INFO_REG_DATE is '(사이트 내) 등록일 - 트리거있음';
 
 
 --drop trigger BUSINESS_INFO_TRG;
@@ -1386,6 +1386,9 @@ create trigger SALE_OPTION_WRITTENTIME_TRG
 begin
 	if (:NEW.IDX is null) then
 		:NEW.IDX := SALE_OPTION_SEQ.nextval;
+	end if;
+	if (:NEW.LEFT_AMOUNT is null) then
+		:NEW.LEFT_AMOUNT := :NEW.START_AMOUNT;
 	end if;
 	if (:NEW.WRITTEN_TIME is null) then
 		:NEW.WRITTEN_TIME := SYSDATE;
@@ -2999,12 +3002,58 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 
 -------------------------------------------------------------------------------------------------------------
 /*
+--계정 썸네일 없는 계정 2개
 insert all
-    into ACCOUNT (ID, PW, NAME) values ('test', 'test', 'test')
-    into ACCOUNT (ID, PW, NAME) values ('test2', 'test', 'test2')
+    into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름')
+    into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름')
 select 1 from DUAL;
-insert into AUCTION (WRITTER_IDX, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID)
-			values (1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
+
+--계정 썸네일 있는 계정 2개
+insert all
+    into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg')
+    into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정4', 'test', '계정4이름', '/img/thumb4.jpg')
+select 1 from DUAL;
+
+--사업자 등록증 정보 (계정 3번, 4번)
+insert all
+	into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
+						,BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
+	values( 3, 123123, '법인명1', '대표자명1', '사업장 주소1', '사업장 세부주소1', '본점주소1', '본점 세부주소1', '업태1', '업종1', '2017년 1월1일', '/img/license1.jpg')
+	into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
+						,BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
+	values( 4, 333333, '법인명2', '대표자명2', '사업장 주소2', '사업장 세부주소2', '본점주소2', '본점 세부주소2', '업태2', '업종2', '2015년 2월2일', '/img/license2.jpg')
+select 1 from DUAL;
+
+
+--판매글 2개
+--이미지가 있는 경우
+insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT, FACE_IMG, MAIN_IMG)
+			values (3, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
+--이미지가 없는 경우
+insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
+			values (4, '판매글제목1', '원산지원산지','글내용글내용');
+
+--판매옵션, 판매글 1번에 3개, 2번에 1개.
+insert all
+	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',123123,'단위수1',123)
+	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',234234,'단위수2',234)
+	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',345345,'단위수3',345)
+	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (2, '판매글2옵션1','설명설명',2323,'단위수4',4563456)
+select 1 from DUAL;
+
+
+
+
+
+
+
+
+--insert into AUCTION (WRITTER_IDX, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID)
+--			values (1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
 
 */
 
