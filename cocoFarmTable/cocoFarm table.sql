@@ -3003,27 +3003,22 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 -------------------------------------------------------------------------------------------------------------
 /*
 --계정 썸네일 없는 계정 2개
-insert all
-    into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름')
-    into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름')
-select 1 from DUAL;
+
+insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
+insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
+select * from ACCOUNT;
 
 --계정 썸네일 있는 계정 2개
-insert all
-    into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg')
-    into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정4', 'test', '계정4이름', '/img/thumb4.jpg')
-select 1 from DUAL;
+insert into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg');
+insert into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정4', 'test', '계정4이름', '/img/thumb4.jpg');
 
 --사업자 등록증 정보 (계정 3번, 4번)
-insert all
-	into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
-						,BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
-	values( 3, 123123, '법인명1', '대표자명1', '사업장 주소1', '사업장 세부주소1', '본점주소1', '본점 세부주소1', '업태1', '업종1', '2017년 1월1일', '/img/license1.jpg')
-	into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
-						,BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
-	values( 4, 333333, '법인명2', '대표자명2', '사업장 주소2', '사업장 세부주소2', '본점주소2', '본점 세부주소2', '업태2', '업종2', '2015년 2월2일', '/img/license2.jpg')
-select 1 from DUAL;
-
+insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
+, BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
+	values( 3, 123123, '법인명1', '대표자명1', '사업장 주소1', '사업장 세부주소1', '본점주소1', '본점 세부주소1', '업태1', '업종1', '2017년 1월1일', '/img/license1.jpg');
+insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
+, BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
+	values( 4, 333333, '법인명2', '대표자명2', '사업장 주소2', '사업장 세부주소2', '본점주소2', '본점 세부주소2', '업태2', '업종2', '2015년 2월2일', '/img/license2.jpg');
 
 --판매글 2개
 --이미지가 있는 경우
@@ -3034,21 +3029,14 @@ insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
 			values (4, '판매글제목1', '원산지원산지','글내용글내용');
 
 --판매옵션, 판매글 1번에 3개, 2번에 1개.
-insert all
-	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',123123,'단위수1',123)
-	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',234234,'단위수2',234)
-	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',345345,'단위수3',345)
-	into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (2, '판매글2옵션1','설명설명',2323,'단위수4',4563456)
-select 1 from DUAL;
-
-
-
-
-
+insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',123123,'단위수1',123);
+insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',234234,'단위수2',234);
+insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (1, '판매글1옵션1','설명설명',345345,'단위수3',345);
+insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
+				values (2, '판매글2옵션1','설명설명',2323,'단위수4',4563456);
 
 
 
