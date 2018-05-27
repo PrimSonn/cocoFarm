@@ -5,15 +5,20 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cocoFarm.dao.TestBidDao;
+import cocoFarm.dto.TestBidDto;
 import cocoFarm.dto.TestDto;
 
 @Controller
 public class TestController {
+
+	@Autowired TestBidDao bidDao;
 
 	@RequestMapping(value="main",method=RequestMethod.GET)
 	public ModelAndView mainGet(ModelAndView mv) {
@@ -27,12 +32,46 @@ public class TestController {
 		
 		String idx = request.getParameter("idx");
 		String type = request.getParameter("type");
-		System.out.println("idx: "+idx+" ,type: "+type);
-		session.setAttribute("idx", (int)1);
-		session.setAttribute("type", (int)2);
+		System.out.println("idx: "+idx+" , type: "+type);
+		if(idx !=null && type !=null) {
+			try {
+				session.setAttribute("idx", Integer.parseInt(idx));
+				session.setAttribute("type", Integer.parseInt(type));
+			} catch (NumberFormatException e) {
+				session.invalidate();
+			}
+		}
 		
-//		mv.setViewName("redirect:auction/bid");
-		mv.setViewName("helloWorld");
+//		for(Object key : request.getParameterMap().keySet()) {
+//			System.out.println("[key: "+key+", value: "+request.getParameter((String) key)+"]");
+//			for(String val : (String[])request.getParameterMap().get(key)) {
+//				System.out.println(val);
+//			}
+//		}
+		
+		mv.setViewName("redirect:auction/bidder");
+//		mv.setViewName("redirect:/");
+		return mv;
+	}
+
+	@RequestMapping(value="auction/bidder",method=RequestMethod.GET)
+	public ModelAndView bidderGet(ModelAndView mv) {
+
+		mv.setViewName("testBid/bidder");
+		return mv;
+	}
+
+	@RequestMapping(value="auction/bidder",method=RequestMethod.POST)
+	public ModelAndView bidder(ModelAndView mv, TestBidDto bid, HttpSession session) {
+
+		bid.setBidder_idx((Integer)session.getAttribute("idx"));
+		bid.setIsIn(Integer.valueOf(-5));
+		System.out.println(bid);
+		
+		bidDao.putBid(bid);
+		System.out.println(bid);
+		
+		mv.setViewName("redirect:/");
 		return mv;
 	}
 	

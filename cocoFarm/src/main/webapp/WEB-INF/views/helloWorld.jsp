@@ -49,7 +49,7 @@ if(idx!=null){
 	<button type='submit'>submit</button>
 </form>
 <hr>
-<h4>signIn</h4>
+<h4>signIn and to bidder page</h4>
 <form action='signIn'method='post'>
 	<label for='idtext'>id: <input id='idtext'type='text'name='idx'></label><br>
 	<label for='typetext'>type: <input id='typetext'type='text'name='type'></label><br>

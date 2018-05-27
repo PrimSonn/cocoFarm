@@ -6,11 +6,14 @@
 		
 	</select>
 	<select id="putBid" parameterType="cocoFarm.dto.TestBidDto" statementType="CALLABLE">
-    {call BIDDER(
-      #{auction_idx,jdbcType=INTEGER,mode=IN}
-      ,#{amount,jdbcType=INTEGER,mode=IN}
-      ,#{bidder_idx,jdbcType=INTEGER,mode=IN}
-      ,#{isIn,jdbcType=INTEGER,mode=OUT}
-    )}
+	    {call BIDDER(
+	      #{auction_idx,jdbcType=INTEGER,mode=IN}
+	      ,#{amount,jdbcType=INTEGER,mode=IN}
+	      ,#{bidder_idx,jdbcType=INTEGER,mode=IN}
+	      ,#{isIn,jdbcType=INTEGER,mode=OUT}
+	    )}
+	</select>
+	<select id="getWakeTime" resultType='cocoFarm.dto.TestBidDto'>
+		select TIME_WINDOW BID_TIME from AUCTION_DUE_QUE
 	</select>
 </mapper>

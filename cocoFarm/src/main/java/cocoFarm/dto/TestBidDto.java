@@ -14,26 +14,23 @@ public class TestBidDto {
 
 	@Override
 	public String toString() {
-		return "BID [auction_idx: "+auction_idx+", amount "+amount+", bid_time "+bid_time+", bidder_idx "+bidder_idx+", state_code "+state_code+"]";
+		return "BID [auction_idx: "+auction_idx+", amount "+amount+", bid_time "+bid_time+", bidder_idx "+bidder_idx+", state_code "+state_code+", isIn "+isIn+"]";
 	}
 
+	public Timestamp getWakeTime() {
+		return this.bid_time;
+	}
+
+	
 	public Integer getAuction_idx() {
-		if(auction_idx !=null) {
 			return auction_idx;
-		}else {
-			return -1;
-		}
 	}
 	public void setAuction_idx(Integer auction_idx) {
 		this.auction_idx = auction_idx;
 	}
 
 	public Integer getAmount() {
-		if(amount !=null) {
 			return amount;
-		}else {
-			return -1;
-		}
 	}
 	public void setAmount(Integer amount) {
 		this.amount = amount;
@@ -52,33 +49,21 @@ public class TestBidDto {
 	}
 
 	public Integer getBidder_idx() {
-		if(bidder_idx !=null) {
-			return bidder_idx;
-		}else {
-			return -1;
-		}
+		return bidder_idx;
 	}
 	public void setBidder_idx(Integer bidder_idx) {
 		this.bidder_idx = bidder_idx;
 	}
 
 	public Integer getState_code() {
-		if(state_code !=null) {
-			return state_code;
-		}else {
-			return -1;
-		}
+		return state_code;
 	}
 	public void setState_code(Integer state_code) {
 		this.state_code = state_code;
 	}
 
-	public boolean getIsIn() {
-		if(isIn !=null && isIn ==1) {
-			return true;
-		}else {
-			return false;
-		}
+	public Integer getIsIn() {
+		return isIn;
 	}public void setIsIn(Integer isIn) {
 		this.isIn = isIn;
 	}

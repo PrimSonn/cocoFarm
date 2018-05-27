@@ -2364,13 +2364,16 @@ create procedure BIDDER (in_auction_idx number, in_amount number, in_bidder_idx 
 is
 	a_amount number;
 	a_timeWindow timestamp;
+	a_writter number;
 begin
-	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) 
-		into a_amount, a_timeWindow  from AUCTION A where IDX = in_auction_idx;
+	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
+		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
 	if (in_amount < a_amount*1.1) then
 		select -1 into isIn from DUAL;
 	elsif ( SYSTIMESTAMP > a_timeWindow) then
 		select -2 into isIn from DUAL;
+	elsif (in_bidder_idx = a_writter) then
+		select -3 into isIn from DUAL;
 	else
 		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
         update BID set STATE_CODE = 11 where BIDDER_IDX = in_bidder_idx and AMOUNT != in_amount;
@@ -2382,7 +2385,7 @@ exception when OTHERS then
 	select 0 into isIn from DUAL;
 end;
 /
--- 입찰 등록용 procedure. 성공시 1 반환, 금액 부족시 -1, 기간 만료시 -2, 에러(주로 경매 번호나 계정 이상) 시 0
+-- 입찰 등록용 procedure. 성공시 1 반환, 금액 부족시 -1, 기간 만료시 -2, 경매인이 입찰시 -3, 에러(주로 경매 번호나 계정 이상) 시 0
 
 
 
