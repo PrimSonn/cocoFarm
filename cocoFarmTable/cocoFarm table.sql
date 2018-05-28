@@ -129,6 +129,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 -------------------------------------------------------------
 
+drop procedure AUCTION_DUE_CHECK#1;
 
 drop trigger SITE_IMG_TRG;
 drop sequence SITE_IMG_SEQ;
@@ -171,6 +172,8 @@ drop trigger BID_CONTRACT_QUE_TRG;
 drop table BID_CONTRACT_QUE cascade constraints;
 
 drop procedure BIDDER;
+drop table BID_ALIVE_QUE cascade constraints;
+
 drop trigger BID_INSERT_TRG;
 --drop sequence BID_SEQ;
 drop index BID_BIDDER_STATE_INDEX;
@@ -1945,8 +1948,8 @@ insert all
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 경매', '3일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 경매', '7일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일 경매', '28일짜리 경매 기한')
+	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 1,'MINUTE'), '1분 경매','테스트용 1분 경매')
 select 1 from DUAL;
-
 commit;
 
 
@@ -1982,7 +1985,7 @@ insert all
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'진행중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'진행중 취소 시작','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'진행중 취소됨','')
-	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'낙찰 시작','')
+	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'낙찰 시작','낙찰 절차 프로시저 중간 단계 처리용')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (5,'만료: 유효입찰 없음','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (6,'낙찰 완료 대기중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (7,'만료: 입찰자의 거래 거부','')
@@ -2338,7 +2341,7 @@ create table BID (
 	,constraint BID_AMOUNT_CHECK check (AMOUNT >0)
 );
 
-create index BID_BIDDER_STATE_INDEX on BID (STATE_CODE, BIDDER_IDX, AUCTION_IDX);
+create index BID_BIDDER_STATE_INDEX on BID (STATE_CODE, BIDDER_IDX);
 
 --create sequence BID_SEQ start with 1 increment by 1;
 
@@ -2360,34 +2363,6 @@ end;
 /
 -- 트리거 설명: 인덱스 삽입, 상태코드 삽입, 보증금비율 코드 삽입, 결제타입 기본값 삽입, 지불기한 코드 삽입, 입찰시각 시스템 시각으로 덮어쓰기
 
-create procedure BIDDER (in_auction_idx number, in_amount number, in_bidder_idx number, isIn out number)
-is
-	a_amount number;
-	a_timeWindow timestamp;
-	a_writter number;
-begin
-	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
-		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
-	if (in_bidder_idx = a_writter) then
-		select -3 into isIn from DUAL;
-	elsif ( SYSTIMESTAMP > a_timeWindow) then
-		select -2 into isIn from DUAL;
-	elsif (in_amount < a_amount*1.1) then
-		select -1 into isIn from DUAL;
-	else
-		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
-        update BID set STATE_CODE = 11 where BIDDER_IDX = in_bidder_idx and AMOUNT != in_amount;
-        update AUCTION set HIGHEST_BID = in_amount where IDX = in_auction_idx;
-		commit;
-		select 1 into isIn from DUAL;
-	end if;
-exception when OTHERS then
-	select 0 into isIn from DUAL;
-end;
-/
--- 입찰 등록용 procedure. 성공시 1 반환, 금액 부족시 -1, 기간 만료시 -2, 경매인이 입찰시 -3, 에러(주로 경매 번호나 계정 이상) 시 0
-
-
 
 comment on table BID is '입찰 테이블 - 전체 속성 null 불가';
 
@@ -2408,7 +2383,6 @@ comment on column BID.BIDDER_IDX is '입찰자 계정번호 - 외래키 (계정)
 comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1)';
 
 
---drop procedure BIDDER;
 --drop trigger BID_INSERT_TRG;
 --drop sequence BID_SEQ;
 --drop index BID_BIDDER_STATE_INDEX;
@@ -2416,6 +2390,63 @@ comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거
 
 
 -----------------------------------------------  (보류)입찰 환불 영수증  -----------------------------------------------
+
+-----------------------------------------------  경매 입찰 대기열  -------------------------------------------------------
+
+create table BID_ALIVE_QUE (
+
+	AUCTION_IDX				number(10,0)
+	,AMOUNT					number(11,0)
+	,BIDDER_IDX				number(8,0)		not null
+
+	,constraint BID_ALIVE_Q_PK primary key (AUCTION_IDX, AMOUNT)
+	,constraint BID_ALIVE_BID_FK foreign key (AUCTION_IDX, AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
+	,constraint BID_ALIVE_Q_ACC_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
+);
+
+create procedure BIDDER (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isIn out number)
+is
+	a_amount AUCTION.HIGHEST_BID%type;
+	a_timeWindow AUCTION.REG_TIME%type;
+	a_writter AUCTION.WRITTER_IDX%type;
+begin
+	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
+		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
+	if (in_bidder_idx = a_writter) then
+		select -3 into isIn from DUAL;
+	elsif ( SYSTIMESTAMP > a_timeWindow) then
+		select -2 into isIn from DUAL;
+	elsif (in_amount < a_amount*1.1) then
+		select -1 into isIn from DUAL;
+	else
+		update AUCTION set HIGHEST_BID = in_amount where IDX = in_auction_idx;
+		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
+		insert into BID_ALIVE_QUE (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
+		update BID set STATE_CODE = 11 where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX = in_bidder_idx;
+		delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX =  in_bidder_idx;
+		commit;
+		select 1 into isIn from DUAL;
+	end if;
+exception when OTHERS then
+	rollback;
+	select 0 into isIn from DUAL;
+end;
+/
+-- 입찰 등록용 procedure. 성공시 1 반환, 금액 부족시 -1, 기간 만료시 -2, 경매인이 입찰시 -3, 에러(주로 경매 번호나 계정 이상) 시 0
+
+
+comment on table BID_ALIVE_QUE is '경매 낙찰 대기열 (유효입찰 나열)';
+
+comment on column BID_ALIVE_QUE.AUCTION_IDX is '경매번호 - 복합기본키 + 복합외래키';
+
+comment on column BID_ALIVE_QUE.AMOUNT is '입찰액 - 복합기본키 + 복합외래키';
+
+comment on column BID_ALIVE_QUE.BIDDER_IDX is '입찰인 - 외래키 not null';
+
+
+--drop procedure BIDDER;
+--drop table BID_ALIVE_QUE cascade constraints;
+
 
 -----------------------------------------------  경매 낙찰 대기열  -------------------------------------------------------
 -- 처리의 용이성을 위한 중복 테이블. (낙찰금 지불 만료 기한 처리)
@@ -3078,8 +3109,29 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 
 ----------------------------------------------- 페널티 목록 -----------------------------------------------
 
+----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
 
+create procedure AUCTION_DUE_CHECK#1 (isDone out number)
+is
+begin
+	select 0 into isDone from DUAL;
+	merge into AUCTION AUCT
+		using 
+			(select * from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) QUE
+		on (AUCT.IDX = QUE.AUCTION_IDX)
+		when matched then 
+			update set STATE_CODE =4;
+	commit;
+	select 1 into isDone from DUAL;
+exception when OTHERS then
+	rollback;
+	select -1 into isDone from DUAL;
+end;
+/
+
+
+--drop procedure AUCTION_DUE_CHECK#1;
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
 /*
@@ -3132,15 +3184,30 @@ insert into SALE_EVALUATION (SALE_RECEIPT_IDX, SCORE, TITLE) values (1,100,'평�
 */
 
 
------------------------------------------------- 작업영역 -----------------------------------------------------
+------------------------------------------------ 작업영역 (실행하지 마세요) -----------------------------------------------------
+
 /*
 
-create procedure Auction_Due_Check ()
-
+create procedure AUCTION_DUE_CHECK#2 (isDone number)
+is
+	auct_idx		AUCTION.IDX%type;
+	auct_accidx		AUCTION.WRITTER_IDX%type;
+	cursor state2auct is select IDX, WRITTER_IDX from AUCTION where SATE_CODE = 2;
 begin
-	
+	isDone := 0;
+	for auct_idx, auct_accidx in state2auct
+	loop
+		if(select * from BID where 
+		
+		
+	end loop;
+	isDone := 1;
+exception when OTHERS then
+	isDone := -1;
 end;
 /
+
+
 
 */
 

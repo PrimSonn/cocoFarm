@@ -14,6 +14,9 @@
 	    )}
 	</select>
 	<select id="getWakeTime" resultType='cocoFarm.dto.TestBidDto'>
-		select TIME_WINDOW BID_TIME from AUCTION_DUE_QUE
+		select min(TIME_WINDOW) BID_TIME from AUCTION_DUE_QUE
 	</select>
+	<update id="auctionProc_1" parameterType ="java.lang.String" statementType="CALLABLE">
+		{call AUCTION_DUE_CHECK#1( ${value,jdbcType=INTEGER, mode=OUT} )}
+	</update>
 </mapper>

@@ -1,5 +1,6 @@
 package cocoFarm.listener;
 
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -30,7 +31,6 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 					
 					TestBidDto bidDto = null;
 					Timestamp wakeTime = null;
-					
 					System.out.println("====================================================================");
 					while (true) {
 						
@@ -45,7 +45,7 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 							System.out.println( LocalDateTime.now().compareTo(wakeTime.toLocalDateTime()) >=0);
 							System.out.println(ChronoUnit.MILLIS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()));
 							System.out.println(LocalDateTime.now().plusNanos( ChronoUnit.NANOS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()) ));
-							
+//							System.out.println(bidDao.auctionProc_1());
 						} else {
 							System.out.println("no wake time found!");
 						}

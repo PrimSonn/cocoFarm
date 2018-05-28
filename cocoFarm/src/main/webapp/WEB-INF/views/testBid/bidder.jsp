@@ -10,8 +10,8 @@
 <h3>bid to Auction#1</h3>
 <h4>your session: ${sessionScope.idx}</h4>
 <form action='bidder'method='post'>
-	<input type='hidden' name='auction_idx'value='1'>
-	<label for='amount' title="amount"><input type="number" placeholder="3300" step="1" min="3300"id="amount"name='amount'required></label>
+	<label for='auction_idx' title="auction_idx" >auctionIdx: <input type='number' step='1'min='1'name='auction_idx'></label><br>
+	<label for='amount' title="amount">amount: <input type="number" placeholder="3300" step="1" min="3300"id="amount"name='amount'required></label>
 	<button type='submit'>submit</button>
 </form>
 </body>
