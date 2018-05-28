@@ -2710,8 +2710,8 @@ begin
 		:NEW.TYPE_CODE := 0;
 	end if;
 	if (:NEW.ISDEL is null) then
-		:NEW.IS_DEL := 0;
-	end if
+		:NEW.ISDEL := 0;
+	end if;
 end;
 /
 --트리거 설명: 인덱스 없으면 시퀀스 넣어줌, 작성시각 없으면 시스템 시각 넣어줌
