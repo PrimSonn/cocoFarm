@@ -129,7 +129,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 -------------------------------------------------------------
 
-drop procedure AUCTION_DUE_CHECK#1;
+drop procedure AUCTION_DUE_CHECK_1;
 
 drop trigger SITE_IMG_TRG;
 drop sequence SITE_IMG_SEQ;
@@ -196,7 +196,7 @@ drop table AUCTION_CATEGORY_MAP cascade constraints;
 
 drop trigger AUCTION_IDX_REGT_TRG;
 drop sequence AUCTION_SEQ;
-drop index AUCTION_ISDEL_ACC_IDX;
+drop index AUCTION_STATE_ACC_IDX;
 drop table AUCTION cascade constraints;
 
 drop table AUCTION_STATE_TYPE cascade constraints;
@@ -408,7 +408,7 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 create table ACCOUNT_STATE_TYPE (
 
 	CODE			number(2,0)
-	,THESHOLD		number(15,0)
+	,THRESHOLD		number(15,0)
 	,NAME			nvarchar2(20)	not null
 	,DESCRIPTION	nvarchar2(400)
 
@@ -416,8 +416,9 @@ create table ACCOUNT_STATE_TYPE (
 );
 
 insert all
-	into ACCOUNT_STATE_TYPE (CODE, NAME) values (0,'기본값')
-	into ACCOUNT_STATE_TYPE (CODE, NAME) values (1,'삭제됨')
+	into ACCOUNT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (-1,'시스템 전용 상태값', '시스템 전용 상태값. 로그인 불가, 선택 불가, 메세지 받는대상 불가 등등의 처리를 하기 위한 상태값')
+	into ACCOUNT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0,'기본값', '살아있음')
+	into ACCOUNT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'삭제됨', '죽었음')
 select 1 from DUAL;
 
 commit;
@@ -425,7 +426,7 @@ commit;
 
 comment on table ACCOUNT_STATE_TYPE is '별도의 계정 상태 (페널티 등) 처리용 테이블';
 
-comment on column ACCOUNT_STATE_TYPE.THESHOLD is '상태 처리시 상수 처리용 속성';
+comment on column ACCOUNT_STATE_TYPE.THRESHOLD is '상태 처리시 상수 처리용 속성';
 
 comment on column ACCOUNT_STATE_TYPE.CODE is '계정 상태 타입 코드';
 
@@ -491,6 +492,10 @@ begin
 end;
 /
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
+
+insert into ACCOUNT (IDX, ID, PW, NAME, TYPE_CODE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+commit;
+--시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
 
 comment on table ACCOUNT is '계정 테이블';
@@ -2025,7 +2030,7 @@ create table AUCTION (
 
 	,STATE_CODE				number(2,0)
 
-	,HIGHEST_BID			number(11,0)
+	,HIGHEST_BID			number(11,0)		not null
 
 	,constraint AUCTION_PK primary key (IDX)
 	,constraint AUCTION_WRITTER_FK foreign key (WRITTER_IDX) references ACCOUNT (IDX) on delete cascade
@@ -2034,7 +2039,7 @@ create table AUCTION (
 	,constraint AUCTION_PRICE_CHECK check (START_PRICE >0)
 );
 
-create index AUCTION_ISDEL_ACC_IDX on AUCTION (STATE_CODE, WRITTER_IDX);
+create index AUCTION_STATE_ACC_IDX on AUCTION (STATE_CODE, WRITTER_IDX);
 
 create sequence AUCTION_SEQ start with 1 increment by 1;
 
@@ -2050,6 +2055,9 @@ begin
 	end if;
 	if (:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 1;
+	end if;
+	if (:NEW.HIGHEST_BID is null) then
+		:NEW.HIGHEST_BID := :NEW.START_PRICE;
 	end if;
 	:NEW.REG_TIME := SYSTIMESTAMP;
 end;
@@ -2077,12 +2085,12 @@ comment on column AUCTION.ITEM_IMG is '경매물품 사진 - null 불가';
 
 comment on column AUCTION.STATE_CODE is '경매 상태 비즈니스 코드 - 외래키. 트리거 있음';
 
-comment on column AUCTION.HIGHEST_BID is '현재 최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐';
+comment on column AUCTION.HIGHEST_BID is '현재 최고 입찰액 - null불가 기본값(시작가) 트리거. 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐';
 
 
 --drop trigger AUCTION_IDX_REGT_TRG;
 --drop sequence AUCTION_SEQ;
---drop index AUCTION_ISDEL_ACC_IDX;
+--drop index AUCTION_STATE_ACC_IDX;
 --drop table AUCTION cascade constraints;
 
 
@@ -2284,6 +2292,7 @@ create table CONTRACT_TIME_WINDOW_TYPE (
 
 	CODE				number(2,0)
 	,TIME_WINDOW		interval day (3) to second (3)	not null
+--	,THRESHOLD			number(13,0)
 
 	,NAME				nvarchar2(15)	not null
 	,DESCRIPTION		nvarchar2(400)
@@ -2295,6 +2304,7 @@ insert all
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 05, 'DAY') ,'5일 낙찰금 지불기한', '5일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 02, 'MINUTE') ,'1분 낙찰금 지불기한', '1분짜리 낙찰금 지불기한')
 select 1 from DUAL;
 
 commit;
@@ -2658,27 +2668,28 @@ create table MESSAGE (
 
 	IDX					number(12,0)		unique
 	,SENDER_IDX			number(8,0)			not null
-	,RECEIVER_IDX		number(8,0)
+	,RECEIVER_IDX		number(8,0)			not null
 
 	,TITLE				nvarchar2(200)		not null
 	,CONTENT			nvarchar2(1000)
 	,WRITTEN_TIME		timestamp(0) with local time zone not null
 
-	,IS_READ			number(1,0)			default 0 not null
+	,IS_READ			number(1,0)			not null
 	,READ_TIME			timestamp(0) with local time zone
 
-	,TYPE_CODE			number(2,0)			default 0 not null
+	,TYPE_CODE			number(2,0)			not null
 
-	,ISDEL				number(1,0)			default 0
+	,ISDEL				number(1,0)
+--보낸 메세지 확인과 받은 메세지 확인에서의 상태값이 따로 필요할 수도 있습니다..
 
-	,constraint MESSAGE_PK primary key (ISDEL, RECEIVER_IDX, IDX)
+	,constraint MESSAGE_PK primary key (ISDEL, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
 	,constraint FK_MESSAGE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
 
-create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (ISDEL, SENDER_IDX);
+create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (RECEIVER_IDX, SENDER_IDX);
 
 create sequence MESSAGE_SEQ start with 1 increment by 1;
 
@@ -2692,6 +2703,15 @@ begin
 	if (:NEW.WRITTEN_TIME is null) then
 		:NEW.WRITTEN_TIME := SYSTIMESTAMP;
 	end if;
+	if (:NEW.IS_READ is null) then
+		:NEW.IS_READ := 0;
+	end if;
+	if (:NEW.TYPE_CODE is null) then
+		:NEW.TYPE_CODE := 0;
+	end if;
+	if (:NEW.ISDEL is null) then
+		:NEW.IS_DEL := 0;
+	end if
 end;
 /
 --트리거 설명: 인덱스 없으면 시퀀스 넣어줌, 작성시각 없으면 시스템 시각 넣어줌
@@ -2699,11 +2719,11 @@ end;
 
 comment on table MESSAGE is '쪽지';
 
-comment on column MESSAGE.IDX is '쪽지번호 - 유일성. 복합기본키, 인조식별자';
+comment on column MESSAGE.IDX is '쪽지번호 - 후보키. 복합기본키, 인조식별자';
 
 comment on column MESSAGE.SENDER_IDX is '보낸사람 - 외래키 (계정.계정번호) null안됨';
 
-comment on column MESSAGE.RECEIVER_IDX is '받는사람 - 복합기본키. 외래키 (계정.계정번호)';
+comment on column MESSAGE.RECEIVER_IDX is '받는사람 - 외래키 (계정.계정번호) null안됨';
 
 comment on column MESSAGE.TITLE is '제목 - null 안됨';
 
@@ -2711,13 +2731,13 @@ comment on column MESSAGE.CONTENT is '내용';
 
 comment on column MESSAGE.WRITTEN_TIME is '작성시각 - null안됨 트리거 있음';
 
-comment on column MESSAGE.IS_READ is '조회 여부 표시. 1:읽음, 0:안읽음, 기본값:0';
+comment on column MESSAGE.IS_READ is '조회 여부 표시. 1:읽음, 0:안읽음, (트리거)기본값:0';
 
 comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확인용.';
 
-comment on column MESSAGE.TYPE_CODE is '메세지 타입 - 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
+comment on column MESSAGE.TYPE_CODE is '메세지 타입 - (트리거)기본값 0. null불가. 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, 기본값:0';
+comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
 
 
 --drop trigger MESSAGE_TRG;
@@ -3112,17 +3132,38 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
 
-create procedure AUCTION_DUE_CHECK#1 (isDone out number)
+create procedure AUCTION_DUE_CHECK_1 (isDone out number)
 is
+	bidder number;
+	cursor auct_Q_cur is
+		select IDX, WRITTER_IDX, TITLE from AUCTION A 
+			inner join (select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) AQ
+			on A.IDX = AQ.AUCTION_IDX for update;
 begin
 	select 0 into isDone from DUAL;
-	merge into AUCTION AUCT
-		using 
-			(select * from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) QUE
-		on (AUCT.IDX = QUE.AUCTION_IDX)
-		when matched then 
-			update set STATE_CODE =4;
-	commit;
+	
+	for auct_row in auct_Q_cur loop
+	
+		select BIDDER_IDX into bidder from BID_ALIVE_QUE
+			where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
+
+		if( bidder is null ) then
+			update AUCTION set STATE_CODE = 5 where current of auct_Q_cur;
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT)
+				values (0, auct_row.WRITTER_IDX, '신청하신 경매'+auct_row.TITLE+'가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음');
+			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
+		else
+			update AUCTION set STATE_CODE = 4 where current of auct_Q_cur;
+			
+			--***************************
+			
+			
+		end if;
+		
+		commit;
+		
+	end loop;
+		
 	select 1 into isDone from DUAL;
 exception when OTHERS then
 	rollback;
@@ -3131,7 +3172,7 @@ end;
 /
 
 
---drop procedure AUCTION_DUE_CHECK#1;
+--drop procedure AUCTION_DUE_CHECK_1;
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
 /*
@@ -3186,13 +3227,13 @@ insert into SALE_EVALUATION (SALE_RECEIPT_IDX, SCORE, TITLE) values (1,100,'평�
 
 ------------------------------------------------ 작업영역 (실행하지 마세요) -----------------------------------------------------
 
-/*
 
-create procedure AUCTION_DUE_CHECK#2 (isDone number)
+/*
+create procedure AUCTION_DUE_CHECK_2 (isDone number)
 is
 	auct_idx		AUCTION.IDX%type;
 	auct_accidx		AUCTION.WRITTER_IDX%type;
-	cursor state2auct is select IDX, WRITTER_IDX from AUCTION where SATE_CODE = 2;
+	cursor state2auct is select IDX, WRITTER_IDX from AUCTION where SATE_CODE = 4;
 begin
 	isDone := 0;
 	for auct_idx, auct_accidx in state2auct
@@ -3206,8 +3247,38 @@ exception when OTHERS then
 	isDone := -1;
 end;
 /
+*/
 
 
+
+/*
+insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
+insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
+insert into ACCOUNT (ID, PW, NAME) values ('계정3', 'test', '계정3이름');
+insert into ACCOUNT (ID, PW, NAME) values ('계정4', 'test', '계정4이름');
+
+insert into AUCTION (WRITTER_IDX, TIME_WINDOW_CODE, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID) values (1, 1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
+insert into AUCTION (WRITTER_IDX, TIME_WINDOW_CODE, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID) values (1, 4, 3000, 'auction.test2', 'testcontent2', 'abcabc2', 3000);
+
+commit;
+
+select * from ACCOUNT;
+select * from AUCTION;
+select * from AUCTION_DUE_QUE;
+select * from BID;
+select * from BID_ALIVE_QUE;
+
+
+
+
+
+drop sequence AUCTION_SEQ;
+delete AUCTION;
+drop sequence ACCOUNT_SEQ;
+delete ACCOUNT;
+create sequence AUCTION_SEQ start with 1 increment by 1;
+create sequence ACCOUNT_SEQ start with 1 increment by 1;
+purge recyclebin;
 
 */
 

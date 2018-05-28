@@ -1,6 +1,5 @@
 package cocoFarm.listener;
 
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -12,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 import cocoFarm.dao.TestBidDao;
+import cocoFarm.dto.CheckerDto;
 import cocoFarm.dto.TestBidDto;
 
 
@@ -30,13 +30,15 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 				public void run() {
 					
 					TestBidDto bidDto = null;
+					CheckerDto checker =null;
 					Timestamp wakeTime = null;
+					
 					System.out.println("====================================================================");
 					while (true) {
 						
 						bidDto = bidDao.getWakeTime();
-						
 						wakeTime =  bidDto==null ? null : bidDto.getWakeTime();
+						checker = bidDao.auctionProc_1();
 						
 						if(wakeTime !=null) {
 							System.out.println("wakeTime: "+new SimpleDateFormat("YYYY/MM/dd HH:mm:ss.SSS").format(wakeTime));
@@ -45,7 +47,7 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 							System.out.println( LocalDateTime.now().compareTo(wakeTime.toLocalDateTime()) >=0);
 							System.out.println(ChronoUnit.MILLIS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()));
 							System.out.println(LocalDateTime.now().plusNanos( ChronoUnit.NANOS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()) ));
-//							System.out.println(bidDao.auctionProc_1());
+							System.out.println("auctProcDone? "+ checker==null? null: checker.getIsDone() );
 						} else {
 							System.out.println("no wake time found!");
 						}
