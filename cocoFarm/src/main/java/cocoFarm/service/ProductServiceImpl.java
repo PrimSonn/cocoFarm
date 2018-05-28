@@ -36,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 //		System.out.println(">>>>>>>>>>>> idx = " + product.getIdx());
 		saleOption.setPkIdx(product.getIdx());
 		saleOptionDao.insert(saleOption);
+		saleOptionDao.insertCategory(saleOption);
 	}
 	
 	@Override

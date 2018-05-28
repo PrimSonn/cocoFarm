@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import cocoFarm.dto.FileDto;
+import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.service.ProductService;
@@ -32,10 +33,15 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
-	public String insertProduct(Product product, SaleOption saleOption,
-								HttpSession session, FileDto f) {
+	public String insertProduct(Product product
+								, SaleOption saleOption
+//								, Option option
+								, FileDto f
+								, HttpSession session) {
 		
 		List<MultipartFile> list = f.getUpload();
+//		List<SaleOption> saleList = option.getOption();
+//		System.out.println(saleList.get(0));
 		
 		System.out.println("list1: " + list.get(0).getOriginalFilename());
 		System.out.println("list2: " + list.get(1).getOriginalFilename());
@@ -73,11 +79,8 @@ public class ProductController {
 //		System.out.println(session.getAttribute("idx"));
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
 //		System.out.println(product.getAccIdx());
-		
+
 		productService.insert(product, saleOption);
-//		System.out.println(saleOption);
-		
-		System.out.println(product.getCategory());
 		
 		return "Mypage/seller/productResult";
 //		return "redirect:/product/insert.do?";

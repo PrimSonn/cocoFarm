@@ -18,73 +18,29 @@
 <script type="text/javascript">
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
-    val=obj.value;
-    re=/[^0-9]/gi;
-    obj.value=val.replace(re,"");
+	val=obj.value;
+	re=/[^0-9]/gi;
+	obj.value=val.replace(re,"");
 }
 
 /* 글자수 제한  */
-
-
 $(document).ready(function() {
+	
 	var textCountLimit = 15;
-	var textCountLimit2=40;
-    $('textarea[name=optionName]').keyup(function() {
-        // 텍스트영역의 길이를 체크
-        var textLength = $(this).val().length;
- 
-        // 입력된 텍스트 길이를 #textCount 에 업데이트 해줌
-        $('#textCount').text(textLength);
-         
-        // 제한된 길이보다 입력된 길이가 큰 경우 제한 길이만큼만 자르고 텍스트영역에 넣음
-        if (textLength > textCountLimit) {
-            $(this).val($(this).val().substr(0, textCountLimit));
-        }
-    });
-});
-
-function func1(sVal){
-	var sel =document.getElementById("option");
-	var str1 ='<ul>'
-		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
-		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
-		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
-		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
-		+'</ul>';	
-	var str2 =str1+str1;
-	var str3 =str1+str2;
-	if(sVal =="1") {
-		document.getElementById("option_boby").innerHTML=str1;
-		
-	}else if (sVal =="2") {
-		document.getElementById("option_boby").innerHTML=str2;
+	var textCountLimit2 = 40;
+	$('textarea[name=optionName]').keyup(function() {
+	     // 텍스트영역의 길이를 체크
+	     var textLength = $(this).val().length;
 	
-	}else if (sVal =="3"){
-		document.getElementById("option_boby").innerHTML=str3;
-	}
-	
-	//document.getElementsByName("name");  //태그의 name 속성이 name인 태그를 모두 찾음(name은 중복가능)
-	//document.getElementById("test");  //id가 test인 태그를 찾음 (id는 중복불가)
-	//var tag1 = "이름 : <input type='text' name='irum' />";
-	//var tag2 = "나이 : <input type='text' name='nai' />";
-	
-	//.innerHTML = "str" : 해당 태그 안에  str를 덮어씌움
-	//document.getElementById("test1").innerHTML = tag1;			
-	//document.getElementById("test2").innerHTML = tag2;
+	     // 입력된 텍스트 길이를 #textCount 에 업데이트 해줌
+	     $('#textCount').text(textLength);
+	      
+	     // 제한된 길이보다 입력된 길이가 큰 경우 제한 길이만큼만 자르고 텍스트영역에 넣음
+	     if (textLength > textCountLimit) {
+	         $(this).val($(this).val().substr(0, textCountLimit));
+	     }
+	});
 
-}
-
-// 네이버 스마트에디터를 사용하는 방법
-function submitContents(elClickedObj) {
-    // 에디터의 내용이 textarea에 적용된다.
-    oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-
-    try {
-        elClickedObj.form.submit();
-    } catch(e) {}
-}
-
-$(document).ready(function() {
 	$(".save_button").click(function() {
 		if($(".category option:selected").val()==0) {
 		  alert("카테고리를 선택해주세요.");
@@ -105,9 +61,74 @@ $(document).ready(function() {
       alert("판매가격을 입력해주세요.");
       return false;
 		}
+		
+		
+		var option = {
+			optionName: $("textarea[name=optionName]").val(),
+			startAmount: $("textarea[name=startAmount]").val(),
+			unit: $("textarea[name=unit]").val(),
+			price: $("textarea[name=price]").val()
+		};
+		
+// 		var option = $("textarea[name=optionName]").val()
+// 								+ $("textarea[name=startAmount]").val()
+// 								+ $("textarea[name=unit]").val()
+// 								+ $("textarea[name=price]").val();
+		
+		alert(option.optionName);
+		
 		submitContents($(this));
 	});
+	
 });
+
+function func1(sVal) {
+	var sel = document.getElementById("option");
+	var str1 ='<ul>'
+		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
+		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+		+'</ul>';	
+// 	var str1 ='<ul>'
+// 		+'<li><p>옵션제목 </p><textarea name="optionName' + sVal + '" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
+// 		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+// 		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+// 		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+// 		+'</ul>';	
+	var str2 = str1+str1;
+	var str3 = str2+str1;
+		
+	
+	if(sVal == "1") {
+		document.getElementById("option_boby").innerHTML=str1;
+	} else if (sVal == "2") {
+		document.getElementById("option_boby").innerHTML=str2;
+	} else if (sVal == "3") {
+		document.getElementById("option_boby").innerHTML=str3;
+	}
+	
+// 	$("#option_body1").show();
+// 	$("#option_body3").hide();
+// 	$("#option_body3").hide();
+	
+// 	if (sVal == "2") {
+// 		$("#option_body2").show();
+// 	} else if (sVal == "3") {
+// 		$("#option_body3").show();
+// 	}
+
+}
+
+// 네이버 스마트에디터를 사용하는 방법
+function submitContents(elClickedObj) {
+    // 에디터의 내용이 textarea에 적용된다.
+    oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+    try {
+      elClickedObj.form.submit();
+    } catch(e) {}
+}
 
 </script>
 </head>
@@ -244,12 +265,17 @@ $(document).ready(function() {
 							
 							<div id="option_boby">
 								<ul>
-									<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>
-									<li><p>총판매수량 </p><textarea name="startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>	
-									<li><p>단위 </p><textarea name="unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>	
-									<li><p>단위당가격 </p><textarea name="price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>
+									<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자"
+																	style="resize:none" rows="1" cols="30"></textarea> </li>
+									<li><p>총판매수량 </p><textarea name="startAmount" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
+									<li><p>단위 </p><textarea name="unit" placeholder="ex) kg"
+																style="resize:none" rows="1" cols="5"></textarea></li>	
+									<li><p>단위당가격 </p><textarea name="price" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
 								</ul>
 							</div>
+							
 							</td>
 							
 						</tr>

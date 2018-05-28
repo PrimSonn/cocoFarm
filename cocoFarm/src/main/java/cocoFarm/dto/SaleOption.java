@@ -16,7 +16,14 @@ public class SaleOption {
 	private Date writtenTime;
 	private Date lastEdited;
 	private int isdel;
-
+	private int category;
+	
+	public int getCategory() {
+		return category;
+	}
+	public void setCategory(int category) {
+		this.category = category;
+	}
 	public int getIdx() {
 		return idx;
 	}

@@ -20,6 +20,14 @@
 			sysdate,
 			sysdate,
 			0	)
+		<selectKey resultType="int" keyProperty="idx" order="AFTER">
+			SELECT sale_option_seq.currval FROM DUAL
+		</selectKey>
 	</insert>
+	
+ 	<insert id="insertCategory" parameterType="cocoFarm.dto.SaleOption">
+ 		INSERT INTO SALE_OPT_CATEGORY( sale_opt_idx, category_idx )
+ 		VALUES( #{idx }, #{category } )
+ 	</insert>
 	
 </mapper>

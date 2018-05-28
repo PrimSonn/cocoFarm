@@ -10,7 +10,7 @@
 	<!-- acc_idx: 글쓴이 인덱스 참조하는 속성 (세션) -->
 	<!-- systimestamp: 밀리초까지 계산 -->
 	<insert id="insert" parameterType="cocoFarm.dto.Product">
-		INSERT INTO SALE( idx, acc_idx, title, origin, hit, written_time, last_edited, content, face_img, main_img)
+		INSERT INTO SALE( idx, acc_idx, title, origin, hit, written_time, last_edited, content, face_img, main_img, isdel)
 		VALUES(
 			sale_seq.nextval,
 			#{accIdx },
@@ -21,15 +21,11 @@
 			systimestamp,
 			#{content },
 			#{faceImg },
-			#{mainImg } )
-		<!-- 		VALUES( sale_seq.nextval, #{accIdx }, #{productTitle }, #{origin }, #{writtenTime }, #{lastEdited }, #{content }, #{faceImg }, #{mainImg } ) -->
+			#{mainImg },
+			0 )
 		<selectKey resultType="int" keyProperty="idx" order="AFTER">
 			SELECT sale_seq.currval FROM DUAL
 		</selectKey>
 	</insert>
-
- 	<insert id="insertCategory" parameterType="cocoFarm.dto.Product">
- 		INSERT INTO CATEGORY( idx, 
- 	</insert>
 
 </mapper>
