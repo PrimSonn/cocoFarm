@@ -444,15 +444,15 @@ comment on column ACCOUNT_STATE_TYPE.DESCRIPTION is '계정 상태 타입 설명
 create table ACCOUNT (
 
 	IDX					number(8,0)		unique
-	,ID					nchar(15)		not null unique
-	,PW					nchar(30)		not null
+	,ID					nvarchar2(15)	not null unique
+	,PW					nvarchar2(30)	not null
 	,NAME				nvarchar2(20)	not null
 
 	,EMAIL				nvarchar2(30)
 	,PHONE				number(14,0)
 	,PHONE2				number(14,0)
 
-	,POSTNUM			number(8,0)
+	,POSTNUM			nvarchar2(8)
 	,ADDR				nvarchar2(20)
 	,DETAILED_ADDR		nvarchar2(50)
 
@@ -2368,12 +2368,12 @@ is
 begin
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
 		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
-	if (in_amount < a_amount*1.1) then
-		select -1 into isIn from DUAL;
+	if (in_bidder_idx = a_writter) then
+		select -3 into isIn from DUAL;
 	elsif ( SYSTIMESTAMP > a_timeWindow) then
 		select -2 into isIn from DUAL;
-	elsif (in_bidder_idx = a_writter) then
-		select -3 into isIn from DUAL;
+	elsif (in_amount < a_amount*1.1) then
+		select -1 into isIn from DUAL;
 	else
 		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
         update BID set STATE_CODE = 11 where BIDDER_IDX = in_bidder_idx and AMOUNT != in_amount;
@@ -3128,6 +3128,19 @@ insert into SALE_EVALUATION (SALE_RECEIPT_IDX, SCORE, TITLE) values (1,100,'평�
 
 --insert into AUCTION (WRITTER_IDX, START_PRICE, TITLE, CONTENT, ITEM_IMG, HIGHEST_BID)
 --			values (1, 3000, 'auction.test', 'testcontent', 'abcabc', 3000);
+
+*/
+
+
+------------------------------------------------ 작업영역 -----------------------------------------------------
+/*
+
+create procedure Auction_Due_Check ()
+
+begin
+	
+end;
+/
 
 */
 

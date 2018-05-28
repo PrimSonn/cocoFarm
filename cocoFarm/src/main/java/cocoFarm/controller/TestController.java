@@ -33,7 +33,7 @@ public class TestController {
 		String idx = request.getParameter("idx");
 		String type = request.getParameter("type");
 		System.out.println("idx: "+idx+" , type: "+type);
-		if(idx !=null && type !=null) {
+		if(idx !=null && type !=null && !idx.matches("") && !type.matches("") ) {
 			try {
 				session.setAttribute("idx", Integer.parseInt(idx));
 				session.setAttribute("type", Integer.parseInt(type));

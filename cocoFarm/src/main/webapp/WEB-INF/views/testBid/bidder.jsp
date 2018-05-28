@@ -8,6 +8,7 @@
 </head>
 <body>
 <h3>bid to Auction#1</h3>
+<h4>your session: ${sessionScope.idx}</h4>
 <form action='bidder'method='post'>
 	<input type='hidden' name='auction_idx'value='1'>
 	<label for='amount' title="amount"><input type="number" placeholder="3300" step="1" min="3300"id="amount"name='amount'required></label>
