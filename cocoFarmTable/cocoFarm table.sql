@@ -192,6 +192,11 @@ drop trigger AUCTION_DUE_QUE_TRG;
 drop index AUCTION_DUE_QUE_INDEX;
 drop table AUCTION_DUE_QUE cascade constraints;
 
+drop trigger AUCT_INQ_ANS_TRG;
+drop trigger AUCT_INQUIRE_TRG;
+drop sequence AUCT_INQUIRE_SEQ;
+drop table AUCTION_INQUIRE cascade constraints;
+
 drop table AUCTION_CATEGORY_MAP cascade constraints;
 
 drop trigger AUCTION_IDX_REGT_TRG;
@@ -1613,7 +1618,6 @@ create table SALE_INQUIRE(
 	,ISDEL			number(1,0)		not null
 
 	,constraint SALE_INQUIRE_PK primary key (IDX)
---	,constraint SALE_INQ_UNIQUE unique (IDX, SALE_IDX)
 	,constraint FK_SALE_INQUIRE_SALE_IDX foreign key (SALE_IDX) references SALE (IDX) on delete cascade
 	,constraint FK_SALE_INQUIRE_ACC_IDX foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_SALE_INQUIRE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
@@ -2118,6 +2122,82 @@ comment on column AUCTION_CATEGORY_MAP.CATEGORY_IDX is '카테고리 노드 번�
 
 
 -----------------------------------------------  경매 물품 이미지 -------------------------------------------------------
+
+-----------------------------------------------  경매 문의사항 -------------------------------------------------------
+
+create table AUCTION_INQUIRE(
+
+	IDX				number(11,0)
+	,AUTCION_IDX	number(10,0)	not null
+	,WRITER_IDX		number(8,0)		not null
+
+	,CONTENT		nvarchar2(2000) not null
+	,WRITTEN_TIME	timestamp (0) with local time zone not null
+
+	,ANSWER			nvarchar2(2000)
+	,ANSWER_TIME	timestamp (0) with local time zone
+
+	,ISDEL			number(1,0)		not null
+	
+	,constraint AUCTION_INQUIRE_PK primary key (IDX)
+	,constraint FK_AUCT_INQUIRE_AUCT_IDX foreign key (AUTCION_IDX) references AUCTION (IDX) on delete cascade
+	,constraint FK_AUCT_INQUIRE_ACC_IDX foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
+	,constraint FK_AUCT_INQUIRE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
+);
+
+create sequence AUCT_INQUIRE_SEQ start with 1 increment by 1;
+
+create trigger AUCT_INQUIRE_TRG
+	before insert on AUCTION_INQUIRE
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := AUCT_INQUIRE_SEQ.nextval
+	end if;
+	if (:NEW.WRITTEN_TIME is null) then
+		:NEW.WRITTEN_TIME := SYSTIMESTAMP;
+	end if;
+	if (:NEW.ISDEL is null) then
+		:NEW.ISDE: := 0;
+	end if;
+end;
+/
+
+create trigger AUCT_INQ_ANS_TRG
+	before update of ANSWER on AUCTION_INQUIRE
+	for each row
+begin
+	if (:NEW.ANSWER_TIME is null) then
+		:NEW.ANSWER_TIME := SYSTIMESTAMP;
+	end if;
+end;
+/	
+
+
+comment on table AUCTION_INQUIRE is '경매 문의사항';
+
+comment on column AUCTION_INQUIRE.IDX is '경매 문의글 번호 - 기본키, 인조식별자 트리거있음';
+
+comment on column AUCTION_INQUIRE.AUTCION_IDX is '경매글 번호 - null불가. 외래키';
+
+comment on column AUCTION_INQUIRE.WRITER_IDX is '문의 계정 번호 - null불가. 외래키';
+
+comment on column AUCTION_INQUIRE.CONTENT is '문의내용 - null불가';
+
+comment on column AUCTION_INQUIRE.WRITTEN_TIME is '문의글 작성시각 - null불가, 트리거있음(기본값 시스템시간처리)';
+
+comment on column AUCTION_INQUIRE.ANSWER is '문의글에 대한 답변 - null가능.';
+
+comment on column AUCTION_INQUIRE.ANSWER_TIME is '문의글 답변 시각 - null가능, 트리거있음 (답변 작성시 자동으로 시간 기입)';
+
+comment on column AUCTION_INQUIRE.ISDEL is '삭제 혹은 이외의(블라인드 따위) 글 상태 - 외래키 null불가 트리거있음 (기본값 0)';
+
+
+--drop trigger AUCT_INQ_ANS_TRG;
+--drop trigger AUCT_INQUIRE_TRG;
+--drop sequence AUCT_INQUIRE_SEQ;
+--drop table AUCTION_INQUIRE cascade constraints;
+
 
 -----------------------------------------------  경매 만료 대기열  -------------------------------------------------------
 -- 일종의 중복 데이터, 만료 처리를 용이하게 하기 위한 부분.
@@ -2646,6 +2726,7 @@ create table MESSAGE_TYPE (
 );
 
 insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (0, '일반', 'default 값 처리용 일반 타입(더미, 그냥 써도 됨)');
+insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (1, '경매 시스템 메세지', '경매 시스템 메세지 타입');
 
 commit;
 
@@ -3131,48 +3212,95 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
-
+-- 경매 만료 목록 확인 + 진행시키기
 create procedure AUCTION_DUE_CHECK_1 (isDone out number)
 is
+	counter number;
 	bidder number;
+	timewindow timestamp;
 	cursor auct_Q_cur is
-		select IDX, WRITTER_IDX, TITLE from AUCTION A 
+		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A 
 			inner join (select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) AQ
 			on A.IDX = AQ.AUCTION_IDX for update;
 begin
 	select 0 into isDone from DUAL;
 	
 	for auct_row in auct_Q_cur loop
-	
-		select BIDDER_IDX into bidder from BID_ALIVE_QUE
-			where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
-
-		if( bidder is null ) then
+		
+		select count(1) into counter from BID_ALIVE_QUE where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
+		
+		if( counter = 0 ) then
 			update AUCTION set STATE_CODE = 5 where current of auct_Q_cur;
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT)
-				values (0, auct_row.WRITTER_IDX, '신청하신 경매'+auct_row.TITLE+'가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음');
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+				values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
 			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
 		else
-			update AUCTION set STATE_CODE = 4 where current of auct_Q_cur;
-			
-			--***************************
-			
-			
+			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (auct_row.IDX, auct_row.HIGHEST_BID);
+			select BIDDER_IDX into bidder from BID_ALIVE_QUE where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
+			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = auct_row.IDX;
+			insert all 
+				into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+					values (0, bidder, '입찰하신 경매 '||auct_row.TITLE||' 에 낙찰되셧습니다'
+						, to_char(timewindow, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||auct_row.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1)
+				into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+					values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||auct_row.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1)
+				select 1 from DUAL;
+			update AUCTION set STATE_CODE = 6 where current of auct_Q_cur;
+			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
 		end if;
 		
-		commit;
-		
 	end loop;
-		
+	
+	commit;
 	select 1 into isDone from DUAL;
+	
 exception when OTHERS then
 	rollback;
 	select -1 into isDone from DUAL;
 end;
 /
 
+/*
+
+설명:
+
+반환할 값을 0 으로 초기화.
+만료된 경매들을 하나씩 확인함
+	만약 해당 경매에 유효입찰이 있으면
+		해당 경매의 상태코드를 5 로 변경 (경매만료: 유효입찰 없음)
+		경매 신청 계정 에게 메세지를 보냄
+		경매 만료 대기열에서 해당 경매를 삭제
+	만약 유효 입찰이 있으면
+		해당 경매의 유효입찰을 낙찰금 지불 대기열에 입력
+		경매 신청 계정 /최고입찰의 신청 계정 에게 메세지를 보냄
+		해당 경매의 상태 코드를 6 으로 변경 (경매 만료: 낙찰금 지불 대기중)
+		경매 만료 대기열에서 해당 경매를 삭제
+commit;
+이상이 없이 끝났다면 1 반환]
+중간에 이상이 있었다면
+	rollback;
+	-1 반환
+종료
+
+테스트 시에는 예외처리 부분을 지우고 테스트 하기!
+
+*/
 
 --drop procedure AUCTION_DUE_CHECK_1;
+
+
+--낙찰금 지불 거부 (만료)
+--+입찰 취소 function (해당 입찰, 변화시킬 상태값)
+
+
+
+
+
+
+
+
+
+
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
 /*

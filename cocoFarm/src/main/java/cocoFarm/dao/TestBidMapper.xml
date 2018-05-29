@@ -16,7 +16,7 @@
 	<select id="getWakeTime" resultType='cocoFarm.dto.TestBidDto'>
 		select min(TIME_WINDOW) BID_TIME from AUCTION_DUE_QUE
 	</select>
-	<select id="auctionProc_1" resultType="java.lang.Integer" statementType="CALLABLE" >
+	<select id="auctionProc_1" parameterType="Integer" statementType="CALLABLE" >
 		{call AUCTION_DUE_CHECK_1 ( #{value,jdbcType=NUMERIC,mode=OUT} )}
 	</select>
 </mapper>

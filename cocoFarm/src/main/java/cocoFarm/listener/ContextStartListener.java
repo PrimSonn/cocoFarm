@@ -21,7 +21,7 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		
+
 		if(!hasRun) {// 왜인지 모르게 자꾸 두 번씩 실행되서 한번만 실행되게 만듦
 			new Thread(new Runnable() {
 				
@@ -44,7 +44,7 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 							System.out.println( LocalDateTime.now().compareTo(wakeTime.toLocalDateTime()) >=0);
 							System.out.println(ChronoUnit.MILLIS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()));
 							System.out.println(LocalDateTime.now().plusNanos( ChronoUnit.NANOS.between(LocalDateTime.now(), wakeTime.toLocalDateTime()) ));
-
+//							System.out.println(bidDao.auctionProc_1());
 						} else {
 							System.out.println("no wake time found!");
 						}
