@@ -1,10 +1,5 @@
 package cocoFarm.listener;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -12,8 +7,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import cocoFarm.dao.TestBidDao;
 import cocoFarm.dao.TimerDao;
-import cocoFarm.dto.TestBidDto;
-import cocoFarm.dto.TestDto;
 import cocoFarm.util.AuctionManager;
 
 
@@ -77,13 +70,12 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 			
 			hasDone=true;
 			
-			System.out.println("-----------------    WebApplication Started!!!!      -----------------");
-			System.out.println("ID: "+event.getApplicationContext().getId());
-			System.out.println("-----------------    WebApplication Started!!!!      -----------------");
+			System.out.println("\r\n\r\n-----------------    WebApplication Started!!!!      -----------------\r\n");
 			
 			*///-------------------------testVersion ends
 			System.out.println("\r\n\r\n===========================contextStartListener Fired!!===========================\r\n");
 			AuctionManager.init(timerDao);
+			
 			hasDone=true;
 		}//if hasDone ends
 		

@@ -3256,7 +3256,7 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
 -- 경매 만료 목록 확인 + 진행시키기
-create procedure AUCTION_DUE_CHECK_1 (NEXTCHECK out timestamp)
+create procedure AUCTION_DUE_CHECK_1 (DBTIME out timestamp, NEXTCHECK out timestamp)
 is
 	counter number;
 	noBidCounter number;
@@ -3306,9 +3306,9 @@ begin
 	
 	select count(1) into hasNextTime from AUCTION_DUE_QUE;
 	if (hasNextTime >0) then
-		select SYSTIMESTAMP - min(TIME_WINDOW) into NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
-		select numtodsinterval(1,'MINUTE') into NEXTCHECK from DUAL;
+		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 	
@@ -3321,9 +3321,9 @@ exception when OTHERS then
 	
 	select count(1) into hasNextTime from AUCTION_DUE_QUE;
 	if (hasNextTime >0) then
-		select SYSTIMESTAMP - min(TIME_WINDOW) into NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
-		select numtodsinterval(1,'MINUTE') into NEXTCHECK from DUAL;
+		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 end;
@@ -3345,10 +3345,15 @@ end;
 		해당 경매의 상태 코드를 6 으로 변경 (경매 만료: 낙찰금 지불 대기중)
 		경매 만료 대기열에서 해당 경매를 삭제
 commit;
-이상이 없이 끝났다면 1 반환]
-중간에 이상이 있었다면
+
+다음 경매 만료 시간을 확인
+	있으면 DB시간, 다음경매 시간을 내보냄
+	없으면 DB시간, DB시간을 내보냄
+
+-중간에 이상이 있었다면
 	rollback;
-	-1 반환
+	있으면 DB시간, 다음경매 시간을 내보냄
+	없으면 DB시간, DB시간을 내보냄
 종료
 
 테스트 시에는 예외처리 부분을 지우고 테스트 하기!
@@ -3426,6 +3431,30 @@ insert into SALE_EVALUATION (SALE_RECEIPT_IDX, SCORE, TITLE) values (1,100,'평�
 
 
 /*
+
+
+
+---판매글  + 옵션 태그 리스트 조회
+-- 숫자 막 써진걸 판매글 번호로 바꾸기
+-- listagg 에 ', ' 안 내용을 바꾸면 옵션 카테고리가 여러가지 일 경우 사이를 , 가 아닌 다른걸로 바꿈.
+-- **** 복사-붙여넣기는 아래 RAW 라고 되어있는걸로 하기!!! ****
+select S.*, A.*, B.*, CAT.NAME as CATEGORY_NAME from SALE S inner join Account A on S.ACC_IDX = A.IDX inner join BUSINESS_INFO B on S.ACC_IDX = B.ACC_IDX
+	left join ( 
+        select listagg(convert(SC.NAME,'UTF8','AL16UTF16'), ', ')within group (order by SC.NAME) as NAME , SC.SALE_IDX 
+            from (select distinct C.NAME as NAME, SO.SALE_IDX SALE_IDX from SALE_OPTION SO
+            inner join SALE_OPT_CATEGORY SOC on SO.IDX = SOC.SALE_OPT_IDX
+            inner join CATEGORY C on SOC.CATEGORY_IDX = C.IDX 
+            where SALE_IDX = 1 and C.NAME is not null
+        ) SC group by SC.SALE_IDX
+    ) CAT
+	on CAT.SALE_IDX = S.IDX
+where S.IDX = 1 and S.ISDEL =0;
+
+
+
+
+
+
 create procedure AUCTION_DUE_CHECK_2 (isDone number)
 is
 	auct_idx		AUCTION.IDX%type;

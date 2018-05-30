@@ -1,7 +1,6 @@
 package cocoFarm.util;
 
-
-import java.sql.Timestamp;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -25,30 +24,33 @@ public final class AuctionManager {
 				public void run() {
 					
 					UniversalTimerDto timerDto = null;
-					Timestamp sleepLength = null;
+					long sleepLength = 0L;
 					LocalDateTime wakeTime = null;
 					
 					while (AuctExpCheckerLife) {
 						System.out.println("\r\n\r\n-------Start Running!--------\r\n\r\n");//----------------testcode
-						timerDto = timerDao.doExpire();
-						sleepLength = timerDto == null ? null : timerDto.getTimeHolder();
+						timerDto = timerDao.doExpire(new UniversalTimerDto());
+						sleepLength = timerDto == null ? sleepLength : (ChronoUnit.MILLIS.between(timerDto.getDbTime().toLocalDateTime(), timerDto.getNextCheck().toLocalDateTime()));
 						
-						if(sleepLength == null) {
-							sleepLength = new Timestamp(60000);
-						} else if (sleepLength.after(new Timestamp(21600000))) {
-							sleepLength = new Timestamp(21600000);
-						} else if (sleepLength.before(new Timestamp(60000))) {
-							sleepLength = new Timestamp(60000);
-						}
-						
-						wakeTime = LocalDateTime.now().plusNanos(sleepLength.getTime()*1000L);
-						if(wakeTime ==null) {
-							System.out.println("\r\n\r\n========================= wakeTime Null ===================== \r\n");
-							break;
+						if(sleepLength == 0L) {
+							sleepLength = 60000L;
+						} else if (sleepLength > 21600000L) {
+							sleepLength = 21600000L;
+						} else if (sleepLength < 60000L ) {
+							sleepLength = 60000L;
 						}
 						
 						try {
-							Thread.sleep(sleepLength.getTime());
+							wakeTime = LocalDateTime.now().plusNanos(sleepLength*1000000L);
+						} catch(DateTimeException e) {
+							System.out.println("\r\n\r\n========================= wakeTime plus failed ===================== \r\n");
+							break;
+						}
+						
+						System.out.println("sleepLength: "+sleepLength+", wakeTime: "+wakeTime);
+						
+						try {
+							Thread.sleep(sleepLength);
 							while(LocalDateTime.now().compareTo(wakeTime)<=0) {
 								Thread.sleep(ChronoUnit.MILLIS.between(LocalDateTime.now(), wakeTime));
 							}
@@ -69,12 +71,12 @@ public final class AuctionManager {
 		
 	}//init() ends
 	
-	public static boolean isAlive() {
+	public static boolean isOk() {
 		return AuctionExpChecker.isAlive();
 	}
 
 	public static void finish() {
-		if (AuctionExpChecker !=null && AuctionExpChecker.isAlive()) AuctExpCheckerLife = false;
+		AuctExpCheckerLife = false;
 	}
 	
 }
