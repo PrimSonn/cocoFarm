@@ -301,6 +301,9 @@ drop table ACCOUNT_TYPE cascade constraints;
 
 drop table ISDEL_TYPE cascade constraints;
 
+drop index PLOGGER_IDX;
+drop table PLOGGER;
+
 -- 위 삭제 코드를 실행한 후, 코코팜 계정에 남아있는 테이블, 트리거, 시퀀스, 인덱스 등이 하나도 없어야 합니다. (이름 중복 방지)
 -- 혹시 중간에 없애기로 한 테이블이 남아있는지 확인해 주세요.
 
@@ -337,6 +340,37 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 
 set serveroutput on;
+
+
+----------------------------------------------- 프로시저 로그 -----------------------------------------------
+
+create table PLOGGER (
+
+	NAME			nvarchar2(400)
+	,TIME			timestamp(3) default SYSTIMESTAMP
+	,RESULTCODE		number(2,0)
+	,CONTENT		nvarchar2(2000)
+	,OTHER_INFO		nvarchar2(2000)
+);
+
+create index PLOGGER_IDX on PLOGGER (NAME, RESULTCODE);
+
+
+comment on table PLOGGER is '프로시저 실행 로그';
+
+comment on column PLOGGER.NAME is '실행 프로시저 이름 기록';
+
+comment on column PLOGGER.TIME is '실행시간 기록';
+
+comment on column PLOGGER.RESULTCODE is '실행결과 코드 (각 프로시저 설정에 따름)';
+
+comment on column PLOGGER.CONTENT is '프로시저 실행 결과 세부 내용 저장';
+
+comment on column PLOGGER.OTHER_INFO is '내용과 별도로 저장해야할 속성이 있을 때 사용';
+
+
+--drop index PLOGGER_IDX;
+--drop table PLOGGER;
 
 
 ------------------------------------------------  삭제상태 코드 ----------------------------------------------------
@@ -2152,13 +2186,13 @@ create trigger AUCT_INQUIRE_TRG
 	for each row
 begin
 	if (:NEW.IDX is null) then
-		:NEW.IDX := AUCT_INQUIRE_SEQ.nextval
+		:NEW.IDX := AUCT_INQUIRE_SEQ.nextval;
 	end if;
 	if (:NEW.WRITTEN_TIME is null) then
 		:NEW.WRITTEN_TIME := SYSTIMESTAMP;
 	end if;
 	if (:NEW.ISDEL is null) then
-		:NEW.ISDE: := 0;
+		:NEW.ISDEL := 0;
 	end if;
 end;
 /
@@ -2503,10 +2537,16 @@ begin
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
 		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
 	if (in_bidder_idx = a_writter) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',-3,'Self Bidding (auctionIdx: '||in_auction_idx||',amount:  '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+		commit;
 		select -3 into isIn from DUAL;
 	elsif ( SYSTIMESTAMP > a_timeWindow) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',-2,'Bid after Timeout (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+		commit;
 		select -2 into isIn from DUAL;
 	elsif (in_amount < a_amount*1.1) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',-1,'usder Bid (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+		commit;
 		select -1 into isIn from DUAL;
 	else
 		update AUCTION set HIGHEST_BID = in_amount where IDX = in_auction_idx;
@@ -2514,11 +2554,14 @@ begin
 		insert into BID_ALIVE_QUE (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
 		update BID set STATE_CODE = 11 where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX = in_bidder_idx;
 		delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX =  in_bidder_idx;
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',1,'BID done (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
 		commit;
 		select 1 into isIn from DUAL;
 	end if;
 exception when OTHERS then
 	rollback;
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+	commit;
 	select 0 into isIn from DUAL;
 end;
 /
@@ -3213,17 +3256,20 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
 -- 경매 만료 목록 확인 + 진행시키기
-create procedure AUCTION_DUE_CHECK_1 (isDone out number)
+create procedure AUCTION_DUE_CHECK_1 (NEXTCHECK out timestamp)
 is
 	counter number;
+	noBidCounter number;
+	hasBidCounter number;
 	bidder number;
 	timewindow timestamp;
+	hasNextTime number;
+	
 	cursor auct_Q_cur is
-		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A 
-			inner join (select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) AQ
-			on A.IDX = AQ.AUCTION_IDX for update;
+		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) for update;
 begin
-	select 0 into isDone from DUAL;
+	noBidCounter := 0;
+	hasBidCounter := 0;
 	
 	for auct_row in auct_Q_cur loop
 		
@@ -3234,29 +3280,52 @@ begin
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
 				values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
 			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
+			noBidCounter := noBidCounter+1;
 		else
 			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (auct_row.IDX, auct_row.HIGHEST_BID);
 			select BIDDER_IDX into bidder from BID_ALIVE_QUE where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
 			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = auct_row.IDX;
-			insert all 
-				into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, bidder, '입찰하신 경매 '||auct_row.TITLE||' 에 낙찰되셧습니다'
-						, to_char(timewindow, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||auct_row.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1)
-				into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||auct_row.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1)
-				select 1 from DUAL;
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+					values (0, bidder, '입찰하신 경매 '||auct_row.TITLE||' 에 낙찰되셧습니다', to_char(timewindow, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||auct_row.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+					values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||auct_row.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
 			update AUCTION set STATE_CODE = 6 where current of auct_Q_cur;
 			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
+			hasBidCounter := hasBidCounter+1;
 		end if;
 		
 	end loop;
 	
+	if counter is null then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',1,'successful. no result found');
+	else
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',1,'successful. (counter: '||counter||', noBidCounter: '||noBidCounter||', hasBidCounter: '||hasBidCounter||')');
+	end if;
+	
 	commit;
-	select 1 into isDone from DUAL;
+	
+	select count(1) into hasNextTime from AUCTION_DUE_QUE;
+	if (hasNextTime >0) then
+		select SYSTIMESTAMP - min(TIME_WINDOW) into NEXTCHECK from AUCTION_DUE_QUE;
+	else
+		select numtodsinterval(1,'MINUTE') into NEXTCHECK from DUAL;
+	end if;
+	
 	
 exception when OTHERS then
+
 	rollback;
-	select -1 into isDone from DUAL;
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',0,'ERROR!!!. (counter: '||counter||', noBidCounter: '||noBidCounter||', hasBidCounter: '||hasBidCounter||')');
+	commit;
+	
+	select count(1) into hasNextTime from AUCTION_DUE_QUE;
+	if (hasNextTime >0) then
+		select SYSTIMESTAMP - min(TIME_WINDOW) into NEXTCHECK from AUCTION_DUE_QUE;
+	else
+		select numtodsinterval(1,'MINUTE') into NEXTCHECK from DUAL;
+	end if;
+	
 end;
 /
 
@@ -3380,6 +3449,7 @@ end;
 
 
 /*
+--insert into ACCOUNT (IDX, ID, PW, NAME, TYPE_CODE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
 insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
 insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
 insert into ACCOUNT (ID, PW, NAME) values ('계정3', 'test', '계정3이름');

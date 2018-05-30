@@ -19,7 +19,7 @@ import cocoFarm.dto.TestDto;
 public class TestController {
 
 	@Autowired TestBidDao bidDao;
-
+	
 	@RequestMapping(value="main",method=RequestMethod.GET)
 	public ModelAndView mainGet(ModelAndView mv) {
 		
