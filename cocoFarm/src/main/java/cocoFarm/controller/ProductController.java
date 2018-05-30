@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,25 +25,28 @@ import cocoFarm.service.ProductService;
 @Controller
 public class ProductController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
-		System.out.println("insert.do get!");
+		logger.info("insert.do get!");
 		return "Mypage/seller/productInsert";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product
-								, SaleOption saleOption
-//								, Option option
+//								, SaleOption saleOption
+								, Option opt
 								, FileDto f
 								, HttpSession session) {
 		
+		logger.info("insert.do post!");
 		List<MultipartFile> list = f.getUpload();
-//		List<SaleOption> saleList = option.getOption();
-//		System.out.println(saleList.get(0));
+		
+//		List<SaleOption> saleList = opt.getOption();
+//		System.out.println("옵션1 optionName: " + saleList.get(0).getOptionName());
 		
 		System.out.println("list1: " + list.get(0).getOriginalFilename());
 		System.out.println("list2: " + list.get(1).getOriginalFilename());
@@ -80,7 +85,8 @@ public class ProductController {
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
 //		System.out.println(product.getAccIdx());
 
-		productService.insert(product, saleOption);
+		//이거
+//		productService.insert(product, saleOption);
 		
 		return "Mypage/seller/productResult";
 //		return "redirect:/product/insert.do?";

@@ -82,10 +82,11 @@ $(document).ready(function() {
 	
 });
 
-function func1(sVal) {
-	var sel = document.getElementById("option");
-	var str1 ='<ul>'
-		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
+function optionSelect(sVal) {
+// 	var sel = document.getElementById("option");
+	var str1 = '<ul>'
+// 		+'<li><p>옵션제목 </p><textarea name="option[' + (sVal-1) + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
+		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
 		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
 		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
 		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
@@ -102,6 +103,7 @@ function func1(sVal) {
 	
 	if(sVal == "1") {
 		document.getElementById("option_boby").innerHTML=str1;
+// 		$(this).find("textarea[name=optionName]").attr("name", "option["+(sVal-1)+"].optionName");
 	} else if (sVal == "2") {
 		document.getElementById("option_boby").innerHTML=str2;
 	} else if (sVal == "3") {
@@ -254,7 +256,7 @@ function submitContents(elClickedObj) {
 								<ul>
 									<li>판매 옵션 개수 :</li>
 									<li>
-										<select name="option" onchange="func1(this.value);">   
+										<select name="option" onchange="optionSelect(this.value);">   
 		       						<option value="1" SELECTED>1개</option>
 		        					<option value="2" >2개</option>
 		        					<option value="3" >3개</option>
@@ -265,14 +267,14 @@ function submitContents(elClickedObj) {
 							
 							<div id="option_boby">
 								<ul>
-									<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자"
-																	style="resize:none" rows="1" cols="30"></textarea> </li>
-									<li><p>총판매수량 </p><textarea name="startAmount" placeholder="숫자만 입력가능"
-																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
-									<li><p>단위 </p><textarea name="unit" placeholder="ex) kg"
-																style="resize:none" rows="1" cols="5"></textarea></li>	
-									<li><p>단위당가격 </p><textarea name="price" placeholder="숫자만 입력가능"
-																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
+									<li><p>옵션제목 </p><input type="text" name="option[0].optionName" placeholder="15자 이내에 글자"
+																	style="resize:none" rows="1" cols="30"> </li>
+									<li><p>총판매수량 </p><input type="text" name="option[0].startAmount" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15">개</li>	
+									<li><p>단위 </p><input type="text" name="option[0].unit" placeholder="ex) kg"
+																style="resize:none" rows="1" cols="5"></li>	
+									<li><p>단위당가격 </p><input type="text" name="option[0].price" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14">원</li>
 								</ul>
 							</div>
 							
