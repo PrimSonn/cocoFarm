@@ -5,8 +5,8 @@
 		<result property="dbTime" column="dbTime"/>
 		<result property="nextCheck" column="nextCheck"/>     
 	</resultMap>
-	<select id="doExpire" resultMap="GetAuctionQue" statementType="CALLABLE">
-		{call AUCTION_DUE_CHECK_1(
+	<select id="auctionExpire" resultMap="GetAuctionQue" statementType="CALLABLE">
+		{call AUCTION_DUE_CHECK(
 			#{dbTime,jdbcType=TIMESTAMP,mode=OUT}
 			,#{nextCheck,jdbcType=TIMESTAMP,mode=OUT}
 	    )}

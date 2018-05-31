@@ -14,7 +14,7 @@ public final class AuctionManager {
 	private static boolean AuctExpCheckerLife = true;
 	private static TimerDao timerDao;
 	
-	public static void init(TimerDao dao) {
+	public static synchronized void init(TimerDao dao) {
 		
 		timerDao = dao;
 		
@@ -29,7 +29,7 @@ public final class AuctionManager {
 					
 					while (AuctExpCheckerLife) {
 						System.out.println("\r\n\r\n-------Start Running!--------\r\n\r\n");//----------------testcode
-						timerDto = timerDao.doExpire(new UniversalTimerDto());
+						timerDto = timerDao.auctionExpire(new UniversalTimerDto());
 						sleepLength = timerDto == null ? sleepLength : (ChronoUnit.MILLIS.between(timerDto.getDbTime().toLocalDateTime(), timerDto.getNextCheck().toLocalDateTime()));
 						
 						if(sleepLength == 0L) {

@@ -129,7 +129,19 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 -------------------------------------------------------------
 
-drop procedure AUCTION_DUE_CHECK_1;
+drop procedure AUCTION_DUE_CHECK;
+
+drop trigger PENALTY_RECORD_TRG;
+drop sequence PENALTY_RECORD_SEQ;
+drop table PENALTY_RECORD cascade constraints;
+
+drop table PENALTY_TYPE cascade constraints;
+
+drop trigger BAD_DEED_RECORD_TRG;
+drop sequence BAD_DEED_RECORD_SEQ;
+drop table BAD_DEED_RECORD cascade constraints;
+
+drop table BAD_DEED_TYPE cascade constraints;
 
 drop trigger SITE_IMG_TRG;
 drop sequence SITE_IMG_SEQ;
@@ -157,6 +169,8 @@ drop trigger MESSAGE_TRG;
 drop sequence MESSAGE_SEQ;
 drop index MESSAGE_SENDER_ISDEL_INDEX;
 drop table MESSAGE cascade constraints;
+
+drop table MESSAGE_STATE_TYPE cascade constraints;
 
 drop table MESSAGE_TYPE cascade constraints;
 
@@ -2534,6 +2548,9 @@ is
 	a_timeWindow AUCTION.REG_TIME%type;
 	a_writter AUCTION.WRITTER_IDX%type;
 begin
+
+	savepoint START_TRANSACTION;
+
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
 		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
 	if (in_bidder_idx = a_writter) then
@@ -2559,7 +2576,7 @@ begin
 		select 1 into isIn from DUAL;
 	end if;
 exception when OTHERS then
-	rollback;
+	rollback to START_TRANSACTION;
 	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
 	commit;
 	select 0 into isIn from DUAL;
@@ -2786,6 +2803,39 @@ comment on column MESSAGE_TYPE.DESCRIPTION is '쪽지 타입 설명';
 --drop table MESSAGE_TYPE cascade constraints;
 
 
+------------------------------------------------  쪽지 상태 타입 -------------------------------------------------
+--    into ISDEL_TYPE (CODE, NAME) values (2, '삭제됨')--보낸쪽지 삭제
+--    into ISDEL_TYPE (CODE, NAME) values (3, '삭제됨')--받은쪽지 삭제
+create table MESSAGE_STATE_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(30)	not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint MESSAGE_STATE_TYPE_PK primary key (CODE)
+);
+
+insert all
+	into MESSAGE_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0,'삭제안됨','아주 삭제가 안된 상태')
+	into MESSAGE_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'완전삭제','양 쪽에서 모두 삭제한 상태')
+	into MESSAGE_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'보낸쪽지 삭제','보낸 계정이 삭제한 상태')
+	into MESSAGE_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'받은쪽지 삭제','받은 계정이 삭제한 상태')
+select 1 from DUAL;
+
+commit;
+
+comment on table MESSAGE_STATE_TYPE is '쪽지 상태 타입';
+
+comment on column MESSAGE_STATE_TYPE.CODE is '쪽지 상태 번호 - 기본키';
+
+comment on column MESSAGE_STATE_TYPE.NAME is '쪽지 상태 이름 - null불가';
+
+comment on column MESSAGE_STATE_TYPE.DESCRIPTION is '쪽지 상태 설명';
+
+
+--drop table MESSAGE_STATE_TYPE cascade constraints;
+
+
 ------------------------------------------------  쪽지  ----------------------------------------------------
 
 create table MESSAGE (
@@ -2803,14 +2853,14 @@ create table MESSAGE (
 
 	,TYPE_CODE			number(2,0)			not null
 
-	,ISDEL				number(1,0)
+	,STATE_CODE				number(1,0)
 --보낸 메세지 확인과 받은 메세지 확인에서의 상태값이 따로 필요할 수도 있습니다..
 
-	,constraint MESSAGE_PK primary key (ISDEL, IDX)
+	,constraint MESSAGE_PK primary key (STATE_CODE, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
-	,constraint FK_MESSAGE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
+	,constraint FK_MESSAGE_STATE foreign key (STATE_CODE) references MESSAGE_STATE_TYPE (CODE)
 );
 
 create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (RECEIVER_IDX, SENDER_IDX);
@@ -2833,8 +2883,8 @@ begin
 	if (:NEW.TYPE_CODE is null) then
 		:NEW.TYPE_CODE := 0;
 	end if;
-	if (:NEW.ISDEL is null) then
-		:NEW.ISDEL := 0;
+	if (:NEW.STATE_CODE is null) then
+		:NEW.STATE_CODE := 0;
 	end if;
 end;
 /
@@ -2861,7 +2911,7 @@ comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확�
 
 comment on column MESSAGE.TYPE_CODE is '메세지 타입 - (트리거)기본값 0. null불가. 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
+comment on column MESSAGE.STATE_CODE is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
 
 
 --drop trigger MESSAGE_TRG;
@@ -3251,61 +3301,212 @@ comment on column SITE_IMG_SETTING.IMG_LOCATION is '이미지 위치(경로 + �
 --drop table SITE_IMG_SETTING cascade constraints;
 
 
------------------------------------------------ 페널티 목록 -----------------------------------------------
+----------------------------------------------- 나쁜짓 목록 -----------------------------------------------
+
+create table BAD_DEED_TYPE (
+
+	CODE			number(2,0)
+	,THRESHOLD		number(15,0)
+	,KARMA			number(3,0)		not null
+	,NAME			nvarchar2(20)	not null
+	,DESCRIPTION	nvarchar2(400)
+
+	,constraint PK_BAD_DEED_CD primary key (CODE)
+);
+
+insert into BAD_DEED_TYPE (CODE, KARMA, NAME, DESCRIPTION)
+	values (0, 100, '나쁜짓 기본값', '혹시 구현중 문제가 생기지 않도록 넣어둔 기본값');
+commit;
+
+
+comment on table BAD_DEED_TYPE is '나쁜짓 목록 테이블';
+
+comment on column BAD_DEED_TYPE.CODE is '나쁜짓 번호 - 기본키';
+
+comment on column BAD_DEED_TYPE.THRESHOLD is '나쁜짓 기준치';
+
+comment on column BAD_DEED_TYPE.KARMA is '나쁜짓 점수 - null불가';
+
+comment on column BAD_DEED_TYPE.NAME is '나쁜짓 이름 - null불가';
+
+comment on column BAD_DEED_TYPE.DESCRIPTION is '나쁜짓 내용';
+
+
+--drop table BAD_DEED_TYPE cascade constraints;
+
+
+----------------------------------------------- 나쁜짓 기록 -----------------------------------------------
+
+create table BAD_DEED_RECORD (
+
+	IDX				number(13,0)
+	,CULPRIT_IDX	number(8,0)		not null
+	,RECORDED_WHEN	date			not null
+	,DEED_CODE		number(2,0)		not null
+	
+	,constraint PK_BAD_RECORD primary key (IDX)
+	,constraint BAD_RECORD_ACC_FK foreign key (CULPRIT_IDX) references ACCOUNT (IDX)
+	,constraint BAD_RECORD_CODE_FK foreign key (DEED_CODE) references BAD_DEED_TYPE (CODE)
+);
+
+create sequence BAD_DEED_RECORD_SEQ start with 1 increment by 1;
+
+create trigger BAD_DEED_RECORD_TRG
+	before insert on BAD_DEED_RECORD
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := BAD_DEED_RECORD_SEQ.nextval;
+	end if;
+	if (:NEW.DEED_CODE is null) then
+		:NEW.DEED_CODE := 0;
+	end if;
+	:NEW.RECORDED_WHEN := SYSDATE;
+end;
+/
+--트리거 설명: 인덱스 번호에 시퀀스 넣어줌, 나쁜짓 번호 기본값 0 넣어줌, 기록시각 강제입력(시스템시각)
+
+
+comment on table BAD_DEED_RECORD is '나쁜짓 기록';
+
+comment on column BAD_DEED_RECORD.IDX is '나쁜짓 기록 번호 - 기본키, 인조식별자, 트리거 있음';
+
+comment on column BAD_DEED_RECORD.CULPRIT_IDX is '나쁜짓을 한 계정 번호- 외래키 null불가';
+
+comment on column BAD_DEED_RECORD.RECORDED_WHEN is '나쁜짓을 한 시각 - null불가, 트리거있음(강제로 시스템시간 입력)';
+
+comment on column BAD_DEED_RECORD.DEED_CODE is '나쁜짓 번호 - 외래키 null불가, 트리거있음 (기본값0)';
+
+
+--drop trigger BAD_DEED_RECORD_TRG;
+--drop sequence BAD_DEED_RECORD_SEQ;
+--drop table BAD_DEED_RECORD cascade constraints;
+
+
+----------------------------------------------- 벌 목록 -----------------------------------------------
+
+create table PENALTY_TYPE (
+
+	CODE			number(2,0)
+	,NAME			nvarchar2(20)	not null
+	,DESCRIPTION	nvarchar2(400)	
+	,THRESHOLD		number(15,0)
+	,LENGTH			interval day (3) to second (0)	not null
+
+	,constraint PK_PENALTY_TYPE primary key (CODE)
+);
+
+insert into PENALTY_TYPE (CODE, NAME, DESCRIPTION, LENGTH)
+	values (0, '벌 기본값', '혹시 구현중 문제가 생기지 않도록 넣어둔 기본값', numtodsinterval( 03, 'DAY'));
+commit;
+
+
+--drop table PENALTY_TYPE cascade constraints;
+
+
+----------------------------------------------- 벌 기록 -----------------------------------------------
+
+create table PENALTY_RECORD (
+
+	IDX					number(13,0)
+	,CONVICT_IDX		number(8,0)		not null
+	,RECORDED_WHEN		date			not null
+	,PENALTY_CODE		number(2,0)		not null
+
+	,constraint PK_PENALTY_RECORD primary key (IDX)
+	,constraint PENALTY_RECORD_ACC_FK foreign key (CONVICT_IDX) references ACCOUNT (IDX)
+	,constraint PENALTY_RECORD_CODE_FK foreign key (PENALTY_CODE) references PENALTY_TYPE(CODE)
+);
+
+create sequence PENALTY_RECORD_SEQ start with 1 increment by 1;
+
+create trigger PENALTY_RECORD_TRG
+	before insert on PENALTY_RECORD
+	for each row
+begin
+	if (:NEW.IDX is null) then
+		:NEW.IDX := PENALTY_RECORD_SEQ.nextval;
+	end if;
+	if (:NEW.PENALTY_CODE is null) then
+		:NEW.PENALTY_CODE := 0;
+	end if;
+	:NEW.RECORDED_WHEN := SYSDATE;
+end;
+/
+--트리거 설명: 인덱스 넣어줌, 페널티번호 0번 기본값, 시각 강제로 시스템시각으로 넣음
+
+
+comment on table PENALTY_RECORD is '''벌'' 의 기록';
+
+comment on column PENALTY_RECORD.IDX is '벌 기록 번호 - 기본키, 인조식별자, 트리거있음';
+
+comment on column PENALTY_RECORD.CONVICT_IDX is '벒을 준 계정 번호 - 외래키, null불가';
+
+comment on column PENALTY_RECORD.RECORDED_WHEN is '벌을 준 시각 - null불가, 트리거있음 (강제로 시각 주입)';
+
+comment on column PENALTY_RECORD.PENALTY_CODE is '''벌'' 번호 - 외래키, null불가, 트리거있음 (기본값 0)';
+
+
+--drop trigger PENALTY_RECORD_TRG;
+--drop sequence PENALTY_RECORD_SEQ;
+--drop table PENALTY_RECORD cascade constraints;
+
 
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
--- 경매 만료 목록 확인 + 진행시키기
-create procedure AUCTION_DUE_CHECK_1 (DBTIME out timestamp, NEXTCHECK out timestamp)
+--****************** 경매 만료 목록 확인 + 진행시키기
+create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
 is
-	counter number;
-	noBidCounter number;
-	hasBidCounter number;
-	bidder number;
-	timewindow timestamp;
-	hasNextTime number;
+	COUNTER number;
+	NO_BID_CNTER number;
+	HAS_BID_CNT number;
+	BIDDER number;
+	TIMEWINDOW timestamp;
+	HAS_NEXT_TIME number;
 	
-	cursor auct_Q_cur is
-		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW <= SYSTIMESTAMP) for update;
+	cursor AUCT_Q_CUR is
+		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
 begin
-	noBidCounter := 0;
-	hasBidCounter := 0;
+	NO_BID_CNTER := 0;
+	HAS_BID_CNT := 0;
 	
-	for auct_row in auct_Q_cur loop
+	savepoint START_TRANSACTION;
+	
+	for AUCTION_CURSOR in AUCT_Q_CUR loop
 		
-		select count(1) into counter from BID_ALIVE_QUE where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
+		select count(1) into COUNTER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX and AMOUNT = AUCTION_CURSOR.HIGHEST_BID;
 		
-		if( counter = 0 ) then
-			update AUCTION set STATE_CODE = 5 where current of auct_Q_cur;
+		if( COUNTER = 0 ) then
+			update AUCTION set STATE_CODE = 5 where current of AUCT_Q_CUR;
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-				values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
-			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
-			noBidCounter := noBidCounter+1;
+				values (0, AUCTION_CURSOR.WRITTER_IDX, '신청하신 경매 '||AUCTION_CURSOR.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
+			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
+			NO_BID_CNTER := NO_BID_CNTER+1;
 		else
-			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (auct_row.IDX, auct_row.HIGHEST_BID);
-			select BIDDER_IDX into bidder from BID_ALIVE_QUE where AUCTION_IDX = auct_row.IDX and AMOUNT = auct_row.HIGHEST_BID;
-			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = auct_row.IDX;
+			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (AUCTION_CURSOR.IDX, AUCTION_CURSOR.HIGHEST_BID);
+			select BIDDER_IDX into BIDDER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX and AMOUNT = AUCTION_CURSOR.HIGHEST_BID;
+			select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, bidder, '입찰하신 경매 '||auct_row.TITLE||' 에 낙찰되셧습니다', to_char(timewindow, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||auct_row.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
+					values (0, BIDDER, '입찰하신 경매 '||AUCTION_CURSOR.TITLE||' 에 낙찰되셧습니다', to_char(TIMEWINDOW, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||AUCTION_CURSOR.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, auct_row.WRITTER_IDX, '신청하신 경매 '||auct_row.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||auct_row.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
-			update AUCTION set STATE_CODE = 6 where current of auct_Q_cur;
-			delete AUCTION_DUE_QUE where AUCTION_IDX = auct_row.IDX;
-			hasBidCounter := hasBidCounter+1;
+					values (0, AUCTION_CURSOR.WRITTER_IDX, '신청하신 경매 '||AUCTION_CURSOR.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||AUCTION_CURSOR.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
+			update AUCTION set STATE_CODE = 6 where current of AUCT_Q_CUR;
+			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
+			HAS_BID_CNT := HAS_BID_CNT+1;
 		end if;
 		
 	end loop;
 	
-	if counter is null then
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',1,'successful. no result found');
+	if COUNTER is null then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no result found');
 	else
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',1,'successful. (counter: '||counter||', noBidCounter: '||noBidCounter||', hasBidCounter: '||hasBidCounter||')');
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. (COUNTER: '||COUNTER||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
 	end if;
 	
 	commit;
 	
-	select count(1) into hasNextTime from AUCTION_DUE_QUE;
-	if (hasNextTime >0) then
+	select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
+	if (HAS_NEXT_TIME >0) then
 		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
@@ -3314,13 +3515,13 @@ begin
 	
 exception when OTHERS then
 
-	rollback;
+	rollback to START_TRANSACTION;
 	
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_1',0,'ERROR!!!. (counter: '||counter||', noBidCounter: '||noBidCounter||', hasBidCounter: '||hasBidCounter||')');
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',0,'ERROR!!!. (COUNTER: '||COUNTER||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
 	commit;
 	
-	select count(1) into hasNextTime from AUCTION_DUE_QUE;
-	if (hasNextTime >0) then
+	select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
+	if (HAS_NEXT_TIME >0) then
 		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
@@ -3360,15 +3561,31 @@ commit;
 
 */
 
---drop procedure AUCTION_DUE_CHECK_1;
+--drop procedure AUCTION_DUE_CHECK;
 
 
 --낙찰금 지불 거부 (만료)
 --+입찰 취소 function (해당 입찰, 변화시킬 상태값)
 
 
+/*
+---****************** 낙찰금 지불 기한 만료 처리
+create procedure CONTRACT_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
+is
+
+	cursor CONTRCT_Q_CUR is
+		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP);
+begin
+
+	for BID_CURSOR in CONTRCT_Q_CUR loop
+	
+	end loop;
 
 
+when exception others then
+
+end;
+*/
 
 
 
@@ -3430,9 +3647,7 @@ insert into SALE_EVALUATION (SALE_RECEIPT_IDX, SCORE, TITLE) values (1,100,'평�
 ------------------------------------------------ 작업영역 (실행하지 마세요) -----------------------------------------------------
 
 
-/*
-
-
+/*판매글 쿼리
 
 ---판매글  + 옵션 태그 리스트 조회
 -- 숫자 막 써진걸 판매글 번호로 바꾸기
@@ -3450,34 +3665,11 @@ select S.*, A.*, B.*, CAT.NAME as CATEGORY_NAME from SALE S inner join Account A
 	on CAT.SALE_IDX = S.IDX
 where S.IDX = 1 and S.ISDEL =0;
 
-
-
-
-
-
-create procedure AUCTION_DUE_CHECK_2 (isDone number)
-is
-	auct_idx		AUCTION.IDX%type;
-	auct_accidx		AUCTION.WRITTER_IDX%type;
-	cursor state2auct is select IDX, WRITTER_IDX from AUCTION where SATE_CODE = 4;
-begin
-	isDone := 0;
-	for auct_idx, auct_accidx in state2auct
-	loop
-		if(select * from BID where 
-		
-		
-	end loop;
-	isDone := 1;
-exception when OTHERS then
-	isDone := -1;
-end;
-/
 */
 
 
+/* 작업용 더미
 
-/*
 --insert into ACCOUNT (IDX, ID, PW, NAME, TYPE_CODE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
 insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
 insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
@@ -3497,8 +3689,6 @@ select * from BID_ALIVE_QUE;
 
 
 
-
-
 drop sequence AUCTION_SEQ;
 delete AUCTION;
 drop sequence ACCOUNT_SEQ;
@@ -3508,4 +3698,27 @@ create sequence ACCOUNT_SEQ start with 1 increment by 1;
 purge recyclebin;
 
 */
+
+
+
+/* 작업중 프로시저
+
+---****************** 낙찰금 지불 기한 만료 처리
+create procedure CONTRACT_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
+is
+
+	cursor CONTRCT_Q_CUR is
+		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP);
+begin
+
+	for BID_CURSOR in CONTRCT_Q_CUR loop
+	
+	end loop;
+
+
+when exception others then
+
+end;
+*/
+
 
