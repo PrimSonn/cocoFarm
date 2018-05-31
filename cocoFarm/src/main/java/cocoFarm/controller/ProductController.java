@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import cocoFarm.dto.FileDto;
@@ -21,6 +23,7 @@ import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.service.ProductService;
+import cocoFarm.util.Paging;
 
 @Controller
 public class ProductController {
@@ -28,6 +31,23 @@ public class ProductController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
+	
+	@RequestMapping(value="/product", method=RequestMethod.GET)
+	public String productList(@RequestParam(defaultValue="0") int curPage
+							, Model model) {
+		
+		int totalCount = productService.getListCount();
+		
+		// 페이징 생성
+		Paging paging  = new Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+		
+		List list = productService.getPagingList(paging);
+		model.addAttribute("list", list);
+		System.out.println(list.get(0).toString());
+		
+		return "Mypage/seller/product";
+	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
@@ -37,7 +57,6 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product
-//								, SaleOption saleOption
 								, Option opt
 								, FileDto f
 								, HttpSession session) {
@@ -45,12 +64,11 @@ public class ProductController {
 		logger.info("insert.do post!");
 		List<MultipartFile> list = f.getUpload();
 		
-		// 외않되
-//		logger.info("faceImg: {}", list.get(0).getOriginalFilename());
-//		logger.info("mainImg: " + list.get(1).getOriginalFilename());
+		logger.info("faceImg: " + list.get(0).getOriginalFilename());
+		logger.info("mainImg: " + list.get(1).getOriginalFilename());
 		
 		// 고유 식별자
-//		logger.info(UUID.randomUUID().toString());
+		logger.info(UUID.randomUUID().toString());
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
 		// 파일이 저장될 경로
@@ -86,7 +104,8 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-		return "Mypage/seller/productResult";
+		return "redirect:/product";
+		
 	}
 	
 }

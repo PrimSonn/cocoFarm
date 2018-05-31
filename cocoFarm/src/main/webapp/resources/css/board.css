@@ -1,0 +1,694 @@
+@charset "UTF-8";
+/*글자 폰트  */
+@import url('https://fonts.googleapis.com/css?family=Amiko');
+/*font-family: 'Amiko', sans-serif;  */
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*font-family: 'Jeju Gothic', serif;*/
+
+
+
+/* container */ 
+/*컨테이너 전체 사이즈 잡아주는 클래스  */
+.container {width: 1100px; margin: 0 auto; position: relative;}
+
+
+/* layout */
+#header {width: 100%; height:550px; 
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background-size: 1920px 1200px;
+background-position:center -350px;}
+
+#header_top{
+width: 100%; 
+height:42px;
+background: rgba(255, 255, 255, 0.4);
+font-size: 13px;   
+font-family:'Jeju Gothic';
+font-weight: 500; 
+font-color:#666;
+
+}
+
+#header_top .left_list {
+	position: relative;
+    float: right;
+    
+}
+
+#header_top .left_list li{
+	position: relative;
+    float: left;
+    border-right: 1px solid;
+    border-color: #cdcdcd;
+    height: 10px;
+    padding: 2px 22px; margin: 10px 0;
+      
+}
+
+#header_top .left_list li:last-child{
+    border-right: 0px solid;
+    padding-right: 0px;   
+}
+
+#header_top .left_list li a{
+	  text-align: center;
+}
+
+
+#header_top .rigth_list{
+	 float: left;
+}
+#header_top .rigth_list li{
+	position: relative;
+    float: left;
+    border-right: 1px solid;
+    border-color: #cdcdcd;
+    height: 10px;
+    padding: 2px 22px; margin: 10px 0;
+}
+
+#header_boby{
+
+	width:100%;
+	height: 85px;
+}
+
+
+#header_boby .logo{
+	text-align: center;
+}
+#header_boby .search {
+	width: 280px;
+	height: 30px;
+	position: absolute;
+	top: 30px;
+	left: 20px;
+}
+
+#header_boby .search input[type=text]{
+	font-family: 'Jeju Gothic';
+	padding-left:13px;
+	background-color:rgba(255,255,255,0.6);
+	width: 280px;
+	height: 30px;
+	font-size: 13px;
+	border: 2px solid #94dc5f;
+	border-radius: 30px;
+	outline: none;
+	/* transition:.3s; */
+}
+
+#header_boby .search input[type=text]:focus{
+	border-color: MediumSeaGreen;
+	box-shadow:0 0 8px 0 MediumSeaGreen;
+	
+}
+
+#header_boby .search .search_icon{
+	background: url(/img/main/search_01.png) no-repeat ;
+	background-size:20px;
+	position: absolute;
+	width: 23px;
+	top:6px;
+	right:0px;
+	height: 23px;
+	border: 0px;
+}
+
+/*헤더에 네비게이션  */
+#header_nav .nav{
+	width:100%;
+	
+}
+#header_nav .nav li {
+	position: relative;
+	width:120px;
+	height:40px;
+	margin:0 30px;
+	text-align:center;
+    float: left;
+    line-height: 40px;
+    font-size: 15px;   
+	font-family:'Jeju Gothic';
+	font-weight: 550; 
+	font-color:#666;
+	text-shadow: 1px 1px 1px #cdcdcd;
+	
+}
+
+#header_nav .nav li a{
+	width:160px;
+	height:30px;
+}
+
+
+#header_nav .nav li:hover{
+	border-color: MediumSeaGreen;
+	border-bottom: 3px solid rgba(38, 215, 53, 0.73);
+}
+
+/*허수아비 이미지  */
+#header_footimg .scarecrow{
+		background: url(/img/backgroundimg/scarecrow01.png) no-repeat ;
+		background-size: 330px 330px;
+		width: 320px;
+		height: 320px;
+		position: absolute;
+	
+	right: 140px;
+	top: 170px;	
+}
+/*캘리 이미지  */
+#header_footimg .calligraphy{
+		background: url(/img/backgroundimg/calligraphy02.png) no-repeat ;
+		
+		width: 320px;
+		height: 320px;
+		position: absolute;
+	opacity: 0.8;
+	left: 230px;
+	top: 200px;	
+}
+#bottom_vimg{
+	background: url(/img/backgroundimg/back_vline.png) no-repeat ;
+	background-position:center center;
+
+	width: 1920px;
+	margin-left: -952px;
+    left: 50%;
+    display: block;
+    top:345px;
+    position: fixed;
+	height: 320px;
+	text-align: center;
+}
+
+
+
+
+/* 로그인 페이지  */
+
+#loginheader {width: 100%; height:1100px;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background-size: 1920px 1200px;
+background-position:center 0px;}
+
+/*로그인 박스 크기  */
+#loginheader .login_box{
+	padding: 46px 50px 46px 40px;
+	width: 310px;
+	height: 260px;
+	margin:60px auto;
+	background-color:rgba(255,255,255,0.5);
+	border-radius: 5px;
+	outline: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic';
+	font-size:13px;
+	color: #273743;
+	    line-height: 1.5;
+}
+
+#loginheader .login_text{
+	font-family: 'Jeju Gothic';
+	background-color:rgba(255,255,255,0.3);
+	width: 100%;
+	height: 40px;
+	border: 1px solid #ddd;
+	font-size: 13px;
+	border-radius: 2px;
+	outline: none;
+	margin: 2px 6px 16px 0;
+	padding-left:10px;
+}
+#loginheader .login_text:focus{
+	border-color: #23ed74;
+	box-shadow:0 0 8px 0 #23ed74;
+}
+
+
+
+#loginheader .log_joinbutton li{
+	border-radius: 2px;
+	margin-top:15px;
+    float: left;
+    width:150px;
+    height: 40px;
+    border: 1px solid;
+    border-color: #cdcdcd;
+    text-align:center;
+    line-height: 40px;
+}
+
+#loginheader .log_joinbutton .loginbutton{
+	background-color:rgba(255,255,255,0.5);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	 border: 1px solid;
+    border-color: #23ed74;
+    font-size: 16px;
+   
+}
+#loginheader .log_joinbutton .loginbutton a{
+	 
+   	color: #23ed74;
+}
+
+#loginheader .log_joinbutton .joinbutton{
+	background-color:rgba(255,255,255,0.5);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	position: relative;
+	  font-size: 16px;
+	right: -15px;
+}
+
+#loginheader .log_joinbutton .joinbutton a{
+	color:#939393;
+}
+
+
+
+#loginheader .find_idpw{
+	position: relative;
+	height:20px;
+	margin-top:80px;
+	display: block;
+	text-align: center;
+	font-size:13px;
+	cursor: pointer;
+    text-decoration: underline;	
+}
+
+#loginheader .find_idpw a{
+	color:#939393;
+}
+/*회원가입 배경은 loginheader에서 쓰는거예요!!   */
+/*회원가입 joinintro 페이지 부분  */
+.join_box{
+	padding: 46px 40px;
+	width: 100%;
+	height: 600px;
+	margin:30px auto;
+	background-color:rgba(255,255,255,0.9);
+	border-radius: 5px;
+	outline: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic';
+	font-size:13px;
+	color: #273743;
+	    line-height: 1.5;
+	
+}
+
+
+.join_box .join_boxtit h1{
+	font-size: 24px;
+	text-align: center;
+	
+}
+.join_box .join_step{
+	
+	margin:30px auto;
+	width: 100%;
+	height: 200px;
+	display:block;
+	
+	
+}
+.join_box .join_step li{
+	line-height: 24px;
+	color:#707070;
+position: relative;
+    float: left;
+    width:272px;
+  border: 1px solid #d1d1d1;
+    text-align: center;
+    border-left:0px;
+    font-size:16px;
+	
+}
+
+.join_box .join_step li:first-child{
+    border-left:1px solid #d1d1d1;
+}
+
+.join_box .join_step .box{
+	 display: block;
+     width: 100%;
+     height:100%;
+     padding: 8px 0;
+}
+ 
+.join_box .join_step .box i{
+background: url(/img/join_img/join01.png) no-repeat;
+background-size: 26px 26px;
+border:0px;
+width: 26px;
+height: 26px; 
+vertical-align: top;
+
+	}
+	
+	
+/*마이페이지 사업자  */	
+/*배경은 loginheader에서 쓰는거예요!!  */
+
+#mypageheader {width: 100%; height:1100px;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background-size: 1920px 1200px;
+background-position:center 0px;}
+
+
+
+.mypage_box{
+	/* padding: 46px 40px; */
+	width: 100%;
+	height: 100%;
+	margin:30px auto;
+	/* background-color:rgba(255,255,255,0.3); */
+	border-radius: 2px;
+	outline: none;
+	
+	font-family: 'Jeju Gothic';
+	font-size:13px;
+	color: #273743;
+	line-height: 1.5;
+	    
+}
+/*마이페이지 layout */
+/*마이페이지 왼쪽 nav*/
+.mypage_box .mypage_nav{
+	border-radius: 2px;
+	background-color:rgba(255,255,255,0.5);
+	height: 100%;
+	width: 280px;
+	position: relative;
+    float: left;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	
+}
+/*마이페이지 오른쪽 page */
+.mypage_box .mypage_page01{
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	background-color:rgba(255,255,255,0.5);
+	height: 100%;
+	width: 810px;
+	position:relative;
+	float: right;
+	left: 0px;
+	border-radius: 5px;
+}
+
+.mypage_box .mypage_topbusiness{
+	
+	
+	height: 250px;
+	width: 100%;
+}
+.mypage_box .mypage_topbusiness .mypagetitle{
+	
+	background-color:#289AFF;
+	opacity:0.5;
+	color:#fff;
+	height: 50px;
+	width: 100%;
+	text-align: center;
+	
+	
+}
+.mypage_box .mypage_topbusiness h2{
+	padding-top:5px;
+	font-size: 13px;
+}
+.mypage_box .mypage_topbusiness h1{
+	
+	font-size: 14px;
+}
+.mypage_box .mypage_topbusiness .mypageimg{
+	
+	margin-top:10px;
+}
+.mypage_box .mypage_topbusiness .mypageimg img{
+	
+	width: 80px;
+	height: 80px;
+	border-radius: 80px;
+	display: block;
+	margin:0px auto;
+}
+.mypage_box .mypage_topbusiness .mypagewho{
+	margin-top:15px;
+	text-align: center;
+	
+}
+
+.mypage_nav .mypage_topbusiness .mail_box{
+	width: 200px;
+	height:30px;
+	
+	text-align: center;
+	border: 1px solid;
+	
+    border-color: #23ed74;
+	border-radius:2px;
+	margin: 10px auto;
+	background-color:#23ed74;
+	opacity:0.9;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	position: relative;
+	line-height: 30px;
+	
+}
+
+.mypage_nav .mypage_topbusiness .mail_box img{
+	width:20px;  
+	padding: 5px 10px 0 0;
+	position: absolute;
+	left: -30px;
+}
+
+.mypage_topbusiness .mail_box a{
+
+width:300px;
+height:40px;
+	color: #fff;
+	position: relative;	
+}
+
+.mypage_box .mypage_topbusiness .mypage_navbody{
+	
+	
+}
+
+.mypage_navbody img{
+	margin-left:23px;
+	margin-right:5px;
+	vertical-align:middle;
+	width: 20px;
+}
+
+.mypage_navbody .navtitle_02 img{
+
+	width: 17px;
+}
+/* 네비게이션 메뉴바  */
+/* .mypage_box .mypage_navbody p:first-child{
+	padding-top: 0px;
+}
+ */
+.mypage_box .mypage_navbody p{
+	margin:10px auto 0px 10px;
+	border-top:1px solid rgba(255,255,255,0.6);
+	padding:12px 0px 0px 0px;
+	font-weight:500;
+	font-size:14px;
+	width: 240px; 
+	
+}
+
+.mypage_box .mypage_navbody ul{
+	padding:3px 0px 0px 36px;
+	
+}
+.mypage_box .mypage_navbody ul li{
+	display: inline-block;
+    width: 115px;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+
+.mypage_page01 .border {
+	margin:10px auto;
+	width: 780px;
+	height:100%;
+	
+}
+.mypage_page01 .border h1{
+	font-size: 18px;
+	
+}
+
+
+/*상품등록 페이지 테이블  */
+.border_save table{
+	margin:20px auto;
+	width:740px;
+	 border-collapse: collapse;
+	 border-spacing: 0px;
+	
+	 
+	 
+}
+.border_save tr:first-child{
+	 border-top: 0px; 
+}
+.border_save tr{
+	 border-top: 1px solid rgba(0,0,0,0.13); 
+}
+.border_save th{
+	/* 
+	background-color: #fff; */
+}
+.td_back1{
+	height: 50px;
+}
+.border_save tr td textarea{
+	height: 28px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius: 3px;
+	color: #616161;
+	background: rgba(255,255,255,0.6);
+	line-height:28px;
+	font-size: 13px;
+}
+.td_back4{
+	height: 230px;
+}
+#content{
+	height: 200px;
+}
+
+.border_save tr td .category{
+	width: 200px;
+	height: 30px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius: 3px;
+	color: #616161;
+	background: rgba(255,255,255,0.6);
+	
+}
+/*옵션 카운터 했을때 나오는것  */
+.option_cnt{
+	margin:10px 0px;
+	width: 100%;
+	height: 30px;
+	font-size: 13px;
+} 
+  
+.option_cnt select{
+	width: 80px;
+	height: 30px;
+	border-radius:2px; 
+	background-color: rgba(255,255,255,0.4)
+}
+.option_cnt ul li{
+	position:relative;
+	float: left;
+	line-height: 30px;
+}
+#option_boby ul{
+	width:100%;
+	height:60px;
+	background-color: rgba(255,255,255,0.4);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13); 
+	margin-bottom:10px;
+	border-radius: 2px;
+	border:1px solid #bfbfbf;
+	
+}
+#option_boby ul li{
+	padding-left:40px;
+	display: inline;
+	float: left;
+	
+}
+#option_boby ul li p{
+	text-align: center;
+	font-weight: 300;
+	padding:5px 0px;
+}
+#option_boby ul li textarea{
+	font-size:10px;
+	height: 25px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+.border_save th{
+/* 	background: rgba(255,255,255,0.6); */
+	
+}
+
+/* 상품 등록 버튼 */
+.save_group{
+   font-family: 'Jeju Gothic';
+   font-size: 15px;
+   width:305px;
+   margin: 0px auto;
+   
+}
+.save_group div{
+   display:inline;
+}
+.save_button{
+   color:#fff;
+   border-radius:3px;
+   margin:10px 0px;
+   width:150px;
+   height:35px;
+   text-align: center;
+   line-height: 35px;
+   border:0px;
+   background-color:#43e44f;
+   opacity:0.9;
+   box-shadow: 0 1px 3px rgba(0,0,0,.13);
+   font-weight: 600;
+}
+.re_button{
+   color:#5b5b5b;
+   border-radius:3px;
+   margin:10px 0px;
+   width:150px;
+   height:35px;
+   text-align: center;
+   line-height: 35px;
+   border:1px solid #43e44f;
+   background-color:rgba(255,255,255,0.4);
+   box-shadow: 0 1px 3px rgba(0,0,0,.13);
+   font-weight: 600;
+}
+
+
+.tr_back {
+	height: 50px;
+}
+
+.th_idx {
+	width: 50px;
+}
+
+.th_option {
+	width: 500px;
+}
+
+.th_amount {
+	width: 100px;
+}
+
+.th_price {
+	width: 150px;
+}
+
+.th_update {
+	width: 100px;
+}

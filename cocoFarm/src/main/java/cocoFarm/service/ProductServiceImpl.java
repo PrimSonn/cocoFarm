@@ -18,15 +18,18 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired SaleOptionDao saleOptionDao;
 	
 	@Override
-	public List getlist() {
-		// TODO Auto-generated method stub
-		return null;
+	public List getList() {
+		return saleOptionDao.selectAll();
+	}
+	
+	@Override
+	public int getListCount() {
+		return saleOptionDao.countAll();
 	}
 	
 	@Override
 	public List getPagingList(Paging paging) {
-		// TODO Auto-generated method stub
-		return null;
+		return saleOptionDao.selectPage(paging);
 	}
 	
 	@Override
@@ -40,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void update(Product product) {
+	public void update(Product product, SaleOption saleOption) {
 		// TODO Auto-generated method stub
 		
 	}

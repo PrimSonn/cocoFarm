@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/*글짜 폰트  */
+/*글자 폰트  */
 @import url('https://fonts.googleapis.com/css?family=Amiko');
 /*font-family: 'Amiko', sans-serif;  */
 @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
@@ -551,14 +551,9 @@ height:40px;
 	background-color: #fff; */
 }
 .border_save tr td{
-	
 	padding-left: 10px;
-	
 }
 .td_back1{
-	height: 50px;
-}
-.td_back2{
 	height: 50px;
 }
 .border_save tr td textarea{
@@ -574,13 +569,8 @@ height:40px;
 	height: 230px;
 }
 #content{
-	
 	height: 200px;
-	
 }
-
-
-
 
 .border_save tr td .category{
 	width: 200px;

@@ -5,6 +5,35 @@
   
 <mapper namespace="cocoFarm.dao.SaleOptionDao">
 
+	<resultMap id=
+
+	<sql id="selectSaleOption">
+		SELECT idx, name,	price, unit, start_amount
+		FROM sale_option
+	</sql>
+
+	<select id="selectAll" resultType="cocoFarm.dto.SaleOption">
+		<include refid="selectSaleOption" />
+		ORDER BY idx
+	</select>
+	
+	<select id="countAll" resultType="int">
+		SELECT COUNT(*) FROM sale_option
+	</select>
+	
+	<select id="selectPage"
+					parameterType="cocoFarm.util.Paging"
+					resultType="cocoFarm.dto.SaleOption">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectSaleOption" />
+				ORDER BY idx DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+
 	<insert id="insert" parameterType="cocoFarm.dto.SaleOption">
 		INSERT INTO SALE_OPTION( idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel)
 		VALUES(

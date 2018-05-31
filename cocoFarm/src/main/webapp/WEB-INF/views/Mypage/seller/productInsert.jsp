@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script type="text/javascript"
-	src="https://code.jquery.com/jquery-2.2.4.js"></script>
+	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
  src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
@@ -159,8 +159,8 @@ function submitContents(elClickedObj) {
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
-						<li><a href="#">판매등록하기</a></li>
-						<li><a href="#">판매상품 조회/수정</a></li>
+						<li><a href="/product/insert.do">판매등록하기</a></li>
+						<li><a href="/product">판매상품 조회/수정</a></li>
 						<li><a href="#">판매 결제 내역 조회 </a></li>
 						<li><a href="#">판매 결제 배송 승인</a></li>
 					</ul>
@@ -192,7 +192,7 @@ function submitContents(elClickedObj) {
 					<form action="/product/insert.do" id="insert" method="post" enctype="multipart/form-data">
 						<table>
 						<tr>
-							<th class="td_back1">상품카테고리</th>
+							<th class="td_back1">상품 카테고리</th>
 							<td>
 								<SELECT class="category" name="category" SIZE=1>
         					<OPTION VALUE=0 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
@@ -203,7 +203,7 @@ function submitContents(elClickedObj) {
 	    				</td>
 						</tr>
 						<tr>
-							<th class="td_back2">상품 제목</th>
+							<th class="td_back1">상품 제목</th>
 							<td><textarea id="title" name="title" style="resize:none;" placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)" cols="50" rows="1" 
     							onblur="onlyNumber(this)"></textarea></td>
 						</tr>
@@ -213,21 +213,21 @@ function submitContents(elClickedObj) {
 							<!-- <td><textarea style="resize:none;" placeholder="ex)제철과입니다." name="title" cols="50" rows="5"></textarea></td> -->
 						</tr>
 						<tr>
-							<th class="td_back2">대표이미지 등록하기</th>
+							<th class="td_back1">대표이미지 등록하기</th>
 							<td><input type="file" id="faceImg" name="upload"></td>
 						</tr>
 						<tr>
-							<th class="td_back2">상세 설명 이미지 등록</th>
+							<th class="td_back1">상세 설명 이미지 등록</th>
 							<td><input type="file" id="mainImg" name="upload"></td>
 						</tr>
 						<tr>
-							<th class="td_back2">원산지</th>
+							<th class="td_back1">원산지</th>
 							<td><textarea id="origin" name="origin" style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" cols="50" rows="1"></textarea></td>
 						</tr>
 						
 						<tr>
 							
-							<th class="td_back">제품 선택 옵션</th>
+							<th>제품 선택 옵션</th>
 							<td>
 							<div class="option_cnt">
 								<ul>
@@ -244,13 +244,13 @@ function submitContents(elClickedObj) {
 							
 							<div id="option_boby">
 								<ul>
-									<li><p>옵션제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
+									<li><p>옵션 제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
 																	style="resize:none" rows="1" cols="30"></textarea> </li>
-									<li><p>총판매수량 </p><textarea name="saleOptions[0].startAmount" placeholder="숫자만 입력가능"
+									<li><p>총 판매 수량 </p><textarea name="saleOptions[0].startAmount" placeholder="숫자만 입력가능"
 																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
 									<li><p>단위 </p><textarea name="saleOptions[0].unit" placeholder="ex) kg"
 																style="resize:none" rows="1" cols="5"></textarea></li>	
-									<li><p>단위당가격 </p><textarea name="saleOptions[0].price" placeholder="숫자만 입력가능"
+									<li><p>단위당 가격 </p><textarea name="saleOptions[0].price" placeholder="숫자만 입력가능"
 																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
 								</ul>
 							</div>
