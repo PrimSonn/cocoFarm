@@ -5,16 +5,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>농산물 판매 상품 등록</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
  src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
+<title>농산물 판매 상품 등록</title>
 <script type="text/javascript">
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
@@ -62,20 +61,14 @@ $(document).ready(function() {
       return false;
 		}
 		
-		
-		var option = {
-			optionName: $("textarea[name=optionName]").val(),
-			startAmount: $("textarea[name=startAmount]").val(),
-			unit: $("textarea[name=unit]").val(),
-			price: $("textarea[name=price]").val()
-		};
-		
-// 		var option = $("textarea[name=optionName]").val()
-// 								+ $("textarea[name=startAmount]").val()
-// 								+ $("textarea[name=unit]").val()
-// 								+ $("textarea[name=price]").val();
-		
-		alert(option.optionName);
+		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
+// 		var option = {
+// 			optionName: $("textarea[name=optionName]").val(),
+// 			startAmount: $("textarea[name=startAmount]").val(),
+// 			unit: $("textarea[name=unit]").val(),
+// 			price: $("textarea[name=price]").val()
+// 		};
+// 		alert(option.optionName);
 		
 		submitContents($(this));
 	});
@@ -83,33 +76,18 @@ $(document).ready(function() {
 });
 
 function optionSelect(sVal) {
-// 	var sel = document.getElementById("option");
-	var str1 = '<ul>'
-// 		+'<li><p>옵션제목 </p><textarea name="option[' + (sVal-1) + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
-		+'<li><p>옵션제목 </p><textarea name="optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
-		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
-		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
-		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
-		+'</ul>';	
-// 	var str1 ='<ul>'
-// 		+'<li><p>옵션제목 </p><textarea name="optionName' + sVal + '" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea> </li>'
-// 		+'<li><p>총판매수량 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
-// 		+'<li><p>단위 </p><textarea style="resize:none"  placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
-// 		+'<li><p>단위당가격 </p><textarea style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
-// 		+'</ul>';	
-	var str2 = str1+str1;
-	var str3 = str2+str1;
-		
-	
-	if(sVal == "1") {
-		document.getElementById("option_boby").innerHTML=str1;
-// 		$(this).find("textarea[name=optionName]").attr("name", "option["+(sVal-1)+"].optionName");
-	} else if (sVal == "2") {
-		document.getElementById("option_boby").innerHTML=str2;
-	} else if (sVal == "3") {
-		document.getElementById("option_boby").innerHTML=str3;
+	var str = ""
+	for(var i=0; i<sVal; i++) {
+		str += '<ul>'
+			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
+			+'<li><p>총판매수량 </p><textarea name="saleOptions[' + i + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+			+'<li><p>단위 </p><textarea name="saleOptions[' + i + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+			+'<li><p>단위당가격 </p><textarea name="saleOptions[' + i + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+			+'</ul>';
 	}
+	document.getElementById("option_boby").innerHTML = str;
 	
+	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
 // 	$("#option_body1").show();
 // 	$("#option_body3").hide();
 // 	$("#option_body3").hide();
@@ -119,7 +97,6 @@ function optionSelect(sVal) {
 // 	} else if (sVal == "3") {
 // 		$("#option_body3").show();
 // 	}
-
 }
 
 // 네이버 스마트에디터를 사용하는 방법
@@ -267,14 +244,14 @@ function submitContents(elClickedObj) {
 							
 							<div id="option_boby">
 								<ul>
-									<li><p>옵션제목 </p><input type="text" name="option[0].optionName" placeholder="15자 이내에 글자"
-																	style="resize:none" rows="1" cols="30"> </li>
-									<li><p>총판매수량 </p><input type="text" name="option[0].startAmount" placeholder="숫자만 입력가능"
-																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15">개</li>	
-									<li><p>단위 </p><input type="text" name="option[0].unit" placeholder="ex) kg"
-																style="resize:none" rows="1" cols="5"></li>	
-									<li><p>단위당가격 </p><input type="text" name="option[0].price" placeholder="숫자만 입력가능"
-																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14">원</li>
+									<li><p>옵션제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
+																	style="resize:none" rows="1" cols="30"></textarea> </li>
+									<li><p>총판매수량 </p><textarea name="saleOptions[0].startAmount" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
+									<li><p>단위 </p><textarea name="saleOptions[0].unit" placeholder="ex) kg"
+																style="resize:none" rows="1" cols="5"></textarea></li>	
+									<li><p>단위당가격 </p><textarea name="saleOptions[0].price" placeholder="숫자만 입력가능"
+																		style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
 								</ul>
 							</div>
 							

@@ -45,19 +45,17 @@ public class ProductController {
 		logger.info("insert.do post!");
 		List<MultipartFile> list = f.getUpload();
 		
-//		List<SaleOption> saleList = opt.getOption();
-//		System.out.println("옵션1 optionName: " + saleList.get(0).getOptionName());
+		// 외않되
+//		logger.info("faceImg: {}", list.get(0).getOriginalFilename());
+//		logger.info("mainImg: " + list.get(1).getOriginalFilename());
 		
-		System.out.println("list1: " + list.get(0).getOriginalFilename());
-		System.out.println("list2: " + list.get(1).getOriginalFilename());
-		
-//		System.out.println(UUID.randomUUID().toString());
 		// 고유 식별자
+//		logger.info(UUID.randomUUID().toString());
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
 		// 파일이 저장될 경로
 		String realpath = context.getRealPath("upload");
-		System.out.println(realpath);
+		logger.info(realpath);
 		
 		// 파일이 저장될 이름
 		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
@@ -81,15 +79,14 @@ public class ProductController {
 		product.setFaceImg(stored1);
 		product.setMainImg(stored2);
 		product.setAccIdx(2);
-//		System.out.println(session.getAttribute("idx"));
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
-//		System.out.println(product.getAccIdx());
 
-		//이거
-//		productService.insert(product, saleOption);
+		List<SaleOption> saleList = opt.getSaleOptions();
+		for(int i=0; i<saleList.size(); i++) {
+			productService.insert(product, saleList.get(i));
+		}
 		
 		return "Mypage/seller/productResult";
-//		return "redirect:/product/insert.do?";
 	}
 	
 }
