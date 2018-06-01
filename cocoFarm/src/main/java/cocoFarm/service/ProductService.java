@@ -7,11 +7,18 @@ import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
 public interface ProductService {
-
+	
 	/**
 	 * 판매상품 등록
 	 * 
-	 * @param Product - 판매상품, SaleOption - 옵션
+	 * @param Product - 판매상품
+	 */
+	
+	public void insert(Product product);
+	/**
+	 * 판매상품 옵션 등록
+	 * 
+	 * @param Product - 판매상품 idx, SaleOption - 옵션
 	 */
 	public void insert(Product product, SaleOption saleOption);
 	
@@ -30,9 +37,9 @@ public interface ProductService {
 	public List getList();
 	
 	/**
-	 * 옵션 수 조회
+	 * 판매상품/옵션 수 조회
 	 * 
-	 * @return int - 옵션 총 갯수
+	 * @return int - 판매상품/옵션 총 갯수
 	 */
 	public int getListCount();
 	
@@ -43,4 +50,12 @@ public interface ProductService {
 	 * @return List - 페이징 처리된 옵션 리스트
 	 */
 	public List getPagingList(Paging paging);
+	
+	/**
+	 * 판매상품 상세보기
+	 * 
+	 * @param product - 조회될 판매상품의 idx
+	 * @return Product - 조회된 판매상품
+	 */
+	public Product productView(Product product);
 }

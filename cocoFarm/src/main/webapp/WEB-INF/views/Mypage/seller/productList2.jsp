@@ -93,16 +93,25 @@
 							<th class="th_option">옵션명</th>
 							<th class="th_amount">판매 수량</th>
 							<th class="th_price">가격</th>
-							<th class="th_update">수정</th>
+							<th class="th_update"></th>
 						</tr>
 						
+<!-- 						<tr class="tr_back"	align="center"> -->
+<%-- 							<td>${list.idx }</td> --%>
+<%-- 							<td>${list.optionName }</td> --%>
+<%-- 							<td>${list.startAmount }</td> --%>
+<%-- 							<td>${list.price }원</td> --%>
+<%-- 							<td><a href="/product/update.do?idx=${list.idx }">수정</a>&nbsp;&nbsp; --%>
+<!-- 									<a href="#">삭제</a></td> -->
+<!-- 						</tr> -->
+						
 						<c:forEach items="${list }" var="i">
-						<tr class="tr_back"	align="center";>
+						<tr class="tr_back"	align="center">
 							<td>${i.idx }</td>
 							<td>${i.optionName }</td>
 							<td>${i.startAmount }</td>
 							<td>${i.price }원</td>
-							<td><a href="/product/update.do">수정</a>&nbsp;&nbsp;<a href="#">삭제</a></td>
+							<td><button onclick="location.href='/product/update.do?idx=${i.idx }'" class="td_update">수정</a></td>
 						</tr>
 						</c:forEach>
 					</table>

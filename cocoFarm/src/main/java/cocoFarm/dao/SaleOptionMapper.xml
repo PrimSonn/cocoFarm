@@ -5,7 +5,10 @@
   
 <mapper namespace="cocoFarm.dao.SaleOptionDao">
 
-	<resultMap id=
+	<resultMap id="SaleOptionResult" type="cocoFarm.dto.SaleOption">
+		<result column="name" property="optionName" />
+		<result column="start_amount" property="startAmount" />
+	</resultMap>
 
 	<sql id="selectSaleOption">
 		SELECT idx, name,	price, unit, start_amount
@@ -23,7 +26,7 @@
 	
 	<select id="selectPage"
 					parameterType="cocoFarm.util.Paging"
-					resultType="cocoFarm.dto.SaleOption">
+					resultMap="SaleOptionResult">
 		SELECT * FROM (
 			SELECT rownum rnum, B.* FROM (
 				<include refid="selectSaleOption" />

@@ -24,17 +24,25 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public int getListCount() {
+		// Product 또는 SaleOption 어떤 것을 뿌려줄 것인지...
+//		return productDao.countAll();
 		return saleOptionDao.countAll();
 	}
 	
 	@Override
 	public List getPagingList(Paging paging) {
+		// Product 또는 SaleOption 어떤 것을 뿌려줄 것인지...
+//		return productDao.selectPage(paging);
 		return saleOptionDao.selectPage(paging);
 	}
 	
 	@Override
-	public void insert(Product product, SaleOption saleOption) {
+	public void insert(Product product) {
 		productDao.insert(product);
+	}
+	
+	@Override
+	public void insert(Product product, SaleOption saleOption) {
 //		System.out.println(product);
 //		System.out.println(">>>>>>>>>>>> idx = " + product.getIdx());
 		saleOption.setPkIdx(product.getIdx());
@@ -43,8 +51,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
+	public Product productView(Product product) {
+		return productDao.selectProductByIdx(product);
+	}
+	
+	@Override
 	public void update(Product product, SaleOption saleOption) {
 		// TODO Auto-generated method stub
-		
 	}
+	
 }

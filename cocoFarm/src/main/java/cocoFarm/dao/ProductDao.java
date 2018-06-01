@@ -9,10 +9,13 @@ public interface ProductDao {
 	
 	public List selectAll();
 	
+	public int countAll();
+	
 	public List selectPage(Paging paging);
+
+	public Product selectProductByIdx(Product product);
 	
 	public void insert(Product product);
 	
 	public void update(Product product);
-	
 }

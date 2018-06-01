@@ -32,6 +32,11 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
+	@RequestMapping(value="/seller/mypage.do", method=RequestMethod.GET)
+	public String nav() {
+		return "Mypage/seller/mypage"; 
+	}
+	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model) {
@@ -44,9 +49,8 @@ public class ProductController {
 		
 		List list = productService.getPagingList(paging);
 		model.addAttribute("list", list);
-		System.out.println(list.get(0).toString());
 		
-		return "Mypage/seller/product";
+		return "Mypage/seller/productList";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
@@ -98,14 +102,43 @@ public class ProductController {
 		product.setMainImg(stored2);
 		product.setAccIdx(2);
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
-
+		
+		productService.insert(product);
+		
 		List<SaleOption> saleList = opt.getSaleOptions();
 		for(int i=0; i<saleList.size(); i++) {
 			productService.insert(product, saleList.get(i));
 		}
 		
 		return "redirect:/product";
-		
+//		return "Mypage/seller/productList2";
 	}
 	
+	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
+	public String update(Product product
+//						, Option opt
+						, FileDto f
+						, Model model) {
+		logger.info("update.do get!");
+		
+		System.out.println(product.getIdx());
+//		System.out.println(opt.getSaleOptions().get(0).getIdx());
+//		System.out.println(opt.getSaleOptions().get(0).getPkIdx());
+		product = productService.productView(product);
+		logger.info(product.getTitle());
+		model.addAttribute("product", product);
+		
+//		opt.setSaleOptions(saleOptions);
+//		List<SaleOption> saleList = opt.getSaleOptions();
+//		model.addAttribute("saleOption", saleList.get(0));
+		
+		return "Mypage/seller/productUpdate";
+	}
+	
+//	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
+//	public String updateProduct(Product product
+//								, Option opt
+//								, FileDto f) {
+//		
+//	}
 }

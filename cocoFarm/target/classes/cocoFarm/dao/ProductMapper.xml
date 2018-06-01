@@ -7,6 +7,28 @@
 
 	<!-- hash map -->
 
+	<resultMap id="ProductResult" type="cocoFarm.dto.Product">
+		<result column="last_edited" property="lastEdited" />
+		<result column="face_img" property="faceImg" />
+		<result column="main_img" property="mainImg" />
+	</resultMap>
+
+	<sql id="selectProduct">
+		SELECT 
+			idx,
+			acc_idx,
+			title,
+			origin,
+			hit,
+			written_time,
+			last_edited,
+			content,
+			face_img,
+			main_img,
+			isdel
+		FROM sale
+	</sql>
+
 	<!-- acc_idx: 글쓴이 인덱스 참조하는 속성 (세션) -->
 	<!-- systimestamp: 밀리초까지 계산 -->
 	<insert id="insert" parameterType="cocoFarm.dto.Product">
@@ -27,5 +49,34 @@
 			SELECT sale_seq.currval FROM DUAL
 		</selectKey>
 	</insert>
+	
+	<select id="selectAll" resultType="cocoFarm.dto.Product">
+		<include refid="selectProduct" />
+		ORDER BY idx
+	</select>
+	
+	<select id="countAll" resultType="int">
+		SELECT COUNT(*) FROM sale
+	</select>
+	
+	<select id="selectPage"
+					parameterType="cocoFarm.util.Paging"
+					resultMap="ProductResult">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectProduct" />
+				ORDER BY idx DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+	
+	<select id="selectProductByIdx"
+					parameterType="cocoFarm.dto.Product"
+					resultType="cocoFarm.dto.Product">
+		<include refid="selectProduct" />
+		WHERE idx = #{idx }
+	</select>
 
 </mapper>
