@@ -31,9 +31,13 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 /*
 테이블 리스트
 
+	PLOGGER: 경매(혹은 그 외) 프로시져 로그
+
 	ISDEL_TYPE: 삭제상태 코드
 
 	ISDEL_TYPE: 계정 타입 코드
+
+	ACCOUNT_TYPEL 계정 타입 코드
 
 	ACCOUNT_STATE_TYPE: 계정 전용 상태 코드 (삭제 등..)
 
@@ -59,7 +63,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	DELIVERY: 배송
 
-	BID_DEPOSIT_TYPE: 입찰 보증금 타입 코드 **취소됨**
+	--BID_DEPOSIT_TYPE: 입찰 보증금 타입 코드 **취소됨**
 
 	CATEGORY: 카테고리 (노드)
 
@@ -91,15 +95,19 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	AUCTION_CATEGORY_MAP: 경매 - 카테고리 맵
 
+	AUCTION_INQUIRE: 경매글 문의사항 덧글
+
 	AUCTION_DUE_QUE: 경매 만료 대기열
 
-	BID_DEPOSITE_RECEIPT: 입찰 보증금 영수증 **취소됨**
+	--BID_DEPOSITE_RECEIPT: 입찰 보증금 영수증 **취소됨**
 
 	BID_STATE_TYPE: 입찰 상태 코드
 
 	CONTRACT_TIME_WINDOW_TYPE: 낙찰 지불 기한 타입 코드
 
 	BID: 입찰
+
+	BID_ALIVE_QUE: 유효 입찰 목록
 
 	BID_CONTRACT_QUE: 경매 낙찰 대기열
 
@@ -108,12 +116,14 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	BID_CONTRACT: 낙찰 완료 입찰 정보
 
 	MESSAGE_TYPE: 쪽지 타입
+	
+	MESSAGE_STATE_TYPE: 쪽지 상태 코드
 
 	MESSAGE: 쪽지
 
 	TODAYS_FARMER: 오늘의 농부
 
-	TODAYS_FARMER_PICK: 오늘의 농부 픽
+	TODAYS_FARMER_PICK: 오늘의 농부 픽(관리자 선택)
 
 	TODAYS_FARMER_COMMENT: 오늘의 농부 댓글
 
@@ -125,6 +135,14 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	SITE_IMG_SETTING: 사이트 이미지
 
+	BAD_DEED_TYPE: 나쁜짓 목록
+	
+	BAD_DEED_RECORD: 나쁜짓 기록
+	
+	PENALTY_TYPE: 벌 목록
+	
+	PENALTY_RECORD: 벌 준 기록
+	
 */
 
 -------------------------------------------------------------
@@ -278,7 +296,7 @@ drop table CATEGORY cascade constraints;
 
 drop trigger MAIN_RECEIPT_TRG;
 drop sequence MAIN_RECEIPT_SEQ;
-drop table MAIN_RECEIPT;
+drop table MAIN_RECEIPT cascade constraints;
 
 drop trigger DELIVERY_B_INSRT_TRG;
 drop sequence DELIVERY_SEQ;
@@ -318,7 +336,7 @@ drop table ISDEL_TYPE cascade constraints;
 drop index PLOGGER_IDX;
 drop table PLOGGER;
 
--- 위 삭제 코드를 실행한 후, 코코팜 계정에 남아있는 테이블, 트리거, 시퀀스, 인덱스 등이 하나도 없어야 합니다. (이름 중복 방지)
+-- 위 삭제 코드를 실행한 후, 코코팜 계정에 남아있는 테이블, 트리거, 시퀀스, 인덱스, 프로시저 등이 하나도 없어야 합니다. (이름 중복 방지)
 -- 혹시 중간에 없애기로 한 테이블이 남아있는지 확인해 주세요.
 
 --purge recyclebin;
@@ -362,7 +380,7 @@ create table PLOGGER (
 
 	NAME			nvarchar2(400)
 	,TIME			timestamp(3) default SYSTIMESTAMP
-	,RESULTCODE		number(2,0)
+	,RESULTCODE		number(10,0)
 	,CONTENT		nvarchar2(2000)
 	,OTHER_INFO		nvarchar2(2000)
 );
@@ -420,10 +438,8 @@ comment on column ISDEL_TYPE.DESCRIPTION is '상태 설명';
 
 
 ------------------------------------------------  계정 타입 코드 ----------------------------------------------------
--- 이런 종류의 비즈니스 코드에 시퀀스 처리를 하는게 좀 이상해서 여기는 시퀀스를 안 넣어둠 (동적으로 타입을 정의하고 제어하는 구조가 아니니까..)
 -- 0:시스템(메세지 처리용) 1:관리자계정 2:사업자계정 3:일반계정
--- 더미데이터에 관리자 계정 하나 이상 무조건 넣기.
--- 쪽지 처리 방식에 따라, 더미 데이터에 시스템계정 최소 1개 넣기.
+-- 더미데이터에 관리자 계정 하나 이상, 시스템계정 최소 1개 넣기. 무조건 넣기.
 
 create table ACCOUNT_TYPE (
 
@@ -491,9 +507,6 @@ comment on column ACCOUNT_STATE_TYPE.DESCRIPTION is '계정 상태 타입 설명
 --drop table ACCOUNT_STATE_TYPE cascade constraints;
 
 
-------------------------------------------------  계정 제재 타입  ----------------------------------------------------
-
-------------------------------------------------  계정 제재 목록  ----------------------------------------------------
 
 ------------------------------------------------  계정  ----------------------------------------------------
 --세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (Integer), +옵션사항 "name" : NAME (String) ]
@@ -587,7 +600,7 @@ comment on column ACCOUNT.REG_DATE is '계정 등록일 - null안됨, 트리거 
 --drop table ACCOUNT cascade constraints;
 
 
-------------------------------------------------  사업자 평점  ------------------------------------------------
+------------------------------------------------  (보류: 결제 이후 처리)사업자 평점  ------------------------------------------------
 -- 아래는 판매자 평점 조회를 쉽게 하려고 넣은 일종의 중복값 테이블. 트리거 처리 금지(원본 삭제시 문제가 됨), procedure을 이용해 처리할 것을 추천. (그냥 써도 어차피 아무도 모를거라 상관 없음)
 -- 복잡하면 이 테이블을 안쓰고 그냥 매번 전체조회해도 됨 (그럴 경우 조회는 어려워지고 평점 등록/수정/삭제 가 쉬워짐)
 
@@ -818,7 +831,7 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 
 ---------------------------------------------- 주 영수증 -----------------------------------------------------
 -- 한번의 결제에 한번 생성. 결제행위 자체를 나타냄. 개별 결제에 여러개의 판매옵션과 입찰, 낙찰 등이 묶일 수 있음
--- + 개별 영수증의 상태 코드??
+
 /*
 누가 : 산 계정
 언제 : 시간저장
@@ -904,10 +917,10 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 
 --drop trigger MAIN_RECEIPT_TRG;
 --drop sequence MAIN_RECEIPT_SEQ;
---drop table MAIN_RECEIPT;
+--drop table MAIN_RECEIPT cascade constraints;
 
 
----------------------------------------------- 목록 영수증 상태 코드( 목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금)-----------------------------------------------------
+---------------------------------------------- 목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금)-----------------------------------------------------
 -- 구조상 주 영수증 아래 상세 내역에 해당하는 개별 영수증이 따라붙기 때문에 생기는 코드.
 
 create table LIST_RECPT_STATE_TYPE (
@@ -935,7 +948,7 @@ comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '목록 영수증 상태 
 
 --drop table LIST_RECPT_STATE_TYPE;
 
----------------------------------------------- 목록 영수증 타입-----------------------------------------------------
+---------------------------------------------- (취소)목록 영수증 타입-----------------------------------------------------
 ---------------------------------------------- (취소) 목록 영수증 -----------------------------------------------------
 /*
 create table LIST_RECEIPT (
@@ -965,7 +978,8 @@ create table LIST_RECEIPT (
 
 
 */
-
+-----------------------------------------------  배송비 타입  -------------------------------------------------------
+-----------------------------------------------  배송비 영수증  -------------------------------------------------------
 -----------------------------------------------  배송 상태 타입  -------------------------------------------------------
 
 create table DELIVERY_STATE_TYPE (
@@ -1177,6 +1191,9 @@ comment on column DELIVERY.RECEIVE_TIME is '수령 확인 시간';
 -----------------------------------------------  경매 수수료 타입  ------------------------------------------------------
 --그냥 넣을까 말까.. 모든 업무 데이터를 표현한다는 관점에서는 넣는게 맞고, 구현할 때 이걸 신경 안써도 되긴 한데 일단 보류. 필요하면 말해주세요.-
 
+-----------------------------------------------  거래 대금 전달 영수증  ------------------------------------------------------
+-----------------------------------------------  경매 대금 전달 영수증  ------------------------------------------------------
+
 -----------------------------------------------  (취소)입찰 보증금 타입 -------------------------------------------------------
 -- 안쓰고 그냥 웹어플리케이션에서 정해진 상수값을 이용해도 됨.
 
@@ -1321,7 +1338,7 @@ create table SALE(
 --	,AVG_SCORE		number(3,2)
 
 	,ISDEL			number(1,0)
---	,DEL_TIME		timestamp (0) with local time zone
+--	,DEL_TIME		date
 -- 이렇게 삭제 처리시 옵션도 같이 삭제처리를 이렇게 하고 조회를 막아야함. (필요하면 VIEW를 만들어 사용)
 
 	,constraint SALE_PK primary key (IDX, ISDEL)
@@ -1603,50 +1620,6 @@ comment on column SALE_OPT_CATEGORY.CATEGORY_IDX is '카테고리 노드 번호 
 --drop trigger SALE_OPT_CAT_INSERT_TRG;
 --drop table SALE_OPT_CATEGORY cascade constraints;
 
-
----------------------------------------------- (판매 옵션)구매 목록(삭제중 - 배송처리를 분리하면서 바뀜) ----------------------------------------------------
-
-/*
-create table PURCHASE(
-
-	IDX						number(12,0)
-	,PURCHASED_ACC			number(8,0)		not null
-	,SALE_IDX				number(9,0)
-
-	,SOLD_ACC				number(8,0)
-	,TITLE					nvarchar2(40)	not null
-	,PRICE					number(7,0)		not null
-	,AMOUNT					number(7,0)		not null
-	,UNIT					nvarchar2(10)	not null
-
-
--- 구매한 이미지 처리용 예시 속성(거래 기록으로 남겨둘 부분). 일단 넣어두긴 하는데 이쪽 설계의 세부 사안을 만들어야 제대로 결정할 수 있는 부분 - 예를들어 판매글이 지워지고 이미지는 남는가, 변경되면? 이런거.
-	,IMG					varchar2(100 char)
-
-	,STATE					number(2,0)		not null
-
-------------------------------------------------------------------
-	,PAYMENT_TIME			timestamp (3) with local time zone	not null
-	,PAYMENT_TYPE			number(2,0)		not null
-	,PAYMENT_NAME			nvarchar2(20)	not null
-	,PAYMENT_PHONE			number(14,0)
-
-	,IS_Refunded			number(1,0)		default 0 not null
-	,REFUNDED_TIME			timestamp (3) with local time zone
---------------------------------------------------------------------
-
-	,DELIVERY_LOC			nvarchar2(50)	not null
-	,RECEIVER_NAME			nvarchar2(20)	not null
-	,RECEIVER_PHONE			number(14,0)
-
-
-
-	,constraint PURCHASE_UNIQUE unique (IDX, PURCHASED_ACC, SALE_IDX)
--- 아래 평가 댓글 역정규화 외래키 용 unique.
-);
-
-
-*/
 
 ---------------------------------------------- 판매글에 대한 문의글 ----------------------------------------------------
 
@@ -2396,6 +2369,7 @@ create table BID_STATE_TYPE (
 insert all
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰 후 경매 만료 대기중, 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (13,'낙찰금 지불기한 만료. - 취소', '최고입찰로서 낙찰이 되었으나, 대금 지불 기한 안에 낙찰금을 지불하지 않음')
 select 1 from DUAL;
 
 commit;
@@ -2527,18 +2501,16 @@ comment on column BID.STATE_CODE is '입찰 상태 코드 - 외래키. 트리거
 --drop table BID cascade constraints;
 
 
------------------------------------------------  (보류)입찰 환불 영수증  -----------------------------------------------
-
 -----------------------------------------------  경매 입찰 대기열  -------------------------------------------------------
 
 create table BID_ALIVE_QUE (
 
 	AUCTION_IDX				number(10,0)
-	,AMOUNT					number(11,0)
+	,BID_AMOUNT					number(11,0)
 	,BIDDER_IDX				number(8,0)		not null
 
-	,constraint BID_ALIVE_Q_PK primary key (AUCTION_IDX, AMOUNT)
-	,constraint BID_ALIVE_BID_FK foreign key (AUCTION_IDX, AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
+	,constraint BID_ALIVE_Q_PK primary key (AUCTION_IDX, BID_AMOUNT)
+	,constraint BID_ALIVE_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete cascade
 	,constraint BID_ALIVE_Q_ACC_FK foreign key (BIDDER_IDX) references ACCOUNT (IDX) on delete cascade
 );
 
@@ -2568,9 +2540,9 @@ begin
 	else
 		update AUCTION set HIGHEST_BID = in_amount where IDX = in_auction_idx;
 		insert into BID (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
-		insert into BID_ALIVE_QUE (AUCTION_IDX, AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
+		insert into BID_ALIVE_QUE (AUCTION_IDX, BID_AMOUNT, BIDDER_IDX) values (in_auction_idx, in_amount, in_bidder_idx);
 		update BID set STATE_CODE = 11 where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX = in_bidder_idx;
-		delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx and AMOUNT != in_amount and BIDDER_IDX =  in_bidder_idx;
+		delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx and BID_AMOUNT != in_amount and BIDDER_IDX =  in_bidder_idx;
 		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BIDDER',1,'BID done (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
 		commit;
 		select 1 into isIn from DUAL;
@@ -2589,7 +2561,7 @@ comment on table BID_ALIVE_QUE is '경매 낙찰 대기열 (유효입찰 나열)
 
 comment on column BID_ALIVE_QUE.AUCTION_IDX is '경매번호 - 복합기본키 + 복합외래키';
 
-comment on column BID_ALIVE_QUE.AMOUNT is '입찰액 - 복합기본키 + 복합외래키';
+comment on column BID_ALIVE_QUE.BID_AMOUNT is '입찰액 - 복합기본키 + 복합외래키';
 
 comment on column BID_ALIVE_QUE.BIDDER_IDX is '입찰인 - 외래키 not null';
 
@@ -2604,7 +2576,7 @@ comment on column BID_ALIVE_QUE.BIDDER_IDX is '입찰인 - 외래키 not null';
 -- 어느 경매가 낙찰 대기중이며, 대기중인 대상 입찰(최고입찰) 은 ### 이다. 대기 만료시간은 ### 이다.
 -- 1.목록 확인 2.지불기한이 만료된 입찰 확인 3.대상이 실제 대기중인 상태였는지 한번 더 확인(예외처리 사항) 4.지불 대기중인 입찰을 만료시키고 다음 유효 입찰(취소가 안된)을 찾기. - 입찰이 취소되면 여기 있는 해당 입찰이 삭제되어야 함!
 -- 경매 후보키: AUCTION_IDX
--- 입찰 후보키: AUCTION_IDX, AMOUNT.
+-- 입찰 후보키: AUCTION_IDX, BID_AMOUNT.
 -- insert 동작: 낙찰을 시작하거나, 다음 최고입찰을 찾은 경매의 최고입찰을 찾아서  해당 입찰을 그냥 insert 하면 트리거로 처리하는게 편할 듯.
 -- 이후 목록의 시간들을 확인하고 처리.
 
@@ -2634,6 +2606,7 @@ begin
 		where CODE = :NEW.CONTRACT_T_WIN_CODE;
 end;
 /
+--트리거 설명: 만료기한 타입이 없으면 기본값 1, 만료기한을 계산해서 넣음.
 
 
 comment on table BID_CONTRACT_QUE is '경매 낙찰 대기열. 모든 속성이 null 불가';
@@ -2727,6 +2700,7 @@ comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 --drop index BID_CONTRCT_RECPT_INDX;
 --drop table BID_CONTRACT_RECEIPT cascade constraints;
 
+
 -----------------------------------------------  낙찰 완료 입찰 정보 -----------------------------------------------
 -- 낙찰된 입찰 목록 (입찰의 서브타입 형태)
 -- 트리거로 정보 관리중: 낙찰금 영수증 발생시 자동으로 입력
@@ -2804,8 +2778,7 @@ comment on column MESSAGE_TYPE.DESCRIPTION is '쪽지 타입 설명';
 
 
 ------------------------------------------------  쪽지 상태 타입 -------------------------------------------------
---    into ISDEL_TYPE (CODE, NAME) values (2, '삭제됨')--보낸쪽지 삭제
---    into ISDEL_TYPE (CODE, NAME) values (3, '삭제됨')--받은쪽지 삭제
+
 create table MESSAGE_STATE_TYPE (
 
 	CODE			number(2,0)
@@ -2854,7 +2827,6 @@ create table MESSAGE (
 	,TYPE_CODE			number(2,0)			not null
 
 	,STATE_CODE				number(1,0)
---보낸 메세지 확인과 받은 메세지 확인에서의 상태값이 따로 필요할 수도 있습니다..
 
 	,constraint MESSAGE_PK primary key (STATE_CODE, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
@@ -2888,7 +2860,7 @@ begin
 	end if;
 end;
 /
---트리거 설명: 인덱스 없으면 시퀀스 넣어줌, 작성시각 없으면 시스템 시각 넣어줌
+--트리거 설명: 인덱스 없으면 시퀀스 넣어줌, 작성시각 없으면 시스템 시각 넣어줌, 상태값을 읽지않음 상태로 넣어줌, 쪽지타입 기본값 0 넣어줌
 
 
 comment on table MESSAGE is '쪽지';
@@ -3314,8 +3286,10 @@ create table BAD_DEED_TYPE (
 	,constraint PK_BAD_DEED_CD primary key (CODE)
 );
 
-insert into BAD_DEED_TYPE (CODE, KARMA, NAME, DESCRIPTION)
-	values (0, 100, '나쁜짓 기본값', '혹시 구현중 문제가 생기지 않도록 넣어둔 기본값');
+insert all 
+	into BAD_DEED_TYPE (CODE, KARMA, NAME, DESCRIPTION) values (0, 100, '나쁜짓 기본값', '혹시 구현중 문제가 생기지 않도록 넣어둔 기본값')
+	into BAD_DEED_TYPE (CODE, KARMA, NAME, DESCRIPTION) values (1, 100, '낙찰금 지불 기한 만료', '최고입찰로 지정된 후 낙찰금을 지불하지 않는 나쁜 짓.')
+select 1 from DUAL;
 commit;
 
 
@@ -3404,7 +3378,7 @@ commit;
 --drop table PENALTY_TYPE cascade constraints;
 
 
------------------------------------------------ 벌 기록 -----------------------------------------------
+----------------------------------------------- 벌 준 기록 -----------------------------------------------
 
 create table PENALTY_RECORD (
 
@@ -3456,78 +3430,78 @@ comment on column PENALTY_RECORD.PENALTY_CODE is '''벌'' 번호 - 외래키, nu
 
 --****************** 경매 만료 목록 확인 + 진행시키기
 create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
-is
-	COUNTER number;
-	NO_BID_CNTER number;
-	HAS_BID_CNT number;
-	BIDDER number;
-	TIMEWINDOW timestamp;
-	HAS_NEXT_TIME number;
-	
-	cursor AUCT_Q_CUR is
-		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
-begin
-	NO_BID_CNTER := 0;
-	HAS_BID_CNT := 0;
-	
-	savepoint START_TRANSACTION;
-	
-	for AUCTION_CURSOR in AUCT_Q_CUR loop
+	is
+		BID_ALIVE_CNT	number;
+		NO_BID_CNTER	number;
+		HAS_BID_CNT		number;
+		BIDDER			number;
+		TIMEWINDOW		timestamp;
+		HAS_NEXT_TIME	number;
 		
-		select count(1) into COUNTER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX and AMOUNT = AUCTION_CURSOR.HIGHEST_BID;
+		cursor AUCT_Q_CUR is
+			select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
+	begin
+		NO_BID_CNTER := 0;
+		HAS_BID_CNT := 0;
 		
-		if( COUNTER = 0 ) then
-			update AUCTION set STATE_CODE = 5 where current of AUCT_Q_CUR;
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-				values (0, AUCTION_CURSOR.WRITTER_IDX, '신청하신 경매 '||AUCTION_CURSOR.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
-			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
-			NO_BID_CNTER := NO_BID_CNTER+1;
+		savepoint START_TRANSACTION;
+		
+		for AUCTION_ROW in AUCT_Q_CUR loop
+			
+			select count(1) into BID_ALIVE_CNT from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
+			
+			if( BID_ALIVE_CNT = 0 ) then
+				update AUCTION set STATE_CODE = 5 where current of AUCT_Q_CUR;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+					values (0, AUCTION_ROW.WRITTER_IDX, '신청하신 경매 '||AUCTION_ROW.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
+				delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
+				NO_BID_CNTER := NO_BID_CNTER+1;
+			else
+				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID);
+				select BIDDER_IDX into BIDDER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
+				select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+						values (0, BIDDER, '입찰하신 경매 '||AUCTION_ROW.TITLE||' 에 낙찰되셧습니다', to_char(TIMEWINDOW, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||AUCTION_ROW.HIGHEST_BID||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
+						values (0, AUCTION_ROW.WRITTER_IDX, '신청하신 경매 '||AUCTION_ROW.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||AUCTION_ROW.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
+				update AUCTION set STATE_CODE = 6 where current of AUCT_Q_CUR;
+				delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
+				HAS_BID_CNT := HAS_BID_CNT+1;
+			end if;
+			
+		end loop;
+		
+		if BID_ALIVE_CNT is null then
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no result found');
 		else
-			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (AUCTION_CURSOR.IDX, AUCTION_CURSOR.HIGHEST_BID);
-			select BIDDER_IDX into BIDDER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX and AMOUNT = AUCTION_CURSOR.HIGHEST_BID;
-			select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, BIDDER, '입찰하신 경매 '||AUCTION_CURSOR.TITLE||' 에 낙찰되셧습니다', to_char(TIMEWINDOW, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||AUCTION_CURSOR.HIGHEST_BID||' 를 납부하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
-					values (0, AUCTION_CURSOR.WRITTER_IDX, '신청하신 경매 '||AUCTION_CURSOR.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||AUCTION_CURSOR.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
-			update AUCTION set STATE_CODE = 6 where current of AUCT_Q_CUR;
-			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_CURSOR.IDX;
-			HAS_BID_CNT := HAS_BID_CNT+1;
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. (BID_ALIVE_CNT: '||BID_ALIVE_CNT||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
 		end if;
 		
-	end loop;
-	
-	if COUNTER is null then
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no result found');
-	else
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. (COUNTER: '||COUNTER||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
-	end if;
-	
-	commit;
-	
-	select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
-	if (HAS_NEXT_TIME >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
-	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
-	end if;
-	
-	
-exception when OTHERS then
+		commit;
+		
+		select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
+		if (HAS_NEXT_TIME >0) then
+			select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
+		
+	exception when OTHERS then
 
-	rollback to START_TRANSACTION;
-	
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',0,'ERROR!!!. (COUNTER: '||COUNTER||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
-	commit;
-	
-	select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
-	if (HAS_NEXT_TIME >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
-	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
-	end if;
-	
-end;
+		rollback to START_TRANSACTION;
+		
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',0,'ERROR!!!. (BID_ALIVE_CNT: '||BID_ALIVE_CNT||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
+		commit;
+		
+		select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
+		if (HAS_NEXT_TIME >0) then
+			select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
+	end;
 /
 
 /*
@@ -3566,28 +3540,6 @@ commit;
 
 --낙찰금 지불 거부 (만료)
 --+입찰 취소 function (해당 입찰, 변화시킬 상태값)
-
-
-/*
----****************** 낙찰금 지불 기한 만료 처리
-create procedure CONTRACT_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
-is
-
-	cursor CONTRCT_Q_CUR is
-		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP);
-begin
-
-	for BID_CURSOR in CONTRCT_Q_CUR loop
-	
-	end loop;
-
-
-when exception others then
-
-end;
-*/
-
-
 
 
 
@@ -3704,14 +3656,20 @@ purge recyclebin;
 /* 작업중 프로시저
 
 ---****************** 낙찰금 지불 기한 만료 처리
+
 create procedure CONTRACT_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
 is
-
+	counter number;
+	
 	cursor CONTRCT_Q_CUR is
-		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP);
+		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE < SYSTIMESTAMP);
 begin
 
-	for BID_CURSOR in CONTRCT_Q_CUR loop
+	for BID_ROW in CONTRCT_Q_CUR loop
+	
+	
+	
+	
 	
 	end loop;
 
@@ -3719,7 +3677,84 @@ begin
 when exception others then
 
 end;
+/
+
 
 */
+
+/*
+
+
+create procedure BID_EXPIED_AUCT_CANCEL (DBTIME out timestamp, NEXTCHECK out timestamp)
+	is
+		LESSER_BID_CHECK	number;
+		WAS_LESSER_BID		number;
+		NO_LESSER_BID		number;
+		NEXT_BID_AMOUNT		number;
+		NEXT_BID_BIDDER		number;
+		AUCT_WRITTER		number;
+		TIMEWINDOW			timestamp;
+		AUCT_TITLE			nvarchar2;
+		KARMA_POINT			number;
+
+		cursor BID_Q_CUR is
+			select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where AUCTION_IDX, AMOUNT in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP) for update;
+	begin
+		WAS_LESSER_BID := 0;
+		NO_LESSER_BID := 0;
+
+		savepoint START_TRANSACTION;
+
+		select KARMA into KARMA_POINT from BAD_DEED_TYPE where CODE = 1;
+
+		for BID_ROW in BID_Q_CUR loop
+			delete BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX and BID_AMOUNT = BID_ROW.AMOUNT;
+			select count(1) into LESSER_BID_CHECK from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+			select TITLE, WRITTER_IDX into AUCT_TITLE, AUCT_WRITTER from AUCTION where IDX = BID_ROW.AUCTION_IDX;
+
+			if (LESSER_BID_CHECK >0) then
+				select B.BIGGEST_BID, O.BIDDER_IDX into NEXT_BID_AMOUNT, NEXT_BID_BIDDER from BID_ALIVE_QUE O
+					inner join (select max(BID_AMOUNT) BIGGEST_BID from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX) B
+						on B.BIGGEST_BID = O.BID_AMOUNT
+					where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (NEXT_BID_AMOUNT, NEXT_BID_BIDDER);
+				select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, NEXT_BID_BIDDER, '입찰하신 경매 '||AUCT_TITLE||' 에 낙찰되셧습니다.','상위 입찰이 취소되어 해당 경매 '''||AUCT_TITLE||''' 에 낙찰되셧습니다. '||TIMEWINDOW||' 까지 '||NEXT_BID_AMOUNT||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다. ',1);
+				WAS_LESSER_BID := WAS_LESSER_BID +1;
+			else
+				update AUCTION set STATE_CODE = 6 where IDX = BID_ROW.AUCTION_IDX;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, AUCT_WRITTER, '신청하신 경매 '''||AUCT_TITLE||''' 의 대금 납부를 모든 입찰인이 거부하였습니다.','해당 경매에 참여한 모든 유효 입찰의 입찰자 들이, 낙찰 대금 지불기한 내 지불을 하지 않아 해당 경매가 거래 없이 완료되었습니다.', 1);
+				NO_LESSER_BID := NO_LESSER_BID +1;
+			end if;
+
+			insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values ( BID_ROW.BIDDER_IDX, 1);
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)  values(0, BID_ROW.BIDDER_IDX, '경매 '''||AUCT_TITLE||''' 의 낙찰금 지불 기한이 만료되었습니다.','대상 경매에 대한 낙찰 권한을 상실하셧으며, 벌점 '||KARMA_POINT|| ' 를 받으셧습니다.', 1);
+			update BID set STATE_CODE = 13 where current of BID_Q_CUR;
+
+		end loop;
+		
+		시간시간시간시간
+		
+		로그로그로그로그
+		
+	exception when others then
+	
+		rollback to START_TRANSACTION;
+		
+		로그로그로그로그
+		
+	end;
+	
+/
+
+
+
+*/
+
+
+
+
+
+
 
 
