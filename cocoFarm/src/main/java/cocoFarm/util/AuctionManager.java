@@ -11,7 +11,7 @@ import cocoFarm.dto.UniversalTimerDto;
 public final class AuctionManager {
 	
 	private static Thread AuctionExpChecker = null;
-	private static boolean AuctExpCheckerLife = true;
+	private static volatile boolean SHOULDRUN = true;
 	private static TimerDao timerDao;
 	
 	public static synchronized void init(TimerDao dao) {
@@ -27,7 +27,7 @@ public final class AuctionManager {
 					long sleepLength = 0L;
 					LocalDateTime wakeTime = null;
 					
-					while (AuctExpCheckerLife) {
+					while (SHOULDRUN) {
 						System.out.println("\r\n\r\n-------Start Running!--------\r\n\r\n");//----------------testcode
 						timerDto = timerDao.auctionExpire(new UniversalTimerDto());
 						sleepLength = timerDto == null ? sleepLength : (ChronoUnit.MILLIS.between(timerDto.getDbTime().toLocalDateTime(), timerDto.getNextCheck().toLocalDateTime()));
@@ -75,8 +75,8 @@ public final class AuctionManager {
 		return AuctionExpChecker.isAlive();
 	}
 
-	public static void finish() {
-		AuctExpCheckerLife = false;
+	public static synchronized void finish() {
+		SHOULDRUN = false;
 	}
 	
 }
