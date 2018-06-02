@@ -3,7 +3,8 @@ package cocoFarm.listener;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 
-import cocoFarm.util.AuctionManager;
+import cocoFarm.util.runners.RunnerManager;
+
 
 public class ContextCloseListener implements ApplicationListener<ContextClosedEvent>{
 
@@ -13,7 +14,7 @@ public class ContextCloseListener implements ApplicationListener<ContextClosedEv
 	public void onApplicationEvent(ContextClosedEvent event) {
 		if(!hasDone) {
 			System.out.println("\r\n\r\n===================== application close listener fired =====================\r\n");
-			AuctionManager.finish();
+			RunnerManager.finish();
 			hasDone = true;
 		}
 	}

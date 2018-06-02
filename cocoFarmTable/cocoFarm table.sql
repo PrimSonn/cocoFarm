@@ -147,6 +147,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 -------------------------------------------------------------
 
+drop procedure BID_DUE_CHECK;
+
 drop procedure AUCTION_DUE_CHECK;
 
 drop trigger PENALTY_RECORD_TRG;
@@ -333,6 +335,7 @@ drop table ACCOUNT_TYPE cascade constraints;
 
 drop table ISDEL_TYPE cascade constraints;
 
+drop index PLOGGER_T_IDX;
 drop index PLOGGER_IDX;
 drop table PLOGGER;
 
@@ -382,11 +385,13 @@ create table PLOGGER (
 	,TIME			timestamp(3) default SYSTIMESTAMP
 	,RESULTCODE		number(10,0)
 	,CONTENT		nvarchar2(2000)
+	,ERR_CODE		number
+	,ERR_MESSAGE	nvarchar2(255)
 	,OTHER_INFO		nvarchar2(2000)
 );
 
 create index PLOGGER_IDX on PLOGGER (NAME, RESULTCODE);
-
+create index PLOGGER_T_IDX on PLOGGER (TIME);
 
 comment on table PLOGGER is '프로시저 실행 로그';
 
@@ -401,6 +406,7 @@ comment on column PLOGGER.CONTENT is '프로시저 실행 결과 세부 내용 �
 comment on column PLOGGER.OTHER_INFO is '내용과 별도로 저장해야할 속성이 있을 때 사용';
 
 
+--drop index PLOGGER_T_IDX;
 --drop index PLOGGER_IDX;
 --drop table PLOGGER;
 
@@ -2406,7 +2412,7 @@ insert all
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 05, 'DAY') ,'5일 낙찰금 지불기한', '5일짜리 낙찰금 지불기한')
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 02, 'MINUTE') ,'1분 낙찰금 지불기한', '1분짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 02, 'MINUTE') ,'1분 낙찰금 지불기한', '2분짜리 낙찰금 지불기한')
 select 1 from DUAL;
 
 commit;
@@ -3428,7 +3434,8 @@ comment on column PENALTY_RECORD.PENALTY_CODE is '''벌'' 번호 - 외래키, nu
 
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
---****************** 경매 만료 목록 확인 + 진행시키기
+--**  1. 경매 만료 목록 확인 + 진행시키기
+
 create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
 	is
 		BID_ALIVE_CNT	number;
@@ -3438,6 +3445,9 @@ create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestam
 		TIMEWINDOW		timestamp;
 		HAS_NEXT_TIME	number;
 		
+		ERR_CODE		number;
+		ERR_MESSAGE		varchar2(255);
+
 		cursor AUCT_CUR is
 			select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
 	begin
@@ -3448,7 +3458,7 @@ create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestam
 		
 		for AUCTION_ROW in AUCT_CUR loop
 			
-			select count(1) into BID_ALIVE_CNT from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
+			select count(1) into BID_ALIVE_CNT from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 			
 			if( BID_ALIVE_CNT = 0 ) then
 				update AUCTION set STATE_CODE = 5 where current of AUCT_CUR;
@@ -3456,8 +3466,13 @@ create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestam
 					values (0, AUCTION_ROW.WRITTER_IDX, '신청하신 경매 '||AUCTION_ROW.TITLE||' 가 입찰이 없이 만료되었습니다.', '경매기간 만료: 유효입찰 없음',1);
 				delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 				NO_BID_CNTER := NO_BID_CNTER+1;
+
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no ALIVE_BID found on AUCTION.IDX: '||AUCTION_ROW.IDX);
+
 			else
-				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID);
+--				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID);
+				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, 4);
+				
 				select BIDDER_IDX into BIDDER from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
 				select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
@@ -3466,16 +3481,14 @@ create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestam
 						values (0, AUCTION_ROW.WRITTER_IDX, '신청하신 경매 '||AUCTION_ROW.TITLE||' 의 낙찰이 시작되었습니다.','낙찰가 : '||AUCTION_ROW.HIGHEST_BID||' 최고입찰자가 입찰액을 지불하면 낙찰 절차가 완료됩니다.', 1);
 				update AUCTION set STATE_CODE = 6 where current of AUCT_CUR;
 				delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
-				HAS_BID_CNT := HAS_BID_CNT+1;
+				
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. found ALIVE_BID on AUCTION.IDX: '||AUCTION_ROW.IDX||' is BIDDER: '||BIDDER||', AMOUNT: '||AUCTION_ROW.HIGHEST_BID);
+
 			end if;
-			
+
 		end loop;
-		------------------------BID_ALIVE_CNT 위치!!!
-		if BID_ALIVE_CNT is null then
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no result found');
-		else
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. (BID_ALIVE_CNT: '||BID_ALIVE_CNT||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
-		end if;
+		
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'AUCTION_DUE_CHECK done. (NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
 		
 		commit;
 		
@@ -3491,7 +3504,12 @@ create procedure AUCTION_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestam
 
 		rollback to START_TRANSACTION;
 		
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',0,'ERROR!!!. (BID_ALIVE_CNT: '||BID_ALIVE_CNT||', NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')');
+		ERR_CODE := sqlcode;
+		ERR_MESSAGE := substr(sqlerrm, 1, 255);
+
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT, ERR_CODE, ERR_MESSAGE)
+			values ('AUCTION_DUE_CHECK',0,'ERROR!!!. (NO_BID_CNTER: '||NO_BID_CNTER||', HAS_BID_CNT: '||HAS_BID_CNT||')', ERR_CODE, ERR_MESSAGE );
+
 		commit;
 		
 		select count(1) into HAS_NEXT_TIME from AUCTION_DUE_QUE;
@@ -3538,7 +3556,109 @@ commit;
 --drop procedure AUCTION_DUE_CHECK;
 
 
---낙찰금 지불 거부 (만료)
+--**  2. 낙찰금 지불 거부 (만료)
+
+create procedure BID_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
+	is
+		NEXT_BID_CHECK		number;
+		WAS_LESSER_BID		number;
+		NO_LESSER_BID		number;
+		NEXT_BID_AMOUNT		number;
+		NEXT_BID_BIDDER		number;
+		AUCT_WRITTER		number;
+		TIMEWINDOW			timestamp;
+		AUCT_TITLE			AUCTION.TITLE%type;
+		KARMA_POINT			number;
+
+		ERR_CODE			number;
+		ERR_MESSAGE			varchar2(255);
+
+		cursor BID_CUR is
+			select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE < SYSTIMESTAMP) for update;
+	begin
+		WAS_LESSER_BID := 0;
+		NO_LESSER_BID := 0;
+
+		savepoint START_TRANSACTION;
+
+		select KARMA into KARMA_POINT from BAD_DEED_TYPE where CODE = 1;
+
+		for BID_ROW in BID_CUR loop
+		
+			delete BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX and BID_AMOUNT = BID_ROW.AMOUNT;
+			delete BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX and BID_AMOUNT = BID_ROW.AMOUNT;
+			
+			select count(1) into NEXT_BID_CHECK from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+			select TITLE, WRITTER_IDX into AUCT_TITLE, AUCT_WRITTER from AUCTION where IDX = BID_ROW.AUCTION_IDX;
+
+			if (NEXT_BID_CHECK >0) then
+				select B.BIGGEST_BID, O.BIDDER_IDX into NEXT_BID_AMOUNT, NEXT_BID_BIDDER from BID_ALIVE_QUE O
+					inner join (select max(BID_AMOUNT) BIGGEST_BID from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX) B
+						on B.BIGGEST_BID = O.BID_AMOUNT
+					where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (BID_ROW.AUCTION_IDX, NEXT_BID_AMOUNT, 4);
+				select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, NEXT_BID_BIDDER, '입찰하신 경매 '||AUCT_TITLE||' 에 낙찰되셧습니다.','상위 입찰이 취소되어 해당 경매 '''||AUCT_TITLE||''' 에 낙찰되셧습니다. '||TIMEWINDOW||' 까지 '||NEXT_BID_AMOUNT||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다. ',1);
+				WAS_LESSER_BID := WAS_LESSER_BID +1;
+
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK',1, 'successful. found NEXT_BID on AUCTION.IDX: '||BID_ROW.AUCTION_IDX||', NEXT_BID_AMOUNT: '||NEXT_BID_AMOUNT||', NEXT_BID_BIDDER: '||NEXT_BID_BIDDER);
+
+			else
+				update AUCTION set STATE_CODE = 6 where IDX = BID_ROW.AUCTION_IDX;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, AUCT_WRITTER, '신청하신 경매 '''||AUCT_TITLE||''' 의 대금 납부를 모든 입찰인이 거부하였습니다.','해당 경매에 참여한 모든 유효 입찰의 입찰자 들이, 낙찰 대금 지불기한 내 지불을 하지 않아 해당 경매가 거래 없이 완료되었습니다.', 1);
+				NO_LESSER_BID := NO_LESSER_BID +1;
+
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK',1, 'successful. found no NEXT_BID on AUCTION.'||BID_ROW.AUCTION_IDX);
+
+			end if;
+
+			insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values ( BID_ROW.BIDDER_IDX, 1);
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)  values(0, BID_ROW.BIDDER_IDX, '경매 '''||AUCT_TITLE||''' 의 낙찰금 지불 기한이 만료되었습니다.','대상 경매에 대한 낙찰 권한을 상실하셧으며, 벌점 '||KARMA_POINT|| ' 를 받으셧습니다.', 1);
+			update BID set STATE_CODE = 13 where current of BID_CUR;
+
+		end loop;
+		
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK', 1, 'BID_DUE_CHECK done. (NO_LESSER_BID: '||NO_LESSER_BID||', WAS_LESSER_BID: '||WAS_LESSER_BID||')');
+		
+		commit;
+
+		select count(1) into NEXT_BID_CHECK from BID_CONTRACT_QUE;--시간
+		if (NEXT_BID_CHECK >0 ) then
+			select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
+	exception when others then
+	
+		rollback to START_TRANSACTION;
+		
+		ERR_CODE := sqlcode;
+		ERR_MESSAGE := substr(sqlerrm, 1, 255);
+		
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT, ERR_CODE, ERR_MESSAGE)
+			values ('BID_DUE_CHECK',0,'ERROR!!!. (NO_LESSER_BID: '||NO_LESSER_BID||', WAS_LESSER_BID: '||WAS_LESSER_BID||')',ERR_CODE, ERR_MESSAGE);
+		
+		commit;
+		
+		select count(1) into NEXT_BID_CHECK from BID_CONTRACT_QUE;--시간
+		if (NEXT_BID_CHECK >0 ) then
+			select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
+	end;
+/
+
+
+
+
+
+
+
+
+
 --+입찰 취소 function (해당 입찰, 변화시킬 상태값)
 
 
@@ -3638,6 +3758,10 @@ select * from AUCTION;
 select * from AUCTION_DUE_QUE;
 select * from BID;
 select * from BID_ALIVE_QUE;
+select * from MESSAGE order by IDX desc;
+select * from BID_CONTRACT_QUE;
+select * from PLOGGER order by TIME desc;
+select * from BAD_DEED_RECORD order by IDX desc;
 
 
 
@@ -3655,101 +3779,9 @@ purge recyclebin;
 
 /* 작업중 프로시저
 
----****************** 낙찰금 지불 기한 만료 처리
-
-create procedure CONTRACT_DUE_CHECK (DBTIME out timestamp, NEXTCHECK out timestamp)
-is
-	counter number;
-	
-	cursor CONTRCT_Q_CUR is
-		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE < SYSTIMESTAMP);
-begin
-
-	for BID_ROW in CONTRCT_Q_CUR loop
-	
-	
-	
-	
-	
-	end loop;
-
-
-when exception others then
-
-end;
-/
 
 
 */
-
-
-/*
-
-create procedure BID_EXPIED_AUCT_CANCEL (DBTIME out timestamp, NEXTCHECK out timestamp)
-	is
-		NULL_CHECK	number;
-		WAS_LESSER_BID		number;
-		NO_LESSER_BID		number;
-		NEXT_BID_AMOUNT		number;
-		NEXT_BID_BIDDER		number;
-		AUCT_WRITTER		number;
-		TIMEWINDOW			timestamp;
-		AUCT_TITLE			nvarchar2;
-		KARMA_POINT			number;
-
-		cursor BID_CUR is
-			select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where AUCTION_IDX, AMOUNT in (select AUCTION_IDX, BID_AMOUNT from BID_CONTRACT_QUE where PAYMENT_DUE > SYSTIMESTAMP) for update;
-	begin
-		WAS_LESSER_BID := 0;
-		NO_LESSER_BID := 0;
-
-		savepoint START_TRANSACTION;
-
-		select KARMA into KARMA_POINT from BAD_DEED_TYPE where CODE = 1;
-
-		for BID_ROW in BID_CUR loop
-			delete BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX and BID_AMOUNT = BID_ROW.AMOUNT;
-			select count(1) into NULL_CHECK from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
-			select TITLE, WRITTER_IDX into AUCT_TITLE, AUCT_WRITTER from AUCTION where IDX = BID_ROW.AUCTION_IDX;
-
-			if (NULL_CHECK >0) then
-				select B.BIGGEST_BID, O.BIDDER_IDX into NEXT_BID_AMOUNT, NEXT_BID_BIDDER from BID_ALIVE_QUE O
-					inner join (select max(BID_AMOUNT) BIGGEST_BID from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX) B
-						on B.BIGGEST_BID = O.BID_AMOUNT
-					where AUCTION_IDX = BID_ROW.AUCTION_IDX;
-				insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT) values (NEXT_BID_AMOUNT, NEXT_BID_BIDDER);
-				select PAYMENT_DUE into TIMEWINDOW from BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, NEXT_BID_BIDDER, '입찰하신 경매 '||AUCT_TITLE||' 에 낙찰되셧습니다.','상위 입찰이 취소되어 해당 경매 '''||AUCT_TITLE||''' 에 낙찰되셧습니다. '||TIMEWINDOW||' 까지 '||NEXT_BID_AMOUNT||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다. ',1);
-				WAS_LESSER_BID := WAS_LESSER_BID +1;
-			else
-				update AUCTION set STATE_CODE = 6 where IDX = BID_ROW.AUCTION_IDX;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, AUCT_WRITTER, '신청하신 경매 '''||AUCT_TITLE||''' 의 대금 납부를 모든 입찰인이 거부하였습니다.','해당 경매에 참여한 모든 유효 입찰의 입찰자 들이, 낙찰 대금 지불기한 내 지불을 하지 않아 해당 경매가 거래 없이 완료되었습니다.', 1);
-				NO_LESSER_BID := NO_LESSER_BID +1;
-			end if;
-
-			insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values ( BID_ROW.BIDDER_IDX, 1);
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)  values(0, BID_ROW.BIDDER_IDX, '경매 '''||AUCT_TITLE||''' 의 낙찰금 지불 기한이 만료되었습니다.','대상 경매에 대한 낙찰 권한을 상실하셧으며, 벌점 '||KARMA_POINT|| ' 를 받으셧습니다.', 1);
-			update BID set STATE_CODE = 13 where current of BID_CUR;
-
-		end loop;
-		
-		select count(1) into NULL_CHECK from BID_CONTRACT_QUE;
-		
-		로그로그로그로그
-		
-	exception when others then
-	
-		rollback to START_TRANSACTION;
-		
-		로그로그로그로그
-		
-	end;
-	
-/
-
-
-
-/*
 
 
 

@@ -2,7 +2,7 @@ package cocoFarm.dto;
 
 import java.sql.Timestamp;
 
-public class UniversalTimerDto {
+public class TimerDto {
 	
 	private Timestamp dbTime;
 	private Timestamp nextCheck;
