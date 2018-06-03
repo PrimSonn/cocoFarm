@@ -10,7 +10,7 @@
 	      #{auction_idx,jdbcType=NUMERIC,mode=IN}
 	      ,#{amount,jdbcType=NUMERIC,mode=IN}
 	      ,#{bidder_idx,jdbcType=NUMERIC,mode=IN}
-	      ,#{isIn,jdbcType=NUMERIC,mode=OUT}
+	      ,#{isDone,jdbcType=NUMERIC,mode=OUT}
 	    )}
 	</select>
 </mapper>

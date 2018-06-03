@@ -65,7 +65,7 @@ public class TestController {
 	public ModelAndView bidder(ModelAndView mv, TestBidDto bid, HttpSession session) {
 
 		bid.setBidder_idx((Integer)session.getAttribute("idx"));
-		bid.setIsIn(Integer.valueOf(-5));
+		bid.setIsDone(Integer.valueOf(-5));
 		System.out.println(bid);
 		
 		bidDao.putBid(bid);

@@ -44,7 +44,7 @@ public class CocoRunner implements Runnable{
 			try {
 				wakeTime = LocalDateTime.now().plusNanos(sleepLength*1000000L);
 			} catch(DateTimeException e) {
-				System.out.println("\r\n========================= "+name+" wakeTime plus failed =====================");
+				System.out.println("\r\n========================= "+name+" get wakeTime failed =====================");
 				break;
 			}
 			
@@ -62,5 +62,7 @@ public class CocoRunner implements Runnable{
 				e.printStackTrace();
 			}// sleep try ends
 		}//run while ends
+		
+		System.out.println("------------------------------- "+name + " ENDS here -------------------------------");
 	}
 }
