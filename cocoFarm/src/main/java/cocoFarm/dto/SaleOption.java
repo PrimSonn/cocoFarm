@@ -105,6 +105,7 @@ public class SaleOption {
 	@Override
 	public String toString() {
 		return "SaleOption [pkIdx=" + pkIdx
+				+ ", idx=" + idx
 				+ ", saleIdx=" + saleIdx
 				+ ", optionName=" + optionName
 				+ ", description=" + description

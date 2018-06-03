@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,15 +17,13 @@
  src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
 <script type="text/javascript">
-/* 숫자만 입력 시키게 하는것 */
-function onlyNumber(obj){
-	val=obj.value;
-	re=/[^0-9]/gi;
-	obj.value=val.replace(re,"");
-}
-
 
 $(document).ready(function() {
+	/* 판매옵션 개수 */
+	$("select option[value='${optionView.size() }']").attr("SELECTED", true);
+	var optionNum = ${optionView.size() };
+	optionSelect(optionNum);
+	
 	/* 글자수 제한  */
 	var textCountLimit = 15;
 	var textCountLimit2 = 40;
@@ -61,60 +60,64 @@ $(document).ready(function() {
       alert("판매가격을 입력해주세요.");
       return false;
 		}
-		
-		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
-// 		var option = {
-// 			optionName: $("textarea[name=optionName]").val(),
-// 			startAmount: $("textarea[name=startAmount]").val(),
-// 			unit: $("textarea[name=unit]").val(),
-// 			price: $("textarea[name=price]").val()
-// 		};
-// 		alert(option.optionName);
-		
 		submitContents($(this));
 	});
-	
 });
+
+/* 숫자만 입력 시키게 하는것 */
+function onlyNumber(obj){
+	val=obj.value;
+	re=/[^0-9]/gi;
+	obj.value=val.replace(re,"");
+}
 
 function optionSelect(sVal) {
 	var str = ""
 	for(var i=0; i<sVal; i++) {
 		str += '<ul>'
-			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
+			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" style="resize:none" rows="1" cols="30" placeholder="15자 이내에 글자">${optionView[0].optionName }</textarea></li>'
 			+'<li><p>총판매수량 </p><textarea name="saleOptions[' + i + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
 			+'<li><p>단위 </p><textarea name="saleOptions[' + i + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
 			+'<li><p>단위당가격 </p><textarea name="saleOptions[' + i + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
 			+'</ul>';
 	}
+	
+	var str1 = '<ul>'
+		+'<li><p>옵션제목 </p><textarea name="saleOptions[' + 0 + '].optionName" style="resize:none" rows="1" cols="30" placeholder="15자 이내에 글자">${optionView[0].optionName }</textarea></li>'
+		+'<li><p>총판매수량 </p><textarea name="saleOptions[' + 0 + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15">${optionView[0].startAmount }</textarea>개</li>'	
+		+'<li><p>단위 </p><textarea name="saleOptions[' + 0 + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5">${optionView[0].unit }</textarea></li>'	
+		+'<li><p>단위당가격 </p><textarea name="saleOptions[' + 0 + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14">${optionView[0].price }</textarea>원</li>'
+		+'</ul>';
+	
+	var str2 = str1 + '<ul>'
+		+'<li><p>옵션제목 </p><textarea name="saleOptions[' + 1 + '].optionName" style="resize:none" rows="1" cols="30" placeholder="15자 이내에 글자">${optionView[1].optionName }</textarea></li>'
+		+'<li><p>총판매수량 </p><textarea name="saleOptions[' + 1 + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15">${optionView[1].startAmount }</textarea>개</li>'	
+		+'<li><p>단위 </p><textarea name="saleOptions[' + 1 + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5">${optionView[1].unit }</textarea></li>'	
+		+'<li><p>단위당가격 </p><textarea name="saleOptions[' + 1 + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14">${optionView[1].price }</textarea>원</li>'
+		+'</ul>';
+		
+	var str3 = str2 + '<ul>'
+		+'<li><p>옵션제목 </p><textarea name="saleOptions[' + 2 + '].optionName" style="resize:none" rows="1" cols="30" placeholder="15자 이내에 글자">${optionView[2].optionName }</textarea></li>'
+		+'<li><p>총판매수량 </p><textarea name="saleOptions[' + 2 + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15">${optionView[2].startAmount }</textarea>개</li>'	
+		+'<li><p>단위 </p><textarea name="saleOptions[' + 2 + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5">${optionView[2].unit }</textarea></li>'	
+		+'<li><p>단위당가격 </p><textarea name="saleOptions[' + 2 + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14">${optionView[2].price }</textarea>원</li>'
+		+'</ul>';
+		
+	if(sVal == 1) str = str1;
+	else if(sVal == 2) str = str2;
+	else if(sVal == 3) str = str3;
+		
 	document.getElementById("option_boby").innerHTML = str;
-	
-	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
-// 	$("#option_body1").show();
-// 	$("#option_body3").hide();
-// 	$("#option_body3").hide();
-	
-// 	if (sVal == "2") {
-// 		$("#option_body2").show();
-// 	} else if (sVal == "3") {
-// 		$("#option_body3").show();
-// 	}
 }
 
 // 네이버 스마트에디터를 사용하는 방법
 function submitContents(elClickedObj) {
     // 에디터의 내용이 textarea에 적용된다.
     oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-
     try {
       elClickedObj.form.submit();
     } catch(e) {}
 }
-
-function getProduct() {
-	$("textarea#title").val("${product.title }");
-	
-}
-
 </script>
 </head>
 <body>
@@ -165,8 +168,8 @@ function getProduct() {
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
-						<li><a href="/product/insert.do">판매등록하기</a></li>
-						<li><a href="/product">판매상품 조회/수정</a></li>
+						<li><a href="/seller/mypage">판매등록하기</a></li>
+						<li><a href="/seller/mypage">판매상품 조회/수정</a></li>
 						<li><a href="#">판매 결제 내역 조회 </a></li>
 						<li><a href="#">판매 결제 배송 승인</a></li>
 					</ul>
@@ -237,8 +240,8 @@ function getProduct() {
 								<ul>
 									<li>판매 옵션 개수 :</li>
 									<li>
-										<select name="option" onchange="optionSelect(this.value);">   
-		       						<option value="1" SELECTED>1개</option>
+										<select id="optionNum" name="optionNum" onchange="optionSelect(this.value);">   
+		       						<option value="1" SELECTED >1개</option>
 		        					<option value="2" >2개</option>
 		        					<option value="3" >3개</option>
 		    						</select>
@@ -249,16 +252,15 @@ function getProduct() {
 							<div id="option_boby">
 								<ul>
 									<li><p>옵션 제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
-																	style="resize:none" rows="1" cols="30">${saleOption.optionName }</textarea> </li>
+																	style="resize:none" rows="1" cols="30"></textarea></li>
 									<li><p>총 판매 수량 </p><textarea name="saleOptions[0].startAmount" placeholder="숫자만 입력가능"
-																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15">${saleOption.leftAmount }</textarea>개</li>	
+																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
 									<li><p>단위 </p><textarea name="saleOptions[0].unit" placeholder="ex) kg"
-																	style="resize:none" rows="1" cols="5">${saleOption.unit }</textarea></li>
+																	style="resize:none" rows="1" cols="5"></textarea></li>
 									<li><p>단위당 가격 </p><textarea name="saleOptions[0].price" placeholder="숫자만 입력가능"
-																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14">${saleOption.price }</textarea>원</li>
+																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
 								</ul>
 							</div>
-							
 							</td>
 							
 						</tr>

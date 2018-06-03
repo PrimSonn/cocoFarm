@@ -8,6 +8,7 @@
 
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css">
 
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -17,7 +18,13 @@ $(document).ready(function() {
 	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
-		$(".mypage_page01").load(page);
+
+		// callback function
+		$(".mypage_page01").load(page, function() {
+// 			alert("판매 상품 목록 조회");
+		});
+// 		$(".mypage_page01").load("productList.jsp #mypage_productView");
+		
 		return false;
 	});
 });
@@ -45,15 +52,15 @@ $(document).ready(function() {
 	</div>
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
+			<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+			<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
 		</div>
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp</span>hwanmin0121</div>
+					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp;</span>hwanmin0121</div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 		
 				</div>
@@ -99,6 +106,7 @@ $(document).ready(function() {
 	
 			</div>
 	</div>
-</div>	
+</div>
+
 </body>
 </html>

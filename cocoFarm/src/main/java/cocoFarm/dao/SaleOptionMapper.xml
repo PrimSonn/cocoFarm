@@ -6,12 +6,15 @@
 <mapper namespace="cocoFarm.dao.SaleOptionDao">
 
 	<resultMap id="SaleOptionResult" type="cocoFarm.dto.SaleOption">
+		<result column="sale_idx" property="saleIdx" />
 		<result column="name" property="optionName" />
 		<result column="start_amount" property="startAmount" />
+		<result column="left_amount" property="leftAmount" />
+		<result column="last_edited" property="lastEdited" />
 	</resultMap>
 
 	<sql id="selectSaleOption">
-		SELECT idx, name,	price, unit, start_amount
+		SELECT idx,sale_idx,name,price,unit,start_amount,left_amount,last_edited,isdel
 		FROM sale_option
 	</sql>
 
@@ -36,7 +39,7 @@
 		) R
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
 	</select>
-
+	
 	<insert id="insert" parameterType="cocoFarm.dto.SaleOption">
 		INSERT INTO SALE_OPTION( idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel)
 		VALUES(
@@ -61,5 +64,24 @@
  		INSERT INTO SALE_OPT_CATEGORY( sale_opt_idx, category_idx )
  		VALUES( #{idx }, #{category } )
  	</insert>
+ 	
+ 	<select id="countOption" parameterType="int" resultType="int">
+ 		SELECT COUNT(*) FROM SALE_OPTION
+ 		WHERE sale_idx = ${_parameter }
+ 	</select>
+	
+	<select id="selectOptionByIdx"
+					parameterType="int"
+					resultType="cocoFarm.dto.SaleOption">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				SELECT idx, sale_idx saleIdx, name optionName,	price, unit, start_amount startAmount, left_amount leftAmount, last_edited lastEdited, isdel
+				FROM sale_option
+				WHERE sale_idx = ${_parameter }
+				ORDER BY idx
+			) B
+			ORDER BY rnum
+		) R
+	</select>
 	
 </mapper>

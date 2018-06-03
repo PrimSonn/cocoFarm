@@ -51,8 +51,20 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public Product productView(Product product) {
-		return productDao.selectProductByIdx(product);
+	public Product productView(int saleIdx) {
+		return productDao.selectProductByIdx(saleIdx);
+	}
+	
+	@Override
+	public List optionView(int saleIdx) {
+//		List<SaleOption> saleList = saleOptionDao.selectOptionByIdx(saleIdx);
+		
+		return saleOptionDao.selectOptionByIdx(saleIdx);
+	}
+	
+	@Override
+	public int optionNumber(int saleIdx) {
+		return saleOptionDao.countOption(saleIdx);
 	}
 	
 	@Override

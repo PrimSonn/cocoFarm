@@ -13,7 +13,7 @@ public interface ProductDao {
 	
 	public List selectPage(Paging paging);
 
-	public Product selectProductByIdx(Product product);
+	public Product selectProductByIdx(int saleIdx);
 	
 	public void insert(Product product);
 	

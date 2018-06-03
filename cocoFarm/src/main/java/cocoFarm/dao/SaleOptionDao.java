@@ -16,4 +16,8 @@ public interface SaleOptionDao {
 	public void insert(SaleOption saleOption);
 
 	public void insertCategory(SaleOption saleOption);
+	
+	public int countOption(int saleIdx);
+	
+	public List selectOptionByIdx(int saleIdx);
 }

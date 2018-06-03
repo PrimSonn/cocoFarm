@@ -39,8 +39,8 @@
 			#{title },
 			#{origin },
 			0,
-			systimestamp,
-			systimestamp,
+			sysdate,
+			sysdate,
 			#{content },
 			#{faceImg },
 			#{mainImg },
@@ -73,10 +73,10 @@
 	</select>
 	
 	<select id="selectProductByIdx"
-					parameterType="cocoFarm.dto.Product"
+					parameterType="int"
 					resultType="cocoFarm.dto.Product">
 		<include refid="selectProduct" />
-		WHERE idx = #{idx }
+		WHERE idx = ${_parameter }
 	</select>
 
 </mapper>

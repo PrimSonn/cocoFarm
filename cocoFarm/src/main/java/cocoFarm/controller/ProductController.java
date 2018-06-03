@@ -32,9 +32,9 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
-	@RequestMapping(value="/seller/mypage.do", method=RequestMethod.GET)
+	@RequestMapping(value="/seller/mypage", method=RequestMethod.GET)
 	public String nav() {
-		return "Mypage/seller/mypage"; 
+		return "Mypage/seller/mypage";
 	}
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
@@ -47,8 +47,9 @@ public class ProductController {
 		Paging paging  = new Paging(totalCount, curPage);
 		model.addAttribute("paging", paging);
 		
-		List list = productService.getPagingList(paging);
-		model.addAttribute("list", list);
+		List optionList = productService.getPagingList(paging);
+		model.addAttribute("list", optionList);
+//		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
 		return "Mypage/seller/productList";
 	}
@@ -100,7 +101,7 @@ public class ProductController {
 		
 		product.setFaceImg(stored1);
 		product.setMainImg(stored2);
-		product.setAccIdx(2);
+		product.setAccIdx(1);
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
 		productService.insert(product);
@@ -110,35 +111,45 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-		return "redirect:/product";
+		return "redirect:/seller/mypage.do";
 //		return "Mypage/seller/productList2";
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
-	public String update(Product product
+	public String update(SaleOption saleOption
 //						, Option opt
-						, FileDto f
+//						, FileDto f
 						, Model model) {
 		logger.info("update.do get!");
 		
-		System.out.println(product.getIdx());
-//		System.out.println(opt.getSaleOptions().get(0).getIdx());
-//		System.out.println(opt.getSaleOptions().get(0).getPkIdx());
-		product = productService.productView(product);
-		logger.info(product.getTitle());
-		model.addAttribute("product", product);
+		// 판매상품
+		Product productView = productService.productView(saleOption.getSaleIdx());
+		model.addAttribute("product", productView);
 		
-//		opt.setSaleOptions(saleOptions);
-//		List<SaleOption> saleList = opt.getSaleOptions();
-//		model.addAttribute("saleOption", saleList.get(0));
+		// 옵션 개수
+		// 필요 없었다... optionView.size()로 해결
+//		int num = productService.optionNumber(saleOption.getSaleIdx());
+//		model.addAttribute("optionNum", num);
+		
+		// 판매상품 옵션
+		List optionView = productService.optionView(saleOption.getSaleIdx());
+		model.addAttribute("optionView", optionView);
 		
 		return "Mypage/seller/productUpdate";
 	}
 	
-//	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
-//	public String updateProduct(Product product
-//								, Option opt
-//								, FileDto f) {
-//		
-//	}
+	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
+	public String updateProduct(Product product
+								, Option opt
+								, FileDto f) {
+		logger.info("update.do post!");
+		
+		return "redirect:/seller/mypage.do";
+	}
+	
+	@RequestMapping(value="/product/basket.do", method=RequestMethod.GET)
+	public String basketView(Model model) {
+		
+		return "Mypage/user/productBasket";
+	}
 }

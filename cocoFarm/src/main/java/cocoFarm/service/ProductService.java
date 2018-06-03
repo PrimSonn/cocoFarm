@@ -2,33 +2,25 @@ package cocoFarm.service;
 
 import java.util.List;
 
+import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
+/**
+ *
+ * <pre>
+ * cocoFarm.service
+ * ProductService.java
+ * </pre>
+ *
+ * @title  : 
+ * @since  : 2018. 6. 2.
+ * @author : jieun
+ *
+ */
 public interface ProductService {
-	
-	/**
-	 * 판매상품 등록
-	 * 
-	 * @param Product - 판매상품
-	 */
-	
-	public void insert(Product product);
-	/**
-	 * 판매상품 옵션 등록
-	 * 
-	 * @param Product - 판매상품 idx, SaleOption - 옵션
-	 */
-	public void insert(Product product, SaleOption saleOption);
-	
-	/**
-	 * 판매상품 수정
-	 * 
-	 * @param Product - 판매상품, SaleOption - 옵션
-	 */
-	public void update(Product product, SaleOption saleOption);
-	
+
 	/**
 	 * 옵션 전체 조회
 	 *  
@@ -52,10 +44,48 @@ public interface ProductService {
 	public List getPagingList(Paging paging);
 	
 	/**
-	 * 판매상품 상세보기
+	 * 판매상품 등록
 	 * 
-	 * @param product - 조회될 판매상품의 idx
+	 * @param Product - 판매상품
+	 */
+	public void insert(Product product);
+	
+	/**
+	 * 판매상품 옵션 등록
+	 * 
+	 * @param Product - 판매상품 idx, SaleOption - 옵션
+	 */
+	public void insert(Product product, SaleOption saleOption);
+	
+	/**
+	 * 판매상품 수정
+	 * 
+	 * @param Product - 판매상품, SaleOption - 옵션
+	 */
+	public void update(Product product, SaleOption saleOption);
+	
+	/**
+	 * 판매상품 불러오기
+	 * 
+	 * @param saleIdx - 조회될 판매상품의 idx
 	 * @return Product - 조회된 판매상품
 	 */
-	public Product productView(Product product);
+	public Product productView(int saleIdx);
+	
+	/**
+	 * 판매상품 옵션 불러오기
+	 * 
+	 * @param product - 조회될 판매상품의 idx
+	 * @return Option - 조회된 판매상품 옵션
+	 */
+	public List optionView(int saleIdx);
+	
+	
+	/**
+	 * 판매상품 옵션 개수 불러오기
+	 * 
+	 * @param saleOption - 옵션의 idx를 통해 판매상품의 saleIdx
+	 * @return Option - 조회된 판매상품 옵션
+	 */
+	public int optionNumber(int saleIdx);
 }
