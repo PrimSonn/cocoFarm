@@ -28,7 +28,7 @@ public class CocoRunner implements Runnable{
 		LocalDateTime wakeTime = null;
 		
 		while (RunnerManager.SHOULDRUN) {
-			System.out.println("\r\n-------"+name+" Start Running!--------\r\n");//----------------testcode
+			System.out.println("\r\n-------"+name+" Start Running!--------");//----------------testcode
 			TimerDto timer = timerSupplier.get();
 			sleepLength = timer == null ? sleepLength : (ChronoUnit.MILLIS.between(timer.getDbTime().toLocalDateTime(), timer.getNextCheck().toLocalDateTime()));
 			timer = null;//Mybatis 특성상 새 인스턴스를 계속해서 넣어야 하기 때문에 매번 생성하고 다시 없애야 함.
@@ -44,11 +44,11 @@ public class CocoRunner implements Runnable{
 			try {
 				wakeTime = LocalDateTime.now().plusNanos(sleepLength*1000000L);
 			} catch(DateTimeException e) {
-				System.out.println("\r\n========================= "+name+" wakeTime plus failed ===================== \r\n");
+				System.out.println("\r\n========================= "+name+" wakeTime plus failed =====================");
 				break;
 			}
 			
-			System.out.println(this.getClass().getName()+" sleepLength: "+sleepLength+", wakeTime: "+wakeTime);
+			System.out.println("first sleep attempt on "+name+" [sleepLength: "+sleepLength+", wakeTime: "+wakeTime+"]");
 			
 			try {
 				Thread.sleep(sleepLength);

@@ -1,7 +1,12 @@
 package cocoFarm.util.runners;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.function.Supplier;
+
+import org.springframework.core.annotation.AnnotationUtils;
 
 import cocoFarm.dao.TimerDao;
 import cocoFarm.dto.TimerDto;
@@ -12,12 +17,43 @@ public final class RunnerManager {
 	static volatile boolean SHOULDRUN = true;
 	private static ArrayList<Thread> member = new ArrayList<Thread>();
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static synchronized void init(TimerDao timerDao) {
 		
 		RunnerManager.timerDao = timerDao;
-		putThread( () -> RunnerManager.timerDao.auctionExpire(new TimerDto()) , "auctionExpire");
-		putThread( () -> RunnerManager.timerDao.bidContractExpire(new TimerDto()) , "bidContractExpire");
-
+//		putThread( () -> RunnerManager.timerDao.auctionExpire(new TimerDto()) , "auctionExpire");
+//		putThread( () -> RunnerManager.timerDao.bidContractExpire(new TimerDto()) , "bidContractExpire");
+		
+		
+		for(Class interfc : timerDao.getClass().getInterfaces()) {
+			System.out.println(interfc.toString());
+			if(interfc.isAssignableFrom(TimerDao.class)) {
+				for(Method method: interfc.getMethods()) {
+					if(method.isAnnotationPresent(Run.class)) {
+						
+						try {
+							putThread( () -> {
+								try {
+									return (TimerDto)method.invoke(timerDao, new TimerDto());
+								} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+									e.printStackTrace();
+								}
+								return null;
+								}
+							, method.getName());
+							
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						}//try catch ends
+						
+					}//annotation check : is @Run
+					
+				}//foreach TimerDao methods..
+				
+			}//timerDao interface check
+			
+		}//timerDao interface foreach
+		
 		member.stream()
 			.filter(runner -> !runner.isAlive())
 			.forEach(runner -> runner.start());
