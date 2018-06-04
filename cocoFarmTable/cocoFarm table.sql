@@ -149,6 +149,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 -------------------------------------------------------------
 
+drop procedure CANCEL_AUCTION;
+
 drop procedure CANCEL_BID;
 
 drop procedure BID_DUE_CHECK;
@@ -3917,8 +3919,111 @@ end;
 
 --drop procedure CANCEL_BID;
 
+
 /*==================================================================================================
+
+완료 코드
+	1: 성공
+	0: 오라클 에러
+	-1: 그런 번호의 경매가 존재하지 않음
+	-2: 대상 경매를 올린 계정과 취소를 신청한 계정이 다름
+	-3: 경매가 취소할 수 있는 상태가 아님
+
 ===================================================================================================*/
+	
+create procedure CANCEL_AUCTION (in_auction_idx AUCTION.IDX%type, in_writter_idx AUCTION.WRITTER_IDX%type, isDone out number)
+is
+	null_checker		number;
+	auction_state		AUCTION.STATE_CODE%type;
+	auction_title		AUCTION.TITLE%type;
+	karma_point			BAD_DEED_TYPE.KARMA%type;
+	
+	err_code			number;
+	err_message			varchar2(255);
+
+	cursor BID_CUR is
+		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx) for update;
+begin
+
+	savepoint START_TRANSACTION;
+	
+	select count(1) into null_checker from AUCTION where IDX = in_auction_idx;
+	
+	if (null_checker =0) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -1, 'No such AUCTION exists. [in_auction_idx: '||in_auction_idx||', in_writter_idx: '||in_writter_idx||']');
+		select -1 into isDone from DUAL;
+	else
+		select count(1) into null_checker from AUCTION where IDX = in_auction_idx and WRITTER_IDX = in_writter_idx;
+		
+		if (null_checker =0) then
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -2, 'cancel request is not from a writter. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
+			select -2 into isDone from DUAL;
+		else
+		
+			select TITLE, STATE_CODE into auction_title, auction_state from AUCTION where IDX = in_auction_idx;
+			
+			if(auction_state =1) then
+				delete AUCTION_DUE_QUE where AUCTION_IDX = in_auction_idx;
+				update AUCTION set STATE_CODE = 2, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
+				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 6);
+				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 6;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				
+				for BID_ROW in BID_CUR loop
+					update BID set STATE_CODE = 20, FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
+					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '진행중 이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
+				end loop;
+				
+				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
+				
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', 1, 'Success. Auction canceled while running. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
+				select 1 into isDone from DUAL;
+				
+			elsif(auction_state =6) then
+				delete BID_CONTRACT_QUE where AUCTION_IDX = in_auction_idx;
+				
+				for BID_ROW in BID_CUR loop
+					update BID set STATE_CODE = 21,FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
+					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '낙찰을 대기중이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
+				end loop;
+				
+				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
+				
+				update AUCTION set STATE_CODE = 8, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
+				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 7);
+				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 7;
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', 1, 'Success. Auction canceled after due. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
+				select 1 into isDone from DUAL;
+				
+			else
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -3, 'Cannot cancel auction with this stats. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||', auction_state: '||auction_state||']');
+				select -3 into isDone from DUAL;
+			end if;
+		
+		end if;
+	
+	end if;
+	
+	commit;
+	
+exception when others then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
+		values ('CANCEL_AUCTION', 0, 'ERROR!!! ........)', err_code, err_message );
+	commit;
+	
+	select 0 into isDone from DUAL;
+end;
+/
+
+
+--drop procedure CANCEL_AUCTION;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
@@ -4033,7 +4138,9 @@ commit;
 
 exec CANCEL_BID (1, 6000, 4, :isDone);
 
-comit;
+--exec CANCEL_AUCTION (1, 1, :isDone);
+
+commit;
 
 
 select * from ACCOUNT;
@@ -4063,107 +4170,12 @@ purge recyclebin;
 
 /* 작업중 프로시저
 
-완료 코드
-	1: 성공
-	0: 오라클 에러
-	-1: 그런 번호의 경매가 존재하지 않음
-	-2: 대상 경매를 올린 계정과 취소를 신청한 계정이 다름
-	-3: 경매가 취소할 수 있는 상태가 아님
-	
+
 
 */
 
 
-	
-create procedure CANCEL_AUCTION (in_auction_idx AUCTION.IDX%type, in_writter_idx AUCTION.WRITTER_IDX%type, isDone out number)
-is
-	null_checker		number;
-	auction_state		AUCTION.STATE_CODE%type;
-	auction_title		AUCTION.TITLE%type;
-	karma_point			BAD_DEED_TYPE.KARMA%type;
-	
-	err_code			number;
-	err_message			varchar2(255);
 
-	cursor BID_CUR is
-		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where AUCTION_IDX, AMOUNT in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx) for update;
-begin
-
-	savepoint START_TRANSACTION;
-	
-	select count(1) into null_checker from AUCTION where IDX = in_auction_idx;
-	
-	if (null_checker =0) then
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -1, 'No such AUCTION exists. [in_auction_idx: '||in_auction_idx||', in_writter_idx: '||in_writter_idx||']');
-		select -1 into isDone from DUAL;
-	else
-		select count(1) into null_checker from AUCTION where IDX = in_auction_idx and WRITTER_IDX = in_writter_idx;
-		
-		if (null_checker =0) then
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -2, 'cancel request is not from a writter. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
-			select -2 into isDone from DUAL;
-		else
-		
-			select TITLE, STATE_CODE into auction_title, auction_state where IDX = in_auction_idx;
-			
-			if(auction_state =1)
-				delete AUCTION_DUE_QUE where AUCTION_IDX = in_auction_idx;
-				update AUCTION set STATE_CODE = 2, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
-				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 6);
-				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 6;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
-				
-				for BID_ROW in BID_CUR loop
-					update BID set STATE_CODE = 20, FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
-					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '진행중 이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
-				end loop;
-				
-				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
-				
-				
-				--로그 + 아웃값
-				
-			elsif(auction_state =6)------------------------*************************************************************************
-				delete BID_CONTRACT_QUE where AUCTION_IDX = in_auction_idx;
-				
-				for BID_ROW in BID_CUR loop
-					update BID set STATE_CODE = 21,FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
-					insert into MESSAGE SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '낙찰을 대기중이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
-				end loop;
-				
-				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
-				
-				update AUCTION set STATE_CODE = 8, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
-				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 7);
-				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 7;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
-				
-				--로그 + 아웃값
-				
-			else
-				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', -3, 'Cannot cancel auction with this stats. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||', auction_state: '||auction_state||']');
-				select -3 into isDone from DUAL;
-			end if;
-		
-		end if;
-	
-	end if;
-	
-	commit;
-	
-exception when others then
-	rollback to START_TRANSACTION;
-	
-	err_code := sqlcode;
-	err_message := substr(sqlerrm, 1, 255);
-
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
-		values ('CANCEL_AUCTION', 0, 'ERROR!!! ........)', err_code, err_message );
-	commit;
-	
-	select 0 into isDone from DUAL;
-end;
-/
 
 
 
