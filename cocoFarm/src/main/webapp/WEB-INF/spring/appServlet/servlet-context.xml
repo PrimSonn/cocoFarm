@@ -8,6 +8,9 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	
+
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
@@ -16,6 +19,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/img/" mapping="/img/**"/>
 	<resources location="/resources/css/" mapping="/css/**"/>
+	<resources location="/resources/auction_img/" mapping="/auction_img/**"/>
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -35,11 +39,13 @@
 <!-- 		</interceptor> -->
 <!-- 	</interceptors> -->
 	
-	<!-- MultipartResolver -->	<!-- 다운로드 클래스(스프링 commmons) 설정-->
-<!-- 	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
-<!-- 		<beans:property name="maxInMemorySize" value='1048576' /> -->
-<!-- 		<beans:property name="maxUploadSize" value='10485760' /> -->
-<!-- 	</beans:bean> -->
+<!-- 	MultipartResolver	다운로드 클래스(스프링 commmons) 설정 -->
+	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!-- 		최소 1MB -->
+		<beans:property name="maxInMemorySize" value='1048576' />
+<!-- 		최대 10MB -->
+		<beans:property name="maxUploadSize" value='10485760' />
+	</beans:bean>
 	
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 	
