@@ -499,6 +499,7 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 
 
 ------------------------------------------------  계정 상태 코드 추가  ----------------------------------------------------
+--계정 상태값 -1에 시스템/관리자 상태를 두었습니다.
 
 create table ACCOUNT_STATE_TYPE (
 
@@ -585,10 +586,7 @@ end;
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
 
 insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
-<<<<<<< HEAD
-=======
-insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
->>>>>>> mergbranch
+insert into ACCOUNT (ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
 commit;
 --시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
@@ -2945,7 +2943,7 @@ create table TODAYS_FARMER (
 );
 
 create trigger TODAYS_FARMER_EDIT_TRG
-	before update of TITLE, CONTENT, THUMB_IMG, MAIN_IMG  on TODAYS_FARMER
+	before update of TITLE, CONTENT, MAIN_IMG  on TODAYS_FARMER
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin

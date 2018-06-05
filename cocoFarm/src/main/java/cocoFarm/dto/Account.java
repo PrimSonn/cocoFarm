@@ -1,5 +1,7 @@
 package cocoFarm.dto;
 
+import java.sql.Timestamp;
+
 public class Account {
 
 	private Integer idx;				//	계정번호- 복합기본키. 유일성(unique). 인조식별자 - 트리거 있음
@@ -58,7 +60,7 @@ public class Account {
 		return postnum;
 	}
 	public void setPostnum(String postnum) {
-		this.Postnum = postnum;
+		this.postnum = postnum;
 	}
 	public String getPhone2() {
 		return phone2;
