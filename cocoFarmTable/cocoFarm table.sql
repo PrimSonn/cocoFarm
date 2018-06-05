@@ -4192,6 +4192,8 @@ purge recyclebin;
 aaa
 
 
+
+
 create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
 is
 	null_checker	number;
@@ -4241,8 +4243,4 @@ end;
 
 
 
-
 */
-
-
-
