@@ -585,6 +585,10 @@ end;
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
 
 insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+<<<<<<< HEAD
+=======
+insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
+>>>>>>> mergbranch
 commit;
 --시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
@@ -2801,13 +2805,13 @@ create table MESSAGE (
 
 	,TYPE_CODE			number(2,0)			not null
 
-	,STATE_CODE				number(1,0)
+	,ISDEL				number(1,0)
 
-	,constraint MESSAGE_PK primary key (STATE_CODE, IDX)
+	,constraint MESSAGE_PK primary key (ISDEL, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
-	,constraint FK_MESSAGE_STATE foreign key (STATE_CODE) references MESSAGE_STATE_TYPE (CODE)
+	,constraint FK_MESSAGE_STATE foreign key (ISDEL) references MESSAGE_STATE_TYPE (CODE)
 );
 
 create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (RECEIVER_IDX, SENDER_IDX);
@@ -2830,8 +2834,8 @@ begin
 	if (:NEW.TYPE_CODE is null) then
 		:NEW.TYPE_CODE := 0;
 	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
+	if (:NEW.ISDEL is null) then
+		:NEW.ISDEL := 0;
 	end if;
 end;
 /
@@ -2858,7 +2862,7 @@ comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확�
 
 comment on column MESSAGE.TYPE_CODE is '메세지 타입 - (트리거)기본값 0. null불가. 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.STATE_CODE is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
+comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
 
 
 --drop trigger MESSAGE_TRG;
@@ -4185,9 +4189,7 @@ purge recyclebin;
 		0. 오라클 에러
 		-1. 해당 입찰이 존재하지 않거나 낙찰 대금을 지불할 수 없는 상태임
 
-
-*/
-
+aaa
 
 
 create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
@@ -4236,6 +4238,11 @@ exception when OTHERS then
 end;
 /
 
+
+
+
+
+*/
 
 
 

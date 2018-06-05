@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cocoFarm.dao.MessageDao">
+	  <select id="getReceiveMessage" parameterType="map" resultType="cocoFarm.dto.Message">
+      SELECT * FROM (SELECT rownum rnum, b.* FROM (
+	      SELECT
+	         idx,
+	         title,
+	         sender_idx,
+	         (SELECT name FROM account A WHERE A.idx = M.sender_idx) sender,
+	         receiver_idx,
+	         written_time
+	      FROM message M
+	      WHERE receiver_idx = #{idx }
+	         AND (isDel = 0 OR isDel = 2 AND is_Read = 0)
+      ORDER BY idx DESC) b ORDER BY rnum) WHERE rnum BETWEEN #{paging.startNo } AND #{paging.endNo }
+   </select>
+
+   <select id="getSendMessage" parameterType="map" resultType="cocoFarm.dto.Message">
+      
+      SELECT * FROM (SELECT rownum rnum, b.* FROM (
+	      SELECT
+	         idx,
+	         title,
+	         sender_idx,
+	         receiver_idx,
+	         (SELECT name FROM account A WHERE A.idx = M.receiver_idx) receiver,
+	         written_time
+	      FROM message M
+	      WHERE sender_idx = #{idx }
+	         AND (isDel = 0 OR isDel = 3 AND is_Read = 0)
+      ORDER BY idx DESC) b ORDER BY rnum) WHERE rnum BETWEEN #{paging.startNo } AND #{paging.endNo }
+   </select>
+   
+	<select id="getOneMessage" parameterType="cocoFarm.dto.Message" resultType="cocoFarm.dto.Message">
+		
+	      SELECT
+	         idx,
+	         title,
+	         sender_idx,
+	         (SELECT name FROM account A WHERE A.idx = M.sender_idx) sender,
+	         receiver_idx,
+	         (SELECT name FROM account A WHERE A.idx = M.receiver_idx) receiver,
+	         content,
+	         written_time
+	      FROM message M
+	      WHERE idx = #{idx }
+      
+	</select>
+	
+	<update id="isRead" parameterType="cocoFarm.dto.Message">
+		UPDATE message SET is_read = 1 WHERE idx = #{idx }
+	</update>
+	
+	<select id="getReceiver" parameterType="int" resultType="String">
+		SELECT name FROM account WHERE idx = #{receiverIdx }
+	</select>
+	
+	<select id="getSender" parameterType="int" resultType="String">
+		SELECT name FROM account WHERE idx = #{senderIdx }
+	</select>
+	
+	<select id="getIsdel" parameterType="String" resultType="int">
+		SELECT isdel FROM message WHERE idx IN ( ${_parameter } )
+	</select>
+	
+	<update id="deleteMessageList" parameterType="String">
+		UPDATE message SET isdel = 1 WHERE idx IN ( ${_parameter} )
+	</update>
+	
+	<update id="deleteReceiveMessage" parameterType="String">
+		UPDATE message SET isdel = 3 WHERE idx IN ( ${_parameter} )
+	</update>
+	
+	<update id="deleteSendMessageList" parameterType="String">
+		UPDATE message SET isdel = 2 WHERE idx IN ( ${_parameter} )
+	</update>
+   
+	<select id="totalCount" parameterType="map" resultType="int">
+		<if test=" messageCate == 1">
+			SELECT count(*) FROM message WHERE receiver_idx = #{idx }
+		</if>
+		<if test=" messageCate == 2">
+			SELECT count(*) FROM message WHERE sender_idx = #{idx }
+		</if>
+	</select>
+	
+   <insert id="writeMessage" parameterType="cocoFarm.dto.Message">
+		INSERT INTO message (idx, sender_idx, receiver_idx, title, content, written_time, is_read, read_time, type_code, isdel )
+		VALUES( message_seq.nextval, #{sender_idx }, #{receiver_idx }, #{title }, #{content }, sysdate, 0, null, #{type_code }, 0 )
+	</insert>
+	
+	<select id="getAlarmCount" parameterType="int" resultType="int">
+		SELECT count(*) FROM message
+		WHERE RECEIVER_IDX = #{idx }
+			AND IS_READ = 0
+			AND ISDEL = 0
+	</select>
+   
+</mapper>
