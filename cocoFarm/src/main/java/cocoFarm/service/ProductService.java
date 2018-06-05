@@ -88,4 +88,22 @@ public interface ProductService {
 	 * @return Option - 조회된 판매상품 옵션
 	 */
 	public int optionNumber(int saleIdx);
+	
+	//�Ǹ��� ���ο� ��� �ҷ����� 
+	public List<Product> getProMainList();
+	
+	public List<Product> getSerchList(Product product);
+	
+	//2018 05 31 DETAIL VEIW  HWAN
+	public Product getDetailList(Product product);
+	public List<SaleOption> getOptionList(SaleOption saleoption);
+	
+	//2018 06월 04일  option amount, idx select 
+	public List getOption_amid(Product product,SaleOption saleoption);
+
+		
+	//2018 06월 04일  2# 
+	public List<SaleOption> getPayOption(String query); 
+		
+	public List<Product> getSale_Option(String salequery);
 }
