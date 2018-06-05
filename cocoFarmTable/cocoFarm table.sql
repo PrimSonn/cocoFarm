@@ -2001,6 +2001,23 @@ comment on column AUCTION_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
 
+/*
+
+ 상태값:
+		1. 진행중
+		2. 진행중 취소됨 (끝)
+		3. 낙찰 시작  --안씀
+		4. 만료: 유효입찰 없음 (끝)
+		5. 낙찰 완료 대기중 (입찰금 지불 대기중)
+		6. 만료 후 최고입찰이 취소/만료됨
+		7. 만료: 모든 입찰자의 거래 거부
+		8. 낙찰 중 경매인의 경매 취소
+		9. 낙찰 완료
+
+*/
+
+
+
 create table AUCTION_STATE_TYPE (
 
 	CODE			number(2,0)
@@ -2013,7 +2030,7 @@ create table AUCTION_STATE_TYPE (
 insert all
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'진행중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'진행중 취소됨','')
-	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'낙찰 시작','낙찰 절차 프로시저 중간 단계 처리용')
+--	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'낙찰 시작','낙찰 절차 프로시저 중간 단계 처리용')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'만료: 유효입찰 없음','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (5,'낙찰 완료 대기중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (6,'만료 후 최고입찰이 취소/만료됨','')
@@ -2348,6 +2365,8 @@ comment on column BID_DEPOSITE_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 		15. 경매 만료 이후 입찰 취소: 차등위 입찰
 		20. 경매가 취소됨: 진행 중
 		21. 경매가 취소됨: 만료 후
+		30. 낙찰됨
+		31. 낙찰 실패
 
 */
 
@@ -2361,8 +2380,8 @@ create table BID_STATE_TYPE (
 );
 
 insert all
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰 후 경매 만료 대기중, 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'경매진행중: 차등위 입찰','입찰 후 경매 만료 대기중, 최고입찰이 아님.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰중. 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'경매진행중: 차등위 입찰','입찰중. 최고입찰이 아님.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (10,'경매 진행중 입찰 취소: 최고 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'경매 진행중 입찰 취소: 차등위 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (12,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨')
@@ -3598,7 +3617,12 @@ exception when OTHERS then
 	if (has_next_time >0) then
 		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
+		if (has_next_time >0) then
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
 	end if;
 	
 end;
@@ -3721,11 +3745,17 @@ exception when others then
 	
 	commit;
 	
-	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
+	select count(1) into next_bid_check from BID_CONTRACT_QUE;
 	if (next_bid_check >0 ) then
 		select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
+		if (next_bid_check >0) then 
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
 	end if;
 	
 end;
@@ -4150,13 +4180,61 @@ purge recyclebin;
 
 /* 작업중 프로시저
 
+	결과값
+		1. 성공
+		0. 오라클 에러
+		-1. 해당 입찰이 존재하지 않거나 낙찰 대금을 지불할 수 없는 상태임
 
 
 */
 
 
 
+create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
+is
+	null_checker	number;
+	bid_account		BID.BIDDER_IDX.type;
+	bid_state		BID.STATE_CODE%type;
+	auction_state	AUCTION.STATE_CODE%type;
+	
+	err_code		number;
+	err_message		varchar2(255);
 
+begin
+
+	savepoint START_TRANSACTION;
+	
+	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
+	
+	if (null_checker =0) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CONFIRM_CONTRACT',-1,'No such bid exists. usder Bid (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+		select -1 into isDone from DUAL;
+	else
+		select BIDDER_IDX, STATE_CODE into bid_account, bid_state from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
+		
+		if(in_bidder_idx <> bid_account) then
+		
+		elsif(bid_state <> 1)
+		
+		end if;
+	
+	end if;
+	
+	
+	commit;
+
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')', err_code, err_message );
+	commit;
+	
+	select 0 into isDone from DUAL;
+end;
+/
 
 
 
