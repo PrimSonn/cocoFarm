@@ -132,7 +132,7 @@ public class LoginController {
 	public String updateProfile(HttpSession session, MultipartFile profile){
 		
 		
-		String path = context.getRealPath("imgs/profile");
+		String path = context.getRealPath("/resources/img/profile");
 		
 		UUID uid = UUID.randomUUID();
 		String filename = profile.getOriginalFilename()+"_"+uid.toString().substring(0, 8); 

@@ -1,8 +1,13 @@
 
 
-------------------------코코팜 테이블-------------------------
+------- ************* 코코팜 테이블 ************* -------
 
-/*
+
+
+
+
+/*-------------------------------------------------------------
+
 --DD 출력
 select T.OWNER, T.TABLE_NAME, T.COLUMN_NAME, T.QUALIFIED_COL_NAME, C.COMMENTS, T.DATA_TYPE, T.DATA_LENGTH, T.DATA_PRECISION, T.NULLABLE, T.DATA_DEFAULT, T.CHARACTER_SET_NAME, T.CHAR_LENGTH
 from all_tab_cols T inner join ALL_COL_COMMENTS C  on T.TABLE_NAME = C.TABLE_NAME and T.COLUMN_NAME=C.COLUMN_NAME where T.OWNER='COCOFARM' order by T.TABLE_NAME;
@@ -24,11 +29,13 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 --USER_SEQUENCES.SEQUENCE_NAME
 --USER_TRIGGERS.TRIGGER_NAME
 --USER_INDEXES.INDEX_NAME
-*/
 
--------------------------------------------------------------
+-------------------------------------------------------------*/
 
-/*
+
+
+/*-------------------------------------------------------------
+
 테이블 리스트
 
 	PLOGGER: 경매(혹은 그 외) 프로시져 로그
@@ -145,9 +152,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 	PENALTY_RECORD: 벌 준 기록
 	
-*/
+-------------------------------------------------------------*/
 
--------------------------------------------------------------
 
 drop procedure CANCEL_AUCTION;
 
@@ -348,20 +354,21 @@ drop index PLOGGER_T_IDX;
 drop index PLOGGER_IDX;
 drop table PLOGGER;
 
+
 -- 위 삭제 코드를 실행한 후, 코코팜 계정에 남아있는 테이블, 트리거, 시퀀스, 인덱스, 프로시저 등이 하나도 없어야 합니다. (이름 중복 방지)
 -- 혹시 중간에 없애기로 한 테이블이 남아있는지 확인해 주세요.
 
 --purge recyclebin;
 
 
----------------------------- 뭔가 에러가 나면 아래 코드 실행해보기. 매번 할 필요는 없음 ------------------------------------
-/*
+/*=========== 뭔가 에러가 나면 아래 코드 실행해보기. 매번 할 필요는 없음 ================
+
 ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
-*/
 
-------------------------------- 설명 --------------------------------------------------
+=======================================================================================*/
 
-/*
+
+/*==================================== 설명 =============================================
 
 비즈니스 코드, 서브타입 분류 코드 등은 테이블 내부에 "속성명_CODE" 속성으로 들어감.
 비즈니스 코드, 서브타입 분류 정보 테이블은 '원형타입이름_TYPE' 으로 처리함.
@@ -379,11 +386,15 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 확인용 플래그(indicator)는 number(1,0)에 check으로 1,0 만 허용. - 기본값(default) 확인하기!!
 예시) ISDEL - 지워졌나? 0:false(안지워짐) 1:true(지워짐)
 
-*/
-------------------------------- 설명 --------------------------------------------------
+========================================================================================*/
 
+
+----------- 프로시저 아웃풋 ------------
 
 set serveroutput on;
+
+----------------------------------------
+
 
 
 ----------------------------------------------- 프로시저 로그 -----------------------------------------------
@@ -522,7 +533,6 @@ comment on column ACCOUNT_STATE_TYPE.DESCRIPTION is '계정 상태 타입 설명
 --drop table ACCOUNT_STATE_TYPE cascade constraints;
 
 
-
 ------------------------------------------------  계정  ----------------------------------------------------
 --세션 [ "idx" : IDX (INTEGER - int 아님, 널 확인 코드용), "type": TYPE (Integer), +옵션사항 "name" : NAME (String) ]
 
@@ -538,18 +548,18 @@ create table ACCOUNT (
 	,PHONE2				number(14,0)
 
 	,POSTNUM			nvarchar2(8)
-	,ADDR				nvarchar2(20)
+	,ADDR				nvarchar2(50)
 	,DETAILED_ADDR		nvarchar2(50)
 
-	,TYPE_CODE			number(2,0)		not null
+	,ACCOUNT_TYPE		number(2,0)		not null
 	,ISDEL				number(1,0)
 
-	,THUMB_IMG			varchar2(200 char)
+	,THUMB_LOC			varchar2(200 char)
 	,REG_DATE			timestamp (0) with local time zone	not null
 
 	,constraint ACCOUNT_PK primary key (ISDEL, IDX)
 	,constraint FK_ACC_ISDEL_TYPE foreign key (ISDEL) references ACCOUNT_STATE_TYPE (CODE)
-	,constraint FK_ACCOUNT_ACCTYPE foreign key (TYPE_CODE) references ACCOUNT_TYPE (CODE)
+	,constraint FK_ACCOUNT_ACCTYPE foreign key (ACCOUNT_TYPE) references ACCOUNT_TYPE (CODE)
 );
 
 create sequence ACCOUNT_SEQ start with 1 increment by 1;
@@ -564,8 +574,8 @@ begin
 	if (:NEW.REG_DATE is null) then
 		:NEW.REG_DATE := SYSTIMESTAMP;
 	end if;
-	if (:NEW.TYPE_CODE is null) then
-		:NEW.TYPE_CODE := 3;
+	if (:NEW.ACCOUNT_TYPE is null) then
+		:NEW.ACCOUNT_TYPE := 3;
 	end if;
 	if (:NEW.ISDEL is null) then
 		:NEW.ISDEL := 0;
@@ -574,7 +584,11 @@ end;
 /
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
 
-insert into ACCOUNT (IDX, ID, PW, NAME, TYPE_CODE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+<<<<<<< HEAD
+=======
+insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
+>>>>>>> mergbranch
 commit;
 --시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
@@ -601,11 +615,11 @@ comment on column ACCOUNT.ADDR is '주소 - 도 시 구 동 까지만, api 따�
 
 comment on column ACCOUNT.DETAILED_ADDR is '세부주소';
 
-comment on column ACCOUNT.TYPE_CODE is '계정타입 - 외래키, null 안됨(식별관계) 기본값 3(트리거, 일반계정)';
+comment on column ACCOUNT.ACCOUNT_TYPE is '계정타입 - 외래키, null 안됨(식별관계) 기본값 3(트리거, 일반계정)';
 
 comment on column ACCOUNT.ISDEL is '상태 확인 코드 - 복합기본키+ 외래키 null 안됨 기본값:0(트리거)';
 
-comment on column ACCOUNT.THUMB_IMG is '썸네일 위치 디렉토리+파일 이름';
+comment on column ACCOUNT.THUMB_LOC is '썸네일 위치 디렉토리+파일 이름';
 
 comment on column ACCOUNT.REG_DATE is '계정 등록일 - null안됨, 트리거 있음';
 
@@ -681,7 +695,6 @@ comment on column BUSINESS_INFO_TYPE.DESCRIPTION is '사업자 등록증 타입 
 --drop table BUSINESS_INFO_TYPE cascade constraints;
 
 
-
 ------------------------------------------------  사업자 정보  ----------------------------------------------------
 -- 사업자 등록증에 등록일자가 따로 있으면, 우리쪽에 정보를 입력한 시점을 기록하는 등록일자와 구분해서 하나 더 속성을 추가해야함.
 
@@ -718,7 +731,7 @@ create table BUSINESS_INFO (
 create sequence BUSINESS_INFO_SEQ start with 1 increment by 1;
 
 create trigger BUSINESS_INFO_TRG
-	before insert on BUSINESS_INFO 
+	before insert on BUSINESS_INFO
 	for each row
 begin
 	if(:NEW.IDX is null) then
@@ -738,7 +751,7 @@ create trigger BUSINESS_ACCOUNT_TRG
 	after insert on BUSINESS_INFO
 	for each row
 begin
-	update ACCOUNT set TYPE_CODE = 2 where IDX = :NEW.ACC_IDX;
+	update ACCOUNT set ACCOUNT_TYPE = 2 where IDX = :NEW.ACC_IDX;
 end;
 /
 --트리거 설명: 사업자 등록증을 등록하면 계정타입번호 자동 전환.
@@ -847,22 +860,6 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 ---------------------------------------------- 주 영수증 -----------------------------------------------------
 -- 한번의 결제에 한번 생성. 결제행위 자체를 나타냄. 개별 결제에 여러개의 판매옵션과 입찰, 낙찰 등이 묶일 수 있음
 
-/*
-누가 : 산 계정
-언제 : 시간저장
-어디서:
-무엇음:	입찰 구입(보증금)
-		일반 판매 구입
-		경매 물품 구입
-			죄다 외부 테이블로 빼야할듯..
-				일반구입: 일반구매 내역 테이블 만들기
-				입찰 구입: 입찰 구입 테이블 따로 만들기.
-				경매 물품 대금: 추가 외부 테이블
-어떻게: 지불타입
-왜:
-영수증의 상태값 - 구매전 구매후 환불전 환불후
-*/
-
 create table MAIN_RECEIPT (
 
 	IDX					number(13,0)	unique
@@ -962,6 +959,7 @@ comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '목록 영수증 상태 
 
 
 --drop table LIST_RECPT_STATE_TYPE;
+
 
 ---------------------------------------------- (취소)목록 영수증 타입-----------------------------------------------------
 ---------------------------------------------- (취소) 목록 영수증 -----------------------------------------------------
@@ -1094,17 +1092,6 @@ comment on column DELIV_RECV_T_WIN_TYPE.DESCRIPTION is '코드 설명';
 
 
 -----------------------------------------------  배송  -------------------------------------------------------
-
-/*
-누가: 배송을 보낼 계정 + 받을계정
-언제: 배송시작시간 + 만료시간(만료시간도 테이블)
-어디서:
-무엇을:	입반구입
-		경매 물품 구입
-어떻게: 배송타입 추가???
-		배송지
-왜:
-*/
 
 create table DELIVERY (
 
@@ -1774,6 +1761,7 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 --drop sequence CART_SEQ;
 --drop table CART cascade constraints;
 
+
 -----------------------------------------------  일반 구매 묶음 영수증 (서브타입)  -----------------------------------------------
 
 create table SALE_RECEIPT (
@@ -1949,7 +1937,7 @@ begin
 	delete SALE_EVALUATION where SALE_RECEIPT_IDX in (select IDX from SALE_RECEIPT where SALE_IDX = :old.IDX);
 end;
 /
-*/--------이 트리거는 문제가 있음. 작업중..
+*/--------이 트리거는 문제가 있음. (보류)
 
 comment on table SALE_EVALUATION is '판매글 평가';
 
@@ -2017,6 +2005,23 @@ comment on column AUCTION_TIME_WINDOW_TYPE.DESCRIPTION is '코드 설명';
 
 -----------------------------------------------  경매 상태 타입  -------------------------------------------------------
 
+/*
+
+ 상태값:
+		1. 진행중
+		2. 진행중 취소됨 (끝)
+		3. 낙찰 시작  --안씀
+		4. 만료: 유효입찰 없음 (끝)
+		5. 낙찰 완료 대기중 (입찰금 지불 대기중)
+		6. 만료 후 최고입찰이 취소/만료됨
+		7. 만료: 모든 입찰자의 거래 거부
+		8. 낙찰 중 경매인의 경매 취소
+		9. 낙찰 완료
+
+*/
+
+
+
 create table AUCTION_STATE_TYPE (
 
 	CODE			number(2,0)
@@ -2029,7 +2034,7 @@ create table AUCTION_STATE_TYPE (
 insert all
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'진행중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'진행중 취소됨','')
-	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'낙찰 시작','낙찰 절차 프로시저 중간 단계 처리용')
+--	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'낙찰 시작','낙찰 절차 프로시저 중간 단계 처리용')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'만료: 유효입찰 없음','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (5,'낙찰 완료 대기중','')
 	into AUCTION_STATE_TYPE (CODE, NAME, DESCRIPTION) values (6,'만료 후 최고입찰이 취소/만료됨','')
@@ -2350,34 +2355,23 @@ comment on column BID_DEPOSITE_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 �
 */
 
 -----------------------------------------------  입찰 상태 타입 -------------------------------------------------------
--- 0. 입찰중. - 안쓰임
--- 1. 입찰 성공. 경매 진행중
--- 2. 낙찰 대기중 (최고입찰이 아님)
--- 3. 낙찰금 지불 대기중 (최고입찰임, 금액 지불 대기중)
--- 4. 완료
--- 11. 자기 상위입찰 됨. - 보증금 환불 전 (취소)
--- 12. 자기 상위입찰 됨. - 보증금 환불 후 (보증금 없음)
--- 13. 경매가 취소됨 - 환불 전.
--- 14. 경매가 취소됨 - 환불 후.
--- 15. 진행중 입찰 취소 - 보증금 환불 전
--- 16. 진행중 입찰 취소 - 보증금 환불 후
--- 21. 경매 완료됨 - 최고입찰이 아님 - 보증금 환불 전
--- 22. 경매 완료됨 - 최고입찰이 아님 - 보증금 환불 후
--- 23. 경매 완료 후 취소 - 보증금 환불 없음
--- 23. 낙찰금 지불 거부
+
 /*
-입찰 등록:
-	금액 지불(지불 요청 전 입찰액 확인(낙찰금 + 최소입찰 단위 보다 큰가, 경매가 만료되었는가)
-	1. 경매 만료 시한 확인
-	1.1 예외시 환불
-	2. 최고입찰액 + 최소입찰 단위와 입찰액 비교
-	2.1 예외시 환불
-	3. 경매의 최고 입찰액 갱신
-	3.1 예외시 환불
-	4. 입찰 목록에 등록 (최고입찰 목록을 따로 가지고 있다면 여기서 함께 처리)
-	4.1 예외시 환불 + 경매의 최고 입찰액을 돌려놓아야 함
-	5. 자기 상위입찰 여부 확인
-	5.1 자기 상위입찰 이라면 이전의 입찰에 대한 처리 (위의 11.12)
+
+ 상태값:
+		1. 경매진행중: 최고입찰
+		2. 경매진행중: 차등위 입찰
+		10. 경매 진행중 입찰 취소: 최고 입찰
+		11. 경매 진행중 입찰 취소: 차등위 입찰
+		12. 자기 상위입찰 됨. - 취소
+		13. 낙찰금 지불기한 만료. - 취소
+		14. 경매 만료 이후 입찰 취소: 최고입찰
+		15. 경매 만료 이후 입찰 취소: 차등위 입찰
+		20. 경매가 취소됨: 진행 중
+		21. 경매가 취소됨: 만료 후
+		30. 낙찰됨
+		31. 낙찰 실패
+
 */
 
 create table BID_STATE_TYPE (
@@ -2390,8 +2384,8 @@ create table BID_STATE_TYPE (
 );
 
 insert all
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰 후 경매 만료 대기중, 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'경매진행중: 차등위 입찰','입찰 후 경매 만료 대기중, 최고입찰이 아님.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰중. 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'경매진행중: 차등위 입찰','입찰중. 최고입찰이 아님.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (10,'경매 진행중 입찰 취소: 최고 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'경매 진행중 입찰 취소: 차등위 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (12,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨')
@@ -2563,13 +2557,8 @@ comment on column BID_ALIVE_QUE.BIDDER_IDX is '입찰인 - 외래키 not null';
 -----------------------------------------------  경매 낙찰 대기열  -------------------------------------------------------
 -- 처리의 용이성을 위한 중복 테이블. (낙찰금 지불 만료 기한 처리)
 -- 낙찰 처리를 하기 위해 낙찰 대기중인 경매(최고입찰)만 모아둔 테이블. (낙찰을 대기중인 경매와 대상 입찰 정보 + 만료시간)
--- 어느 경매가 낙찰 대기중이며, 대기중인 대상 입찰(최고입찰) 은 ### 이다. 대기 만료시간은 ### 이다.
--- 1.목록 확인 2.지불기한이 만료된 입찰 확인 3.대상이 실제 대기중인 상태였는지 한번 더 확인(예외처리 사항) 4.지불 대기중인 입찰을 만료시키고 다음 유효 입찰(취소가 안된)을 찾기. - 입찰이 취소되면 여기 있는 해당 입찰이 삭제되어야 함!
 -- 경매 후보키: AUCTION_IDX
 -- 입찰 후보키: AUCTION_IDX, BID_AMOUNT.
--- insert 동작: 낙찰을 시작하거나, 다음 최고입찰을 찾은 경매의 최고입찰을 찾아서  해당 입찰을 그냥 insert 하면 트리거로 처리하는게 편할 듯.
--- 이후 목록의 시간들을 확인하고 처리.
-
 
 create table BID_CONTRACT_QUE (
 
@@ -2816,13 +2805,13 @@ create table MESSAGE (
 
 	,TYPE_CODE			number(2,0)			not null
 
-	,STATE_CODE				number(1,0)
+	,ISDEL				number(1,0)
 
-	,constraint MESSAGE_PK primary key (STATE_CODE, IDX)
+	,constraint MESSAGE_PK primary key (ISDEL, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
-	,constraint FK_MESSAGE_STATE foreign key (STATE_CODE) references MESSAGE_STATE_TYPE (CODE)
+	,constraint FK_MESSAGE_STATE foreign key (ISDEL) references MESSAGE_STATE_TYPE (CODE)
 );
 
 create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (RECEIVER_IDX, SENDER_IDX);
@@ -2845,8 +2834,8 @@ begin
 	if (:NEW.TYPE_CODE is null) then
 		:NEW.TYPE_CODE := 0;
 	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
+	if (:NEW.ISDEL is null) then
+		:NEW.ISDEL := 0;
 	end if;
 end;
 /
@@ -2873,7 +2862,7 @@ comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확�
 
 comment on column MESSAGE.TYPE_CODE is '메세지 타입 - (트리거)기본값 0. null불가. 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.STATE_CODE is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
+comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
 
 
 --drop trigger MESSAGE_TRG;
@@ -2933,25 +2922,20 @@ end;
 
 ------------------------------------------------  오늘의 농부  ----------------------------------------------------
 
-
 create table TODAYS_FARMER (
 
 	ACC_IDX			number(8,0)
 
 	,TITLE			nvarchar2(40)	not null
 	,CONTENT		nvarchar2(2000)
--- 2000자로 부족하면 clob로 변경하기 (단, clob는 update 트리거 적용 불가)
+
 	,WRITTEN_TIME	timestamp (0) with local time zone default SYSTIMESTAMP not null
 	
 	,VIEW_COUNT		number(9,0) default 0
 	,LAST_EDITED	timestamp (0) with local time zone
 
---	,RECOMMEND		number(8,0)	(매번 전체조회를 피하기 위해 넣을 수 있는 속성, 무결성 관리를 하려면 별도의 뷰를 생성하고 트리거를 쓰는 짓을 해야 되서 일단 보류)
-
-	,THUMB_IMG		varchar2(200 char)
-	,MAIN_IMG		varchar2(200 char)	
---이미지를 제대로 여럿 넣으려면 별도의 테이블 쓰기
-
+	,MAIN_IMG		varchar2(200 char)
+	
 	,ISDEL			number(1,0) default 0 not null
 
 	,constraint TODAYS_FARMER_PK primary key (ACC_IDX)
@@ -2986,8 +2970,6 @@ comment on column TODAYS_FARMER.VIEW_COUNT is '조회수';
 comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리거 없음. 글내용의 data type 이 clob 라서 update 관련 트리거가 안됨';
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
-
-comment on column TODAYS_FARMER.THUMB_IMG is '썸네일 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
 comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
@@ -3302,6 +3284,20 @@ comment on column DEED_RECORD_STATE_TYPE.ADJUSTMENT is '나쁜짓 기록 상태 
 
 ----------------------------------------------- 나쁜짓 목록 -----------------------------------------------
 
+/*
+
+	코드:
+		0. 기본값
+		1. 낙찰금 지불 기한 만료
+		2. 경매 진행중 입찰 취소: 최고입찰
+		3. 경매 진행중 입찰 취소: 차등 입찰
+		4. 경매 만료 이후 입찰 취소: 최고입찰
+		5. 경매 만료 이후 입찰 취소: 차등 입찰
+		6. 경매 진행 중 경매 취소
+		7. 경매 만료 후 경매 취소
+
+*/
+
 create table BAD_DEED_TYPE (
 
 	CODE			number(2,0)
@@ -3468,6 +3464,7 @@ comment on column PENALTY_RECORD.PENALTY_CODE is '''벌'' 번호 - 외래키, nu
 
 ----------------------------------------------- 경매/입찰 진행용 프로시저 -----------------------------------------------
 
+
 /*======================================= 1. 입찰 프로시저 =========================================
 
 	결과 코드 - isDone
@@ -3535,7 +3532,7 @@ end;
 
 /*============================= 2. 경매 만료 목록 확인 + 진행시키기 ================================
 
-	경매 진행기간이 지난 경매를 확인하여 낙찰/만료 절차 진행
+	경매 진행기간이 지난 경매를 확인하여 낙찰/만료 절차 진행 (타이머)
 
 ===================================================================================================*/
 
@@ -3618,7 +3615,12 @@ exception when OTHERS then
 	if (has_next_time >0) then
 		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
+		if (has_next_time >0) then
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
 	end if;
 	
 end;
@@ -3627,7 +3629,7 @@ end;
 --drop procedure AUCTION_DUE_CHECK;
 
 
-/*================================= 3. 낙찰금 지불 거부 (만료) ======================================
+/*=============================== 3. 낙찰금 지불 거부 (만료 타이머) ==================================
 
 설명:
 	반환할 값을 0 으로 초기화.
@@ -3741,11 +3743,17 @@ exception when others then
 	
 	commit;
 	
-	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
+	select count(1) into next_bid_check from BID_CONTRACT_QUE;
 	if (next_bid_check >0 ) then
 		select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
+		if (next_bid_check >0) then 
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
+		
 	end if;
 	
 end;
@@ -3920,7 +3928,7 @@ end;
 --drop procedure CANCEL_BID;
 
 
-/*==================================================================================================
+/*===================================  5. 경매 취소 프로시저  ======================================
 
 완료 코드
 	1: 성공
@@ -4170,14 +4178,63 @@ purge recyclebin;
 
 /* 작업중 프로시저
 
+	결과값
+		1. 성공
+		0. 오라클 에러
+		-1. 해당 입찰이 존재하지 않거나 낙찰 대금을 지불할 수 없는 상태임
+
+aaa
+
+
+
+
+create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
+is
+	null_checker	number;
+	bid_account		BID.BIDDER_IDX.type;
+	bid_state		BID.STATE_CODE%type;
+	auction_state	AUCTION.STATE_CODE%type;
+	
+	err_code		number;
+	err_message		varchar2(255);
+
+begin
+
+	savepoint START_TRANSACTION;
+	
+	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
+	
+	if (null_checker =0) then
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CONFIRM_CONTRACT',-1,'No such bid exists. usder Bid (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
+		select -1 into isDone from DUAL;
+	else
+		select BIDDER_IDX, STATE_CODE into bid_account, bid_state from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
+		
+		if(in_bidder_idx <> bid_account) then
+		
+		elsif(bid_state <> 1)
+		
+		end if;
+	
+	end if;
+	
+	
+	commit;
+
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')', err_code, err_message );
+	commit;
+	
+	select 0 into isDone from DUAL;
+end;
+/
+
+
 
 
 */
-
-
-
-
-
-
-
-
