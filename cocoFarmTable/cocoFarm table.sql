@@ -2928,18 +2928,14 @@ create table TODAYS_FARMER (
 
 	,TITLE			nvarchar2(40)	not null
 	,CONTENT		nvarchar2(2000)
--- 2000자로 부족하면 clob로 변경하기 (단, clob는 update 트리거 적용 불가)
+
 	,WRITTEN_TIME	timestamp (0) with local time zone default SYSTIMESTAMP not null
 	
 	,VIEW_COUNT		number(9,0) default 0
 	,LAST_EDITED	timestamp (0) with local time zone
 
---	,RECOMMEND		number(8,0)	(매번 전체조회를 피하기 위해 넣을 수 있는 속성, 무결성 관리를 하려면 별도의 뷰를 생성하고 트리거를 쓰는 짓을 해야 되서 일단 보류)
-
-	,THUMB_IMG		varchar2(200 char)
-	,MAIN_IMG		varchar2(200 char)	
---이미지를 제대로 여럿 넣으려면 별도의 테이블 쓰기
-
+	,MAIN_IMG		varchar2(200 char)
+	
 	,ISDEL			number(1,0) default 0 not null
 
 	,constraint TODAYS_FARMER_PK primary key (ACC_IDX)
@@ -2974,8 +2970,6 @@ comment on column TODAYS_FARMER.VIEW_COUNT is '조회수';
 comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리거 없음. 글내용의 data type 이 clob 라서 update 관련 트리거가 안됨';
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
-
-comment on column TODAYS_FARMER.THUMB_IMG is '썸네일 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
 comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
