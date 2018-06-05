@@ -548,18 +548,18 @@ create table ACCOUNT (
 	,PHONE2				number(14,0)
 
 	,POSTNUM			nvarchar2(8)
-	,ADDR				nvarchar2(20)
+	,ADDR				nvarchar2(50)
 	,DETAILED_ADDR		nvarchar2(50)
 
-	,TYPE_CODE			number(2,0)		not null
+	,ACCOUNT_TYPE		number(2,0)		not null
 	,ISDEL				number(1,0)
 
-	,THUMB_IMG			varchar2(200 char)
+	,THUMB_LOC			varchar2(200 char)
 	,REG_DATE			timestamp (0) with local time zone	not null
 
 	,constraint ACCOUNT_PK primary key (ISDEL, IDX)
 	,constraint FK_ACC_ISDEL_TYPE foreign key (ISDEL) references ACCOUNT_STATE_TYPE (CODE)
-	,constraint FK_ACCOUNT_ACCTYPE foreign key (TYPE_CODE) references ACCOUNT_TYPE (CODE)
+	,constraint FK_ACCOUNT_ACCTYPE foreign key (ACCOUNT_TYPE) references ACCOUNT_TYPE (CODE)
 );
 
 create sequence ACCOUNT_SEQ start with 1 increment by 1;
@@ -574,8 +574,8 @@ begin
 	if (:NEW.REG_DATE is null) then
 		:NEW.REG_DATE := SYSTIMESTAMP;
 	end if;
-	if (:NEW.TYPE_CODE is null) then
-		:NEW.TYPE_CODE := 3;
+	if (:NEW.ACCOUNT_TYPE is null) then
+		:NEW.ACCOUNT_TYPE := 3;
 	end if;
 	if (:NEW.ISDEL is null) then
 		:NEW.ISDEL := 0;
@@ -584,7 +584,8 @@ end;
 /
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
 
-insert into ACCOUNT (IDX, ID, PW, NAME, TYPE_CODE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
+insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
 commit;
 --시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
@@ -611,11 +612,11 @@ comment on column ACCOUNT.ADDR is '주소 - 도 시 구 동 까지만, api 따�
 
 comment on column ACCOUNT.DETAILED_ADDR is '세부주소';
 
-comment on column ACCOUNT.TYPE_CODE is '계정타입 - 외래키, null 안됨(식별관계) 기본값 3(트리거, 일반계정)';
+comment on column ACCOUNT.ACCOUNT_TYPE is '계정타입 - 외래키, null 안됨(식별관계) 기본값 3(트리거, 일반계정)';
 
 comment on column ACCOUNT.ISDEL is '상태 확인 코드 - 복합기본키+ 외래키 null 안됨 기본값:0(트리거)';
 
-comment on column ACCOUNT.THUMB_IMG is '썸네일 위치 디렉토리+파일 이름';
+comment on column ACCOUNT.THUMB_LOC is '썸네일 위치 디렉토리+파일 이름';
 
 comment on column ACCOUNT.REG_DATE is '계정 등록일 - null안됨, 트리거 있음';
 
@@ -727,7 +728,7 @@ create table BUSINESS_INFO (
 create sequence BUSINESS_INFO_SEQ start with 1 increment by 1;
 
 create trigger BUSINESS_INFO_TRG
-	before insert on BUSINESS_INFO 
+	before insert on BUSINESS_INFO
 	for each row
 begin
 	if(:NEW.IDX is null) then
@@ -747,7 +748,7 @@ create trigger BUSINESS_ACCOUNT_TRG
 	after insert on BUSINESS_INFO
 	for each row
 begin
-	update ACCOUNT set TYPE_CODE = 2 where IDX = :NEW.ACC_IDX;
+	update ACCOUNT set ACCOUNT_TYPE = 2 where IDX = :NEW.ACC_IDX;
 end;
 /
 --트리거 설명: 사업자 등록증을 등록하면 계정타입번호 자동 전환.
@@ -2782,13 +2783,13 @@ create table MESSAGE (
 
 	,TYPE_CODE			number(2,0)			not null
 
-	,STATE_CODE				number(1,0)
+	,ISDEL				number(1,0)
 
-	,constraint MESSAGE_PK primary key (STATE_CODE, IDX)
+	,constraint MESSAGE_PK primary key (ISDEL, IDX)
 	,constraint FK_MESSAGE_SENDER_ACCIDX foreign key (SENDER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_RECEIVER_ACCIDX foreign key (RECEIVER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_MESSAGE_MSGTYPE foreign key (TYPE_CODE) references MESSAGE_TYPE (CODE)
-	,constraint FK_MESSAGE_STATE foreign key (STATE_CODE) references MESSAGE_STATE_TYPE (CODE)
+	,constraint FK_MESSAGE_STATE foreign key (ISDEL) references MESSAGE_STATE_TYPE (CODE)
 );
 
 create index MESSAGE_SENDER_ISDEL_INDEX on MESSAGE (RECEIVER_IDX, SENDER_IDX);
@@ -2811,8 +2812,8 @@ begin
 	if (:NEW.TYPE_CODE is null) then
 		:NEW.TYPE_CODE := 0;
 	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
+	if (:NEW.ISDEL is null) then
+		:NEW.ISDEL := 0;
 	end if;
 end;
 /
@@ -2839,7 +2840,7 @@ comment on column MESSAGE.READ_TIME is '읽은 시각 기록 - 조회여부 확�
 
 comment on column MESSAGE.TYPE_CODE is '메세지 타입 - (트리거)기본값 0. null불가. 일단은 시스템 알림이나 관리자 문의사항 조회를 쉽게 하기 위한 부분인데, 더 세분화 해서 기능을 확장할 수 있는 부분(추가 테이블이 필요할 수도 있음). 예시) 중요 메세지 표시';
 
-comment on column MESSAGE.STATE_CODE is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
+comment on column MESSAGE.ISDEL is '삭제 확인 코드 - 복합기본키. 외래키, (트리거)기본값:0';
 
 
 --drop trigger MESSAGE_TRG;

@@ -107,6 +107,7 @@ public class MessageController {
 	@RequestMapping(value="/mypage/writeInquiry.do", method=RequestMethod.POST)
 	public ModelAndView inquiryProc(Message message) {
 		System.out.println(message);
+		message.setReceiver_idx(1);
 		messageService.writeMessage(message);
 		
 		ModelAndView mav = new ModelAndView();

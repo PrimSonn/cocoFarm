@@ -113,7 +113,6 @@ $(document).ready(function() {
 					<form action="/mypage/writeInquiry.do" method="post">
 						<input type="hidden" id="sender_idx" name="sender_idx" value="${account.idx }" />
 						<input type="hidden" id="sender_name" name="sender" value="${account.name }" />
-						<input type="hidden" id="receiver_idx" name="receiver_idx" value="62" />	<!-- 문의관리자IDX필요함 -->
 						<input type="hidden" id="type_code" name="type_code" value="1" />
 
 						<label>받는사람</label><input type="text" id="receiver" name="receiver" value="관리자" /><br>
