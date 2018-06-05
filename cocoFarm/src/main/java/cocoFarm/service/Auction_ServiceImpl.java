@@ -28,7 +28,8 @@ public class Auction_ServiceImpl implements Auction_Service {
 		MultipartFile file = auction.getImg_file();
 		if(file != null && !file.isEmpty()) {
 			// 파일 업로드
-			String path = context.getRealPath("resources/auction_img");
+			String path = context.getRealPath("/resources/img/auction_img");
+			System.out.println(path);
 			String filename = UUID.randomUUID().toString().split("-")[0]+"_"+file.getOriginalFilename();
 			File dest = new File(path, filename);
 

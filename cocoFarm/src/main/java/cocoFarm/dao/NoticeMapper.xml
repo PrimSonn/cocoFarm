@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cocoFarm.dao.NoticeDao">
+
+<select id="selectAll" resultType="cocoFarm.dto.Notice">
+ 	<include refid="selectNotice" />
+ 	ORDER BY IDX
+</select>
+ 
+<select id="countAll" resultType="int">
+ 	SELECT COUNT(*) FROM NOTICE
+</select>
+
+<select id="selectPage" parameterType="cocoFarm.util.Paging" resultType="cocoFarm.dto.Notice">
+	SELECT*FROM (SELECT rownum rnum, B.* FROM 
+	(<include refid="selectNotice" /> ORDER BY idx DESC) B ORDER BY rnum ) R 
+	WHERE rnum BETWEEN #{startNo } AND #{endNo }		
+</select>
+
+<sql id="selectNotice">
+ 	SELECT idx, title, content, written_date, last_edited FROM NOTICE
+</sql>
+ 
+<insert id="write" parameterType="cocoFarm.dto.Notice">
+	INSERT INTO NOTICE ( title, writer_idx, content) 
+	VALUES (#{title }, #{writer_idx }, #{content })
+</insert> 
+
+<select id="selectNoticeByIdx" parameterType="cocoFarm.dto.Notice" resultType="cocoFarm.dto.Notice">
+	SELECT*FROM NOTICE WHERE idx = #{idx }
+</select>
+
+<update id="update" parameterType="cocoFarm.dto.Notice">
+	UPDATE NOTICE
+	SET title = #{title }, content = #{content }
+	WHERE idx = #{idx }
+</update>
+
+<update id="delete" parameterType="cocoFarm.dto.Notice">
+	DELETE NOTICE
+	WHERE idx = #{idx }
+</update>
+
+
+
+</mapper>

@@ -47,7 +47,8 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login/login.do", method=RequestMethod.GET)
-	public void login(){}
+	public void login(HttpSession session, Account account, Model model){
+	}
 	
 	@RequestMapping(value="/login/login.do", method=RequestMethod.POST)
 	public String loginProc(HttpSession session, Account account, Model model){

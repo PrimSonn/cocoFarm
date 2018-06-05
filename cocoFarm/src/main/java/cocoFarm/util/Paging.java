@@ -20,6 +20,10 @@ public class Paging {
 	//	curPage == 1
 	//	pageCount == 10
 	//	listCount == 10
+	
+	public Paging () {
+	}
+	
 	public Paging(int totalCount) {
 		this.setTotalCount(totalCount);
 		

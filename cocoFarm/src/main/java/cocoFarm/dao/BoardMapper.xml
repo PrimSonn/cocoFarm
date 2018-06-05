@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cocoFarm.dao.BoardDao">
+
+<sql id="selectBoard">
+ 	SELECT ACC_IDX, title, content, written_date, main_img, hit, ISDEL FROM TODAYS_FARMER where ISDEL = 0
+</sql>
+
+<select id="selectAll" resultType="cocoFarm.dto.Board">
+ 	<include refid="selectBoard" />
+ 	ORDER BY written_date desc
+</select>
+
+<select id="countAll" resultType="int">
+ 	SELECT COUNT(*) FROM TODAYS_FARMER where ISDEL = 0
+</select>
+
+<select id="selectPage" parameterType="cocoFarm.util.Paging" resultType="cocoFarm.dto.Board">
+	SELECT * FROM (SELECT rownum rnum, B.* FROM 
+	(<include refid="selectBoard" /> ORDER BY WRITTEN_DATE desc) B ORDER BY rnum ) R 
+	WHERE rnum BETWEEN #{startNo } AND #{endNo }
+</select>
+
+<insert id="write" parameterType="cocoFarm.dto.Board">
+	INSERT INTO TODAYS_FARMER (ACC_IDX, title, content) 
+	VALUES (#{acc_idx}, #{title }, #{content })
+</insert> 
+
+<select id="selectBoardByAcc_idx" parameterType="cocoFarm.dto.Board" resultType="cocoFarm.dto.Board">
+	SELECT TF.*, REC.CNT RECOMMEND FROM TODAYS_FARMER TF
+		left join (select TODAYS_FARMER_IDX ACC_IDX, count(1) CNT from TODAYS_FARMER_RECOMMEND where TODAYS_FARMER_IDX = #{acc_idx} group by TODAYS_FARMER_IDX) REC on TF.ACC_IDX = REC.ACC_IDX
+	WHERE TF.ACC_IDX = #{acc_idx } and TF.ISDEL = 0
+</select>
+
+<update id="update" parameterType="cocoFarm.dto.Board">
+	UPDATE TODAYS_FARMER
+	SET title = #{title }, content = #{content }
+	WHERE ACC_IDX = #{acc_idx }
+</update>
+
+<update id="delete" parameterType="cocoFarm.dto.Board">
+	update TODAYS_FARMER set ISDEL = 1 where ACC_IDX = #{acc_idx}
+<!-- 	DELETE TODAYS_FARMER -->
+<!-- 	WHERE ACC_IDX = #{acc_idx } -->
+</update>
+
+<update id="updateHit" parameterType="cocoFarm.dto.Board">
+	UPDATE TODAYS_FARMER
+	SET hit = hit + 1
+	WHERE ACC_IDX = #{acc_idx }
+</update>
+
+
+
+</mapper>

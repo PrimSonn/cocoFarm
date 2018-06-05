@@ -12,13 +12,13 @@
 	<select id="loginCheck" parameterType="cocoFarm.dto.Account" resultType="int">
 		SELECT COUNT(*)
 		FROM account 
-		WHERE id=#{id} AND pw=#{pw} AND isDel=0
+		WHERE id=#{id} AND pw=#{pw} AND isDel !=1
 	</select>
 
 	<select id="login" parameterType="cocoFarm.dto.Account" resultType="cocoFarm.dto.Account">
 		SELECT idx, id, name, email, phone, postnum, addr, detailed_addr, account_type
 		FROM account 
-		WHERE id=#{id} AND pw=#{pw} AND isDel=0
+		WHERE id=#{id} AND pw=#{pw} AND isDel !=1
 	</select>
 	
 	<select id="selectId" parameterType="cocoFarm.dto.Account" resultType="int">
