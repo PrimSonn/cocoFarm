@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cocoFarm.dao.Auction_Dao">
+
+	<sql id="selectAuction">
+		SELECT A.*,aq.time_window , AC.ID, to_timestamp(to_char(systimestamp,'yy/mm/dd hh24missff3'),'yy/mm/dd hh24missff3') as systime
+		FROM AUCTION A 
+		INNER JOIN AUCTION_DUE_QUE AQ 
+		ON ( A.IDX = AQ.AUCTION_IDX ) 
+		INNER JOIN ACCOUNT AC 
+		ON ( A.WRITTER_IDX=AC.IDX )
+		WHERE A.STATE_CODE =1 
+		AND AQ.TIME_WINDOW > SYSTIMESTAMP
+	</sql>
+
+	<!-- 	이거 셀렉트할때 만료일자 우선순위로 올라오게 하는게 나을거같은데 조건 어떻게 쓰지..? -->
+	<select id="selectAll" resultType="cocoFarm.dto.Auction">
+		<include refid="selectAuction" />
+		ORDER BY time_window ASC
+	</select>
+
+	<select id="countAll" resultType="int">
+		SELECT COUNT(*) FROM auction
+	</select>
+
+	<select id="selectPage"
+	 parameterType="cocoFarm.util.Auction_Paging"
+	 resultType="cocoFarm.dto.Auction">
+		SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectAuction" />
+				ORDER BY time_window ASC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+
+	<sql id="selectSearch">
+			SELECT rownum rnum, B.* FROM (
+				<include refid="selectAuction" />
+<!-- 				WHERE 1=1 -->
+				AND 1=1
+				<if test="search != null and search != ''">
+					AND title LIKE '%' || #{search } || '%' 
+				</if>
+				ORDER BY time_window ASC
+			) B
+			ORDER BY rnum
+	</sql>
+	
+	<select id="selectPageSearch"
+	 parameterType="cocoFarm.util.Auction_Paging"
+	 resultType="cocoFarm.dto.Auction">
+		SELECT * FROM (
+			<include refid="selectSearch" />
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+
+	<select id="countSearch"
+	 parameterType="cocoFarm.util.Auction_Paging"
+	 resultType="int">
+		SELECT COUNT(*) FROM (
+			<include refid="selectSearch" />
+		) CNT
+	</select>
+
+	<insert id="write" parameterType="cocoFarm.dto.Auction">
+		
+		INSERT INTO Auction(writter_idx, time_window_code, start_price, title, content, item_img, highest_bid)
+		VALUES( #{writter_idx}, #{time_window_code}, #{start_price}, #{title}, #{content}, #{item_img}, #{start_price})
+	</insert>
+
+	<insert id="insertInquire" parameterType="cocoFarm.dto.Auction_Inquire">
+		INSERT INTO Auction_Inquire(autcion_idx, writer_idx, content)
+		VALUES( #{autcion_idx}, #{writer_idx }, #{content })
+	</insert>
+
+
+<!-- 	<update id="updateHit" parameterType="mvc.dto.Board"> -->
+<!-- 		UPDATE board -->
+<!-- 		SET hit = hit + 1 -->
+<!-- 		WHERE boardno = #{boardno } -->
+<!-- 	</update> -->
+
+	<select id="selectAuctionByAuctionIDX"
+		parameterType="cocoFarm.dto.Auction"
+		resultType="cocoFarm.dto.Auction">
+		
+		<include refid="selectAuction" />
+		AND A.idx = #{idx }
+	</select>
+
+
+
+<!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
+<!-- 		DELETE board -->
+<!-- 		WHERE boardno = #{boardno } -->
+<!-- 	</delete> -->
+
+<!-- 	<delete id="deleteFile" parameterType="mvc.dto.Board"> -->
+<!-- 		DELETE board_file -->
+<!-- 		WHERE boardno = #{boardno } -->
+<!-- 	</delete> -->
+
+<!-- 	<delete id="deleteBoardList" parameterType="String"> -->
+<!-- 		DELETE FROM board -->
+<!-- 		WHERE boardno IN ( ${_parameter } ) -->
+<!-- 	</delete> -->
+	
+<!-- 	<delete id="deleteBoardFileList" parameterType="String"> -->
+<!-- 		DELETE FROM board_file -->
+<!-- 		WHERE boardno IN ( ${_parameter } ) -->
+<!-- 	</delete> -->
+	
+<!-- 	<select id="getFile" -->
+<!-- 	 parameterType="mvc.dto.Board" -->
+<!-- 	 resultType="mvc.dto.BoardFile"> -->
+<!-- 		SELECT -->
+<!-- 			boardno -->
+<!-- 			, fileno -->
+<!-- 			, original_filename -->
+<!-- 			, stored_filename -->
+<!-- 			, file_size -->
+<!-- 			, upload_date -->
+<!-- 		FROM board_file -->
+<!-- 		WHERE boardno = #{boardno } -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="getStoredFilename" -->
+<!-- 	 parameterType="mvc.dto.BoardFile" -->
+<!-- 	 resultType="String"> -->
+	 
+<!-- 		SELECT stored_filename FROM board_file -->
+<!-- 		WHERE fileno = #{fileno } -->
+		
+<!-- 	</select> -->
+</mapper>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
