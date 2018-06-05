@@ -16,6 +16,8 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/img/" mapping="/img/**"/>
 	<resources location="/resources/css/" mapping="/css/**"/>
+<!-- 	<resources location="/imgs/" mapping="/img/**"/> -->
+<!-- 	<resources location="/css/" mapping="/css/**"/> -->
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -27,19 +29,19 @@
 
 <!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
 	
-<!-- 	<interceptors> -->	<!-- 나중에 인터셉터 추가시 설정. -->
-<!-- 		<interceptor> -->
-<!-- 			<mapping path="/*" /> -->	<!-- 적용 url -->
-<!-- 			<exclude-mapping path="/*"/> -->	<!-- 예외 url -->
-<!-- 			<beans:bean class="board.interceptor.BoardInterceptor" /> -->	<!-- 인터셉터 클래스 -->
-<!-- 		</interceptor> -->
-<!-- 	</interceptors> -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage/**" />
+			<exclude-mapping path="/login/login.do"/>
+			<beans:bean class="cocoFarm.interceptor.loginInterceptor" />
+		</interceptor>
+	</interceptors>
 	
 	<!-- MultipartResolver -->	<!-- 다운로드 클래스(스프링 commmons) 설정-->
-<!-- 	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
-<!-- 		<beans:property name="maxInMemorySize" value='1048576' /> -->
-<!-- 		<beans:property name="maxUploadSize" value='10485760' /> -->
-<!-- 	</beans:bean> -->
+	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxInMemorySize" value='1048576' />
+		<beans:property name="maxUploadSize" value='10485760' />
+	</beans:bean>
 	
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
 	

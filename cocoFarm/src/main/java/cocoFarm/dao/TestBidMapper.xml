@@ -10,13 +10,7 @@
 	      #{auction_idx,jdbcType=NUMERIC,mode=IN}
 	      ,#{amount,jdbcType=NUMERIC,mode=IN}
 	      ,#{bidder_idx,jdbcType=NUMERIC,mode=IN}
-	      ,#{isIn,jdbcType=NUMERIC,mode=OUT}
+	      ,#{isDone,jdbcType=NUMERIC,mode=OUT}
 	    )}
-	</select>
-	<select id="getWakeTime" resultType='cocoFarm.dto.TestBidDto'>
-		select min(TIME_WINDOW) BID_TIME from AUCTION_DUE_QUE
-	</select>
-	<select id="auctionProc_1" statementType="CALLABLE" >
-		{call AUCTION_DUE_CHECK_1}
 	</select>
 </mapper>

@@ -1,7 +1,9 @@
 package cocoFarm.dao;
 
-import cocoFarm.dto.UniversalTimerDto;
+import cocoFarm.dto.TimerDto;
+import cocoFarm.util.runners.Run;
 
 public interface TimerDao {
-	public UniversalTimerDto auctionExpire(UniversalTimerDto timer);
+	@Run() public TimerDto auctionExpire(TimerDto timer);
+	@Run() public TimerDto bidContractExpire(TimerDto timer);
 }

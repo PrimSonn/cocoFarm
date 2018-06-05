@@ -10,11 +10,11 @@ public class TestBidDto {
 	private Timestamp bid_time;
 	private Integer bidder_idx;
 	private Integer state_code;
-	private Integer isIn;
+	private Integer isDone;
 
 	@Override
 	public String toString() {
-		return "BID [auction_idx: "+auction_idx+", amount "+amount+", bid_time "+bid_time+", bidder_idx "+bidder_idx+", state_code "+state_code+", isIn "+isIn+"]";
+		return "BID [auction_idx: "+auction_idx+", amount "+amount+", bid_time "+bid_time+", bidder_idx "+bidder_idx+", state_code "+state_code+", isIn "+isDone+"]";
 	}
 
 	public Timestamp getWakeTime() {
@@ -62,10 +62,10 @@ public class TestBidDto {
 		this.state_code = state_code;
 	}
 
-	public Integer getIsIn() {
-		return isIn;
-	}public void setIsIn(Integer isIn) {
-		this.isIn = isIn;
+	public Integer getIsDone() {
+		return isDone;
+	}public void setIsDone(Integer isDone) {
+		this.isDone = isDone;
 	}
 	
 }
