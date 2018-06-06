@@ -10,7 +10,9 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/oderstyle.css">
+
 
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
@@ -33,6 +35,7 @@ var amountcon=[];
 var sum${status1.count}=0;
 var allamount${status1.count}=0;
 	<c:forEach items="${opt}" var="data" varStatus="status">
+	var option_num${status.index}=Number(${data.idx});
 	var option${status.index}=Number(${data.price});	
 	var amount${status.index}=Number(${amount.get(status.index)});
 	sum${status1.count}+=(option${status.index})*(amount${status.index});
@@ -82,10 +85,58 @@ $(document).ready(function() {
 	<c:set var="allsum" value="allsum"/>
 	<c:set var="allamount" value="allamount"/>
 	
+	
+	//날짜 변수 만들기 
+	var date = new Date(); 
+	var year = date.getFullYear(); 
+	var month = new String(date.getMonth()+1); 
+	var day = new String(date.getDate()); 
+	
+	// 한자리수일 경우 0을 채워준다. 
+	if(month.length == 1){ 
+	  month = "0" + month; 
+	} 
+	if(day.length == 1){ 
+	  day = "0" + day; 
+	} 
+	
+	//오늘 날짜 
+	var today=year+month+day;
+	
+	//주문번호  날짜+글번호+
+	 var unit_num= Math.floor(Math.random() * 100) + 1;
+	 //각자 상담 코드 넣어야됨 + 고객 sesson + 상품idx 
+	 //우리 주분 번호 +고객 sesson 
+	 var oder_num=today+unit_num+1541;
+	<c:set var="today" value="today"/>
+	<c:set var="oder_num" value="oder_num"/>
+	console.log(${today});
+	console.log("옵션번호"+option_num0);
+	console.log("주문번호"+oder_num);
+	
+	
+	
+	
+	
+	
+	
+	
 	// iamport 변수 초기화
 	var IMP = window.IMP;
 	IMP.init('imp97619342');	// 가맹점 식별코드
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// 결제 모듈 불러오기
+	
+	
 	$("#pay").click(function() {
 		/*수령인 */
 		var mem_name =$(".mem_name").val();
@@ -184,11 +235,11 @@ function requestPayment() {
 	   IMP.request_pay({
 	    pg : 'html5_inicis', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
 	    pay_method : 'card', //결제방식 - 'samsung':삼성페이, 'card':신용카드, 'trans':실시간계좌이체, 'vbank':가상계좌, 'phone':휴대폰소액결제
-	    merchant_uid : 'merchant_' + new Date().getTime(), //고유주문번호 - random, unique
+	    merchant_uid : 'merchant_'+new Date().getTime(), //고유주문번호 - random, unique
 	    name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 	    amount : ${allsum}, //결제금액 - 필수항목
 	    buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-	    buyer_name : '구매자이름', //주문자명 - 선택항목
+	    buyer_name : '구매자이름보내기 김환민', //주문자명 - 선택항목
 	    buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
 	    buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
 	    buyer_postcode : '123-456', //주문자우편번호 - 선택항목
@@ -209,9 +260,9 @@ function requestPayment() {
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					 
-					imp_uid : rsp.imp_uid
-					//기타 필요한 데이터가 있으면 추가 전달
+					
+					imp_uid : rsp.imp_uid,
+					buyer_name :rsp.buyer_name
 					}
 			}).done(function(data) {
 				//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
@@ -335,7 +386,7 @@ $(function() {
 							<div class="product_dsc">
 								<strong class="product_bn">[농수산물 판매자] 법인명</strong>
 								<a href="#" class="product_name">
-									<strong>[2018090230192]${pro_data.title}</strong>
+									<strong>[${today}]${pro_data.title}</strong>
 								</a>
 								<div class="option">
 									<span class="option_icon">옵션</span>
@@ -451,9 +502,6 @@ $(function() {
 		</div>
 	
 	</div>
-	
-	
-	
 	
 </div>
 </body>

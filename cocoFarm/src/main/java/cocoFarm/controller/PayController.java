@@ -102,11 +102,14 @@ public class PayController {
 	*/
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomplepots(String memname) {
+	public String paycomplepots(String memdeliver,String buyer_name,String memname) {
 //		model.addAttribute("memname", memname);
+		System.out.println(buyer_name);
 		
-		System.out.println("======================");
-		System.out.println(memname);
+		
+		
+		System.out.println("===배송==================");
+		System.out.println(memdeliver);
 		
 		return "{\"result\":\""+memname+"\"}";
 				

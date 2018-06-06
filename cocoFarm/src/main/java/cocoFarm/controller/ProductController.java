@@ -57,7 +57,7 @@ public class ProductController {
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
 		logger.info("insert.do get!");
-		return "Mypage/seller/productInsert";
+		return "Mypage/seller/productInsert2";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
@@ -111,8 +111,8 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-		return "redirect:/seller/mypage.do";
-//		return "Mypage/seller/productList2";
+//		return "redirect:/seller/mypage.do";
+		return "Mypage/seller/productList2";
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
