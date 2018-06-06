@@ -227,18 +227,12 @@ drop table BID_CONTRACT_QUE cascade constraints;
 drop table BID_ALIVE_QUE cascade constraints;
 
 drop trigger BID_INSERT_TRG;
---drop sequence BID_SEQ;
 drop index BID_BIDDER_STATE_INDEX;
 drop table BID cascade constraints;
 
 drop table CONTRACT_TIME_WINDOW_TYPE cascade constraints;
 
 drop table BID_STATE_TYPE cascade constraints;
-
---drop sequence BID_DEPO_RECPT_SEQ;
---drop trigger BID_DEPOSITE_RECPT_TRG;
---drop index BID_DEPO_RECPT_INDEX;
---drop table BID_DEPOSITE_RECEIPT cascade constraints;
 
 drop trigger AUCTION_DUE_QUE_TRG;
 drop index AUCTION_DUE_QUE_INDEX;
@@ -260,20 +254,13 @@ drop table AUCTION_STATE_TYPE cascade constraints;
 
 drop table AUCTION_TIME_WINDOW_TYPE cascade constraints;
 
---drop trigger SALE_EVAL_DEL_TRG;
 drop trigger SALE_EVAL_TRG;
 drop table SALE_EVALUATION cascade constraints;
 
 drop trigger SALE_OPT_RECPT_TRG;
-drop sequence SALE_OPT_RECPT_SEQ;
-drop index SALE_OPT_RECPT_OPT;
 drop index SALE_OPT_RECPT_INDEX;
 drop table SALE_OPTION_RECEIPT cascade constraints;
 
-drop trigger SALE_RECEIPT_TRG;
-drop sequence SALE_RECEIPT_SEQ;
-drop index SALE_RECEIPT_M_INDEX;
-drop index SALE_RECEIPT_SALE_INDEX;
 drop table SALE_RECEIPT cascade constraints;
 
 drop trigger CART_TRG;
@@ -311,8 +298,6 @@ drop table CATEGORY_MAP cascade constraints;
 drop trigger CATEGORY_TRG;
 drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
-
---drop table BID_DEPOSIT_TYPE cascade constraints;
 
 drop trigger MAIN_RECEIPT_TRG;
 drop sequence MAIN_RECEIPT_SEQ;
@@ -810,7 +795,7 @@ create table PAYMENT_TYPE (
 );
 
 insert all
-	into PAYMENT_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값 더미', '구현시 쓰지 않더라도 문제가 되지 않도록 넣어두는 기본값')
+	into PAYMENT_TYPE (CODE, NAME, DESCRIPTION) values (0, '모바일 결제', '구현시 쓰지 않더라도 문제가 되지 않도록 넣어두는 기본값')
 select 1 from DUAL;
 
 commit;
@@ -841,7 +826,8 @@ create table MAIN_RECEIPT_STATE_TYPE (
 	,constraint MAIN_RECEIPT_TYPE_PK primary key (CODE)
 );
 
-insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값', '일단 넣는 기본값');
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '지불 전', '임시 저장용 영수증');
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '지불 완료', '활성화된 영수증');
 
 commit;
 
@@ -889,6 +875,8 @@ create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
 create trigger MAIN_RECEIPT_TRG
 	before insert on MAIN_RECEIPT
 	for each row
+declare
+	accName ACCOUNT.NAME%type;
 begin
 	if(:NEW.IDX is null) then
 		:NEW.IDX := MAIN_RECEIPT_SEQ.nextval;
@@ -896,13 +884,17 @@ begin
 	if(:NEW.PAYMENT_TYPE_CODE is null) then
 		:NEW.PAYMENT_TYPE_CODE := 0;
 	end if;
+	if(:NEW.PAID_NAME is null) then
+		select NAME into accName from ACCOUNT where IDX = :NEW.BUYER_IDX;
+		:NEW.PAID_NAME := accName;
+	end if;
 	if(:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 0;
 	end if;
 	:NEW.CONTRACT_TIME := SYSTIMESTAMP;
 end;
 /
---트리거 설명: 인덱스, 결제타입, 상태코드 없으면 삽입. 결제시간 강제입력(덮어쓰기).
+--트리거 설명: 인덱스, 결제타입, 결제자 이름, 상태코드 없으면 삽입. 결제시간 강제입력(덮어쓰기).
 
 
 comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
@@ -933,7 +925,7 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 --drop table MAIN_RECEIPT cascade constraints;
 
 
----------------------------------------------- 목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금)-----------------------------------------------------
+---------------------------------------------- 목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금) -----------------------------------------------------
 -- 구조상 주 영수증 아래 상세 내역에 해당하는 개별 영수증이 따라붙기 때문에 생기는 코드.
 
 create table LIST_RECPT_STATE_TYPE (
@@ -1767,49 +1759,21 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 
 create table SALE_RECEIPT (
 
-	IDX					number(13,0)
+	SALE_IDX			number(10,0)
+	,MAIN_RECPT_IDX		number(13,0)
 
-	,MAIN_RECPT_BUYER	number(8,0)		not null
-	,MAIN_RECPT_IDX		number(13,0)	not null
-	,SALE_IDX			number(10,0)
-
-	,constraint SALE_RECPT_PK primary key (IDX)
-	,constraint SALE_RECPT_M_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
-	,constraint SALE_RECPT_SALE_FK foreign key (SALE_IDX) references SALE (IDX) on delete set null
+	,constraint SALE_RECPT_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
+	,constraint SALE_RECPT_SALE_FK foreign key (SALE_IDX) references SALE (IDX)
+	,constraint SALE_RECPT_M_FK foreign key (MAIN_RECPT_IDX) references MAIN_RECEIPT (IDX)
 );
-
-create index SALE_RECEIPT_SALE_INDEX on SALE_RECEIPT (SALE_IDX);
-create index SALE_RECEIPT_M_INDEX on SALE_RECEIPT (MAIN_RECPT_BUYER);
-
-create sequence SALE_RECEIPT_SEQ start with 1 increment by 1;
-
-create trigger SALE_RECEIPT_TRG
-	before insert on SALE_RECEIPT
-	for each row
-begin
-	if (:NEW.IDX is null) then
-		:NEW.IDX := SALE_RECEIPT_SEQ.nextval;
-	end if;
-end;
-/
---트리거설명: 자동으로 인덱스 값 넣어줌.
-
 
 comment on table SALE_RECEIPT is '일반 구매 묶음 영수증 (주 영수증 서브타입 형태)';
 
-comment on column SALE_RECEIPT.IDX is '일반 구매 묶음 영수증 번호 - 기본키, 인조식별자. 트리거있음';
+comment on column SALE_RECEIPT.SALE_IDX is '판매글 번호 - 복합기본키. 외래키';
 
-comment on column SALE_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매 계정 번호 -  복합외래키 ,null불가';
-
-comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 구매 계정 번호 -  복합외래키 , null불가';
-
-comment on column SALE_RECEIPT.SALE_IDX is '판매글 번호 - 외래키, null가능(대상 판매글 삭제시 null)';
+comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합기본키. 외래키';
 
 
---drop trigger SALE_RECEIPT_TRG;
---drop sequence SALE_RECEIPT_SEQ;
---drop index SALE_RECEIPT_M_INDEX;
---drop index SALE_RECEIPT_SALE_INDEX;
 --drop table SALE_RECEIPT cascade constraints;
 
 
@@ -1817,13 +1781,12 @@ comment on column SALE_RECEIPT.SALE_IDX is '판매글 번호 - 외래키, null�
 
 create table SALE_OPTION_RECEIPT (
 
-	IDX						number(13,0)
+	MAIN_RECPT_IDX			number(13,0)
+	,SALE_IDX				number(10,0)
+	,SALE_OPTION_IDX		number(11,0)
 
 	,DELIVERY_IDX			number(13,0)
 
-	,SALE_RECPT_IDX			number(13,0) not null
-
-	,SALE_OPTION_IDX		number(11,0)
 	,NAME					nvarchar2(25)	not null
 	,AMOUNT					number(7,0)		not null
 	,UNIT					nvarchar2(20)	not null
@@ -1831,28 +1794,25 @@ create table SALE_OPTION_RECEIPT (
 
 	,STATE_CODE				number(2,0)		not null
 
-	,REFUND_TARGET_IDX		number(13,0)
-
-	,constraint SALE_OPT_RECEIPT_PK primary key (IDX)
+	,constraint SALE_OPT_RECEIPT_PK primary key (MAIN_RECPT_IDX, SALE_IDX, SALE_OPTION_IDX)
 	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
-	,constraint SALEOPTRECPT_S_RECPT_FK foreign key (SALE_RECPT_IDX) references SALE_RECEIPT (IDX)
-	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_OPTION_IDX) references SALE_OPTION (IDX) on delete set null
+	,constraint SALEOPTRECPT_S_RECPT_FK foreign key (SALE_IDX, MAIN_RECPT_IDX) references SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX)
+	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_IDX, SALE_OPTION_IDX) references SALE_OPTION (SALE_IDX, IDX)
 	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
-	,constraint SALE_OPT_REFUND_FK foreign key (REFUND_TARGET_IDX) references SALE_OPTION_RECEIPT (IDX)
 	,constraint SALE_OPT_RECPT_CHECK check (AMOUNT >0 and PRICE >0)
 );
 
 create index SALE_OPT_RECPT_INDEX on SALE_OPTION_RECEIPT (DELIVERY_IDX);
-create index SALE_OPT_RECPT_OPT on SALE_OPTION_RECEIPT (SALE_RECPT_IDX);
-
-create sequence SALE_OPT_RECPT_SEQ start with 1 increment by 1;
 
 create trigger SALE_OPT_RECPT_TRG
 	before insert on SALE_OPTION_RECEIPT
-	for each row------------------------------------------------------------------
+	for each row
+declare
+	saleIdx SALE.IDX%type;
 begin
-	if (:NEW.IDX is null) then
-		:NEW.IDX := SALE_OPT_RECPT_SEQ.nextval;
+	if (:NEW.SALE_IDX is null) then
+		select SALE_IDX into saleIdx from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;
+		:NEW.SALE_IDX := saleIdx;
 	end if;
 	if (:NEW.STATE_CODE is null) then
 		:NEW.STATE_CODE := 0;
@@ -1863,13 +1823,13 @@ end;
 
 comment on table SALE_OPTION_RECEIPT is '판매 옵션 목록 영수증';
 
-comment on column SALE_OPTION_RECEIPT.IDX is '판매 옵션 목록 영수증 번호 - 기본키, 인조식별자.';
+comment on column SALE_OPTION_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 - 복합기본키. 옵션 묶음 영수증 외래키';
+
+comment on column SALE_OPTION_RECEIPT.SALE_IDX is '판매글 번호 - 복합기본키. 옵션 묶음 영수증 외래키';
+
+comment on column SALE_OPTION_RECEIPT.SALE_OPTION_IDX is '판매 옵션 번호 - 복합기본키. 외래키, 트리거 있음';
 
 comment on column SALE_OPTION_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키, null가능';
-
-
-
-comment on column SALE_OPTION_RECEIPT.SALE_OPTION_IDX is '판매 옵션 번호 - 외래키';
 
 comment on column SALE_OPTION_RECEIPT.NAME is '판매 옵션 이름 - null불가. 복제값 저장용.';
 
@@ -1881,12 +1841,8 @@ comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불�
 
 comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
 
-comment on column SALE_OPTION_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 - null 가능';
-
 
 --drop trigger SALE_OPT_RECPT_TRG;
---drop sequence SALE_OPT_RECPT_SEQ;
---drop index SALE_OPT_RECPT_OPT;
 --drop index SALE_OPT_RECPT_INDEX;
 --drop table SALE_OPTION_RECEIPT cascade constraints;
 
@@ -1898,7 +1854,8 @@ comment on column SALE_OPTION_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환
 
 create table SALE_EVALUATION (
 
-	SALE_RECEIPT_IDX		number(13,0)
+	SALE_IDX			number(10,0)
+	,MAIN_RECPT_IDX		number(13,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
@@ -1907,13 +1864,13 @@ create table SALE_EVALUATION (
 	,LAST_EDITED			date
 	,ISDEL					number(1,0)		not null
 
-	,constraint SALE_EVAL_PK primary key (SALE_RECEIPT_IDX)
-	,constraint SALE_EVAL_RECPT_IDX foreign key (SALE_RECEIPT_IDX) references SALE_RECEIPT (IDX) on delete cascade
+	,constraint SALE_EVAL_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
+	,constraint SALE_EVAL_RECPT_IDX foreign key (SALE_IDX, MAIN_RECPT_IDX) references SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) on delete cascade
 	,constraint SALE_EVAL_CHECK check (SCORE <=100 and SCORE >= 0)
 );
 
 create trigger SALE_EVAL_TRG
-	before insert or update on SALE_EVALUATION
+	before insert or update of SCORE, TITLE, CONTENT on SALE_EVALUATION
 	for each row 
 	when (NEW.REG_TIME is null)
 begin
@@ -1930,19 +1887,12 @@ end;
 /
 --트리거 설명: 처음 등록시 등록시각 자동 등록, 삭제상태 코드 자동기입 , 이후 수정시 수정시각 자동 등록
 
-/*
-create trigger SALE_EVAL_DEL_TRG
-	before delete on SALE
-	for each row
-begin
-	delete SALE_EVALUATION where SALE_RECEIPT_IDX in (select IDX from SALE_RECEIPT where SALE_IDX = :old.IDX);
-end;
-/
-*/--------이 트리거는 문제가 있음. (보류)
 
 comment on table SALE_EVALUATION is '판매글 평가';
 
-comment on column SALE_EVALUATION.SALE_RECEIPT_IDX is '일반 구매 묶음 영수증 번호 - 기본키, 외래키';
+comment on column SALE_EVALUATION.SALE_IDX is '판매글 번호 - 복합 외래키(판매 영수증)';
+
+comment on column SALE_EVALUATION.MAIN_RECPT_IDX is '주 영수증 번호 - 복합 외래키(판매 영수증)';
 
 comment on column SALE_EVALUATION.SCORE is '점수 - 0이상 100이하 정수. null불가';
 
@@ -4054,24 +4004,24 @@ insert into ACCOUNT (ID, PW, NAME) values ('계정1', 'test', '계정1이름');
 insert into ACCOUNT (ID, PW, NAME) values ('계정2', 'test', '계정2이름');
 
 --계정 썸네일 있는 계정 2개
-insert into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg');
-insert into ACCOUNT (ID, PW, NAME, THUMB_IMG) values ('계정4', 'test', '계정4이름', '/img/thumb4.jpg');
+insert into ACCOUNT (ID, PW, NAME, THUMB_LOC) values ('계정3', 'test', '계정3이름', '/img/thumb3.jpg');
+insert into ACCOUNT (ID, PW, NAME, THUMB_LOC) values ('계정4', 'test', '계정4이름', '/img/thumb4.jpg');
 
---사업자 등록증 정보 (계정 3번, 4번)
+--사업자 등록증 정보 (계정 4번, 5번)
 insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
 , BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
-	values( 3, 123123, '법인명1', '대표자명1', '사업장 주소1', '사업장 세부주소1', '본점주소1', '본점 세부주소1', '업태1', '업종1', '2017년 1월1일', '/img/license1.jpg');
+	values( 4, 123123, '법인명1', '대표자명1', '사업장 주소1', '사업장 세부주소1', '본점주소1', '본점 세부주소1', '업태1', '업종1', '2017년 1월1일', '/img/license1.jpg');
 insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE
 , BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
-	values( 4, 333333, '법인명2', '대표자명2', '사업장 주소2', '사업장 세부주소2', '본점주소2', '본점 세부주소2', '업태2', '업종2', '2015년 2월2일', '/img/license2.jpg');
+	values( 5, 333333, '법인명2', '대표자명2', '사업장 주소2', '사업장 세부주소2', '본점주소2', '본점 세부주소2', '업태2', '업종2', '2015년 2월2일', '/img/license2.jpg');
 
 --판매글 2개
 --이미지가 있는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT, FACE_IMG, MAIN_IMG)
-			values (3, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
+			values (2, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
 --이미지가 없는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
-			values (4, '판매글제목1', '원산지원산지','글내용글내용');
+			values (3, '판매글제목1', '원산지원산지','글내용글내용');
 
 --판매옵션, 판매글 1번에 3개, 2번에 1개.
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
@@ -4250,3 +4200,20 @@ end;
 
 
 */
+
+
+
+
+/* 작업중 프로시저
+
+	판매 영수증 만들기
+
+*/
+
+
+
+
+
+
+
+
