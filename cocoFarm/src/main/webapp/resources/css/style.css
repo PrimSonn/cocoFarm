@@ -79,7 +79,7 @@ font-color:#666;
 }
 
 #header_boby{
-
+	
 	width:100%;
 	height: 85px;
 }
@@ -128,6 +128,7 @@ font-color:#666;
 
 /*헤더에 네비게이션  */
 #header_nav .nav{
+
 	width:100%;
 	
 }
@@ -260,7 +261,6 @@ background-position:center 0px;}
    
 }
 #loginheader .log_joinbutton .loginbutton a{
-	 
    	color: #23ed74;
 }
 
@@ -307,7 +307,6 @@ background-position:center 0px;}
 	font-size:13px;
 	color: #273743;
 	    line-height: 1.5;
-	
 }
 
 
@@ -335,7 +334,6 @@ position: relative;
     text-align: center;
     border-left:0px;
     font-size:16px;
-	
 }
 
 .join_box .join_step li:first-child{
@@ -383,7 +381,6 @@ background-position:center 0px;}
 	font-size:13px;
 	color: #273743;
 	line-height: 1.5;
-	    
 }
 /*마이페이지 layout */
 /*마이페이지 왼쪽 nav*/
@@ -411,7 +408,6 @@ background-position:center 0px;}
 }
 
 .mypage_box .mypage_topbusiness{
-	
 	
 	height: 250px;
 	width: 100%;
@@ -499,7 +495,6 @@ height:40px;
 }
 
 .mypage_navbody .navtitle_02 img{
-
 	width: 17px;
 }
 /* 네비게이션 메뉴바  */
@@ -537,7 +532,6 @@ height:40px;
 }
 .mypage_page01 .border h1{
 	font-size: 18px;
-	
 }
 
 
@@ -548,8 +542,6 @@ height:40px;
 	 border-collapse: collapse;
 	 border-spacing: 0px;
 	
-	 
-	 
 }
 .border_save tr:first-child{
 	 border-top: 0px; 
@@ -587,7 +579,7 @@ height:40px;
 #content{
 	
 	height: 200px;
-	
+
 }
 
 
@@ -650,7 +642,7 @@ height:40px;
 }
 .border_save th{
 /* 	background: rgba(255,255,255,0.6); */
-	
+
 }
 
 /* 상품 등록 버튼 */
@@ -659,7 +651,7 @@ height:40px;
    font-size: 15px;
    width:305px;
    margin: 0px auto;
-   
+   cursor: pointer;
 }
 .save_group div{
    display:inline;
@@ -677,6 +669,7 @@ height:40px;
    opacity:0.9;
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
+   cursor: pointer;
 }
 
 .re_button{
@@ -691,6 +684,7 @@ height:40px;
    background-color:rgba(255,255,255,0.4);
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
+   cursor: pointer;
 }
 
 /*  아직 페이징 번호 css 미완성 */
@@ -797,4 +791,8 @@ height:40px;
 	height:20px;
 	display:inline;
     float: left;
+}
+
+.buy_button, .addcart_button, .talk_button {
+	cursor: pointer;
 }
