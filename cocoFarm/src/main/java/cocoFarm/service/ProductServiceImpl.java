@@ -76,28 +76,32 @@ public class ProductServiceImpl implements ProductService {
 	public void update(Option option) {
 		// saleIdx를 통해 옵션 idx를 얻어 setting
 		List<SaleOption> optionIdx = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(0).getSaleIdx());
-//		System.out.println(optionIdx.get(0));
-//		System.out.println(optionIdx.get(1));
-//		System.out.println(optionIdx.get(2));
-		System.out.println(optionIdx.size());
+
+		System.out.println("Before optionSize: " + optionIdx.size());
+		System.out.println("Before option [idx1: " + optionIdx.get(0).getIdx() + "]");
+//		System.out.println("Before option [idx2: " + optionIdx.get(1).getIdx() + "]");
 		System.out.println("--------------");
-		
-		System.out.println(option.getSaleOptions().size());
+
+		int optionSize = option.getSaleOptions().size();
+		System.out.println("After optionSize: " + optionSize);
 //		System.out.println(option.getSaleOptions().get(0));
 //		System.out.println(option.getSaleOptions().get(1));
 		
-		int optionSize = option.getSaleOptions().size();
-		for(int i=0; i<optionIdx.size(); i++) {
-			// 옵션 제거
-			if(i > optionSize-1) {
+		int i=0;
+		// 옵션 제거
+		if(optionIdx.size() > optionSize) {
+			for(i=optionSize; i<optionIdx.size(); i++) {
 				saleOptionDao.delete(optionIdx.get(i));
-				break;
 			}
-			// 기존 옵션 수정
-			option.getSaleOptions().get(i).setIdx(optionIdx.get(i).getIdx());
-			saleOptionDao.update(option.getSaleOptions().get(i));
-			// 옵션 추가
-			if(optionIdx.size() <= optionSize) {
+		// 기존 옵션 수정
+		} else if(optionIdx.size() == optionSize) {
+			for(i=0; i<optionIdx.size(); i++) {
+				option.getSaleOptions().get(i).setIdx(optionIdx.get(i).getIdx());
+				saleOptionDao.update(option.getSaleOptions().get(i));
+			}
+		// 옵션 추가
+		} else if(optionIdx.size() < optionSize) {
+			for(i=optionIdx.size(); i<optionSize; i++) {
 				saleOptionDao.updateNew(option.getSaleOptions().get(i));
 			}
 		}
@@ -105,9 +109,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public void update(Product product) {
-		// 이미지가 등록되었을 경우, 등록되지 않았을 경우 나눠서 생각해 본다.
-		
 		productDao.update(product);
+		// 이미지가 등록되었을 경우, 등록되지 않았을 경우 나눠서 생각해 본다. 나중에
 	}
 	
 	//2018_05_26 hwanmin work

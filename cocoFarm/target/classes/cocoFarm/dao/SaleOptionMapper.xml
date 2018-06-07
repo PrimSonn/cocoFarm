@@ -35,6 +35,7 @@
 		SELECT * FROM (
 			SELECT rownum rnum, B.* FROM (
 				<include refid="selectSaleOption" />
+				WHERE isdel = 0
 				ORDER BY idx DESC
 			) B
 			ORDER BY rnum

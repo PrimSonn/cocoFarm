@@ -79,7 +79,7 @@ public class ProductController {
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
 		// 파일이 저장될 경로
-		String realpath = context.getRealPath("upload");
+		String realpath = context.getRealPath("resources/proimg");
 		logger.info(realpath);
 		
 		// 파일이 저장될 이름
@@ -105,7 +105,7 @@ public class ProductController {
 		product.setMainImg(stored2);
 		
 		// 상품을 등록하는 사람의 idx
-		product.setAccIdx(1);
+		product.setAccIdx(2);
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
 		productService.insert(product);
@@ -167,7 +167,7 @@ public class ProductController {
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
 		// 파일이 저장될 경로
-		String realpath = context.getRealPath("upload");
+		String realpath = context.getRealPath("resources/proimg");
 		logger.info(realpath);
 		
 		// 파일이 저장될 이름
@@ -212,8 +212,14 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/basket.do", method=RequestMethod.GET)
-	public String basketView(Model model) {
-		
+	public String basketList(Option option, Model model) {
+		List<SaleOption> saleList = option.getSaleOptions();
 		return "Mypage/user/productBasket";
+	}
+	
+	@RequestMapping(value="/product/basket.do", method=RequestMethod.POST)
+	public String insertBasket(Option option, Model model) {
+		List<SaleOption> saleList = option.getSaleOptions();
+		return "redirect:/product/basket.do";
 	}
 }

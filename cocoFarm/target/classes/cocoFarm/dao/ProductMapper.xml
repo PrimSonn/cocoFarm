@@ -107,8 +107,8 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	
  	<!--hwanmin 2018_05_31 detailview select  -->
  	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
- 		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG main_img, 
-		A.name name,A.THUMB_IMG THUMB_IMG,A.EMAIL email,
+ 		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
+		A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
 		B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,
 		B.business_addr business_addr,B.business_category business_category,
 		CAT.NAME AS CATEGORY_NAME FROM SALE S INNER JOIN Account A ON S.ACC_IDX = A.IDX INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
@@ -126,7 +126,8 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  		select s.idx idx, s.sale_idx saleidx,s.name optionName,s.description description,s.price price,s.unit unit,
 		s.start_amount startAmount,s.LEFT_AMOUNT leftAmount,s.LASTSOLD_TIME lastsoldTime,s.WRITTEN_TIME writtenTime,
 		s.LAST_EDITED lastEdited, s.isdel isdel
-		from sale_OPTION s where Sale_idx=#{idx}
+		from sale_OPTION s where Sale_idx=#{idx} AND isdel=0
+		ORDER BY idx
  	</select>
  	
 	<select parameterType="String" id="getPayOption" resultType="cocoFarm.dto.SaleOption"> 
@@ -135,7 +136,7 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 
 	<select parameterType="String" id="getSale_Option" resultType="cocoFarm.dto.Product"> 
 	SELECT S.idx idx,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,
-	S.MAIN_IMG main_img FROM SALE S WHERE idx in ${value} 
+	S.MAIN_IMG mainImg FROM SALE S WHERE idx in ${value} 
 	</select>
 
 </mapper>
