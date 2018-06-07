@@ -32,7 +32,7 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
-	@RequestMapping(value="/seller/mypage", method=RequestMethod.GET)
+	@RequestMapping(value="/seller/mypage/nav", method=RequestMethod.GET)
 	public String nav() {
 		return "Mypage/seller/mypage_load";
 	}
@@ -51,13 +51,13 @@ public class ProductController {
 		model.addAttribute("list", optionList);
 //		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
-		return "Mypage/seller/productList2";
+		return "Mypage/seller/productList";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
 		logger.info("insert.do get!");
-		return "Mypage/seller/productInsert2";
+		return "Mypage/seller/productInsert";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
@@ -116,7 +116,7 @@ public class ProductController {
 		}
 		
 		return "redirect:/product";
-//		return "Mypage/seller/productList2";
+//		return "Mypage/seller/productList";
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
@@ -213,6 +213,7 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Option option, Model model) {
+		logger.info("cart.do get!");
 		List<SaleOption> saleList = option.getSaleOptions();
 		return "Mypage/user/productCart";
 	}
@@ -221,11 +222,12 @@ public class ProductController {
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
-		List<SaleOption> saleList = option.getSaleOptions();
+		logger.info("cart.do post!");
 		
-		for(int i=0; i<saleList.size(); i++) {
-			logger.info("Option" + i+1 + ": " + saleList.get(i));
-		}
+//		List<SaleOption> saleList = option.getSaleOptions();
+//		for(int i=0; i<saleList.size(); i++) {
+//			logger.info("Option" + i+1 + ": " + saleList.get(i));
+//		}
 		
 		// 상품을 등록하는 사람의 idx
 //		productService.insertBasket(option, (Integer)session.getAttribute("idx"));

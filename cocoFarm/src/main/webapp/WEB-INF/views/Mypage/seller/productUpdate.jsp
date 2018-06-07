@@ -163,7 +163,7 @@ function submitContents(elClickedObj) {
 					<ul>
 						<li><a href="#">개인정보 수정</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					

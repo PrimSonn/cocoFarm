@@ -19,10 +19,12 @@ $(document).ready(function() {
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 
+		$(".mypage_page01").load(page);
+		
 		// callback function
-		$(".mypage_page01").load(page, function() {
+// 		$(".mypage_page01").load(page, function() {
 // 			alert("판매 상품 목록 조회");
-		});
+// 		});
 // 		$(".mypage_page01").load("productList.jsp #mypage_productView");
 		
 		return false;
@@ -72,7 +74,7 @@ $(document).ready(function() {
 					<ul>
 						<li><a href="#">개인정보 수정</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="#">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/product/cart.do">장바구니 조회</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					
