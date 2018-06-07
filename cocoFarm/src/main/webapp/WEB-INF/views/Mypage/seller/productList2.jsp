@@ -6,8 +6,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <title>판매 상품 조회</title>
+
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -54,7 +57,7 @@
 					<ul>
 						<li><a href="#">개인정보 수정</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="#">장바구니 조회</a></li>
+						<li><a href="/product/basket.do">장바구니 조회</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					
@@ -83,9 +86,9 @@
 			
 			<div class="mypage_page01">
 				<div class="border">
-					<h1>농산물 판매 상품 조회 </h1>
+					<h1>농산물 판매 상품 조회/수정 </h1>
 					
-					<div class="border_save">
+					<div class="product_list">
 					
 					<table align="center">
 						<tr class="tr_back">
@@ -111,7 +114,7 @@
 							<td>${i.optionName }</td>
 							<td>${i.startAmount }</td>
 							<td>${i.price }원</td>
-							<td><button onclick="location.href='/product/update.do?idx=${i.idx }'" class="td_update">수정</a></td>
+							<td><button onclick="location.href='/product/update.do?idx=${i.idx }&saleIdx=${i.saleIdx }'" class="td_update">수정</button></td>
 						</tr>
 						</c:forEach>
 					</table>

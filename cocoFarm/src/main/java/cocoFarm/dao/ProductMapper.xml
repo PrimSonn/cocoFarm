@@ -70,14 +70,27 @@
 			ORDER BY rnum
 		) R
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+					AND isdel = 0
 	</select>
 	
 	<select id="selectProductByIdx"
 					parameterType="int"
 					resultType="cocoFarm.dto.Product">
 		<include refid="selectProduct" />
-		WHERE idx = ${_parameter }
+		WHERE idx = ${_parameter } AND isdel = 0
 	</select>
+	
+	<update id="update" parameterType="cocoFarm.dto.Product">
+		UPDATE SALE
+		SET title = #{title },
+				origin = #{origin },
+				last_edited = sysdate,
+				content = #{content },
+				face_img = #{faceImg },
+				main_img = #{mainImg },
+				isdel = 0
+		WHERE idx = #{idx }
+	</update>
 	
 	<!--hwanmin 2018_05_26 work-->
  	<select id="ProMainList" resultType="cocoFarm.dto.Product">

@@ -34,7 +34,7 @@ public class ProductController {
 	
 	@RequestMapping(value="/seller/mypage", method=RequestMethod.GET)
 	public String nav() {
-		return "Mypage/seller/mypage";
+		return "Mypage/seller/mypage_load";
 	}
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
@@ -51,13 +51,13 @@ public class ProductController {
 		model.addAttribute("list", optionList);
 //		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
-		return "Mypage/seller/productList";
+		return "Mypage/seller/productList2";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
 		logger.info("insert.do get!");
-		return "Mypage/seller/productInsert";
+		return "Mypage/seller/productInsert2";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
@@ -69,8 +69,10 @@ public class ProductController {
 		logger.info("insert.do post!");
 		List<MultipartFile> list = f.getUpload();
 		
-		logger.info("faceImg: " + list.get(0).getOriginalFilename());
+		logger.info("faceImg: \"" + list.get(0).getOriginalFilename() + "\"");
 		logger.info("mainImg: " + list.get(1).getOriginalFilename());
+		logger.info("size: " + list.size());
+		logger.info("length: " + list.get(0).getOriginalFilename().length());
 		
 		// 고유 식별자
 		logger.info(UUID.randomUUID().toString());
@@ -101,6 +103,8 @@ public class ProductController {
 		
 		product.setFaceImg(stored1);
 		product.setMainImg(stored2);
+		
+		// 상품을 등록하는 사람의 idx
 		product.setAccIdx(1);
 //		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
@@ -111,20 +115,22 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-		return "redirect:/seller/mypage.do";
+		return "redirect:/product";
 //		return "Mypage/seller/productList2";
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
 	public String update(SaleOption saleOption
-//						, Option opt
-//						, FileDto f
+//						, HttpSession session
 						, Model model) {
 		logger.info("update.do get!");
 		
-		// 판매상품
+		// 판매상품, 대표이미지, 상세설명이미지
 		Product productView = productService.productView(saleOption.getSaleIdx());
 		model.addAttribute("product", productView);
+
+		// 대표이미지, 상세설명이미지
+//		model.addAttribute("productImg", )
 		
 		// 옵션 개수
 		// 필요 없었다... optionView.size()로 해결
@@ -135,6 +141,9 @@ public class ProductController {
 		List optionView = productService.optionView(saleOption.getSaleIdx());
 		model.addAttribute("optionView", optionView);
 		
+		
+//		session.setAttribute("saleIdx", productView.getIdx());
+		
 		return "Mypage/seller/productUpdate";
 	}
 	
@@ -144,7 +153,62 @@ public class ProductController {
 								, FileDto f) {
 		logger.info("update.do post!");
 		
-		return "redirect:/seller/mypage.do";
+		System.out.println(product.getIdx());
+		
+		// 이미지를 새로 등록
+		List<MultipartFile> list = f.getUpload();
+		
+		logger.info("faceImg: " + list.get(0).getOriginalFilename());
+		logger.info("mainImg: " + list.get(1).getOriginalFilename());
+		logger.info("size: " + list.size());
+		
+		// 고유 식별자
+		logger.info(UUID.randomUUID().toString());
+		String uID = UUID.randomUUID().toString().split("-")[0];
+		
+		// 파일이 저장될 경로
+		String realpath = context.getRealPath("upload");
+		logger.info(realpath);
+		
+		// 파일이 저장될 이름
+		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
+		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
+		
+		File dest1 = new File(realpath, stored1);
+		File dest2 = new File(realpath, stored2);
+		System.out.println(dest1);
+		System.out.println(dest2);
+		
+		// 실제 파일 업로드
+		try {
+			list.get(0).transferTo(dest1);
+			list.get(1).transferTo(dest2);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		product.setFaceImg(stored1);
+		product.setMainImg(stored2);
+		
+		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
+//		if(list.get(0).getOriginalFilename().length()!=0
+//				|| list.get(1).getOriginalFilename().length()!=0) {
+//		}
+		
+		productService.update(product);
+		
+//		System.out.println(opt.getSaleOptions().get(0).getIdx()); //0
+//		System.out.println(opt.getSaleOptions().get(1).getIdx()); //0
+		
+		// 쿼리스트링을 통해 받은 idx (Product) ( = saleIdx (SaleOption) )
+		for(int i=0; i<opt.getSaleOptions().size(); i++) {
+			opt.getSaleOptions().get(i).setSaleIdx(product.getIdx());
+		}
+		productService.update(opt);
+		
+		return "redirect:/product";
 	}
 	
 	@RequestMapping(value="/product/basket.do", method=RequestMethod.GET)

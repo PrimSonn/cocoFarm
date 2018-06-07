@@ -57,12 +57,16 @@ public interface ProductService {
 	 */
 	public void insert(Product product, SaleOption saleOption);
 	
+	public void update(Product product);
+	
+	public void update(Option option);
+	
 	/**
 	 * 판매상품 수정
 	 * 
 	 * @param Product - 판매상품, SaleOption - 옵션
 	 */
-	public void update(Product product, SaleOption saleOption);
+	public void update(Product product, Option Option);
 	
 	/**
 	 * 판매상품 불러오기
@@ -89,7 +93,7 @@ public interface ProductService {
 	 */
 	public int optionNumber(int saleIdx);
 	
-	//�Ǹ��� ���ο� ��� �ҷ����� 
+	//2018_05_26 hwanmin work
 	public List<Product> getProMainList();
 	
 	public List<Product> getSerchList(Product product);

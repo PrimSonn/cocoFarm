@@ -19,5 +19,14 @@ public interface SaleOptionDao {
 	
 	public int countOption(int saleIdx);
 	
-	public List selectOptionByIdx(int saleIdx);
+	public List<SaleOption> selectOptionByIdx(int saleIdx);
+	
+	// 옵션 수정
+	public void update(SaleOption saleOption);
+	
+	// 옵션 추가
+	public void updateNew(SaleOption saleOption);
+	
+	// 옵션 제거
+	public void delete(SaleOption saleOption);
 }
