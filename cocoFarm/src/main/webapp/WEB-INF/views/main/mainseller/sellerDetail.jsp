@@ -224,7 +224,7 @@ $(document).ready(function() {
 		
 		/* 장바구니 버튼 눌렀을 때 */
 		$(".addcart_button").click(function() {
-			$(".option_form").attr("action", "/product/basket.do");
+			$(".option_form").attr("action", "/product/cart.do");
 			$(".option_form").submit();
 		});
 	

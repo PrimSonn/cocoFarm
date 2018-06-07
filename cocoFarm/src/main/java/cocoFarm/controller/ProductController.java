@@ -211,14 +211,16 @@ public class ProductController {
 		return "redirect:/product";
 	}
 	
-	@RequestMapping(value="/product/basket.do", method=RequestMethod.GET)
+	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Option option, Model model) {
 		List<SaleOption> saleList = option.getSaleOptions();
-		return "Mypage/user/productBasket";
+		return "Mypage/user/productCart";
 	}
 	
-	@RequestMapping(value="/product/basket.do", method=RequestMethod.POST)
-	public String insertBasket(Option option, Product product, Model model) {
+	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+	public String insertBasket(Option option
+							, HttpSession session
+							, Model model) {
 		List<SaleOption> saleList = option.getSaleOptions();
 		
 		for(int i=0; i<saleList.size(); i++) {
@@ -226,10 +228,9 @@ public class ProductController {
 		}
 		
 		// 상품을 등록하는 사람의 idx
-		product.setAccIdx(2);
-//		product.setAccIdx((Integer)session.getAttribute("idx"));
+//		productService.insertBasket(option, (Integer)session.getAttribute("idx"));
+		productService.insertCart(option, 2);
 		
-		productService.insertBasket(option, product.getAccIdx());
-		return "redirect:/product/basket.do";
+		return "redirect:/product/cart.do";
 	}
 }

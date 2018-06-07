@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
 		List<SaleOption> optionIdx = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(0).getSaleIdx());
 
 		System.out.println("Before optionSize: " + optionIdx.size());
-		System.out.println("Before option [idx1: " + optionIdx.get(0).getIdx() + "]");
+//		System.out.println("Before option [idx1: " + optionIdx.get(0).getIdx() + "]");
 //		System.out.println("Before option [idx2: " + optionIdx.get(1).getIdx() + "]");
 		System.out.println("--------------");
 
@@ -114,11 +114,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void insertBasket(Option option, int accIdx) {
-		// 여기부터
-		SaleOption saleOption = saleOptionDao.selectOption(option.getSaleOptions().get(0).getIdx());
-		System.out.println("---!!---:"+saleOption);
-		saleOptionDao.insertBasket(saleOption, accIdx);
+	public void insertCart(Option option, int accIdx) {
+		SaleOption saleOption = null;
+		for(int i=0; i<option.getSaleOptions().size(); i++) {
+			System.out.println("SaleOption" + (i+1) + " idx: " + option.getSaleOptions().get(i).getIdx());
+			saleOption = saleOptionDao.selectOption(option.getSaleOptions().get(i).getIdx());
+			saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
+			System.out.println("CART SaleOption" + (i+1) + ":" + saleOption);
+			saleOptionDao.insertCart(saleOption, accIdx);
+		}
 	}
 	
 	//2018_05_26 hwanmin work

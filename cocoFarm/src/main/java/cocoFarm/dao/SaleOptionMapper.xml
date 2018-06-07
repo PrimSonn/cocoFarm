@@ -128,12 +128,12 @@
 	
 	<select id="selectOption" parameterType="int"
 					resultMap="SaleOptionResult">
-		SELECT sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel
+		SELECT idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel
 		FROM SALE_OPTION
 		WHERE idx = ${_parameter }
 	</select>
 	
-	<insert id="insertBasket" parameterType="java.util.HashMap">
+	<insert id="insertCart" parameterType="java.util.HashMap">
 		INSERT INTO CART(idx,acc_idx,sale_opt_idx,count)
 		VALUES(
 			cart_seq.nextval,
