@@ -4,25 +4,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class LicenseDto {
 
-	private String acc_idx;						//ȸ�� IDX(�α�������,����ڵ���� �Ϸ��� ȸ���� IDX)
-	private int business_license_code;			// ����ڹ�ȣ
-	private String business_reg_date;			// ���������
-	private String corporation_name;			// ���θ�
-	private String representative;				// ��ǥ�� �̸�
-	private String business_addr;				// ����� ������ : �ּ�
-	private String business_detailed_addr;		// ����� ������ : ���ּ�
-	private String headquarter_addr;			// ���� ������ : �ּ�
-	private String headquarter_detailed_addr;	// ���� ������ : ���ּ�
-	private String business_category;			// ����� ���� : ����
-	private String business_type;				// ����� ���� : ����
-	private MultipartFile license_img;			// ����ڵ���� �̹��� �޾ƿ��� ��Ƽ��Ʈ����
-	private String license_storedName;			// ����ڵ���� �̹��� ��ȯ �̸�(DB�� ����Ǵ� �̸�)
+	private String acc_idx;						//회원 IDX(로그인중인,사업자등록을 하려는 회원의 IDX)
+	private int business_license_code;			// 사업자번호
+	private String business_reg_date;			// 개업년월일
+	private String corporation_name;			// 법인명
+	private String representative;				// 대표자 이름
+	private String business_addr;				// 사업장 소재지 : 주소
+	private String business_detailed_addr;		// 사업장 소재지 : 상세주소
+	private String headquarter_addr;			// 본점 소재지 : 주소
+	private String headquarter_detailed_addr;	// 본점 소재지 : 상세주소
+	private String business_category;			// 사업의 종류 : 업태
+	private String business_type;				// 사업의 종류 : 종류
+	private MultipartFile license_img;			// 사업자등록증 이미지 받아오는 멀티파트파일
+	private String license_storedName;			// 사업자등록증 이미지 변환 이름(DB에 저장되는 이름)
 	
-	
-	
-
-
-
 
 	public String getBusiness_reg_date() {
 		return business_reg_date;
