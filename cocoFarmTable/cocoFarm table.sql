@@ -134,7 +134,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 
 	TODAYS_FARMER_COMMENT: 오늘의 농부 댓글
 
-	ANNOUNCEMENT: 공지사항
+	NOTICE: 공지사항
 
 	SITE_MAIN_AUCTION: 메인 노출 경매 설정
 
@@ -187,10 +187,10 @@ drop table SITE_IMG_TYPE cascade constraints;
 
 drop table SITE_MAIN_AUCTION cascade constraints;
 
-drop trigger ANNOUNCEMENT_EDITED_TRG;
-drop trigger ANNOUNCEMENT_TRG;
-drop sequence ANNOUNCEMENT_SEQ;
-drop table ANNOUNCEMENT cascade constraints;
+drop trigger NOTICE_EDITED_TRG;
+drop trigger NOTICE_TRG;
+drop sequence NOTICE_SEQ;
+drop table NOTICE cascade constraints;
 
 drop trigger TODAYS_FARM_COMM_TRG;
 drop sequence TODAYS_FARM_COMM_SEQ;
@@ -198,7 +198,10 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 
 drop table TODAYS_FARMER_PICK cascade constraints;
 
+drop table TODAYS_FARMER_RECOMMEND cascade constraints;
+
 drop trigger TODAYS_FARMER_EDIT_TRG;
+drop index TODAYS_FARMER_IDX;
 drop table TODAYS_FARMER cascade constraints;
 
 drop trigger MESSAGE_TRG;
@@ -499,6 +502,7 @@ comment on column ACCOUNT_TYPE.DESCRIPTION is '계정코드 설명';
 
 
 ------------------------------------------------  계정 상태 코드 추가  ----------------------------------------------------
+--계정 상태값 -1에 시스템/관리자 상태를 두었습니다.
 
 create table ACCOUNT_STATE_TYPE (
 
@@ -585,10 +589,7 @@ end;
 --트리거 설명: 행 추가시 IDX가 없을 때 sequence.nextval 을 자동으로 넣음, REG_DATE 가 없을 때 시스템 시간을 넣음. 계정타입 없으면 3(일반계정). ISDEL 기본값 0
 
 insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values (0, 'cocoSystem', 'cocoSystem#1234', '시스템', 0, -1);
-<<<<<<< HEAD
-=======
-insert into ACCOUNT (IDX, ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자1', 1, -1);
->>>>>>> mergbranch
+insert into ACCOUNT (ID, PW, NAME, ACCOUNT_TYPE, ISDEL) values ('cocoAdmin', 'cocoAdmin#1234', '관리자', 1, -1);
 commit;
 --시스템 계정 기본값 생성하는 코드입니다.. (메세지용)
 
@@ -2928,28 +2929,26 @@ create table TODAYS_FARMER (
 
 	,TITLE			nvarchar2(40)	not null
 	,CONTENT		nvarchar2(2000)
--- 2000자로 부족하면 clob로 변경하기 (단, clob는 update 트리거 적용 불가)
-	,WRITTEN_TIME	timestamp (0) with local time zone default SYSTIMESTAMP not null
+
+	,WRITTEN_DATE	date default SYSDATE not null
 	
-	,VIEW_COUNT		number(9,0) default 0
+	,HIT			number(9,0) default 0
 	,LAST_EDITED	timestamp (0) with local time zone
 
---	,RECOMMEND		number(8,0)	(매번 전체조회를 피하기 위해 넣을 수 있는 속성, 무결성 관리를 하려면 별도의 뷰를 생성하고 트리거를 쓰는 짓을 해야 되서 일단 보류)
-
-	,THUMB_IMG		varchar2(200 char)
-	,MAIN_IMG		varchar2(200 char)	
---이미지를 제대로 여럿 넣으려면 별도의 테이블 쓰기
-
+	,MAIN_IMG		varchar2(200 char)
+	
 	,ISDEL			number(1,0) default 0 not null
 
 	,constraint TODAYS_FARMER_PK primary key (ACC_IDX)
 	,constraint FK_TODAYS_FARMER_ACC foreign key (ACC_IDX) references ACCOUNT (IDX) on delete cascade
-	,constraint TODAYS_FARM_VCOUNT_CHECK check (VIEW_COUNT >=0)
+	,constraint TODAYS_FARM_VCOUNT_CHECK check (HIT >=0)
 	,constraint FK_TODAYS_FARMER_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
 
+create index TODAYS_FARMER_IDX on TODAYS_FARMER (WRITTEN_DATE desc);
+
 create trigger TODAYS_FARMER_EDIT_TRG
-	before update of TITLE, CONTENT, THUMB_IMG, MAIN_IMG  on TODAYS_FARMER
+	before update of TITLE, CONTENT, MAIN_IMG  on TODAYS_FARMER
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
@@ -2967,15 +2966,13 @@ comment on column TODAYS_FARMER.TITLE is '제목 - null 안됨';
 
 comment on column TODAYS_FARMER.CONTENT is '내용 - 각종html 을 넣다보면 매우 길어질 거라 생각해서 nclob. 대신 문자열로 바꾸기 위해서 to_nclob 함수 이용. 불편하고 쓸데없다 싶으면 nvarchar2 로 변경';
 
-comment on column TODAYS_FARMER.WRITTEN_TIME is '작성 시각 - null 안됨, 기본값: 시스템 시각';
+comment on column TODAYS_FARMER.WRITTEN_DATE is '작성 시각 - null 안됨, 기본값: 시스템 시각';
 
-comment on column TODAYS_FARMER.VIEW_COUNT is '조회수';
+comment on column TODAYS_FARMER.HIT is '조회수';
 
 comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리거 없음. 글내용의 data type 이 clob 라서 update 관련 트리거가 안됨';
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
-
-comment on column TODAYS_FARMER.THUMB_IMG is '썸네일 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
 comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
 
@@ -2983,11 +2980,12 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - �
 
 
 --drop trigger TODAYS_FARMER_EDIT_TRG;
+--drop index TODAYS_FARMER_IDX;
 --drop table TODAYS_FARMER cascade constraints;
 
 
-------------------------------------------------  오늘의 농부 추천(보류: 일단 추천식으로 가정)  ----------------------------------------------------
-/*
+------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
+
 create table TODAYS_FARMER_RECOMMEND (
 
 	RECOMMEND_ACC			number(8,0)
@@ -2998,8 +2996,16 @@ create table TODAYS_FARMER_RECOMMEND (
 	,constraint FK_TODAYS_FARM_RECOMM foreign key (TODAYS_FARMER_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
+
+comment on table TODAYS_FARMER_RECOMMEND is '오늘의 농부 추천';
+
+comment on column TODAYS_FARMER_RECOMMEND.RECOMMEND_ACC is '추천인 계정번호 - 외래키, 복합기본키';
+
+comment on column TODAYS_FARMER_RECOMMEND.TODAYS_FARMER_IDX is '오늘의 농부 글번호 - 외래키, 복합기본키';
+
+
 --drop table TODAYS_FARMER_RECOMMEND cascade constraints;
-*/
+
 
 ------------------------------------------------  오늘의 농부 픽(관리자의 메인 노출 설정)  ----------------------------------------------------
 --갯수 조절 안됨, 예외처리 사항이라 일단은 그냥 둠.
@@ -3030,8 +3036,8 @@ create table TODAYS_FARMER_COMMENT (
 	,WRITER_IDX				number(8,0)		not null
 	,CONTENT				nvarchar2(400)	not null
 
-	,WRITTEN_TIME			timestamp (0) with local time zone not null
-	,LAST_EDITED			timestamp (0) with local time zone
+	,WRITTEN_TIME			date not null
+	,LAST_EDITED			date
 
 	,SUPER_COMMENT			number(10,0)
 
@@ -3054,7 +3060,7 @@ begin
 		then :NEW.IDX := TODAYS_FARM_COMM_SEQ.nextval;
 	end if;
 	if :NEW.WRITTEN_TIME is null
-		then :NEW.WRITTEN_TIME := SYSTIMESTAMP;
+		then :NEW.WRITTEN_TIME := SYSDATE;
 	end if;
 end;
 /
@@ -3065,7 +3071,7 @@ create trigger TODAYS_FARM_COMM_EDIT_TRG
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
-	:NEW.LAST_EDITED := SYSTIMESTAMP;
+	:NEW.LAST_EDITED := SYSDATE;
 end;
 /
 --트리거 설명: 마지막 수정시각 처리 트리거
@@ -3097,66 +3103,66 @@ comment on column TODAYS_FARMER_COMMENT.ISDEL is '삭제 확인 코드 - 외래�
 
 ------------------------------------------------  공지사항 ----------------------------------------------------
 
-create table ANNOUNCEMENT (
+create table NOTICE (
 
 	IDX					number(4,0)
 	,WRITER_IDX			number(8,0) not null
 	,TITLE				nvarchar2(50) not null
 	,CONTENT			nvarchar2(2000)
-	,WRITTEN_TIME		timestamp(0) with local time zone not null
-	,LAST_EDITED		timestamp(0) with local time zone
+	,WRITTEN_DATE		date not null
+	,LAST_EDITED		date
 
-	,constraint ANNOUNCEMENT_PK primary key (IDX)
+	,constraint NOTICE_PK primary key (IDX)
 	,constraint FK_WRITER_IDX_ACC foreign key (WRITER_IDX) references ACCOUNT (IDX)
 );
 
-create sequence ANNOUNCEMENT_SEQ start with 1 increment by 1;
+create sequence NOTICE_SEQ start with 1 increment by 1;
 
-create trigger ANNOUNCEMENT_TRG
-	before insert on ANNOUNCEMENT
+create trigger NOTICE_TRG
+	before insert on NOTICE
 	for each row
 begin
 	if (:NEW.IDX is null) then
-		:NEW.IDX := ANNOUNCEMENT_SEQ.nextval;
+		:NEW.IDX := NOTICE_SEQ.nextval;
 	end if;
-	if  (:NEW.WRITTEN_TIME is null) then
-		:NEW.WRITTEN_TIME := SYSTIMESTAMP;
+	if  (:NEW.WRITTEN_DATE is null) then
+		:NEW.WRITTEN_DATE := SYSDATE;
 	end if;
 end;
 /
 --트리거 설명: 공지사항 인덱스/작성시각 처리 트리거
 
-create trigger ANNOUNCEMENT_EDITED_TRG
-	before update of TITLE, CONTENT on ANNOUNCEMENT
+create trigger NOTICE_EDITED_TRG
+	before update of TITLE, CONTENT on NOTICE
 	for each row
 begin
 	if(:NEW.LAST_EDITED is null) then
-		:NEW.LAST_EDITED := SYSTIMESTAMP;
+		:NEW.LAST_EDITED := SYSDATE;
 	end if;
 end;
 /
 --트리거 설명: 최종 작성시각 처리용 (만약 내용이 길이가 부족해서 nclob로 데이터 타입을 바꾸면 트리거 처리 불가능
 
 
-comment on table ANNOUNCEMENT is '공지사항';
+comment on table NOTICE is '공지사항';
 
-comment on column ANNOUNCEMENT.IDX is '공지사항번호 - 기본키, 인조식별자';
+comment on column NOTICE.IDX is '공지사항번호 - 기본키, 인조식별자';
 
-comment on column ANNOUNCEMENT.WRITER_IDX is '작성자 번호 - 외래키 null안됨. 작성자 타입에 따른 규칙은 어플리케이션에서 구현';
+comment on column NOTICE.WRITER_IDX is '작성자 번호 - 외래키 null안됨. 작성자 타입에 따른 규칙은 어플리케이션에서 구현';
 
-comment on column ANNOUNCEMENT.TITLE is '제목 - null 안됨';
+comment on column NOTICE.TITLE is '제목 - null 안됨';
 
-comment on column ANNOUNCEMENT.CONTENT is '내용';
+comment on column NOTICE.CONTENT is '내용';
 
-comment on column ANNOUNCEMENT.WRITTEN_TIME is '작성시각 - null안됨 트리거있음';
+comment on column NOTICE.WRITTEN_DATE is '작성시각 - null안됨 트리거있음';
 
-comment on column ANNOUNCEMENT.LAST_EDITED is '';
+comment on column NOTICE.LAST_EDITED is '';
 
 
---drop trigger ANNOUNCEMENT_EDITED_TRG;
---drop trigger ANNOUNCEMENT_TRG;
---drop sequence ANNOUNCEMENT_SEQ;
---drop table ANNOUNCEMENT cascade constraints;
+--drop trigger NOTICE_EDITED_TRG;
+--drop trigger NOTICE_TRG;
+--drop sequence NOTICE_SEQ;
+--drop table NOTICE cascade constraints;
 
 
 ---------------------------------------------- 메인 노출 경매 설정 ----------------------------------------------------
@@ -4192,6 +4198,8 @@ purge recyclebin;
 aaa
 
 
+
+
 create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
 is
 	null_checker	number;
@@ -4241,8 +4249,4 @@ end;
 
 
 
-
 */
-
-
-

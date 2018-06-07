@@ -1,6 +1,6 @@
 package cocoFarm.util;
 
-public class Paging {
+public class Auction_Paging {
 	private int curPage;	//현재 페이지 번호 (현재 선택한 페이지)
 
 	private int totalCount;	//총 게시글 수 (DB 조회 결과로 얻어옴)
@@ -14,17 +14,15 @@ public class Paging {
 	private int startNo;	//게시물리스트 첫 번호
 	private int endNo;	//게시물리스트 마지막 번호
 	
-	private int messageCate;
+	private String search;	//검색어
+	
+	public Auction_Paging() { }
 	
 	// 총 게시글 수만 입력하는 생성자
 	//	curPage == 1
 	//	pageCount == 10
 	//	listCount == 10
-	
-	public Paging () {
-	}
-	
-	public Paging(int totalCount) {
+	public Auction_Paging(int totalCount) {
 		this.setTotalCount(totalCount);
 		
 		makePaging();
@@ -33,7 +31,7 @@ public class Paging {
 	// 총 게시글 수와 현재 페이지를 입력하는 생성자
 	//	pageCount == 10
 	//	listCount == 10
-	public Paging(int totalCount, int curPage) {
+	public Auction_Paging(int totalCount, int curPage) {
 		this(totalCount);
 		this.setCurPage(curPage);
 		
@@ -42,7 +40,7 @@ public class Paging {
 
 	// 총 게시글 수와 현재 페이지, 보여지는 게시글 수를 입력하는 생성자
 	//	listCount == 10
-	public Paging(int totalCount, int curPage, int listCount) {
+	public Auction_Paging(int totalCount, int curPage, int listCount) {
 		this(totalCount, curPage);
 		this.setListCount(listCount);
 		
@@ -51,7 +49,7 @@ public class Paging {
 
 	// 총 게시글 수와 현재 페이지, 보여지는 게시글 수, 페이지 수를 입력하는 생성자
 	//	listCount == 10
-	public Paging(int totalCount, int curPage, int listCount, int pageCount) {
+	public Auction_Paging(int totalCount, int curPage, int listCount, int pageCount) {
 		this(totalCount, curPage, listCount);
 		this.setPageCount(pageCount);
 		
@@ -89,6 +87,8 @@ public class Paging {
 		endNo = curPage*listCount;
 	}
 
+
+	
 
 	public int getCurPage() {
 		return curPage;
@@ -162,6 +162,14 @@ public class Paging {
 		this.endNo = endNo;
 	}
 
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
 	@Override
 	public String toString() {
 		return "curPage="+curPage+
@@ -173,18 +181,8 @@ public class Paging {
 				", endPage="+endPage+
 				", startNo="+startNo+
 				", endNo="+endNo+
-				"]";
+				", search="+search+"]";
 	}
 
-	public int getMessageCate() {
-		
-		System.out.println("getMessageCate : " + messageCate);
-		return messageCate;
-	}
-
-	public void setMessageCate(int messageCate) {
-		
-		this.messageCate = messageCate;
-		System.out.println("getMessageCate : " + this.messageCate);
-	}
+	
 }

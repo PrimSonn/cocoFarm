@@ -14,9 +14,20 @@
 
 /* layout */
 #header {width: 100%; height:550px; 
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center -350px;}
+
+/* layout  sellerDetail 부분*/
+#header_detail{
+width: 100%; 
+height:180px; 
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background-size: 1920px 1200px;
+background-position:center -350px;
+box-shadow:0 0 8px 0 #828282;
+}
+
 
 #header_top{
 width: 100%; 
@@ -105,7 +116,7 @@ font-color:#666;
 }
 
 #header_boby .search .search_icon{
-	background: url(../img/main/search_01.png) no-repeat ;
+	background: url(/img/main/search_01.png) no-repeat ;
 	background-size:20px;
 	position: absolute;
 	width: 23px;
@@ -149,7 +160,7 @@ font-color:#666;
 
 /*허수아비 이미지  */
 #header_footimg .scarecrow{
-		background: url(../img/backgroundimg/scarecrow01.png) no-repeat ;
+		background: url(/img/backgroundimg/scarecrow01.png) no-repeat ;
 		background-size: 330px 330px;
 		width: 320px;
 		height: 320px;
@@ -160,7 +171,7 @@ font-color:#666;
 }
 /*캘리 이미지  */
 #header_footimg .calligraphy{
-		background: url(../img/backgroundimg/calligraphy02.png) no-repeat ;
+		background: url(/img/backgroundimg/calligraphy02.png) no-repeat ;
 		
 		width: 320px;
 		height: 320px;
@@ -170,16 +181,16 @@ font-color:#666;
 	top: 200px;	
 }
 #bottom_vimg{
-	background: url(../img/backgroundimg/back_vline.png) no-repeat ;
+	background: url(/img/backgroundimg/back_vline.png) no-repeat ;
 	background-position:center center;
 
 	width: 1920px;
 	margin-left: -952px;
     left: 50%;
     display: block;
-    top:345px;
-    position: fixed;
-	height: 320px;
+    top:475px;
+    position: absolute;
+	height: 90px;
 	text-align: center;
 }
 
@@ -189,7 +200,7 @@ font-color:#666;
 /* 로그인 페이지  */
 
 #loginheader {width: 100%; height:1100px;
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center 0px;}
 
@@ -339,7 +350,7 @@ position: relative;
 }
  
 .join_box .join_step .box i{
-background: url(../img/join_img/join01.png) no-repeat;
+background: url(/img/join_img/join01.png) no-repeat;
 background-size: 26px 26px;
 border:0px;
 width: 26px;
@@ -353,7 +364,7 @@ vertical-align: top;
 /*배경은 loginheader에서 쓰는거예요!!  */
 
 #mypageheader {width: 100%; height:1100px;
-background: url(../img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center 0px;}
 
@@ -641,39 +652,64 @@ height:40px;
 /* 	background: rgba(255,255,255,0.6); */
 	
 }
+
 /* 상품 등록 버튼 */
 .save_group{
-	display:block;
-	
-	text-align: center;
+   font-family: 'Jeju Gothic';
+   font-size: 15px;
+   width:305px;
+   margin: 0px auto;
+   
+}
+.save_group div{
+   display:inline;
 }
 .save_button{
-	border-radius:3px;
-	margin:10px 0px;
-	width:150px;
-	height:35px;
-	text-align: center;
-	line-height: 35px;
-	
-	background-color:#43e44f;
-	opacity:0.9;
-	box-shadow: 0 1px 3px rgba(0,0,0,.13);
-	display: inline-block;
+   color:#fff;
+   border-radius:3px;
+   margin:10px 0px;
+   width:150px;
+   height:35px;
+   text-align: center;
+   line-height: 35px;
+   border:0px;
+   background-color:#43e44f;
+   opacity:0.9;
+   box-shadow: 0 1px 3px rgba(0,0,0,.13);
+   font-weight: 600;
 }
 
 .re_button{
-	border-radius:3px;
-	margin:10px 0px;
-	width:150px;
-	height:35px;
+   color:#5b5b5b;
+   border-radius:3px;
+   margin:10px 0px;
+   width:150px;
+   height:35px;
+   text-align: center;
+   line-height: 35px;
+   border:1px solid #43e44f;
+   background-color:rgba(255,255,255,0.4);
+   box-shadow: 0 1px 3px rgba(0,0,0,.13);
+   font-weight: 600;
+}
+
+/*  아직 페이징 번호 css 미완성 */
+.pageing_num {
+	margin: 10px auto;
+	width: 400px;
 	text-align: center;
-	line-height: 35px;
-	border:1px solid #43e44f;
-	background-color:rgba(255,255,255,0.4);
-	
-	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+
+.paging_text-center {
+	width: 400px;
+    height: 50px;
+    text-align: center;
+    display: contets;
+}
+
+.pagination{
+	height: 50px;
 	display: inline-block;
-	
 }
 
 .save_button a{
@@ -753,4 +789,12 @@ height:40px;
 	width: 200px;
 	height: 200px;
 /* 	border-radius: 100px; //둥근프로필 */
+}
+
+.pagination li{
+	width: 20px;
+	border: 1px solid black;
+	height:20px;
+	display:inline;
+    float: left;
 }

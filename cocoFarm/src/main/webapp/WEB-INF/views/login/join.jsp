@@ -187,7 +187,6 @@
 				<br>
 				<form action="/login/join.do" method="post" class="form-horizontal">
 				<input type="hidden" id="idCheck" name="idCheck" value="N" />
-				<input type="hidden" name="account_type" value="3" />
 			
 				<div class="form-group">
 					<label for="id" class="control-label col-xs-2">아이디 : </label>

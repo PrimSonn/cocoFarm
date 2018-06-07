@@ -10,7 +10,7 @@
 
 </head>
 <body>
-<div id="header">
+<div id="loginheader">
 
 	<div id="header_top">
 	<div class="container">
@@ -33,27 +33,29 @@
 				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
 				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
 		</div>
-		<div id="header_nav">
-			<ul class="nav">
-				<li><a href="#">농수산물</a></li>
-				<li><a href="#">경매</a></li>
-				<li><a href="#">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
-				<li><a href="#">공지사항</a></li>
-				<li><a href="#">회사소개</a></li>
-			</ul>
-		</div>
-		
-		<div id="header_footimg">
-			<div class="scarecrow"></div>
-			<div class="calligraphy"></div>
+		<div class="join_box">
+			<div class="join_boxtit">
+				<h1>코코팜 회원가입에 오신것을 환영합니다.</h1>
+			<div class="join_step">
+				<ul>
+					<li><span class="box"><i class="join_step_1"></i><span>일반회원가입</span></span></li>
+					<li><span class="box"><i class="join_step_1"></i><span>일반회원가입</span></span></li>
+					<li><span class="box"><i class="join_step_1"></i><span>일반회원가입</span></span></li>
+					<li><span class="box"><i class="join_step_1"></i><span>일반회원가입</span></span></li>
+				</ul>
+			
+			</div>
+			
+			
+			
+			
+			
 		</div>
 	
 	</div>
-	<div id="bottom_vimg"></div>
+	
+	
 </div>	
-
-<h1>55555</h1>
 
 
 </body>
