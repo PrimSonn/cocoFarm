@@ -88,17 +88,20 @@ $(document).ready(function() {
 					<c:if test="${sessionScope.type eq 2 }"><h2>판매자 회원</h2></c:if> 
 					<c:if test="${sessionScope.type eq 3 }"><h2>일반 회원</h2></c:if>
 					<h1>마이페이지</h1></div>
-					<div class="mypageimg"><img class="profile" src="/img/profile/${account.thumb_loc }"></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp</span>hwanmin0121</div>
+<%-- 					<div class="mypageimg"><img class="profile" src="/img/profile/${account.thumb_loc }"></div> --%>
+					<div class="mypagewho"><span><strong>${sessionScope.idx }</strong>님&nbsp</span>hwanmin0121</div>
 					<div class="mail_box"><a href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 				</div>
 				<div class="mypage_navbody">
 					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
 					<ul>
 						<li><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
+						<li></li>
 						<li><a href="#">장바구니 조회</a></li>
-						<li><a href="#">회원 탈퇴</a></li>
+						<li><a href="#">결제 내역 조회</a></li>
+						<li><a href="/mypage/license.do">판매자 등록</a></li>
+						<li><a href="/mypage/deleteLicense.do">판매자 등록 삭제</a></li>
+						<li><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
 					</ul>
 					<c:if test="${sessionScope.type eq 2 or sessionScope.type eq 1 }">
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>

@@ -82,9 +82,10 @@ function onlyNumber(obj) {
 	</table>
 	
 	<br><br>
+	
 	<button>등록하기</button>
 </form>
-
+	<button><a href="javascript:history.back()">돌아가기</a></button>
 
 </body>
 </html>

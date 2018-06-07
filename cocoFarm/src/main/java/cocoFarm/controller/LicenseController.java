@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +32,12 @@ public class LicenseController {
 	public void license() { }
 	
 	@RequestMapping(value="/mypage/license.do", method=RequestMethod.POST)
-	public String license(LicenseDto license) {
+	public String license(LicenseDto license, HttpSession session) {
 		
 		MultipartFile file = license.getLicense_img();
 		
-		// ���� �ĺ���
 		String uID = UUID.randomUUID().toString().split("-")[0];
-		// ������ ����� ���
-		String realpath = context.getRealPath("upload"); 
-		// ������ ����� �̸�(���� �̸� �ڿ� �����ĺ��ڸ� �ٿ��� ����ũ�ϰ� ����Ѵ�)
+		String realpath = context.getRealPath("/resources/img/licenseimg"); 
 		String stored = file.getOriginalFilename() + "_" + uID;
 		
 		File dest = new File(realpath, stored);
@@ -52,7 +50,9 @@ public class LicenseController {
 			e.printStackTrace();
 		}
 		
+		
 		license.setLicense_storedName(stored);
+		license.setAcc_idx((int)session.getAttribute("idx"));
 		
 		System.out.println(license.toString());
 		
@@ -60,7 +60,7 @@ public class LicenseController {
 		
 		
 		
-		return "redirect:/mypage/license.do";
+		return "redirect:/mypage/message.do";
 	}
 	
 	@RequestMapping(value="/mypage/deleteLicense.do", method=RequestMethod.GET)
@@ -71,11 +71,11 @@ public class LicenseController {
 	@RequestMapping(value="/mypage/deleteLicense.do", method=RequestMethod.POST)
 	public String deleteLicense(LicenseDto license) {
 		
-		System.out.println(license.getAcc_idx());
+		System.out.println("라이센스 삭제 = "+license.getAcc_idx());
 		
 		licenseService.deleteLicense(license);
 		
-		return "redirect:/mypage/mypage.do";
+		return "redirect:/mypage/message.do";
 	}
 	
 }

@@ -35,7 +35,7 @@ public class LoginController {
 	public ModelAndView main(HttpSession session, ModelAndView mav){
 		System.out.println(session.getAttribute("idx"));
 		System.out.println(session.getAttribute("type")); 
-		mav.setViewName("/Main/cocomain");
+		mav.setViewName("/main/cocomain");
 		return mav;
 	}
 	
@@ -55,7 +55,7 @@ public class LoginController {
 		System.out.println(account);
 		
 		if(loginService.login(account, session)) {
-			return "redirect:/cocomain.do";
+			return "redirect:/main/cocomain.do";
 		} else {
 			model.addAttribute("msg", "로그인 실패");
 			model.addAttribute("url", "/login/login.do");
@@ -93,7 +93,7 @@ public class LoginController {
 		System.out.println(account);
 		loginService.join(account);
 		
-		return "redirect:/cocomain.do"; 
+		return "redirect:/login/login.do"; 
 	}
 	
 	@RequestMapping(value="/login/idCheck.do", method=RequestMethod.POST)

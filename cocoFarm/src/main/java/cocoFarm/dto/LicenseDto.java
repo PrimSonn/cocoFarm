@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class LicenseDto {
 
-	private String acc_idx;						//ȸ�� IDX(�α�������,����ڵ���� �Ϸ��� ȸ���� IDX)
+	private int acc_idx;						//ȸ�� IDX(�α�������,����ڵ���� �Ϸ��� ȸ���� IDX)
 	private int business_license_code;			// ����ڹ�ȣ
 	private String business_reg_date;			// ���������
 	private String corporation_name;			// ���θ�
@@ -32,11 +32,11 @@ public class LicenseDto {
 		this.business_reg_date = business_geg_date;
 	}
 
-	public String getAcc_idx() {
+	public int getAcc_idx() {
 		return acc_idx;
 	}
 
-	public void setAcc_idx(String acc_idx) {
+	public void setAcc_idx(int acc_idx) {
 		this.acc_idx = acc_idx;
 	}
 
@@ -131,7 +131,8 @@ public class LicenseDto {
 
 	@Override
 	public String toString() {
-		return "[License = business_license_code : " + business_license_code
+		return "[License = acc_idx : " + acc_idx
+				+ ", business_license_code : " + business_license_code
 				+ ", business_reg_date : " + business_reg_date
 				+ ", corporation_name : " + corporation_name
 				+ ", representative : " + representative
