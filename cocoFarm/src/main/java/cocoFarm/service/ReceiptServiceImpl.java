@@ -42,11 +42,12 @@ public class ReceiptServiceImpl implements ReceiptService{
 		OptReceiptMkr holder = new OptReceiptMkr(2,"name",list);
 		System.out.println(holder);
 		
-		holder = recptDao.tempRecpt(holder);
+		recptDao.tempRecpt(holder);
 		
 		System.out.println("isNull? " +(holder==null));
 		System.out.println(holder);
 		System.out.println("--------------------------------------");
+//		holder.getMainRcpt();
 	}
 
 //	@Override

@@ -2128,7 +2128,7 @@ comment on column AUCTION_CATEGORY_MAP.CATEGORY_IDX is '카테고리 노드 번�
 create table AUCTION_INQUIRE(
 
 	IDX				number(11,0)
-	,AUTCION_IDX	number(10,0)	not null
+	,AUCTION_IDX	number(10,0)	not null
 	,WRITER_IDX		number(8,0)		not null
 
 	,CONTENT		nvarchar2(2000) not null
@@ -2140,7 +2140,7 @@ create table AUCTION_INQUIRE(
 	,ISDEL			number(1,0)		not null
 	
 	,constraint AUCTION_INQUIRE_PK primary key (IDX)
-	,constraint FK_AUCT_INQUIRE_AUCT_IDX foreign key (AUTCION_IDX) references AUCTION (IDX) on delete cascade
+	,constraint FK_AUCT_INQUIRE_AUCT_IDX foreign key (AUCTION_IDX) references AUCTION (IDX) on delete cascade
 	,constraint FK_AUCT_INQUIRE_ACC_IDX foreign key (WRITER_IDX) references ACCOUNT (IDX) on delete cascade
 	,constraint FK_AUCT_INQUIRE_ISDEL foreign key (ISDEL) references ISDEL_TYPE (CODE)
 );
@@ -2178,7 +2178,7 @@ comment on table AUCTION_INQUIRE is '경매 문의사항';
 
 comment on column AUCTION_INQUIRE.IDX is '경매 문의글 번호 - 기본키, 인조식별자 트리거있음';
 
-comment on column AUCTION_INQUIRE.AUTCION_IDX is '경매글 번호 - null불가. 외래키';
+comment on column AUCTION_INQUIRE.AUCTION_IDX is '경매글 번호 - null불가. 외래키';
 
 comment on column AUCTION_INQUIRE.WRITER_IDX is '문의 계정 번호 - null불가. 외래키';
 

@@ -42,11 +42,14 @@ public class BoardController {
 	public String wirteProcess(Board board, HttpSession session) {
 		
 //		try {
+		System.out.println(session.getAttribute("idx"));
+		System.out.println(session.getAttribute("type"));
 			Integer type = (Integer)session.getAttribute("type");
 			Integer sessionIdx = (Integer)session.getAttribute("idx");
 			
 			if( sessionIdx!=null && board.getTitle()!=null &&type!=null && type<3 && !board.getTitle().equals("")) {
 				board.setAcc_idx((Integer)session.getAttribute("idx"));
+				System.out.println("----------------"+board);
 				boardService.write(board);
 			}//----> 작성자 타입이 3 이하 (판매자 계정 혹은 관리자 등..) 이 아니면 글쓰기를 단순하게 막아놓음. 브라우저 쪽에 있는 성공 메세지를 수정해야 함.
 //		}catch(Exception e) {
