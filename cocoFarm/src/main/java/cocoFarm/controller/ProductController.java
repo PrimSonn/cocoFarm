@@ -218,14 +218,18 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/basket.do", method=RequestMethod.POST)
-	public String insertBasket(Option option, Model model) {
+	public String insertBasket(Option option, Product product, Model model) {
 		List<SaleOption> saleList = option.getSaleOptions();
 		
 		for(int i=0; i<saleList.size(); i++) {
 			logger.info("Option" + i+1 + ": " + saleList.get(i));
 		}
 		
-		productService.insertBasket(option);
+		// 상품을 등록하는 사람의 idx
+		product.setAccIdx(2);
+//		product.setAccIdx((Integer)session.getAttribute("idx"));
+		
+		productService.insertBasket(option, product.getAccIdx());
 		return "redirect:/product/basket.do";
 	}
 }

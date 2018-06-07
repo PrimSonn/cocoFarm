@@ -35,5 +35,5 @@ public interface SaleOptionDao {
 	// 옵션 제거
 	public void delete(SaleOption saleOption);
 	
-	public void insertBasket(SaleOption saleOption);
+	public void insertBasket(SaleOption saleOption, int accIdx);
 }

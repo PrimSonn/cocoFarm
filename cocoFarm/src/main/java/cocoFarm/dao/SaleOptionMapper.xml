@@ -133,11 +133,13 @@
 		WHERE idx = ${_parameter }
 	</select>
 	
-	<insert id="insertBasket" parameterType="cocoFarm.dto.SaleOption">
-		INSERT INTO CART(idx,acc_idx,sale_opt_idx,count,added_time)
+	<insert id="insertBasket" parameterType="java.util.HashMap">
+		INSERT INTO CART(idx,acc_idx,sale_opt_idx,count)
 		VALUES(
-			.nextval
-			#{)
+			cart_seq.nextval,
+			#{arg1 },
+			#{arg0.idx },
+			#{arg0.proAmount }	)
 	</insert>
 	
 </mapper>

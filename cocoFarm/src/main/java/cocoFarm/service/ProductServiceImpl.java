@@ -114,9 +114,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void insertBasket(Option option) {
+	public void insertBasket(Option option, int accIdx) {
+		// 여기부터
 		SaleOption saleOption = saleOptionDao.selectOption(option.getSaleOptions().get(0).getIdx());
-		saleOptionDao.insertBasket(saleOption);
+		System.out.println("---!!---:"+saleOption);
+		saleOptionDao.insertBasket(saleOption, accIdx);
 	}
 	
 	//2018_05_26 hwanmin work

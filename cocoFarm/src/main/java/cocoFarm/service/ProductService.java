@@ -98,7 +98,7 @@ public interface ProductService {
 	 * 
 	 * @param Option - 장바구니에 넣을 옵션 리스트
 	 */
-	public void insertBasket(Option option);
+	public void insertBasket(Option option, int accIdx);
 	
 	
 	//2018_05_26 hwanmin work
