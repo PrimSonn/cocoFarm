@@ -92,6 +92,10 @@
 		WHERE idx = #{idx }
 	</update>
 	
+	<insert id="insertBasket" parameterType="cocoFarm.dto.SaleOption">
+		
+	</insert>
+	
 	<!--hwanmin 2018_05_26 work-->
  	<select id="ProMainList" resultType="cocoFarm.dto.Product">
  	select S.IDX, S.ACC_IDX, S.TITLE, S.ORIGIN, S.HIT, S.WRITTEN_TIME, S.LAST_EDITED, S.FACE_IMG as faceImg, SO.MIN_PRICE from SALE S

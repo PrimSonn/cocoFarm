@@ -55,7 +55,7 @@ public interface ProductService {
 	 * 
 	 * @param Product - 판매상품 idx, SaleOption - 옵션
 	 */
-	public void insert(Product product, SaleOption saleOption);
+	public void insert(Product product, SaleOption saleOption);	//구현X
 	
 	public void update(Product product);
 	
@@ -92,6 +92,14 @@ public interface ProductService {
 	 * @return Option - 조회된 판매상품 옵션
 	 */
 	public int optionNumber(int saleIdx);
+	
+	/**
+	 * 장바구니 담기
+	 * 
+	 * @param Option - 장바구니에 넣을 옵션 리스트
+	 */
+	public void insertBasket(Option option);
+	
 	
 	//2018_05_26 hwanmin work
 	public List<Product> getProMainList();

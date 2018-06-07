@@ -220,6 +220,12 @@ public class ProductController {
 	@RequestMapping(value="/product/basket.do", method=RequestMethod.POST)
 	public String insertBasket(Option option, Model model) {
 		List<SaleOption> saleList = option.getSaleOptions();
+		
+		for(int i=0; i<saleList.size(); i++) {
+			logger.info("Option" + i+1 + ": " + saleList.get(i));
+		}
+		
+		productService.insertBasket(option);
 		return "redirect:/product/basket.do";
 	}
 }

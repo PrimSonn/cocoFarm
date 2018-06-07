@@ -20,6 +20,8 @@ public interface ProductDao {
 	
 	public void update(Product product);
 	
+	public void insertBasket(SaleOption saleoption);
+	
 	//hwanmin work 2018_05_26
 	
 	public List ProMainList();

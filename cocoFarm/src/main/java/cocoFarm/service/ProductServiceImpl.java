@@ -110,7 +110,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void update(Product product) {
 		productDao.update(product);
-		// 이미지가 등록되었을 경우, 등록되지 않았을 경우 나눠서 생각해 본다. 나중에
+		// 이미지가 등록되었을 경우, 등록되지 않았을 경우(기존 이미지 유지) 나눠서 생각해 본다. 나중에
+	}
+	
+	@Override
+	public void insertBasket(Option option) {
+		SaleOption saleOption = saleOptionDao.selectOption(option.getSaleOptions().get(0).getIdx());
+		saleOptionDao.insertBasket(saleOption);
 	}
 	
 	//2018_05_26 hwanmin work

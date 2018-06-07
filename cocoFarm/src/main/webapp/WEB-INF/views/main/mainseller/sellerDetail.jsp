@@ -196,7 +196,7 @@ $(document).ready(function() {
 		});
 		/* 구매하기 버튼 눌렀을대 써밋 */
 		$(".buy_button").click(function() {
-// 			/orderpay.do
+			$(".option_form").attr("action", "/orderpay.do");
 			$(".option_form").submit();
 			/* 
 			if($(".category option:selected").val()==0) {
@@ -224,7 +224,8 @@ $(document).ready(function() {
 		
 		/* 장바구니 버튼 눌렀을 때 */
 		$(".addcart_button").click(function() {
-// 			$(".option_form").submit();
+			$(".option_form").attr("action", "/product/basket.do");
+			$(".option_form").submit();
 		});
 	
 	});
@@ -370,7 +371,7 @@ $(document).ready(function() {
 			</dl>
 			
 			
-			<form class="option_form" action="/orderpay.do" method="post">
+			<form class="option_form" action="" method="post">
 				<div id="detail_option">
 					
 				</div>

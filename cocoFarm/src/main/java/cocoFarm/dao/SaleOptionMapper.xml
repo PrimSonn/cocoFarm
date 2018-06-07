@@ -125,4 +125,19 @@
 		SET isdel = 1
 		WHERE idx = #{idx }
 	</delete>
+	
+	<select id="selectOption" parameterType="int"
+					resultMap="SaleOptionResult">
+		SELECT sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel
+		FROM SALE_OPTION
+		WHERE idx = ${_parameter }
+	</select>
+	
+	<insert id="insertBasket" parameterType="cocoFarm.dto.SaleOption">
+		INSERT INTO CART(idx,acc_idx,sale_opt_idx,count,added_time)
+		VALUES(
+			.nextval
+			#{)
+	</insert>
+	
 </mapper>

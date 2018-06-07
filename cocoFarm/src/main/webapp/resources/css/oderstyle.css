@@ -254,14 +254,75 @@
 	padding: 0px;
 }
 
-/*유저 정보 */
-.user_info {
-	width: 296px;
-	height: 360px;
-	background-color: #b7b7b7;
-	border: 1px solid black;
+/*가격 정보 */
+.price_sum {
+	box-shadow: 0 1px 2px rgba(0,0,0,.1);
+	border: 1px solid #efefef;
+	width: 284px;
+	height: 400px;
+	background-color: #fff;
+	
 	position: relative;
-	float: left;
+	float: right;
 	padding: 31px 50px 0 50px;
+	font-family: 'Nanum Gothic', sans-serif;
+	
+}
+
+.price_sum h1{
+	font-family:  'Jeju Gothic', serif;
+	font-size: 18px;
+	color: #3c3c3c;
+}
+
+.price_group {
+	
+	margin: 17px 0px 15px 0px;
+	
+}
+.unit {
+	display: inline;
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+.price_sum_num{
+	position:relative;
+	font-family: 'Tahoma','Nanum Gothic';
+	font-size: 28px;
+	font-weight: 800;
+	color : #333333;
+}
+.price_won_num{
+	margin-top:10px;
+	
+	
+	font-weight: 500;
+}
+/*총금액 및 배송  list */
+.price_list{
+	font-size: 12px;
+	color:#313131;
+	border-top: 1px solid #efefef;
+}
+.price_list li:first-child{
+	margin-top: 10px;
+	
+}
+.price_list li{
+	height: 25px;
+	
+}
+.price_list strong{
+	width: 100px;
+ 	line-height: 20px;
+	float: left;
+	font-weight: 300;
+}
+
+.price_list p {
+	
+	display: inline;
+	float: right;
 	
 }
