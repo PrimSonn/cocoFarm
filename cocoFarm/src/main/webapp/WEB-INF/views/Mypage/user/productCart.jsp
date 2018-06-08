@@ -31,6 +31,11 @@
 
 })
 
+function cartItems() {
+	var size = ${optionView }
+		
+}
+
 $(document).ready(function() {
 	
 	/* 장바구니 옵션 변경 버튼 */
