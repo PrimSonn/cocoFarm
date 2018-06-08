@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -70,14 +70,31 @@
 			ORDER BY rnum
 		) R
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+					AND isdel = 0
 	</select>
 	
 	<select id="selectProductByIdx"
 					parameterType="int"
 					resultType="cocoFarm.dto.Product">
 		<include refid="selectProduct" />
-		WHERE idx = ${_parameter }
+		WHERE idx = ${_parameter } AND isdel = 0
 	</select>
+	
+	<update id="update" parameterType="cocoFarm.dto.Product">
+		UPDATE SALE
+		SET title = #{title },
+				origin = #{origin },
+				last_edited = sysdate,
+				content = #{content },
+				face_img = #{faceImg },
+				main_img = #{mainImg },
+				isdel = 0
+		WHERE idx = #{idx }
+	</update>
+	
+	<insert id="insertBasket" parameterType="cocoFarm.dto.SaleOption">
+		
+	</insert>
 	
 	<!--hwanmin 2018_05_26 work-->
  	<select id="ProMainList" resultType="cocoFarm.dto.Product">
@@ -94,8 +111,9 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	
  	<!--hwanmin 2018_05_31 detailview select  -->
  	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
- 		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG main_img, 
-		A.name name,A.THUMB_img THUMB_IMG,A.EMAIL email,
+
+ 		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
+		A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
 		B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,
 		B.business_addr business_addr,B.business_category business_category,
 		CAT.NAME AS CATEGORY_NAME FROM SALE S INNER JOIN Account A ON S.ACC_IDX = A.IDX INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
@@ -113,7 +131,8 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  		select s.idx idx, s.sale_idx saleidx,s.name optionName,s.description description,s.price price,s.unit unit,
 		s.start_amount startAmount,s.LEFT_AMOUNT leftAmount,s.LASTSOLD_TIME lastsoldTime,s.WRITTEN_TIME writtenTime,
 		s.LAST_EDITED lastEdited, s.isdel isdel
-		from sale_OPTION s where Sale_idx=#{idx} and isdel=0 ORDER BY idx
+		from sale_OPTION s where Sale_idx=#{idx} AND isdel=0
+		ORDER BY idx
  	</select>
  	
 	<select parameterType="String" id="getPayOption" resultType="cocoFarm.dto.SaleOption"> 
@@ -122,7 +141,7 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 
 	<select parameterType="String" id="getSale_Option" resultType="cocoFarm.dto.Product"> 
 	SELECT S.idx idx,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,
-	S.MAIN_IMG main_img FROM SALE S WHERE idx in ${value} 
+	S.MAIN_IMG mainImg FROM SALE S WHERE idx in ${value} 
 	</select>
 
 </mapper>

@@ -128,6 +128,7 @@ public class SaleOption {
 				+ ", writtenTime=" + writtenTime
 				+ ", lastEdited=" + lastEdited
 				+ ", isdel=" + isdel
+				+ ", proAmount=" + proAmount
 				+ "]";
 	}
 }

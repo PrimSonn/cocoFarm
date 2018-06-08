@@ -20,11 +20,13 @@
 
 	<select id="selectAll" resultType="cocoFarm.dto.SaleOption">
 		<include refid="selectSaleOption" />
+		WHERE isdel = 0
 		ORDER BY idx
 	</select>
 	
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM sale_option
+		WHERE isdel = 0
 	</select>
 	
 	<select id="selectPage"
@@ -33,11 +35,12 @@
 		SELECT * FROM (
 			SELECT rownum rnum, B.* FROM (
 				<include refid="selectSaleOption" />
+				WHERE isdel = 0
 				ORDER BY idx DESC
 			) B
 			ORDER BY rnum
 		) R
-		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+		WHERE rnum BETWEEN #{startNo } AND #{endNo } AND isdel = 0
 	</select>
 	
 	<insert id="insert" parameterType="cocoFarm.dto.SaleOption">
@@ -67,7 +70,7 @@
  	
  	<select id="countOption" parameterType="int" resultType="int">
  		SELECT COUNT(*) FROM SALE_OPTION
- 		WHERE sale_idx = ${_parameter }
+ 		WHERE sale_idx = ${_parameter } AND isdel = 0
  	</select>
 	
 	<select id="selectOptionByIdx"
@@ -82,6 +85,61 @@
 			) B
 			ORDER BY rnum
 		) R
+		WHERE isdel = 0
 	</select>
+	
+	<update id="update" parameterType="cocoFarm.dto.SaleOption">
+		UPDATE SALE_OPTION
+		SET name = #{optionName },
+				price = #{price },
+				unit = #{unit },
+				start_amount = #{startAmount },
+				left_amount = #{startAmount },
+				last_edited = sysdate,
+				isdel = 0
+		WHERE idx = #{idx }
+	</update>
+	
+	<insert id="updateNew" parameterType="cocoFarm.dto.SaleOption">
+		INSERT INTO SALE_OPTION( idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel)
+		VALUES(
+			sale_option_seq.nextval,
+			#{saleIdx },
+			#{optionName },
+			0,
+			#{price },
+			#{unit },
+			#{startAmount },
+			#{startAmount },
+			sysdate,
+			sysdate,
+			sysdate,
+			0	)
+		<selectKey resultType="int" keyProperty="idx" order="AFTER">
+			SELECT sale_option_seq.currval FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<delete id="delete" parameterType="cocoFarm.dto.SaleOption">
+		UPDATE SALE_OPTION
+		SET isdel = 1
+		WHERE idx = #{idx }
+	</delete>
+	
+	<select id="selectOption" parameterType="int"
+					resultMap="SaleOptionResult">
+		SELECT idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel
+		FROM SALE_OPTION
+		WHERE idx = ${_parameter }
+	</select>
+	
+	<insert id="insertCart" parameterType="java.util.HashMap">
+		INSERT INTO CART(idx,acc_idx,sale_opt_idx,count)
+		VALUES(
+			cart_seq.nextval,
+			#{arg1 },
+			#{arg0.idx },
+			#{arg0.proAmount }	)
+	</insert>
 	
 </mapper>

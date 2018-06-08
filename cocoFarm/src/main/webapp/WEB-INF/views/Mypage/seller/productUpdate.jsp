@@ -72,6 +72,8 @@ function onlyNumber(obj){
 }
 
 function optionSelect(sVal) {
+	
+	// 이 방식으로 하면 ${optionView[0].optionName } 적용이 안돼! 외않되!
 	var str = ""
 	for(var i=0; i<sVal; i++) {
 		str += '<ul>'
@@ -161,15 +163,15 @@ function submitContents(elClickedObj) {
 					<ul>
 						<li><a href="#">개인정보 수정</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="#">장바구니 조회</a></li>
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
-						<li><a href="/seller/mypage">판매등록하기</a></li>
-						<li><a href="/seller/mypage">판매상품 조회/수정</a></li>
+						<li><a href="/product/insert.do">판매등록하기</a></li>
+						<li><a href="/product">판매상품 조회/수정</a></li>
 						<li><a href="#">판매 결제 내역 조회 </a></li>
 						<li><a href="#">판매 결제 배송 승인</a></li>
 					</ul>
@@ -195,7 +197,7 @@ function submitContents(elClickedObj) {
 					<h1>농산물 판매 상품 수정 </h1>
 					<div class="border_save">
 					
-					<form action="/product/update.do" method="post" enctype="multipart/form-data">
+					<form action="/product/update.do?idx=${product.idx }" method="post" enctype="multipart/form-data">
 						<table>
 						<tr>
 							<th class="td_back1">상품 카테고리</th>
@@ -211,8 +213,7 @@ function submitContents(elClickedObj) {
 						<tr>
 							<th class="td_back1">상품 제목</th>
 							<td><textarea id="title" name="title" 
-									style="resize:none;" cols="50" rows="1" 
-    							onblur="onlyNumber(this)">${product.title }</textarea></td>
+									style="resize:none;" cols="50" rows="1">${product.title }</textarea></td>
 						</tr>
 						<tr>
 							<th class="td_back4">상품 부가 설명</th>

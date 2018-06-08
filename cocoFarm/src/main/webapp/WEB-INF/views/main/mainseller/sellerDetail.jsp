@@ -196,7 +196,8 @@ $(document).ready(function() {
 		});
 		/* 구매하기 버튼 눌렀을대 써밋 */
 		$(".buy_button").click(function() {
-			 $(".option_form").submit();
+			$(".option_form").attr("action", "/orderpay.do");
+			$(".option_form").submit();
 			/* 
 			if($(".category option:selected").val()==0) {
 			  alert("카테고리를 선택해주세요.");
@@ -221,7 +222,11 @@ $(document).ready(function() {
 		
 		});
 		
-		
+		/* 장바구니 버튼 눌렀을 때 */
+		$(".addcart_button").click(function() {
+			$(".option_form").attr("action", "/product/cart.do");
+			$(".option_form").submit();
+		});
 	
 	});
 	/* 숫자만 입력 시키게 하는것 */
@@ -364,20 +369,19 @@ $(document).ready(function() {
 					</div>
 				</dd>
 			</dl>
-			<form class="option_form" action="/orderpay.do" method="post">
-			<div id="detail_option">
-				
-			</div>
+			
+			
+			<form class="option_form" action="" method="post">
+				<div id="detail_option">
+					
+				</div>
 			</form>
+			
 			<div class="sum_price">
 				<strong>총 상품금액</strong>
 	
 				<div class="left_price"><p>총 수량 1개</p><fmt:formatNumber value="${sumvar}" pattern="#,###"/><em>0</em><span>원</span>
 			</div>
-			
-			
-			
-			
 			
 			<button class="buy_button"><img src="/img/main/buy_icon.png" width="20px;"><span>구매하기</span></button>
 			<button class="addcart_button">장바구니 담기</button>

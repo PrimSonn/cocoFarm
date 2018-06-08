@@ -42,50 +42,48 @@ public class PayController {
 		try{
 			List<SaleOption> saleList = option.getSaleOptions();
 			
-					//옵션 불러오는것 idx
-					String query ="(";
-					
-					List<Integer> listA = new ArrayList();
-					
-					
-					for(int i=0; i<saleList.size()-1; i++) {
-						query += saleList.get(i).getIdx()+",";
-						listA.add(saleList.get(i).getProAmount());
-					}
-					query +=saleList.get(saleList.size()-1).getIdx() +")";
-					listA.add(saleList.get(saleList.size()-1).getProAmount());
-					
-					System.out.println(query);
-					System.out.println(listA);
-					
-					
-					model.addAttribute("opt",(productService.getPayOption(query)));
-					System.out.println((productService.getPayOption(query)));
-					model.addAttribute("amount",listA);
+			//옵션 불러오는것 idx
+			String query ="(";
+			
+			List<Integer> listA = new ArrayList();
+			
+			
+			for(int i=0; i<saleList.size()-1; i++) {
+				query += saleList.get(i).getIdx()+",";
+				listA.add(saleList.get(i).getProAmount());
+			}
+			query +=saleList.get(saleList.size()-1).getIdx() +")";
+			listA.add(saleList.get(saleList.size()-1).getProAmount());
+			
+			System.out.println(query);
+			System.out.println(listA);
+			
+			
+			model.addAttribute("opt",(productService.getPayOption(query)));
+			System.out.println((productService.getPayOption(query)));
+			model.addAttribute("amount",listA);
+		
+			//옵션 판매글 불러오는것 
+			String salequery ="(";
+			
+			for(int i=0; i<productService.getPayOption(query).size()-1; i++) {
+				salequery += productService.getPayOption(query).get(i).getSaleIdx()+",";
 				
-					//옵션 판매글 불러오는것 
-					String salequery ="(";
-					
-					for(int i=0; i<productService.getPayOption(query).size()-1; i++) {
-						salequery += productService.getPayOption(query).get(i).getSaleIdx()+",";
-						
-					}
-					salequery += productService.getPayOption(query).get(productService.getPayOption(query).size()-1).getSaleIdx()+")";
-					/*System.out.println(salequery);*/
-					
-					
-					productService.getSale_Option(salequery);
-					System.out.println(productService.getSale_Option(salequery));
-					/*System.out.println(productService.getPayOption(query).get(0).getSaleIdx());
-					*/
-					
-					model.addAttribute("pro",(productService.getSale_Option(salequery)));
-					
+			}
+			salequery += productService.getPayOption(query).get(productService.getPayOption(query).size()-1).getSaleIdx()+")";
+			/*System.out.println(salequery);*/
+			
+			
+			productService.getSale_Option(salequery);
+			System.out.println(productService.getSale_Option(salequery));
+			/*System.out.println(productService.getPayOption(query).get(0).getSaleIdx());
+			*/
+			
+			model.addAttribute("pro",(productService.getSale_Option(salequery)));
+			
 		}catch(NullPointerException np) {
 				System.out.println("리스트에 아무것도 없습니다.");
-			}
-
-		
+		}
 		return "payment/oderPay";
 	}
 	

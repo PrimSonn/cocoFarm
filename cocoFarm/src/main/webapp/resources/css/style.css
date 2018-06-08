@@ -79,7 +79,7 @@ font-color:#666;
 }
 
 #header_boby{
-
+	
 	width:100%;
 	height: 85px;
 }
@@ -128,6 +128,7 @@ font-color:#666;
 
 /*헤더에 네비게이션  */
 #header_nav .nav{
+
 	width:100%;
 	
 }
@@ -260,7 +261,6 @@ background-position:center 0px;}
    
 }
 #loginheader .log_joinbutton .loginbutton a{
-	 
    	color: #23ed74;
 }
 
@@ -299,7 +299,7 @@ background-position:center 0px;}
 	width: 100%;
 	height: 600px;
 	margin:30px auto;
-	background-color:rgba(255,255,255,0.9);
+	background-color:rgba(255,255,255,0.6);
 	border-radius: 5px;
 	outline: none;
 	box-shadow: 0 1px 3px rgba(0,0,0,.13);
@@ -307,7 +307,6 @@ background-position:center 0px;}
 	font-size:13px;
 	color: #273743;
 	    line-height: 1.5;
-	
 }
 
 
@@ -335,7 +334,6 @@ position: relative;
     text-align: center;
     border-left:0px;
     font-size:16px;
-	
 }
 
 .join_box .join_step li:first-child{
@@ -383,7 +381,6 @@ background-position:center 0px;}
 	font-size:13px;
 	color: #273743;
 	line-height: 1.5;
-	    
 }
 /*마이페이지 layout */
 /*마이페이지 왼쪽 nav*/
@@ -411,7 +408,6 @@ background-position:center 0px;}
 }
 
 .mypage_box .mypage_topbusiness{
-	
 	
 	height: 250px;
 	width: 100%;
@@ -500,7 +496,6 @@ height:40px;
 }
 
 .mypage_navbody .navtitle_02 img{
-
 	width: 17px;
 }
 /* 네비게이션 메뉴바  */
@@ -538,7 +533,6 @@ height:40px;
 }
 .mypage_page01 .border h1{
 	font-size: 18px;
-	
 }
 
 
@@ -549,8 +543,7 @@ height:40px;
 	 border-collapse: collapse;
 	 border-spacing: 0px;
 	
-	 
-	 
+
 }
 .border_save tr:first-child{
 	 border-top: 0px; 
@@ -588,7 +581,6 @@ height:40px;
 #content{
 	
 	height: 200px;
-	
 }
 
 
@@ -651,7 +643,7 @@ height:40px;
 }
 .border_save th{
 /* 	background: rgba(255,255,255,0.6); */
-	
+
 }
 
 /* 상품 등록 버튼 */
@@ -660,7 +652,7 @@ height:40px;
    font-size: 15px;
    width:305px;
    margin: 0px auto;
-   
+   cursor: pointer;
 }
 .save_group div{
    display:inline;
@@ -692,6 +684,115 @@ height:40px;
    background-color:rgba(255,255,255,0.4);
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
+   cursor: pointer;
 }
 
+/*  아직 페이징 번호 css 미완성 */
+.pageing_num {
+	margin: 10px auto;
+	width: 400px;
+	text-align: center;
+}
 
+.paging_text-center {
+	width: 400px;
+    height: 50px;
+    text-align: center;
+    display: contets;
+}
+
+.pagination{
+	height: 50px;
+	display: inline-block;
+}
+
+.save_button a{
+	/* padding:20px 20px 20px 20px; */
+	 color: #fff;
+}
+
+/* 아이디/비밀번호 찾기 */
+.findIdPw_box{
+	padding: 46px 100px;
+	width: 880px;
+	height: 600px;
+}	
+
+.findIdPw_box h1{
+	font-size: 18px;
+}
+
+.findId_box{
+	padding: 46px 50px 46px 40px;
+	width: 350px;
+	height: 260px;
+	margin:60px auto;
+	background-color:rgba(255,255,255,0.5);
+	border-radius: 5px;
+	outline: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic';
+	font-size:13px;
+	color: #273743;
+	line-height: 1.5;
+	float:left;
+}
+
+.findPw_box{
+	padding: 46px 50px 46px 40px;
+	width: 350px;
+	height: 260px;
+	margin:60px auto;
+	background-color:rgba(255,255,255,0.5);
+	border-radius: 5px;
+	outline: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic';
+	font-size:13px;
+	color: #273743;
+	line-height: 1.5;
+	float:right;
+}
+
+.findIdPw_box ul{
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* 회원정보 수정 */
+.mypage_box .mypage_updateAccount {
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    background-color: rgba(255,255,255,0.5);
+    height: 574px;
+    width: 810px;
+    position: relative;
+    float: right;
+    left: 0px;
+    border-radius: 5px;
+}
+.mypage_updateAccount .border {
+	margin:10px auto;
+	width: 780px;
+	height:100%;
+}
+.mypage_updateAccount .border h1{
+	font-size: 18px;
+}
+.mypage_updateAccount .profile {
+	width: 200px;
+	height: 200px;
+/* 	border-radius: 100px; //둥근프로필 */
+}
+
+.pagination li{
+	width: 20px;
+	border: 1px solid black;
+	height:20px;
+	display:inline;
+    float: left;
+}
+
+.buy_button, .addcart_button, .talk_button {
+	cursor: pointer;
+}

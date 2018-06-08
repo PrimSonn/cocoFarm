@@ -18,10 +18,6 @@ public class LicenseDto {
 	private MultipartFile license_img;			// 사업자등록증 이미지 받아오는 멀티파트파일
 	private String license_storedName;			// 사업자등록증 이미지 변환 이름(DB에 저장되는 이름)
 	
-	
-
-
-
 
 	public String getBusiness_reg_date() {
 		return business_reg_date;

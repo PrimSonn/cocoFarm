@@ -12,16 +12,18 @@ public class Paging {
 	private int endPage;	//화면에 보이는 끝 페이지 (계산으로 알아냄)
 	
 	private int startNo;	//게시물리스트 첫 번호
-	private int endNo;		//게시물리스트 마지막 번호
+	private int endNo;	//게시물리스트 마지막 번호
 	
-	private String search;	//검색어
-	
-	public Paging() { }
+	private int messageCate;
 	
 	// 총 게시글 수만 입력하는 생성자
 	//	curPage == 1
 	//	pageCount == 10
 	//	listCount == 10
+	
+	public Paging () {
+	}
+	
 	public Paging(int totalCount) {
 		this.setTotalCount(totalCount);
 		
@@ -171,14 +173,18 @@ public class Paging {
 				", endPage="+endPage+
 				", startNo="+startNo+
 				", endNo="+endNo+
-				", search="+search+"]";
+				"]";
 	}
 
-	public String getSearch() {
-		return search;
+	public int getMessageCate() {
+		
+		System.out.println("getMessageCate : " + messageCate);
+		return messageCate;
 	}
 
-	public void setSearch(String search) {
-		this.search = search;
+	public void setMessageCate(int messageCate) {
+		
+		this.messageCate = messageCate;
+		System.out.println("getMessageCate : " + this.messageCate);
 	}
 }
