@@ -26,8 +26,22 @@ public class TestController {
 	public ModelAndView recptSvc(ModelAndView mv) {
 		
 		recptSvc.test();
-		mv.setViewName("Main/cocomain");
+		mv.setViewName("main/cocomain");
 		return mv;
+	}
+	
+	@RequestMapping(value="getIn",method=RequestMethod.POST)
+	public ModelAndView getInPost(ModelAndView mav,HttpSession session) {
+		return getIn(mav,session);
+	}
+	
+	@RequestMapping(value="getIn",method=RequestMethod.GET)
+	public ModelAndView getIn(ModelAndView mav,HttpSession session) {
+		
+		session.setAttribute("idx", Integer.valueOf(0));
+		session.setAttribute("type", Integer.valueOf(1));
+		mav.setViewName("main/cocomain");
+		return mav;
 	}
 	
 //	@RequestMapping(value="main",method=RequestMethod.GET)
