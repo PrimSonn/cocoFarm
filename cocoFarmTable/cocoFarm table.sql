@@ -4025,13 +4025,13 @@ insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
 
 --판매옵션, 판매글 1번에 3개, 2번에 1개.
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',123123,'단위수1',123);
+				values (1, '판매글1옵션1','설명설명',12,'단위수1',123);
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',234234,'단위수2',234);
+				values (1, '판매글1옵션2','설명설명',233,'단위수2',234);
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (1, '판매글1옵션1','설명설명',345345,'단위수3',345);
+				values (1, '판매글1옵션3','설명설명',345,'단위수3',345);
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
-				values (2, '판매글2옵션1','설명설명',2323,'단위수4',4563456);
+				values (2, '판매글2옵션1','설명설명',432,'단위수4',4563456);
 
 --1번 계정이 뭔가 구매한 주 영수증
 insert into MAIN_RECEIPT (BUYER_IDX, MONEY_AMOUNT, PAID_NAME) values (1,300,'구매이름');
@@ -4203,8 +4203,6 @@ end;
 
 
 
-*/
-
 
 
 
@@ -4218,6 +4216,7 @@ end;
 /
 
 
+*/
 
 
 
@@ -4225,3 +4224,11 @@ end;
 
 
 
+
+
+
+
+
+
+
+	

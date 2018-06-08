@@ -107,11 +107,11 @@ public class PayController {
 	@ResponseBody
 	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname) {
 //		model.addAttribute("memname", memname);
-		System.out.println(memname);
+//		System.out.println(memname);
 		
 		Gson gson=new Gson();
 		List list = gson.fromJson(optionlist, List.class);
-		System.out.println("---optionlist---");
+//		System.out.println("---optionlist---");
 		
 		
 		List<SaleOptSerializer> saleOptionList = new ArrayList<>();
@@ -127,12 +127,17 @@ public class PayController {
 //			System.out.println( map.get("proAmount"));
 		}
 		
-		for(SaleOptSerializer s : saleOptionList) {
-			System.out.println(s);
-		}
+//		for(SaleOptSerializer s : saleOptionList) {
+//			System.out.println(s);
+//		}
 		
-		System.out.println();
 		
+		/*==================================================================
+		 * 
+		 * result.getIsDone() = 결과가 1이면 성공 0이면 실패
+		 * result.getMainRcpt() = 받아온 영수증 번호, 실패시 null
+		 * 
+		 =================================================================*/
 		OptReceiptMkr result=null;
 		
 		if(session.getAttribute("idx")!=null) {
@@ -140,8 +145,8 @@ public class PayController {
 		}else {
 			//return to errpage
 		}
-		
 		if(result!=null) {
+			System.out.println("======== got Result =========");
 			System.out.println("isDone: "+result.getIsDone());
 			System.out.println("MainRcpt: "+result.getMainRcpt());
 		}else {

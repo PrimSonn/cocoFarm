@@ -26,6 +26,7 @@ public class ReceiptServiceImpl implements ReceiptService{
 		OptReceiptMkr holder = new OptReceiptMkr(accountIdx,paid_name, targetList);
 		recptDao.tempRecpt(holder);
 		
+		System.out.println("holder: "+holder);
 		return holder;
 	}
 
@@ -39,6 +40,7 @@ public class ReceiptServiceImpl implements ReceiptService{
 		System.out.println(holder);
 		
 		recptDao.tempRecpt(holder);
+//		recptDao.tester(holder);
 		
 		System.out.println("isNull? " +(holder==null));
 		System.out.println(holder);
