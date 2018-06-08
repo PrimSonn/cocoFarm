@@ -1,19 +1,33 @@
 @charset "UTF-8";
-/*글자 폰트  */
+/*글짜 폰트  */
 @import url('https://fonts.googleapis.com/css?family=Amiko');
 /*font-family: 'Amiko', sans-serif;  */
 @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
 /*font-family: 'Jeju Gothic', serif;*/
 
+
+
 /* container */ 
 /*컨테이너 전체 사이즈 잡아주는 클래스  */
 .container {width: 1100px; margin: 0 auto; position: relative;}
+
 
 /* layout */
 #header {width: 100%; height:550px; 
 background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
 background-size: 1920px 1200px;
 background-position:center -350px;}
+
+/* layout  sellerDetail 부분*/
+#header_detail{
+width: 100%; 
+height:180px; 
+background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+background-size: 1920px 1200px;
+background-position:center -350px;
+box-shadow:0 0 8px 0 #828282;
+}
+
 
 #header_top{
 width: 100%; 
@@ -174,9 +188,9 @@ font-color:#666;
 	margin-left: -952px;
     left: 50%;
     display: block;
-    top:345px;
-    position: fixed;
-	height: 320px;
+    top:475px;
+    position: absolute;
+	height: 90px;
 	text-align: center;
 }
 
@@ -457,6 +471,7 @@ background-position:center 0px;}
 	
 }
 
+
 .mypage_nav .mypage_topbusiness .mail_box img{
 	width:20px;  
 	padding: 5px 10px 0 0;
@@ -527,12 +542,15 @@ height:40px;
 }
 
 
-/* 상품 등록 페이지 테이블  */
+/*상품등록 페이지 테이블  */
 .border_save table{
 	margin:20px auto;
 	width:740px;
-	border-collapse: collapse;
-	border-spacing: 0px;
+	 border-collapse: collapse;
+	 border-spacing: 0px;
+	
+	 
+	 
 }
 .border_save tr:first-child{
 	 border-top: 0px; 
@@ -545,9 +563,14 @@ height:40px;
 	background-color: #fff; */
 }
 .border_save tr td{
+	
 	padding-left: 10px;
+	
 }
 .td_back1{
+	height: 50px;
+}
+.td_back2{
 	height: 50px;
 }
 .border_save tr td textarea{
@@ -563,8 +586,13 @@ height:40px;
 	height: 230px;
 }
 #content{
+	
 	height: 200px;
+	
 }
+
+
+
 
 .border_save tr td .category{
 	width: 200px;
@@ -650,7 +678,6 @@ height:40px;
    opacity:0.9;
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
-   cursor: pointer;
 }
 
 .re_button{
@@ -665,5 +692,6 @@ height:40px;
    background-color:rgba(255,255,255,0.4);
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
-   cursor: pointer;
 }
+
+

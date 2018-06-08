@@ -10,7 +10,6 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
-<link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/oderstyle.css">
 
 
@@ -342,10 +341,10 @@ $(function() {
 	<div class="odberheader">
 		<h1>주문/결제</h1>
 		<div class="nav_map">
-		<span><strong><a href="">장바구니</a>
-		</strong></span>
+		<span><a href="">장바구니</a>
+		</span>
 		<span>></span>
-		<span><a href="">주문/결제</a></span>
+		<span><strong style="font-weight:600;"><a href="">주문/결제</a></strong></span>
 		<span>></span>
 		<span>완료</span>
 		</div>
@@ -381,7 +380,7 @@ $(function() {
 				 
 						<td class="product_info">
 							<a href="" >
-							<img src="/proimg/${pro_data.faceImg}" style="width: 92px">
+							<img src="/proimg/${pro_data.faceImg}" style="height: 92px">
 							</a>
 							<div class="product_dsc">
 								<strong class="product_bn">[농수산물 판매자] 법인명</strong>
@@ -443,14 +442,14 @@ $(function() {
 					<span class="reap ">
 					수령인
 					</span>
-					<input type="text" class="mem_name" value="수령인 수령인" > 
+					<input type="text" class="mem_name" value="" placeholder="수령인을 입력해주세요."> 
 				
 				</div>
 				<div class="delive_reci">
 					<span class="reap">
 					배송지명
 					</span>
-					<input type="text" class="mem_deliver" value="수령인 수령인" > 
+					<input type="text" class="mem_deliver" value="" placeholder="배송지명을 입력해주세요"> 
 				
 				</div>
 				
@@ -459,9 +458,9 @@ $(function() {
 					<span class="reap">
 					연락처
 					</span>
-					<input type="text" class="phone_a" value="010" > -
-					<input type="text" class="phone_b" value="0000" > -
-					<input type="text" class="phone_c" value="0000" > 
+					<input type="text" class="phone_a" value="" placeholder="010"> -
+					<input type="text" class="phone_b" value="" placeholder="0000"> -
+					<input type="text" class="phone_c" value="" placeholder="0000"> 
 					</div>
 				</div>
 				<div class="delive_reci deli_address">
@@ -480,7 +479,7 @@ $(function() {
 					<span class="reap">
 					배송 메모
 					</span>
-					<input type="text" class="deliver_memo" value="수령인 수령인" > 
+					<input type="text" class="deliver_memo" value="" placeholder="필요한 배송 사항 메모" > 
 				
 				</div>	
 				<p class="extra_info">
@@ -493,9 +492,17 @@ $(function() {
 			</div>
 			
 			
-			<div class="user_info">
+			<div class="price_sum">
 			
-			<h1>유저 정보</h1>
+				<h1>결제 금액</h1>
+				<div class="price_group">
+				<span class="price_sum_num">30000</span><p class="unit">원</p>
+				</div>
+				
+				<ul class="price_list">
+					<li><strong>총 상품금액</strong><p>(+) <em>30000</em>원</p></li>
+					<li><strong>배송비</strong><p>(+) <em>0</em>원</p></li>
+				</ul>
 			<button id="pay">결제하기</button>
 			<button id="pay11" name="pay11">통신하기</button>
 			</div>
