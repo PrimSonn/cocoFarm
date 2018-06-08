@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cocoFarm.dao.TestBidDao">
+
+	<select id="getBidList" resultType='cocoFarm.dto.TestBidDto'>
+	</select>
+
+	<select id="putBid" parameterType="cocoFarm.dto.TestBidDto" statementType="CALLABLE">
+	    {call BIDDER(
+	      #{auction_idx,jdbcType=NUMERIC,mode=IN}
+	      ,#{amount,jdbcType=NUMERIC,mode=IN}
+	      ,#{bidder_idx,jdbcType=NUMERIC,mode=IN}
+	      ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+	    )}
+	</select>
+</mapper>

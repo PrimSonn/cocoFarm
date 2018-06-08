@@ -1,0 +1,26 @@
+
+
+
+낙찰금 지불!
+	
+	해당 입찰 존재 확인
+	입찰자 인증
+	대상 경매의 상태 확인
+	최고입찰인지 확인 (대기열 활용)
+	
+	
+	
+	해당 입찰 처리
+	
+	해당 경매의 다른 입찰 처리
+	
+	해당 경매 처리
+
+성공하면 영수증 만들기
+
+<!--추가됨 https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+<dependency>
+		<groupId>org.codehaus.jackson</groupId>
+		<artifactId>jackson-mapper-asl</artifactId>
+	<version>1.9.13</version>
+</dependency>

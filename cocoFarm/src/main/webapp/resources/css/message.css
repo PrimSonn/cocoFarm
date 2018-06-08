@@ -1,0 +1,81 @@
+@charset "UTF-8";
+/*글짜 폰트  */
+@import url('https://fonts.googleapis.com/css?family=Amiko');
+/*font-family: 'Amiko', sans-serif;  */
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*font-family: 'Jeju Gothic', serif;*/
+
+select {
+    width: 120px;
+    height: 30px;
+    padding-left: 10px;
+    font-size: 14px;
+    color: #616161;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    background: rgba(255,255,255,0.6);
+    margin-left: 20px;
+}
+.messageForm h1 {
+	font-size: 18px;
+	margin: 20px;
+}
+
+
+table {
+    width: 100%;
+    margin: 20px auto;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 2px;
+    background-color: rgba(255,255,255,0.6);
+}
+ 
+table th {
+    padding: 15px;
+    border: none;
+    border-bottom: 2px solid #9e9e9e;
+    font-weight: normal;
+    text-align:center;
+    text-shadow: 0 1px #FFF;
+    vertical-align: middle;
+}
+ 
+table td {
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #DDD;
+    text-align: center;
+    vertical-align: baseline;
+}
+
+.imgSelect {
+	cursor: pointer;
+}
+
+.popupLayer {
+	position: absolute;
+	display: none;
+	background-color: rgba(255,255,255,0.6);
+	border: solid 2px #d0d0d0;
+	width: 80px;
+	height: 30px;
+	padding: 10px;
+}
+
+#writeInquiry_box {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+    background-color: rgba(255,255,255,0.5);
+    height: 483px;
+    width: 810px;
+    position: relative;
+    float: right;
+    left: 0px;
+    border-radius: 5px;
+}
+#writeInquiry_box h1 {
+	font-size: 18px;
+}
+#writeInquiry_box form {
+	margin-top: 10px;
+}

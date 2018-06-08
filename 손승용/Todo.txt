@@ -1,12 +1,6 @@
 ﻿
 https://stackoverflow.com/questions/8686507/how-to-add-a-hook-to-the-application-context-initialization-event
 
-마스터 데이터 : 거래단계 구분, 계정, 계정 형태 구분
-
-판매 구성
-쪽지 구성
-자유게시판
-그외 기능 확인
 
 ToDo (diagram)
 	data architecture
@@ -27,3 +21,31 @@ else
 		표준 도메인
 
 ERWin
+
+
+
+-----------------------------
+
+
+최소 입찰 단위에 대한 기준
+
+배송비..
+각종 수수료에 대한 기준
+입찰금 지불 만료시간에 대한 기준
+
+
+
+------------------------------
+
+
+
+경매 낙찰 결제
+
+
+
+
+
+
+
+
+---------------
