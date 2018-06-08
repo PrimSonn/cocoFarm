@@ -1,11 +1,10 @@
 package cocoFarm.controller;
 
-import java.io.IOException;
-import java.io.Writer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+
 
 import cocoFarm.dto.Option;
 import cocoFarm.dto.SaleOption;
@@ -100,11 +98,14 @@ public class PayController {
 	*/
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomplepots(String memname) {
+	public String paycomplepots(String memdeliver,String buyer_name,String memname) {
 //		model.addAttribute("memname", memname);
+		System.out.println(buyer_name);
 		
-		System.out.println("======================");
-		System.out.println(memname);
+		
+		
+		System.out.println("===배송==================");
+		System.out.println(memdeliver);
 		
 		return "{\"result\":\""+memname+"\"}";
 				

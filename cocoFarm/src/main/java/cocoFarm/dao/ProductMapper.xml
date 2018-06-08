@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -111,6 +111,7 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	
  	<!--hwanmin 2018_05_31 detailview select  -->
  	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
+
  		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
 		A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
 		B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,

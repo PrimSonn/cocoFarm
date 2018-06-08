@@ -467,6 +467,7 @@ background-position:center 0px;}
 	
 }
 
+
 .mypage_nav .mypage_topbusiness .mail_box img{
 	width:20px;  
 	padding: 5px 10px 0 0;
@@ -542,6 +543,7 @@ height:40px;
 	 border-collapse: collapse;
 	 border-spacing: 0px;
 	
+
 }
 .border_save tr:first-child{
 	 border-top: 0px; 
@@ -579,7 +581,6 @@ height:40px;
 #content{
 	
 	height: 200px;
-
 }
 
 
@@ -669,7 +670,6 @@ height:40px;
    opacity:0.9;
    box-shadow: 0 1px 3px rgba(0,0,0,.13);
    font-weight: 600;
-   cursor: pointer;
 }
 
 .re_button{
