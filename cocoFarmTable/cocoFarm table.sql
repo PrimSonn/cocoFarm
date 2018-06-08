@@ -733,13 +733,13 @@ end;
 /
 --트리거 설명: INFO_REG_DATE 가 없을 때 시스템 시간을 넣음, IDX 넣어줌
 
-create trigger BUSINESS_ACCOUNT_TRG
-	after insert on BUSINESS_INFO
-	for each row
-begin
-	update ACCOUNT set ACCOUNT_TYPE = 2 where IDX = :NEW.ACC_IDX;
-end;
-/
+--create trigger BUSINESS_ACCOUNT_TRG
+--	after insert on BUSINESS_INFO
+--	for each row
+--begin
+--	update ACCOUNT set ACCOUNT_TYPE = 2 where IDX = :NEW.ACC_IDX;
+--end;
+--/
 --트리거 설명: 사업자 등록증을 등록하면 계정타입번호 자동 전환.
 
 
@@ -4208,8 +4208,14 @@ end;
 
 
 
-
-
+create procedure TEST_PROC(num in number) is
+declare
+	type arr_type is varray(num) of number;
+	arr	arr_type;
+begin
+	select CODE into arr from BID_STATE_TYPE;
+end;
+/
 
 
 

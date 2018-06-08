@@ -21,16 +21,12 @@ public class ReceiptServiceImpl implements ReceiptService{
 	@Autowired ReceiptDao recptDao;
 
 	@Override
-	public boolean makeTempReceipt(Integer accountIdx, String paid_name, List<SaleOptSerializer> targetList) {
+	public OptReceiptMkr makeTempReceipt(Integer accountIdx, String paid_name, List<SaleOptSerializer> targetList) {
 		
 		OptReceiptMkr holder = new OptReceiptMkr(accountIdx,paid_name, targetList);
 		recptDao.tempRecpt(holder);
 		
-		if(holder.getIsDone()==1) {
-			return false;
-		}
-		
-		return true;
+		return holder;
 	}
 
 	@Override

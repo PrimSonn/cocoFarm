@@ -33,9 +33,6 @@
 			fetch SALE_CUR
 				bulk collect into saleArr;
 			close SALE_CUR;
-<!-- 			select distinct SALE_IDX bulk collect into saleArr from SALE_OPTION -->
-<!-- 				where IDX in <foreach item="optList" index="index" collection="optList" open="(" separator="," close=")"> -->
-<!-- 									#{optList.idx} </foreach> ; -->
 			
 			forall i in saleArr.first..saleArr.last
 				insert into SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) values (saleArr(i), mainRecpt);
