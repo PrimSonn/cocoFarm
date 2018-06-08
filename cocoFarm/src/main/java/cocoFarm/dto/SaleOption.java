@@ -2,7 +2,10 @@ package cocoFarm.dto;
 
 import java.util.Date;
 
-public class SaleOption {
+import cocoFarm.util.recptMaker.SaleOptSerializer;
+
+public class SaleOption implements SaleOptSerializer{
+	
 	private int pkIdx;		// SALE pk idx
 	private int idx;
 	private int saleIdx;
@@ -35,7 +38,7 @@ public class SaleOption {
 	public void setCategory(int category) {
 		this.category = category;
 	}
-	public int getIdx() {
+	public Integer getIdx() {
 		return idx;
 	}
 	public void setIdx(int idx) {

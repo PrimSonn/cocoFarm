@@ -24,27 +24,51 @@
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
 			
 <script type="text/javascript">
+
 /*총 가격 초기화  */
 var allsum=0;
 /* 총수량 초기화 */
 var allamount=0;
+var option={}
+var optionlist=new Array();
+
 <c:forEach items="${pro}" var="pro_data" varStatus="status1">
 var sumcon=[];
 var amountcon=[];
 var sum${status1.count}=0;
 var allamount${status1.count}=0;
+
+
+
+
+$(document).ready(function() {
+
+
 	<c:forEach items="${opt}" var="data" varStatus="status">
+
+//		console.log("idx : " + ${data.idx});
+	//console.log("amount : " + ${amount});
+	//console.log("amount11 : " + ${amount.get(status.index)});
+	//list 만들기 
+	option = new Object();
+	option.idx=${data.idx};
+	
+	option.proAmount=${amount.get(status.index)};
+	optionlist.push(option);
+
+
+	 
 	var option_num${status.index}=Number(${data.idx});
 	var option${status.index}=Number(${data.price});	
 	var amount${status.index}=Number(${amount.get(status.index)});
 	sum${status1.count}+=(option${status.index})*(amount${status.index});
 	allamount${status1.count}+=amount${status.index};
 	</c:forEach>
+
 	sumcon.push(sum${status1.count});
 	amountcon.push(allamount${status1.count});
-</c:forEach>
+	</c:forEach>
 
-$(document).ready(function() {
 	
 	
 	
@@ -109,11 +133,8 @@ $(document).ready(function() {
 	 var oder_num=today+unit_num+1541;
 	<c:set var="today" value="today"/>
 	<c:set var="oder_num" value="oder_num"/>
-	console.log(${today});
-	console.log("옵션번호"+option_num0);
-	console.log("주문번호"+oder_num);
+
 	
-	console.log("총 합산 금액"+${allsum});
 	
 	// iamport 변수 초기화
 	var IMP = window.IMP;
@@ -169,32 +190,9 @@ $(document).ready(function() {
 		console.log("배송지명"+mem_name);
 		console.log("배송지" +mem_deliver);
 		console.log("배송지" +mem_deliver);
-		
-		
+
 		requestPayment();
-	
-		
-		
-
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	});
-
-	
 });
 
 	
@@ -207,18 +205,24 @@ function save() {
 	/*수령장소  */
 	var mem_deliver=$(".mem_deliver").val();
 	
-	console.log("들어가긴 함?");
-	
+	 
+	 console.log(optionlist);
+
+		JSON.stringify(optionlist);
+		var dff=JSON.stringify(optionlist);
+		
+		console.log(dff); 
 		$.ajax({
            type : "POST",
            url : "/paycomple.do",
            dataType : "json",
            data : {
-        	  memname: mem_name
+        	   optionlist:dff,
+        	   memname: mem_name
            },
            success : function(data) {
               console.log(data.result);
-              
+          
               alert("성공");
            },
            error : function(e) {
@@ -506,7 +510,7 @@ $(function() {
 					<li><strong>배송비</strong><p>(+) <em>0</em>원</p></li>
 				</ul>
 			<button id="pay">결제하기</button>
-			<button id="pay11" name="pay11">통신하기</button>
+			<!-- <button id="pay11" name="pay11">통신하기</button> -->
 			</div>
 		</div>
 	
