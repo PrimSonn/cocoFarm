@@ -19,9 +19,11 @@ public class SaleOption {
 	private int category;
 	
 	//2018 06 01 hwanmin add
-	private int proAmount;      //사용자들이 상품 담은 총 개수
+	private Integer proAmount;      //사용자들이 상품 담은 총 개수
 	
-	public int getProAmount() {
+
+	
+	public Integer getProAmount() {
 		return proAmount;
 	}
 	public void setProAmount(int proAmount) {
