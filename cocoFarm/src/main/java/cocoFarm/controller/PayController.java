@@ -2,9 +2,9 @@ package cocoFarm.controller;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import com.google.gson.Gson;
 
 import cocoFarm.dto.Option;
 import cocoFarm.dto.SaleOption;
@@ -98,15 +98,33 @@ public class PayController {
 	*/
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomplepots(String memdeliver,String buyer_name,String memname) {
+	public String paycomplepots(String optionlist, String memdeliver,String buyer_name,String memname) {
 //		model.addAttribute("memname", memname);
-		System.out.println(buyer_name);
+		System.out.println(memname);
+		
+		Gson gson=new Gson();
+		List list = gson.fromJson(optionlist, List.class);
+		System.out.println("---optionlist---");
 		
 		
+		List<SaleOption> saleOptionList = new ArrayList<>();
+		for(int i=0; i<list.size(); i++) {
+			Map map = (Map) list.get(i);
+			SaleOption so = new SaleOption();
+			so.setIdx(((Double)map.get("idx")).intValue());
+			so.setProAmount( ((Double)map.get("proAmount")).intValue());
+			saleOptionList.add(so);
+			
+			
+//			System.out.println( map.get("idx"));
+//			System.out.println( map.get("proAmount"));
+		}
 		
-		System.out.println("===배송==================");
-		System.out.println(memdeliver);
+		for(SaleOption s : saleOptionList) {
+			System.out.println(s);
+		}
 		
+		System.out.println();
 		return "{\"result\":\""+memname+"\"}";
 				
 		
