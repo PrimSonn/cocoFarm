@@ -100,15 +100,15 @@
 						</tr>
 						
 <!-- 						<tr class="tr_back"	align="center"> -->
-<%-- 							<td>${list.idx }</td> --%>
-<%-- 							<td>${list.optionName }</td> --%>
-<%-- 							<td>${list.startAmount }</td> --%>
-<%-- 							<td>${list.price }원</td> --%>
-<%-- 							<td><a href="/product/update.do?idx=${list.idx }">수정</a>&nbsp;&nbsp; --%>
+<%-- 							<td>${optionList.idx }</td> --%>
+<%-- 							<td>${optionList.optionName }</td> --%>
+<%-- 							<td>${optionList.startAmount }</td> --%>
+<%-- 							<td>${optionList.price }원</td> --%>
+<%-- 							<td><a href="/product/update.do?idx=${optionList.idx }">수정</a>&nbsp;&nbsp; --%>
 <!-- 									<a href="#">삭제</a></td> -->
 <!-- 						</tr> -->
 						
-						<c:forEach items="${list }" var="i">
+						<c:forEach items="${optionList }" var="i">
 						<tr class="tr_back"	align="center">
 							<td>${i.idx }</td>
 							<td>${i.optionName }</td>

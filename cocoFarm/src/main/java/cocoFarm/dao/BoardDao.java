@@ -3,6 +3,7 @@ package cocoFarm.dao;
 import java.util.List;
 
 import cocoFarm.dto.Board;
+import cocoFarm.dto.BoardFile;
 import cocoFarm.util.Paging;
 
 public interface BoardDao {
@@ -22,6 +23,13 @@ public interface BoardDao {
 	public void update(Board board);
 	
 	public void delete(Board board);
+
+	public void insertFile(BoardFile boardFile);
+	
+	public BoardFile getFile(Board viewBoard);
+
+	
+
 	
 	
 

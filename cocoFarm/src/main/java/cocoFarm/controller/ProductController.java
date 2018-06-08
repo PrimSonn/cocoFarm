@@ -48,7 +48,7 @@ public class ProductController {
 		model.addAttribute("paging", paging);
 		
 		List optionList = productService.getPagingList(paging);
-		model.addAttribute("list", optionList);
+		model.addAttribute("optionList", optionList);
 //		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
 		return "Mypage/seller/productList";
@@ -57,7 +57,7 @@ public class ProductController {
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert() {
 		logger.info("insert.do get!");
-		return "Mypage/seller/productInsert2";
+		return "Mypage/seller/productInsert";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
@@ -143,7 +143,6 @@ public class ProductController {
 		List optionView = productService.optionView(saleOption.getSaleIdx());
 		model.addAttribute("optionView", optionView);
 		
-		
 //		session.setAttribute("saleIdx", productView.getIdx());
 		
 		return "Mypage/seller/productUpdate";
@@ -214,9 +213,15 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-	public String basketList(Option option, Model model) {
+	public String basketList(Option option
+							, Product product
+							, Model model) {
 		logger.info("cart.do get!");
 		List<SaleOption> saleList = option.getSaleOptions();
+		
+		model.addAttribute("productCart", product);
+		model.addAttribute("optionCart", option);
+		
 		return "Mypage/user/productCart";
 	}
 	

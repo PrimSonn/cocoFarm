@@ -14,6 +14,48 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
+<script>
+(function() {
+	var tableEl = document.querySelector('.tr_cartItem');
+	var mainHtml = tableEl.innerHTML;
+	var routerMap = {
+		'' : function() {
+			tableEl.innerHTML = mainHtml;
+		}
+	}
+	
+	function otherwise() {
+		tableEl.innerHTML =
+	    'Not Found';
+	}
+
+})
+
+function cartItems() {
+	var size = ${optionView }
+		
+}
+
+$(document).ready(function() {
+	
+	/* 장바구니 옵션 변경 버튼 */
+	$.ajax({
+		type: "POST"
+		, url: "/product/cart.do"
+		, data: {
+			// 장바구니 상품
+		}
+		, dataType: "json"
+		, success: function(data) {
+			
+		}
+	})
+	
+});
+
+
+</script>
+
 </head>
 <body>
 <div id="mypageheader">
@@ -63,6 +105,7 @@
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
+						<!-- nav-link는 load쓸 때 필요한 것 -->
 						<li class="nav-link"><a href="/product/insert.do">판매등록하기</a></li>
 						<li class="nav-link"><a href="/product">판매상품 조회/수정</a></li>
 						<li><a href="#">판매 결제 내역 조회 </a></li>
@@ -97,7 +140,7 @@
 				<th class="th_delivery">배송비</th>
 			</tr>
 			
-			<tr class="tr_back"	align="center">
+			<tr class="tr_back" id="tr_cartItem"	align="center">
 				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td>
 				<td>
 					<div>
@@ -108,34 +151,34 @@
 					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
 				</td>
 				<td>41,900원</td>
-				<td>2,500원</td>
-			</tr>
-			
-			<tr class="tr_back"	align="center">
-				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td>
-				<td>
-					<img src="//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2017-09-13%2Fd0dec3bc1c8248f39457849e7700f097.jpg" align="left" width="140px" height="140px" />
-					<div class="td_productName">김천 거봉포도 4kg</div><br>
-					<div class="td_optionName">옵션1</div>
-					<div class="td_optionName">옵션2</div>
-					<div class="td_optionName">옵션3</div>
-					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
-				</td>
-				<td>39,900원</td>
 				<td>무료</td>
 			</tr>
 			
-			<tr class="tr_back"	align="center">
-				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td>
-				<td>
-					<img src=//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2018-05-29%2F88430634ff4f429ca0c2d4f4a7dca337.jpg  align="left" width="140px" height="140px" />
-					<div class="td_productName">고령 멜론 4종 혼합세트</div><br>
-					<div class="td_optionName">옵션1</div>
-					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
-				</td>
-				<td>29,900원</td>
-				<td>무료</td>
-			</tr>
+<!-- 			<tr class="tr_back"	align="center"> -->
+<!-- 				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td> -->
+<!-- 				<td> -->
+<!-- 					<img src="//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2017-09-13%2Fd0dec3bc1c8248f39457849e7700f097.jpg" align="left" width="140px" height="140px" /> -->
+<!-- 					<div class="td_productName">김천 거봉포도 4kg</div><br> -->
+<!-- 					<div class="td_optionName">옵션1</div> -->
+<!-- 					<div class="td_optionName">옵션2</div> -->
+<!-- 					<div class="td_optionName">옵션3</div> -->
+<!-- 					<div style="float: right;"><button class="td_update">옵션 변경</button></div> -->
+<!-- 				</td> -->
+<!-- 				<td>39,900원</td> -->
+<!-- 				<td>무료</td> -->
+<!-- 			</tr> -->
+			
+<!-- 			<tr class="tr_back"	align="center"> -->
+<!-- 				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td> -->
+<!-- 				<td> -->
+<!-- 					<img src=//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2018-05-29%2F88430634ff4f429ca0c2d4f4a7dca337.jpg  align="left" width="140px" height="140px" /> -->
+<!-- 					<div class="td_productName">고령 멜론 4종 혼합세트</div><br> -->
+<!-- 					<div class="td_optionName">옵션1</div> -->
+<!-- 					<div style="float: right;"><button class="td_update">옵션 변경</button></div> -->
+<!-- 				</td> -->
+<!-- 				<td>29,900원</td> -->
+<!-- 				<td>무료</td> -->
+<!-- 			</tr> -->
 		
 			<tr class="tr_back"	align="center">
 				<th><input type="checkbox" id="chk_all" name="chk_all"></th>
