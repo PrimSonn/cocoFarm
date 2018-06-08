@@ -23,13 +23,18 @@ public class MainController {
 		return "main/cocomain";
 	}
 	
+	@RequestMapping(value="main.do",method=RequestMethod.POST)
+	public String mainPost() {
+		return helloWorld();
+	}
+	
 	//판매 상세 정보
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
 		System.out.println(productService.getProMainList());
 		model.addAttribute("seller",(productService.getProMainList()));
 		
-		return "Main/mainseller/sellermain";
+		return "main/mainseller/sellermain";
 	}
 	
 	
@@ -39,7 +44,7 @@ public class MainController {
 		System.out.println(product.getSearch_name());
 		model.addAttribute("seller",(productService.getSerchList(product)));
 		
-		return "Main/mainseller/sellermain";
+		return "main/mainseller/sellermain";
 	}
 	
 	
@@ -69,7 +74,7 @@ public class MainController {
 		}
 		/*System.out.println(productService.getDetailList(product).getFaceImg());*/
 		
-		return "Main/mainseller/sellerDetail";
+		return "main/mainseller/sellerDetail";
 	}
 	
 	
