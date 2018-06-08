@@ -19,6 +19,7 @@
 			<url>http://maven.jahia.org/maven2</url>
 		</repository>
 	</repositories>
+	
 	<dependencies>
 
 		<!--추가됨 https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->

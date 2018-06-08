@@ -45,8 +45,10 @@ public class BoardController {
 	@RequestMapping(value="/board/write.do", method=RequestMethod.POST)
 	public String wirteProcess(Board board, HttpSession session) {		
 		
+
 		board.setAcc_idx((Integer) session.getAttribute("idx"));							
 		boardService.write(board);			
+
 		
 		return "redirect:/board/list.do";	
 	}
