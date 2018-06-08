@@ -4,7 +4,7 @@ import java.util.Date;
 
 import cocoFarm.util.recptMaker.SaleOptSerializer;
 
-public class SaleOption implements SaleOptSerializer{
+public class SaleOption implements SaleOptSerializer {
 	
 	private int pkIdx;		// SALE pk idx
 	private int idx;

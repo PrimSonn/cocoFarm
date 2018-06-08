@@ -20,7 +20,7 @@ public class MainController {
 	
 	@RequestMapping(value="/main.do",method=RequestMethod.GET)
 	public String helloWorld() {
-		return "cocomain";
+		return "main/cocomain";
 	}
 	
 	//판매 상세 정보

@@ -54,7 +54,7 @@ $(document).ready(function() {
 <h1>농부 스토리 작성</h1>
 <hr>
 
-<form action="/board/write.do" method="post">
+<form action="/board/write.do" method="post" enctype="multipart/form-data">
 
 <!-- 	<div class="form-group"> -->
 <!-- 		<label for="writer">작성자</label> -->
@@ -76,10 +76,15 @@ $(document).ready(function() {
 		<textarea rows="10" style="width:100%" id="content" name="content"></textarea>
 	</div>
 	
+	<div class="form-group">
+		<label for="fileup">첨부 파일</label>
+		<input type="file" id="fileup" name="fileup" />
+	</div>
+	
 	<div class="text-center">
 		<button id="btnWrite" class="btn btn-primary">작성</button>
 		<input type="reset" id="btnCancel" class="btn btn-danger" value="취소" />
-	</div>
+	</div>	
 	
 </form>
 
