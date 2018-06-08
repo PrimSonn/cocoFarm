@@ -53,17 +53,19 @@ table, th {
 		<td>${i.acc_idx }</td>
 		<td></td>
 		<td><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.title }</a></td>
-		<td></td>
+		<td><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.content }</a></td>
 		<td>
 			<fmt:formatDate value="${i.written_date }"
 			pattern="yy-MM-dd" />
 		</td>
-		<td>${i.hit }</td>		
+		<td>${i.hit }</td>				
 	</tr>	
-	
 </c:forEach>
 </tbody>		
 </table>
+
+<div>
+</div>
 
 <button id="btnMain" class="btn pull-left">메인으로</button>
 		

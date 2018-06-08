@@ -1,18 +1,26 @@
 package cocoFarm.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import cocoFarm.dao.BoardDao;
 import cocoFarm.dto.Board;
+import cocoFarm.dto.BoardFile;
 import cocoFarm.util.Paging;
 
 @Service
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired BoardDao boardDao;
+	@Autowired ServletContext context;
 	
 	@Override
 	public List getList() {
@@ -31,7 +39,37 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void write(Board board) {
-		boardDao.write(board);		
+		
+		boardDao.write(board);
+		
+		System.out.println("boardService:"+board);
+		
+		MultipartFile file = board.getFileup();
+		
+		if (file != null && !file.isEmpty()) {
+			
+			// 파일 업로드
+			String path = context.getRealPath("upload");
+			String filename = file.getOriginalFilename()+"_"+UUID.randomUUID().toString().split("-")[0];
+			File dest = new File(path, filename);
+			System.out.println(dest);
+			try {
+				file.transferTo(dest);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			// DB 기록
+			BoardFile boardFile = new BoardFile();
+			boardFile.setAcc_idx(board.getAcc_idx());
+			boardFile.setOriginal_filename(file.getOriginalFilename());
+			boardFile.setStored_filename(filename);  
+			
+			boardDao.insertFile(boardFile);
+			
+		}
 	}
 
 	@Override
@@ -50,5 +88,12 @@ public class BoardServiceImpl implements BoardService {
 	public void delete(Board board) {
 		boardDao.delete(board);		
 	}
+
+	@Override
+	public BoardFile getFileup(Board viewBoard) {
+		return boardDao.getFile(viewBoard);
+	}
+
+	
 	
 }

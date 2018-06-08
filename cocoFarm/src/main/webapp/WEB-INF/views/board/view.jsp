@@ -24,6 +24,14 @@
 	   pattern="yy-MM-dd HH:mm:ss" /><br>
 조회수 : ${view.hit }<br>
 
+첨부파일: 
+${boardFile.original_filename }<br>
+${boardFile.stored_filename }<br>
+${boardFile.upload_date }<br>
+${boardFile.acc_idx }<br>
+
+
+
 <div class="text-center">	
 	<a href="/board/list.do"><img src="/img/notice/list.gif" width="82" height="31" alt="목록보기"></a>
 		

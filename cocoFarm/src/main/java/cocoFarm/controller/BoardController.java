@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cocoFarm.dto.Board;
+import cocoFarm.dto.BoardFile;
 import cocoFarm.service.BoardService;
 import cocoFarm.util.Paging;
 
@@ -30,7 +31,7 @@ public class BoardController {
 		
 		// 페이징 처리된 게시글 목록	
 		List list = boardService.getPagingList(paging);		// 전체 게시글 조회
-		model.addAttribute("list", list);
+		model.addAttribute("list", list);		
 		
 		return "board/list";
 	}
@@ -41,17 +42,16 @@ public class BoardController {
 	@RequestMapping(value="/board/write.do", method=RequestMethod.POST)
 	public String wirteProcess(Board board, HttpSession session) {
 		
-//		try {
-			Integer type = (Integer)session.getAttribute("type");
-			Integer sessionIdx = (Integer)session.getAttribute("idx");
+		System.out.println("board1:"+board);
+		
+		board.setAcc_idx((Integer) session.getAttribute("idx"));
+					
+		System.out.println("board:"+board);
+		
+		boardService.write(board);
+		
+		
 			
-			if( sessionIdx!=null && board.getTitle()!=null &&type!=null && type<3 && !board.getTitle().equals("")) {
-				board.setAcc_idx((Integer)session.getAttribute("idx"));
-				boardService.write(board);
-			}//----> 작성자 타입이 3 이하 (판매자 계정 혹은 관리자 등..) 이 아니면 글쓰기를 단순하게 막아놓음. 브라우저 쪽에 있는 성공 메세지를 수정해야 함.
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		return "redirect:/board/list.do";	
 	}
@@ -59,11 +59,18 @@ public class BoardController {
 	@RequestMapping(value="/board/view.do", method=RequestMethod.GET)
 	public String view(Board viewBoard, Model model) {
 		
+		// 게시글 번호가 1보다 작으면 목록으로 보내기
 		if (viewBoard.getAcc_idx() < 1) {
 			return "redirect:/board/list.do";
 		}
+		
+		// 게시글 상세 정보 전달
 		viewBoard = boardService.boardView(viewBoard);
 		model.addAttribute("view", viewBoard);
+		
+		// 첨부 파일 정보
+		BoardFile boardFile = boardService.getFileup(viewBoard);
+		model.addAttribute("boardFile", boardFile);
 		
 		return "board/view";
 	}

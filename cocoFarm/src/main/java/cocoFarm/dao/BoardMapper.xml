@@ -52,6 +52,15 @@
 	WHERE ACC_IDX = #{acc_idx }
 </update>
 
+<insert id="insertFile" parameterType="cocoFarm.dto.BoardFile">
+  	INSERT INTO TODAYS_FARMER_file (ACC_IDX, ORIGINAL_FILENAME, STORED_FILENAME, UPLOAD_DATE)
+  	VALUES (#{acc_idx }, #{original_filename }, #{stored_filename }, sysdate)
+ </insert>
+
+<select id="getFile" parameterType="cocoFarm.dto.Board" resultType="cocoFarm.dto.BoardFile">
+ SELECT ACC_IDX, ORIGINAL_FILENAME, STORED_FILENAME, UPLOAD_DATE FROM TODAYS_FARMER_file
+ WHERE acc_idx = #{acc_idx }
+</select>
 
 
 </mapper>

@@ -2,6 +2,8 @@ package cocoFarm.dto;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Board {
 	
 	private Integer acc_idx;
@@ -13,6 +15,14 @@ public class Board {
 	private Integer hit;
 	private Integer recommend;
 	
+	private MultipartFile fileup;
+			
+	public MultipartFile getFileup() {
+		return fileup;
+	}
+	public void setFileup(MultipartFile fileup) {
+		this.fileup = fileup;
+	}
 	public Integer getAcc_idx() {
 		return acc_idx;
 	}
