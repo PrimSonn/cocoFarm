@@ -29,7 +29,7 @@ public class MainController {
 		System.out.println(productService.getProMainList());
 		model.addAttribute("seller",(productService.getProMainList()));
 		
-		return "main/mainseller/sellermain";
+		return "Main/mainseller/sellermain";
 	}
 	
 	
@@ -39,7 +39,7 @@ public class MainController {
 		System.out.println(product.getSearch_name());
 		model.addAttribute("seller",(productService.getSerchList(product)));
 		
-		return "main/mainseller/sellermain";
+		return "Main/mainseller/sellermain";
 	}
 	
 	
@@ -69,7 +69,7 @@ public class MainController {
 		}
 		/*System.out.println(productService.getDetailList(product).getFaceImg());*/
 		
-		return "main/mainseller/sellerDetail";
+		return "Main/mainseller/sellerDetail";
 	}
 	
 	

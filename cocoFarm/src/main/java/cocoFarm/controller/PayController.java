@@ -105,10 +105,11 @@ public class PayController {
 	*/
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname) {
+	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname,String text) {
 //		model.addAttribute("memname", memname);
 //		System.out.println(memname);
 		
+		System.out.println("확인 결제 확인"+text);
 		Gson gson=new Gson();
 		List list = gson.fromJson(optionlist, List.class);
 //		System.out.println("---optionlist---");
@@ -154,7 +155,8 @@ public class PayController {
 		}
 		
 		
-		return "{\"result\":\""+memname+"\"}";
+		
+		return "{\"MainRcpt\":\""+result.getMainRcpt()+"\",\"isDone\":\""+result.getIsDone()+"\"}";
 		
 		
 //		try {

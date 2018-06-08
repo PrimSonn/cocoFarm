@@ -197,13 +197,14 @@ $(document).ready(function() {
 
 	
 
-
+	var MainRcpt;
 // 결제 요청 - 결제 모듈 불러오기
 function save() {
 	/*수령인 */
 	var mem_name =$(".mem_name").val();
 	/*수령장소  */
 	var mem_deliver=$(".mem_deliver").val();
+	
 	
 	 
 	 console.log(optionlist);
@@ -221,8 +222,8 @@ function save() {
         	   memname: mem_name
            },
            success : function(data) {
-              console.log(data.result);
-          
+              console.log(data.MainRcpt);
+              MainRcpt=data.MainRcpt;
               alert("성공");
            },
            error : function(e) {
@@ -235,12 +236,12 @@ function save() {
 
 
 function requestPayment() {
+		
 	save();
-	   
 	   IMP.request_pay({
 	    pg : 'html5_inicis', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
 	    pay_method : 'card', //결제방식 - 'samsung':삼성페이, 'card':신용카드, 'trans':실시간계좌이체, 'vbank':가상계좌, 'phone':휴대폰소액결제
-	    merchant_uid : 'merchant_'+new Date().getTime(), //고유주문번호 - random, unique
+	    merchant_uid : MainRcpt, //고유주문번호 - random, unique
 	    name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 	    amount : ${allsum}, //결제금액 - 필수항목
 	    buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
@@ -265,9 +266,9 @@ function requestPayment() {
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					
-					imp_uid : rsp.imp_uid,
-					buyer_name :rsp.buyer_name
+					text:rsp.merchant_uid
+					//imp_uid : rsp.imp_uid,
+					//buyer_name :rsp.buyer_name 
 					}
 			}).done(function(data) {
 				//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
