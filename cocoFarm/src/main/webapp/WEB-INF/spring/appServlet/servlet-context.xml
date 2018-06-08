@@ -19,10 +19,8 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/img/" mapping="/img/**"/>
 	<resources location="/resources/css/" mapping="/css/**"/>
+	<resources mapping="/proimg/**" location="/resources/proimg/" />
 	<resources location="/resources/img/auction_img/" mapping="/auction_img/**"/>
-<!--  아래는 이전 위치, 쓰지 마세요. 혹시 이전에 쓰던 위치 남아있는거 있나 확인용으로 남겨둡니다.-->
-<!-- 	<resources location="/imgs/" mapping="/img/**"/> -->
-<!-- 	<resources location="/css/" mapping="/css/**"/> -->
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -32,7 +30,7 @@
 	</beans:bean>
 
 
-<!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
+
 	
 	<interceptors>
 		<interceptor>
@@ -42,6 +40,7 @@
 		</interceptor>
 	</interceptors>
 	
+<!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->
 
 <!-- 	MultipartResolver	다운로드 클래스(스프링 commmons) 설정 -->
 	<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -50,9 +49,11 @@
 <!-- 		최대 10MB -->
 		<beans:property name="maxUploadSize" value='10485760' />
 	</beans:bean>
-	
+
+<!--	<beans:bean class='org.springframework.web.servlet.view.BeanNameViewResolver'>	-->
+<!--		<beazns:property name='order' value='0'/>	-->
+<!--	</beans:bean>	-->
+
 	<context:component-scan base-package="cocoFarm.controller,cocoFarm.service" />
-	
-	
 	
 </beans:beans>

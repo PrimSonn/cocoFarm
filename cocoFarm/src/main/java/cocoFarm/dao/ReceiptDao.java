@@ -1,0 +1,10 @@
+package cocoFarm.dao;
+
+import cocoFarm.dto.OptReceiptMkr;
+import cocoFarm.dto.RecptCallParamHolder;
+
+public interface ReceiptDao {
+	
+	public void tempRecpt(OptReceiptMkr paramHolder);
+	public RecptCallParamHolder callTempRecptMkr(RecptCallParamHolder paramHolder);
+}

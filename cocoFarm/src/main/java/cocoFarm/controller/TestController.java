@@ -13,13 +13,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cocoFarm.dao.TestBidDao;
 import cocoFarm.dto.TestBidDto;
+import cocoFarm.service.ReceiptService;
 
 @SuppressWarnings("unused")
 @Controller
 public class TestController {
 
 	@Autowired TestBidDao bidDao;
-//	
+	@Autowired ReceiptService recptSvc;
+	
+	@RequestMapping(value="recptSvc",method=RequestMethod.GET)
+	public ModelAndView recptSvc(ModelAndView mv) {
+		
+		recptSvc.test();
+		mv.setViewName("Main/cocomain");
+		return mv;
+	}
+	
 //	@RequestMapping(value="main",method=RequestMethod.GET)
 //	public ModelAndView mainGet(ModelAndView mv) {
 //		

@@ -28,7 +28,7 @@ public class CocoRunner implements Runnable{
 		LocalDateTime wakeTime = null;
 		
 		while (RunnerManager.SHOULDRUN) {
-			System.out.println("\r\n-------"+name+" Start Running!--------");//----------------testcode
+			System.out.println("-------"+name+" Start Running!--------");//----------------testcode
 			TimerDto timer = timerSupplier.get();
 			sleepLength = timer == null ? sleepLength : (ChronoUnit.MILLIS.between(timer.getDbTime().toLocalDateTime(), timer.getNextCheck().toLocalDateTime()));
 			timer = null;//Mybatis 특성상 새 인스턴스를 계속해서 넣어야 하기 때문에 매번 생성하고 다시 없애야 함.
@@ -44,11 +44,11 @@ public class CocoRunner implements Runnable{
 			try {
 				wakeTime = LocalDateTime.now().plusNanos(sleepLength*1000000L);
 			} catch(DateTimeException e) {
-				System.out.println("\r\n========================= "+name+" get wakeTime failed =====================");
+				System.out.println("========================= "+name+" get wakeTime failed =====================");
 				break;
 			}
 			
-			System.out.println("first sleep attempt on "+name+" [sleepLength: "+sleepLength+", wakeTime: "+wakeTime+"]");
+			System.out.println(name+": first sleep attempt on "+name+" [sleepLength: "+sleepLength+", wakeTime: "+wakeTime+"]");
 			
 			try {
 				Thread.sleep(sleepLength);
@@ -57,7 +57,7 @@ public class CocoRunner implements Runnable{
 					sleepLength =  ChronoUnit.MILLIS.between(now, wakeTime) > 0 ? ChronoUnit.MILLIS.between(now, wakeTime) : 0;
 					Thread.sleep(sleepLength);
 				}
-				System.out.println("\r\n"+name+" Thread Awake!" + LocalDateTime.now());
+				System.out.println(""+name+" Thread Awake!" + LocalDateTime.now());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}// sleep try ends

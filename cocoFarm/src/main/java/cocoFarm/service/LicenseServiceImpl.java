@@ -16,7 +16,6 @@ public class LicenseServiceImpl implements LicenseService {
 	public void license(LicenseDto license) {
 		
 		licenseDao.insertLicense(license);
-		
 	}
 	
 	@Override
@@ -25,5 +24,4 @@ public class LicenseServiceImpl implements LicenseService {
 		licenseDao.deleteLicense(license);
 		
 	}
-	
 }
