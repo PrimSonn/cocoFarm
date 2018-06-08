@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class BoardFile {
 	
-	private int acc_idx;
+	private Integer acc_idx;
 	private String original_filename;
 	private String stored_filename;
 	private Date upload_date;
 
-	public int getAcc_idx() {
+	public Integer getAcc_idx() {
 		return acc_idx;
 	}
 
-	public void setAcc_idx(int acc_idx) {
+	public void setAcc_idx(Integer acc_idx) {
 		this.acc_idx = acc_idx;
 	}
 

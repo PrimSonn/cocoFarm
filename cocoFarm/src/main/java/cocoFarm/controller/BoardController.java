@@ -31,8 +31,11 @@ public class BoardController {
 		
 		// 페이징 처리된 게시글 목록	
 		List list = boardService.getPagingList(paging);		// 전체 게시글 조회
-		model.addAttribute("list", list);		
+		model.addAttribute("list", list);
 		
+		System.out.println("list:"+list.get(0));
+		
+				
 		return "board/list";
 	}
 	
@@ -40,18 +43,10 @@ public class BoardController {
 	public void write() {}
 	
 	@RequestMapping(value="/board/write.do", method=RequestMethod.POST)
-	public String wirteProcess(Board board, HttpSession session) {
+	public String wirteProcess(Board board, HttpSession session) {		
 		
-		System.out.println("board1:"+board);
-		
-		board.setAcc_idx((Integer) session.getAttribute("idx"));
-					
-		System.out.println("board:"+board);
-		
-		boardService.write(board);
-		
-		
-			
+		board.setAcc_idx((Integer) session.getAttribute("idx"));							
+		boardService.write(board);			
 		
 		return "redirect:/board/list.do";	
 	}

@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
 		if (file != null && !file.isEmpty()) {
 			
 			// 파일 업로드
-			String path = context.getRealPath("upload");
+			String path = context.getRealPath("/resources/img/todays_farmer_upload");
 			String filename = file.getOriginalFilename()+"_"+UUID.randomUUID().toString().split("-")[0];
 			File dest = new File(path, filename);
 			System.out.println(dest);

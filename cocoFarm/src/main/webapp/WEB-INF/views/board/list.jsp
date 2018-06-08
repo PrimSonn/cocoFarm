@@ -48,27 +48,29 @@ table, th {
 	</tr>
 </thead>
 <tbody>
+
 <c:forEach items="${list }" var="i">
 	<tr>
-		<td>${i.acc_idx }</td>
 		<td></td>
+		<td></td>
+		
 		<td><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.title }</a></td>
 		<td><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.content }</a></td>
 		<td>
-			<fmt:formatDate value="${i.written_date }"
-			pattern="yy-MM-dd" />
+			<fmt:formatDate value="${i.written_date }" pattern="yy-MM-dd" />
 		</td>
 		<td>${i.hit }</td>				
+		<td><a href="/board/view.do?acc_idx=${i.acc_idx }"><img src="/img/todays_farmer_upload/${i.stored_filename }"></a></td>
 	</tr>	
 </c:forEach>
 </tbody>		
 </table>
 
-<div>
-</div>
 
-<button id="btnMain" class="btn pull-left">메인으로</button>
-		
+
+
+
+<button id="btnMain" class="btn pull-left">메인으로</button>		
 <button id="btnWrite" class="btn pull-right">글쓰기</button>
 
 

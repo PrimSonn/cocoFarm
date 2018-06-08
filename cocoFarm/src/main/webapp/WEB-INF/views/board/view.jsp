@@ -30,7 +30,7 @@ ${boardFile.stored_filename }<br>
 ${boardFile.upload_date }<br>
 ${boardFile.acc_idx }<br>
 
-
+<img src="/img/todays_farmer_upload/${boardFile.stored_filename }">
 
 <div class="text-center">	
 	<a href="/board/list.do"><img src="/img/notice/list.gif" width="82" height="31" alt="목록보기"></a>
@@ -41,6 +41,5 @@ ${boardFile.acc_idx }<br>
 </div>
 
 </div> <!-- container End -->
-
 
 </body></html>

@@ -6,27 +6,36 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Board {
 	
-	private Integer acc_idx;
+	private int acc_idx;
 	private String title;
 //	private String writerid;
 	private String content;
 	private Date written_date;
 	private String main_img;
-	private Integer hit;
-	private Integer recommend;
+	private int hit;
+	private int recommend;
 	
 	private MultipartFile fileup;
-			
+	
+	private String stored_filename;
+				
+	public String getStored_filename() {
+		return stored_filename;
+	}
+	public void setStored_filename(String stored_filename) {
+		this.stored_filename = stored_filename;
+	}
+	
 	public MultipartFile getFileup() {
 		return fileup;
 	}
 	public void setFileup(MultipartFile fileup) {
 		this.fileup = fileup;
 	}
-	public Integer getAcc_idx() {
+	public int getAcc_idx() {
 		return acc_idx;
 	}
-	public void setAcc_idx(Integer acc_idx) {
+	public void setAcc_idx(int acc_idx) {
 		this.acc_idx = acc_idx;
 	}
 	public String getTitle() {
@@ -59,16 +68,16 @@ public class Board {
 	public void setMain_img(String main_img) {
 		this.main_img = main_img;
 	}
-	public Integer getHit() {
+	public int getHit() {
 		return hit;
 	}
-	public void setHit(Integer hit) {
+	public void setHit(int hit) {
 		this.hit = hit;
 	}
-	public Integer getRecommend() {
+	public int getRecommend() {
 		return recommend;
 	}
-	public void setRecommend(Integer recommend) {
+	public void setRecommend(int recommend) {
 		this.recommend = recommend;
 	}
 	

@@ -5,12 +5,14 @@
 <mapper namespace="cocoFarm.dao.BoardDao">
 
 <sql id="selectBoard">
- 	SELECT ACC_IDX, title, content, written_date, main_img, hit, ISDEL FROM TODAYS_FARMER where ISDEL = 0
+ 	SELECT acc_idx, title, content, written_date, main_img, hit, ISDEL,
+ 	(SELECT stored_filename FROM TODAYS_FARMER_file WHERE acc_idx=t.acc_idx) AS stored_filename	
+ 	FROM TODAYS_FARMER t where ISDEL = 0 		
 </sql>
 
 <select id="selectAll" resultType="cocoFarm.dto.Board">
  	<include refid="selectBoard" />
- 	ORDER BY written_date desc
+ 	ORDER BY written_date desc 	
 </select>
 
 <select id="countAll" resultType="int">
@@ -25,7 +27,7 @@
 
 <insert id="write" parameterType="cocoFarm.dto.Board">
 	INSERT INTO TODAYS_FARMER (ACC_IDX, title, content) 
-	VALUES (#{acc_idx}, #{title }, #{content })
+	VALUES (#{acc_idx }, #{title }, #{content })
 </insert> 
 
 <select id="selectBoardByAcc_idx" parameterType="cocoFarm.dto.Board" resultType="cocoFarm.dto.Board">
@@ -41,9 +43,8 @@
 </update>
 
 <update id="delete" parameterType="cocoFarm.dto.Board">
-	update TODAYS_FARMER set ISDEL = 1 where ACC_IDX = #{acc_idx}
-<!-- 	DELETE TODAYS_FARMER -->
-<!-- 	WHERE ACC_IDX = #{acc_idx } -->
+	DELETE TODAYS_FARMER 
+ 	WHERE ACC_IDX = #{acc_idx } 
 </update>
 
 <update id="updateHit" parameterType="cocoFarm.dto.Board">
