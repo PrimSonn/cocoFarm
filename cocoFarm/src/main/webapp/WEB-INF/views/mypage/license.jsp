@@ -64,9 +64,9 @@ function onlyNumber(obj) {
 		</tr>
 		<tr></tr><tr></tr>
 		<tr>
-			<td id="label" for="headquarter_addr"><label>본점 소재지 : </label></td>
-			<td><input type="text" id="headquarter_addr" name="headquarter_addr" placeholder="주소를입력해주세요(시,구,동)" size="30px" /></td>
-			<td><input type="text" id="headquarter_detailed_addr" name="headquarter_detailed_addr" placeholder="상세주소" size="30px" /></td>
+			<td id="label" for="headhquarter_addr"><label>본점 소재지 : </label></td>
+			<td><input type="text" id="headhquarter_addr" name="headhquarter_addr" placeholder="주소를입력해주세요(시,구,동)" size="30px" /></td>
+			<td><input type="text" id="headhquarter_detailed_addr" name="headhquarter_detailed_addr" placeholder="상세주소" size="30px" /></td>
 		</tr>
 		<tr></tr><tr></tr>
 		<tr>

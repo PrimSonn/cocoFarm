@@ -1,23 +1,27 @@
 package cocoFarm.dto;
 
+import java.sql.Timestamp;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class LicenseDto {
 
-	private int acc_idx;						//ȸ�� IDX(�α�������,����ڵ���� �Ϸ��� ȸ���� IDX)
-	private int business_license_code;			// ����ڹ�ȣ
-	private String business_reg_date;			// ���������
-	private String corporation_name;			// ���θ�
-	private String representative;				// ��ǥ�� �̸�
-	private String business_addr;				// ����� ������ : �ּ�
-	private String business_detailed_addr;		// ����� ������ : ���ּ�
-	private String headquarter_addr;			// ���� ������ : �ּ�
-	private String headquarter_detailed_addr;	// ���� ������ : ���ּ�
-	private String business_category;			// ����� ���� : ����
-	private String business_type;				// ����� ���� : ����
-	private MultipartFile license_img;			// ����ڵ���� �̹��� �޾ƿ��� ��Ƽ��Ʈ����
-	private String license_storedName;			// ����ڵ���� �̹��� ��ȯ �̸�(DB�� ����Ǵ� �̸�)
-	
+	private int idx;							// 사업자등록 DB의 idx 번호
+	private int acc_idx;						// 회원 idx(등록증을 신청한 회원)
+	private long business_license_code;			// 사업자등록번호
+	private String business_reg_date;			// 개업연월일
+	private String corporation_name;			// 법인명(단체명)
+	private String representative;				// 대표자
+	private String business_addr;				// 사업장소재지 : 주소
+	private String business_detailed_addr;		// 사업장소재지 : 상세주소
+	private String headhquarter_addr;			// 본점소재지 : 주소
+	private String headhquarter_detailed_addr;	// 본점소재지 : 상세주소
+	private String business_category;			// 사업의종류 : 업태
+	private String business_type;				// 사업의종류 : 종류
+	private MultipartFile license_img;			// 사업자등록증 이미지
+	private String license_storedName;			// 사업자등록증 이미지 이름(db에 들어가는 uuid 붙은 이름)
+	private Timestamp info_reg_date;			// 홈페이지에 등록한 일자
+	private String name;						// DB에서 조회해온 회원의 이름
 	
 	
 
@@ -56,11 +60,11 @@ public class LicenseDto {
 		this.license_img = license_img;
 	}
 
-	public int getBusiness_license_code() {
+	public long getBusiness_license_code() {
 		return business_license_code;
 	}
 
-	public void setBusiness_license_code(int business_license_code) {
+	public void setBusiness_license_code(long business_license_code) {
 		this.business_license_code = business_license_code;
 	}
 
@@ -96,20 +100,20 @@ public class LicenseDto {
 		this.business_detailed_addr = business_detailed_addr;
 	}
 
-	public String getHeadquarter_addr() {
-		return headquarter_addr;
+	public String getHeadhquarter_addr() {
+		return headhquarter_addr;
 	}
 
-	public void setHeadquarter_addr(String headquarter_addr) {
-		this.headquarter_addr = headquarter_addr;
+	public void setHeadhquarter_addr(String headhquarter_addr) {
+		this.headhquarter_addr = headhquarter_addr;
 	}
 
-	public String getHeadquarter_detailed_addr() {
-		return headquarter_detailed_addr;
+	public String getHeadhquarter_detailed_addr() {
+		return headhquarter_detailed_addr;
 	}
 
-	public void setHeadquarter_detailed_addr(String headquarter_detailed_addr) {
-		this.headquarter_detailed_addr = headquarter_detailed_addr;
+	public void setHeadhquarter_detailed_addr(String headhquarter_detailed_addr) {
+		this.headhquarter_detailed_addr = headhquarter_detailed_addr;
 	}
 
 	public String getBusiness_category() {
@@ -128,6 +132,21 @@ public class LicenseDto {
 		this.business_type = business_type;
 	}
 
+	public Timestamp getInfo_reg_date() {
+		return info_reg_date;
+	}
+	
+	public void setInfo_reg_date(Timestamp info_reg_date) {
+		this.info_reg_date = info_reg_date;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public String toString() {
@@ -138,13 +157,26 @@ public class LicenseDto {
 				+ ", representative : " + representative
 				+ ", business_addr : " + business_addr
 				+ ", business_detailed_addr : " + business_detailed_addr
-				+ ", headquarter_addr : " + headquarter_addr
-				+ ", headquarter_detailed_addr : " + headquarter_detailed_addr
+				+ ", headquarter_addr : " + headhquarter_addr
+				+ ", headquarter_detailed_addr : " + headhquarter_detailed_addr
 				+ ", business_category : " + business_category
 				+ ", business_type : " + business_type
 				+ ", license_storedName : " + license_storedName
+				+ ", info_reg_date : " + info_reg_date
+				+ ", name : " + name
 				+ " ]";
 		
 	}
+
+	public int getIdx() {
+		return idx;
+	}
+
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+
+
+
 	
 }

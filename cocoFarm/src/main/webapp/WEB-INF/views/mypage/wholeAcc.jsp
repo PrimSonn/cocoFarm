@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,7 +17,7 @@
 <!-- 공지사항 글 등록 -->
 <!-- 오늘의 농부 글 등록 -->
 <div>
-	<table>
+	<table style="border: 1px solid;">
 		<thead>
 			<tr>
 				<th>이름</th>
@@ -42,7 +42,7 @@
 					<td>${accList.addr }</td>
 					<td>${accList.detailed_addr }</td>
 					<td>${accList.account_type }</td>
-					<td>${accList.reg_date }</td>
+					<td><fmt:formatDate value="${accList.reg_date }" pattern="yyyy-MM-dd"/></td>
 				</tr>
 			</c:forEach>
 		</tbody>

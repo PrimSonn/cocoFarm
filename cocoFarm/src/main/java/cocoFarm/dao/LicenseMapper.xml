@@ -10,7 +10,7 @@
 	<insert id="insertLicense" parameterType="cocoFarm.dto.LicenseDto">
 		INSERT INTO business_info(ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REPRESENTATIVE, BUSINESS_ADDR, BUSINESS_DETAILED_ADDR, HEADHQUARTER_ADDR, HEADHQUARTER_DETAILED_ADDR, BUSINESS_CATEGORY, BUSINESS_TYPE, REG_DATE, LICENSE_IMG)
 		VALUES(#{acc_idx }, #{business_license_code }, #{corporation_name }, #{representative }, #{business_addr }, #{business_detailed_addr }
-		, #{headquarter_addr }, #{headquarter_detailed_addr }, #{business_category }, #{business_type }, #{business_reg_date }, #{license_storedName })
+		, #{headhquarter_addr }, #{headhquarter_detailed_addr }, #{business_category }, #{business_type }, #{business_reg_date }, #{license_storedName })
 	</insert>
 
 	<delete id="deleteLicense" parameterType="cocoFarm.dto.LicenseDto">

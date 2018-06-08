@@ -121,6 +121,14 @@ $(document).ready(function() {
 					<ul>
 						<li><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
 					</ul>
+					<c:if test="${sessionScope.type eq 1 }">
+					<p class="navtitle_05"><img alt="" src="">관리자 메뉴</p>
+					<ul>
+						<li><a href="/mypage/wholeAcc.do">전체회원조회</a></li>
+						<li><a href="/mypage/delWholeAcc.do">탈퇴회원조회</a></li>
+						<li><a href="/mypage/licenseList.do">판매자 등록 신청 조회 및 승인</a></li>
+					</ul>
+					</c:if>
 				</div>
 			</div>
 			

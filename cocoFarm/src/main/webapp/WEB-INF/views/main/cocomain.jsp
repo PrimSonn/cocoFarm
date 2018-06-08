@@ -21,10 +21,10 @@
 		</ul>
 		
 		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
+			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="#">회원가입</a></li>
 			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
+			<li><a href="/mypage/message.do">마이페이지</a></li>	
 		</ul>
 	</div>
 	</div>
