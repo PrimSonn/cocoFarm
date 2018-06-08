@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,13 +17,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import cocoFarm.dto.OptReceiptMkr;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.service.ProductService;
+import cocoFarm.service.ReceiptService;
+import cocoFarm.util.recptMaker.SaleOptSerializer;
 
 @Controller
 public class PayController {
+	
 	@Autowired ProductService productService;
+	@Autowired ReceiptService receiptSvc;
 
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.GET)
@@ -98,7 +105,7 @@ public class PayController {
 	*/
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomplepots(String optionlist, String memdeliver,String buyer_name,String memname) {
+	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname) {
 //		model.addAttribute("memname", memname);
 		System.out.println(memname);
 		
@@ -107,7 +114,7 @@ public class PayController {
 		System.out.println("---optionlist---");
 		
 		
-		List<SaleOption> saleOptionList = new ArrayList<>();
+		List<SaleOptSerializer> saleOptionList = new ArrayList<>();
 		for(int i=0; i<list.size(); i++) {
 			Map map = (Map) list.get(i);
 			SaleOption so = new SaleOption();
@@ -120,13 +127,30 @@ public class PayController {
 //			System.out.println( map.get("proAmount"));
 		}
 		
-		for(SaleOption s : saleOptionList) {
+		for(SaleOptSerializer s : saleOptionList) {
 			System.out.println(s);
 		}
 		
 		System.out.println();
+		
+		OptReceiptMkr result=null;
+		
+		if(session.getAttribute("idx")!=null) {
+			result = receiptSvc.makeTempReceipt((Integer)session.getAttribute("idx"), null, saleOptionList);
+		}else {
+			//return to errpage
+		}
+		
+		if(result!=null) {
+			System.out.println("isDone: "+result.getIsDone());
+			System.out.println("MainRcpt: "+result.getMainRcpt());
+		}else {
+			System.out.println("failed!!!!");
+		}
+		
+		
 		return "{\"result\":\""+memname+"\"}";
-				
+		
 		
 //		try {
 //			writer.write("{\"result\":"+ memname +"}");
