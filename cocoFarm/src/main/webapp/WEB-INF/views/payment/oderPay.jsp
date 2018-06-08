@@ -113,26 +113,28 @@ $(document).ready(function() {
 	console.log("옵션번호"+option_num0);
 	console.log("주문번호"+oder_num);
 	
-	
-	
-	
-	
-	
-	
+	console.log("총 합산 금액"+${allsum});
 	
 	// iamport 변수 초기화
 	var IMP = window.IMP;
 	IMP.init('imp97619342');	// 가맹점 식별코드
 	
+	//
+	
+	//콤마찍기
+	function comma(str) {
+	    str = String(str);
+	    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	}
+
+	function uncomma(str) {
+	    str = String(str);
+	    return str.replace(/[^\d]+/g, '');
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
+	$(".price_sum_num").text(comma(${allsum}));
+	$(".sum_total").text(comma(${allsum}));
 	// 결제 모듈 불러오기
 	
 	
@@ -496,11 +498,11 @@ $(function() {
 			
 				<h1>결제 금액</h1>
 				<div class="price_group">
-				<span class="price_sum_num">30000</span><p class="unit">원</p>
+				<span class="price_sum_num"></span><p class="unit">원</p>
 				</div>
 				
 				<ul class="price_list">
-					<li><strong>총 상품금액</strong><p>(+) <em>30000</em>원</p></li>
+					<li><strong>총 상품금액</strong><p>(+)<em class="sum_total"></em>원</p></li>
 					<li><strong>배송비</strong><p>(+) <em>0</em>원</p></li>
 				</ul>
 			<button id="pay">결제하기</button>
