@@ -48,6 +48,15 @@ public class ReceiptServiceImpl implements ReceiptService{
 //		holder.getMainRcpt();
 	}
 
+	@Override
+	public Integer recptCheck(RecptCallParamHolder paramHolder) {
+		
+		recptDao.checkRecpt(paramHolder);
+		
+		return paramHolder.getIsDone();
+	}
+
+	
 //	@Override
 //	public boolean MakeTempReceipt(Integer accountIdx, List<Serializer> targetList) {
 //	

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cocoFarm.dao.TestBidDao;
 import cocoFarm.dto.TestBidDto;
 import cocoFarm.service.ReceiptService;
+import cocoFarm.service.RestSvc;
 
 @SuppressWarnings("unused")
 @Controller
@@ -21,6 +22,7 @@ public class TestController {
 
 	@Autowired TestBidDao bidDao;
 	@Autowired ReceiptService recptSvc;
+	@Autowired RestSvc restSvc;
 	
 	@RequestMapping(value="recptSvc",method=RequestMethod.GET)
 	public ModelAndView recptSvc(ModelAndView mv) {
@@ -40,6 +42,15 @@ public class TestController {
 		
 		session.setAttribute("idx", Integer.valueOf(0));
 		session.setAttribute("type", Integer.valueOf(1));
+		mav.setViewName("main/cocomain");
+		return mav;
+	}
+	
+	@RequestMapping(value="restTest",method=RequestMethod.GET)
+	public ModelAndView restTest(ModelAndView mav) {
+		
+		
+		System.out.println("-------------------------------\r\nrestSvc result: "+restSvc.checkPayment("imp_862596445680", 0)+"\r\n");
 		mav.setViewName("main/cocomain");
 		return mav;
 	}

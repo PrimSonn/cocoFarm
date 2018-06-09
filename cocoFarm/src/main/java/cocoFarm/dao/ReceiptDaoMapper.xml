@@ -60,6 +60,15 @@
 		end;
 	</select>
 	
+	<select id="checkRecpt" parameterType = 'cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE'>
+		{call CHECK_TEMP_RECPT(
+			 #{accIdx,jdbcType=NUMERIC,mode=IN}
+		     ,#{intArg,jdbcType=NUMERIC,mode=IN}
+		     ,#{intArg2,jdbcType=NUMERIC,mode=IN}
+		     ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
 	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
 		declare
 			mainRecpt number;

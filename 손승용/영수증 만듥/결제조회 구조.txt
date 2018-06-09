@@ -1,0 +1,12 @@
+
+
+"response":
+	{"amount":15000
+		,"cancel_amount":0
+		,"cancel_history":[]
+		,"cancel_reason":null
+		,"cancel_receipt_urls":[]
+		,"cancelled_at":0
+		,"imp_uid":"imp_796796903542"
+		,"merchant_uid":"63"
+		,"status":"paid",}

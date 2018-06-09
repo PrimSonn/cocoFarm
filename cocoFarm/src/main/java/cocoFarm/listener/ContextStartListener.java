@@ -25,7 +25,7 @@ public class ContextStartListener implements ApplicationListener<ContextRefreshe
 
 		if(!hasDone) {// 왜인지 모르게 자꾸 두 번씩 실행되서 한번만 실행되게 만듦
 			
-//			System.out.println("\r\n\r\n===========================contextStartListener Fired!!===========================\r\n");
+			System.out.println("\r\n\r\n===========================contextStartListener Fired!!===========================\r\n");
 			RunnerManager.init(timerDao);
 			hasDone=true;
 			
