@@ -1854,8 +1854,8 @@ comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코
 
 create table SALE_EVALUATION (
 
-	SALE_IDX			number(10,0)
-	,MAIN_RECPT_IDX		number(13,0)
+	SALE_IDX				number(10,0)
+	,MAIN_RECPT_IDX			number(13,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
