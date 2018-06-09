@@ -169,23 +169,26 @@ public class PayController {
 		
 		
 		/*Gson gson = new Gson();
-		JsonObject jsonObject = new JsonObject();*/
-		
+		JsonObject jsonObject = new JsonObject();*/		
 //		try {
 //		
 //			writer.write("{\"result\":"+ memname +"}");
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-	
 //		List<SaleOption> payList = option.getSaleOptions();
-		
 //		System.out.println(payList.get(0).getIdx());
-		
-		
-		
 		//return "payment/oderPay";
 	}
 	
+	@RequestMapping(value="/pay.do",method=RequestMethod.POST)
+	@ResponseBody
+	public String paycomple(String text) {
+		System.out.println("번호"+text);
+		
+		
+		return "{\"MainRcpt\":\""+1111+"\"}";
+	}
+	
+	
 }
-

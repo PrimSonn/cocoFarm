@@ -24,28 +24,19 @@
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
 			
 <script type="text/javascript">
-
 /*총 가격 초기화  */
 var allsum=0;
 /* 총수량 초기화 */
 var allamount=0;
 var option={}
 var optionlist=new Array();
-
 <c:forEach items="${pro}" var="pro_data" varStatus="status1">
 var sumcon=[];
 var amountcon=[];
 var sum${status1.count}=0;
 var allamount${status1.count}=0;
-
-
-
-
 $(document).ready(function() {
-
-
 	<c:forEach items="${opt}" var="data" varStatus="status">
-
 //		console.log("idx : " + ${data.idx});
 	//console.log("amount : " + ${amount});
 	//console.log("amount11 : " + ${amount.get(status.index)});
@@ -55,8 +46,6 @@ $(document).ready(function() {
 	
 	option.proAmount=${amount.get(status.index)};
 	optionlist.push(option);
-
-
 	 
 	var option_num${status.index}=Number(${data.idx});
 	var option${status.index}=Number(${data.price});	
@@ -64,11 +53,9 @@ $(document).ready(function() {
 	sum${status1.count}+=(option${status.index})*(amount${status.index});
 	allamount${status1.count}+=amount${status.index};
 	</c:forEach>
-
 	sumcon.push(sum${status1.count});
 	amountcon.push(allamount${status1.count});
 	</c:forEach>
-
 	
 	
 	
@@ -133,7 +120,6 @@ $(document).ready(function() {
 	 var oder_num=today+unit_num+1541;
 	<c:set var="today" value="today"/>
 	<c:set var="oder_num" value="oder_num"/>
-
 	
 	
 	// iamport 변수 초기화
@@ -147,7 +133,6 @@ $(document).ready(function() {
 	    str = String(str);
 	    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 	}
-
 	function uncomma(str) {
 	    str = String(str);
 	    return str.replace(/[^\d]+/g, '');
@@ -185,19 +170,14 @@ $(document).ready(function() {
 		
 		//각각의 idx = ${data.idx} // saleOptions[${status.index}].proAmount
 		//각각의 수량 amount= amount${status.index}
-
 		
 		console.log("배송지명"+mem_name);
 		console.log("배송지" +mem_deliver);
 		console.log("배송지" +mem_deliver);
-
 		requestPayment();
 	});
 });
-
 	
-
-
 function requestPayment() {
 	
 	var Main_Rcpt = -1;
@@ -209,7 +189,6 @@ function requestPayment() {
 	var mem_deliver=$(".mem_deliver").val();
 	
 	console.log(optionlist);
-
 	JSON.stringify(optionlist);
 	var dff=JSON.stringify(optionlist);
 		
@@ -235,7 +214,6 @@ function requestPayment() {
 		   alert("실패"); 
 	   }
 	});
-
 	console.log('--------------------');
 	console.log('Main_Rcpt: '+Main_Rcpt);
 	console.log('is_Done: '+is_Done);
@@ -265,7 +243,7 @@ function requestPayment() {
 						// 결제 완료 처리 로직
 						//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
 						jQuery.ajax({
-									url: "/main.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
+									url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
 								type: 'POST',
 								dataType: 'json',
 								data: {
@@ -299,57 +277,15 @@ function requestPayment() {
 		//임시 영수증 삭제 로직 추가.
 	}
 }
-
 $(function() {
 	$(".address_btn").postcodifyPopUp(); 
 });
-
-
 </script>
 </head>
 <body>
-<div id="header_detail">
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="/product/insert.do">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
-	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<!--2018년 5월 25일 hwanmin 추가   -->
-				<div class="search">
-					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
-						</button>
-					</form> 
-				</div>
-		
-		</div>
-		<div id="header_nav">
-			<ul class="nav">
-				<li><a href="/seller.do">농수산물</a></li>
-				<li><a href="#">경매</a></li>
-				<li><a href="#">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
-				<li><a href="#">공지사항</a></li>
-				<li><a href="#">회사소개</a></li>
-			</ul>
-		</div>
-	</div>
-</div>
 <div class="container">
 	<div class="odberheader">
 		<h1>주문/결제</h1>
