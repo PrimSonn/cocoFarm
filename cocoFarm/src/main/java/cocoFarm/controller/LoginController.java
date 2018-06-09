@@ -36,7 +36,7 @@ public class LoginController {
 		System.out.println(session.getAttribute("idx"));
 		System.out.println(session.getAttribute("type")); 
 
-		mav.setViewName("/main/cocomain");
+		mav.setViewName("main/cocomain");
 		return mav;
 	}
 	

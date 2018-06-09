@@ -23,6 +23,11 @@ public class MainController {
 		return "main/cocomain";
 	}
 	
+	@RequestMapping(value="main.do",method=RequestMethod.POST)
+	public String mainPost() {
+		return helloWorld();
+	}
+	
 	//판매 상세 정보
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
