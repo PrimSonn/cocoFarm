@@ -4051,6 +4051,7 @@ begin
 	savepoint START_TRANSACTION;
 
 	select 0 into isDone from DUAL;
+	result_code:= 0;
 	
 	select count(1) into null_checker from MAIN_RECEIPT where IDX = merchant_uid;
 	
