@@ -10,12 +10,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.function.BiFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cocoFarm.dto.RecptCallParamHolder;
+
+interface TriFunc<T,U,V,R> {
+	R apply(T arg,U arg2,V arg3);
+}
 
 
 @Service
@@ -78,7 +81,7 @@ public class RestSvcImpl implements RestSvc{
 
 		try {
 			
-			BiFunction<String,String,String> post= ( req, url )-> {
+			TriFunc<String,String,String,String> post= ( req, url, accToken)-> {
 				String body = null;
 				HttpURLConnection conn;
 				try {
@@ -87,7 +90,9 @@ public class RestSvcImpl implements RestSvc{
 					conn.setDoOutput(true);
 					conn.setRequestProperty("Accept-Charset", CHARSET);
 					conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + CHARSET);
-					
+					if(accToken !=null && !accToken.equals("")) {
+						conn.setRequestProperty("Authorization", accToken);
+					}
 					try (OutputStream output = conn.getOutputStream()) {
 					    output.write(req.getBytes(CHARSET));
 					}
@@ -103,10 +108,10 @@ public class RestSvcImpl implements RestSvc{
 			};
 			
 			
-			String req = String.format("imp_key=%s&imp_secret=%s"
+			final String tokenReq = String.format("imp_key=%s&imp_secret=%s"
 										, URLEncoder.encode(IMP_KEY, CHARSET)
 										,URLEncoder.encode(IMP_SECRET, CHARSET));
-			String accToken = tokenParser(post.apply(req, GET_TOKEN), "access_token");
+			String accToken = tokenParser(post.apply(tokenReq, GET_TOKEN,null), "access_token");
 			if(accToken ==null || accToken == "") return -106;
 			//-------------여기까지 접속용 토큰을 받아옴, 아래 부터는 토큰을 이용해 결제 정보를 받아옴.
 			
@@ -165,14 +170,18 @@ public class RestSvcImpl implements RestSvc{
 						reason = "error";
 						break;
 				}
-				accToken = tokenParser(post.apply(req, GET_TOKEN), "access_token");
+				accToken = tokenParser(post.apply(tokenReq, GET_TOKEN,null), "access_token");
 				if(accToken ==null || accToken == "") return -111;
 				
-				req = String.format("imp_uid=%s&reason=%s, args)"
+				String refundReq = String.format("imp_uid=%s&reason=%s, args)"
 									,URLEncoder.encode(imp_uid, CHARSET)
 									,URLEncoder.encode(reason, CHARSET));
-				body = post.apply(req, CANCEL_PAYMENT);
+				body = post.apply(refundReq, CANCEL_PAYMENT,accToken);
 				if (body==null||body.equals("")) return 112;
+				
+				
+				
+				
 				
 				/*
 				 * 

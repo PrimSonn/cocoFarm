@@ -4040,6 +4040,7 @@ is
 	acc_idx				ACCOUNT.IDX%type;
 	sale_title			SALE.TITLE%type;
 	pay_code			MAIN_RECEIPT.PAYMENT_CODE%type;
+	result_code			number;
 
 	err_code			number;
 	err_message			varchar2(255);
@@ -4050,30 +4051,31 @@ begin
 	savepoint START_TRANSACTION;
 
 	select 0 into isDone from DUAL;
+	
 	select count(1) into null_checker from MAIN_RECEIPT where IDX = merchant_uid;
 	
 	if (null_checker =0) then
-		select -1 into isDone from DUAL;
+		result_code := -1;
 	else
 		select BUYER_IDX, STATE_CODE, MONEY_AMOUNT, PAYMENT_CODE into acc_idx, null_checker, money_amount, pay_code from MAIN_RECEIPT where IDX = merchant_uid;
 		
 		if (null_checker <>0) then
 			if (pay_code = in_pay_code) then
-				select 2 into isDone from DUAL;
+				result_code := 2;
 			else
-				select -2 into isDone from DUAL;
+				result_code := -2;
 			end if;
 			
 		elsif(acc_idx <> in_acc_idx) then
-			select -3 into isDone from DUAL;
+			result_code := -3;
 		elsif (money_amount <> in_price) then
 			delete MAIN_RECEIPT where IDX = merchant_uid and BUYER_IDX = in_acc_idx;
-			select -4 into isDone from DUAL;
+			result_code := -4;
 		else
 			select count(1) into null_checker from SALE_OPTION O inner join SALE_OPTION_RECEIPT R on O.IDX = R.SALE_OPTION_IDX where O.ISDEL <>0;
 			
 			if (null_checker <>0) then 
-				select -5 into isDone from DUAL;
+				result_code := -5;
 			else
 				savepoint OPT_UPDATE;
 				
@@ -4082,7 +4084,7 @@ begin
 					
 					if (recpt_amount > SALE_OPTION_ROW.LEFT_AMOUNT ) then
 						rollback to OPT_UPDATE;
-						select -6 into isDone from DUAL;
+						result_code := -6;
 						exit;
 					end if;
 					
@@ -4094,19 +4096,19 @@ begin
 					
 				end loop;
 				
-				if (isDone = 0) then
+				if (result_code = 0) then
 					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
 					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
-					select 1 into isDone from DUAL;
-				else
-					select -7 into isDone from DUAL;
+					result_code := 1;
+				elsif(result_code is null) then
+					result_code := -7;
 				end if;
 			end if;
-			
 			---경매 부분 추가 가능 부분.
 		end if;
 	end if;
 	
+	select result_code into isDone from DUAL;
 	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CHECK_TEMP_RECPT',isDone,'merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx);
 	
 	commit;

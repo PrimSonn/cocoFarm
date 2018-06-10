@@ -50,7 +50,7 @@ public class TestController {
 	public ModelAndView restTest(ModelAndView mav) {
 		
 		
-		System.out.println("-------------------------------\r\nrestSvc result: "+restSvc.checkPayment("imp_862596445680", 0)+"\r\n");
+		System.out.println("-------------------------------\r\nrestSvc result: "+restSvc.checkPayment("imp_1234325435", 0)+"\r\n");
 		mav.setViewName("main/cocomain");
 		return mav;
 	}
