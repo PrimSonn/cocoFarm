@@ -33,6 +33,12 @@ public class RecptCallParamHolder {
 		this.isDone=isDone;
 	}
 	
+	public RecptCallParamHolder(Integer accIdx, String arg, Integer intArg, Integer isDone) {
+		this.accIdx=accIdx;
+		this.arg=arg;
+		this.intArg=intArg;
+		this.isDone=isDone;
+	}
 	
 	public Integer getAccIdx() {
 		return accIdx;

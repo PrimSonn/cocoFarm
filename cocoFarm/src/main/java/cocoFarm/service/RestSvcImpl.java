@@ -111,11 +111,12 @@ public class RestSvcImpl implements RestSvc{
 			
 			if(!tokenParser(body,"status").equals("paid")) return -20;
 			
-			Integer merchant_uid;
+			String merchant_uid;
+			merchant_uid = tokenParser(body,"merchant_uid");
 			Integer moneyAmount;
 			try {
 				moneyAmount = Integer.parseInt(tokenParser(body, "amount"));
-				merchant_uid = Integer.parseInt(tokenParser(body,"merchant_uid"));
+				
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 				return 108;

@@ -301,6 +301,7 @@ drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
 
 drop trigger MAIN_RECEIPT_TRG;
+drop function MAIN_RECPT_IDX_FUNC;
 drop sequence MAIN_RECEIPT_SEQ;
 drop table MAIN_RECEIPT cascade constraints;
 
@@ -322,7 +323,7 @@ drop table MAIN_RECEIPT_STATE_TYPE;
 
 drop table PAYMENT_TYPE cascade constraints;
 
-drop trigger BUSINESS_ACCOUNT_TRG;
+drop trigger BUSINESS_ACCOUNT_TRG;--deprecated
 drop trigger BUSINESS_INFO_TRG;
 drop sequence BUSINESS_INFO_SEQ;
 drop table BUSINESS_INFO cascade constraints;
@@ -851,7 +852,7 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 
 create table MAIN_RECEIPT (
 
-	IDX					number(13,0)	unique
+	IDX					number(30,0)	unique
 	,BUYER_IDX			number(8,0)
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
 	,MONEY_AMOUNT		number(13,0)	not null
@@ -874,6 +875,13 @@ create table MAIN_RECEIPT (
 
 create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
 
+create function MAIN_RECPT_IDX_FUNC return number
+is
+begin
+	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100000000000000 + MAIN_RECEIPT_SEQ.nextval;
+end;
+/
+
 create trigger MAIN_RECEIPT_TRG
 	before insert on MAIN_RECEIPT
 	for each row
@@ -881,7 +889,7 @@ declare
 	accName ACCOUNT.NAME%type;
 begin
 	if(:NEW.IDX is null) then
-		:NEW.IDX := MAIN_RECEIPT_SEQ.nextval;
+		:NEW.IDX := MAIN_RECPT_IDX_FUNC;
 	end if;
 	if(:NEW.PAYMENT_TYPE_CODE is null) then
 		:NEW.PAYMENT_TYPE_CODE := 0;
@@ -923,6 +931,7 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 
 
 --drop trigger MAIN_RECEIPT_TRG;
+--drop function MAIN_RECPT_IDX_FUNC;
 --drop sequence MAIN_RECEIPT_SEQ;
 --drop table MAIN_RECEIPT cascade constraints;
 
@@ -1764,7 +1773,7 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 create table SALE_RECEIPT (
 
 	SALE_IDX			number(10,0)
-	,MAIN_RECPT_IDX		number(13,0)
+	,MAIN_RECPT_IDX		number(30,0)
 
 	,constraint SALE_RECPT_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
 	,constraint SALE_RECPT_SALE_FK foreign key (SALE_IDX) references SALE (IDX)
@@ -1785,7 +1794,7 @@ comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합
 
 create table SALE_OPTION_RECEIPT (
 
-	MAIN_RECPT_IDX			number(13,0)
+	MAIN_RECPT_IDX			number(30,0)
 	,SALE_IDX				number(10,0)
 	,SALE_OPTION_IDX		number(11,0)
 
@@ -1859,7 +1868,7 @@ comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코
 create table SALE_EVALUATION (
 
 	SALE_IDX				number(10,0)
-	,MAIN_RECPT_IDX			number(13,0)
+	,MAIN_RECPT_IDX			number(30,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
@@ -2570,7 +2579,7 @@ create table BID_CONTRACT_RECEIPT (
 	,BID_AMOUNT				number(11,0)
 
 	,MAIN_RECPT_BUYER		number(8,0)			not null
-	,MAIN_RECPT_IDX			number(13,0)		not null
+	,MAIN_RECPT_IDX			number(30,0)		not null
 	,CONTRACT_AMOUNT		number(10,0)		not null
 	
 	,TITLE					nvarchar2(40)		not null
@@ -4033,6 +4042,7 @@ is
 begin
 	savepoint START_TRANSACTION;
 
+	select 0 into isDone from DUAL;
 	select count(1) into null_checker from MAIN_RECEIPT where IDX = merchant_uid;
 	
 	if (null_checker =0) then
@@ -4072,7 +4082,7 @@ begin
 					
 				end loop;
 				
-				if (isDone is null) then
+				if (isDone = 0) then
 					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
 					update MAIN_RECEIPT set STATE_CODE = 1 where IDX = merchant_uid;
 					select 1 into isDone from DUAL;
@@ -4128,10 +4138,10 @@ insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REP
 --판매글 2개
 --이미지가 있는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT, FACE_IMG, MAIN_IMG)
-			values (2, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
+			values (4, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
 --이미지가 없는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
-			values (3, '판매글제목1', '원산지원산지','글내용글내용');
+			values (5, '판매글제목1', '원산지원산지','글내용글내용');
 
 --판매옵션, 판매글 1번에 3개, 2번에 1개.
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
