@@ -423,6 +423,18 @@ background-position:center 0px;}
 	
 	
 }
+.mypage_box .mypage_topbusiness .mypagetitle03{
+	
+	background-color:#f2bb13;
+	opacity:0.8;
+	color:#fff;
+	height: 50px;
+	width: 100%;
+	text-align: center;
+	
+	
+}
+
 .mypage_box .mypage_topbusiness h2{
 	padding-top:5px;
 	font-size: 13px;
@@ -796,3 +808,22 @@ height:40px;
 .buy_button, .addcart_button, .talk_button {
 	cursor: pointer;
 }
+
+/* 2018년 6월 10일 추가 */
+.choose_color3{
+	color:#fff;
+	background-color: #f2bb13;
+	padding: 7px 22px !important;
+	margin-top: 5px !important;
+	border-radius: 3px;
+	
+}
+.choose_color2{
+	color:#fff;
+	background-color: #7ccef1;
+	padding: 7px 22px !important;
+	margin-top: 5px !important;
+	border-radius: 3px;
+	
+}
+

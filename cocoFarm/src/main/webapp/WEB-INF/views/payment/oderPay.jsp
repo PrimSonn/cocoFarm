@@ -243,12 +243,12 @@ function requestPayment() {
 						// 결제 완료 처리 로직
 						//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
 						jQuery.ajax({
-									url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
+								url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
 								type: 'POST',
 								dataType: 'json',
 								data: {
-									text:rsp.merchant_uid
-									//imp_uid : rsp.imp_uid,
+ 									//merchant_uid : rsp.merchant_uid,
+									imp_uid : rsp.imp_uid,
 									//buyer_name :rsp.buyer_name 
 									}
 							}).done(function(data) {
@@ -263,6 +263,28 @@ function requestPayment() {
 								} else {
 									//[3] 아직 제대로 결제가 되지 않았습니다.
 									//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
+									/* 
+									$.ajax({
+										   type : "POST",
+										   url : "/payfail.do",
+										   dataType : "json",
+										   async: false,
+										   data : {
+											   imp_uid : rsp.imp_uid
+										   },
+											success : function(data) {
+											console.log('data.MainRcpt: '+data.MainRcpt);
+												Main_Rcpt=data.MainRcpt;
+											is_Done = data.isDone;
+											alert("취소시 에이젝스 성공");
+										   },
+										   error : function(e) {
+											  console.log(e.responseText);
+											   
+											   alert("취소시 에이젝스 실패"); 
+										   }
+										});
+									 */	
 								}
 							});
 				

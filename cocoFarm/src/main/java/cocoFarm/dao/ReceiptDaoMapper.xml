@@ -23,7 +23,7 @@
 		begin
 			savepoint START_TRANSACTION;
 			
-			mainRecpt := MAIN_RECEIPT_SEQ.nextval;
+			mainRecpt := MAIN_RECPT_IDX_FUNC;
 			<foreach item='optList' collection='optList'>
 				select (PRICE * #{optList.proAmount} + totMoney) money into totMoney from SALE_OPTION where IDX = #{optList.idx};
 			</foreach>
@@ -58,6 +58,16 @@
 			insert into PLOGGER (NAME, RESULTCODE, ERR_CODE, ERR_MESSAGE) values ('tempRecpt', 0, err_code, err_message);
 			commit;
 		end;
+	</select>
+	
+	<select id="checkRecpt" parameterType = 'cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE'>
+		{call CHECK_TEMP_RECPT(
+			 #{arg,jdbcType=NUMERIC,mode=IN}
+			 ,#{accIdx,jdbcType=NUMERIC,mode=IN}
+		     ,#{arg2,jdbcType=NUMERIC,mode=IN}
+		     ,#{intArg,jdbcType=NUMERIC,mode=IN}
+		     ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
 	</select>
 	
 	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >

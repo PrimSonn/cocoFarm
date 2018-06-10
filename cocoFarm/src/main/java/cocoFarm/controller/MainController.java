@@ -78,4 +78,13 @@ public class MainController {
 	}
 	
 	
+	//판매 상세 정보
+	@RequestMapping(value="/companyinfo.do",method=RequestMethod.GET)
+	public String companyInfo(Product product, Model model) {
+		
+		return "companyinfo/comintro";
+	}
+	
+	
+	
 }

@@ -154,6 +154,7 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure CHECK_TEMP_RECPT;
 
 drop procedure CANCEL_AUCTION;
 
@@ -300,6 +301,7 @@ drop sequence CATEGORY_SEQ;
 drop table CATEGORY cascade constraints;
 
 drop trigger MAIN_RECEIPT_TRG;
+drop function MAIN_RECPT_IDX_FUNC;
 drop sequence MAIN_RECEIPT_SEQ;
 drop table MAIN_RECEIPT cascade constraints;
 
@@ -321,7 +323,7 @@ drop table MAIN_RECEIPT_STATE_TYPE;
 
 drop table PAYMENT_TYPE cascade constraints;
 
-drop trigger BUSINESS_ACCOUNT_TRG;
+drop trigger BUSINESS_ACCOUNT_TRG;--deprecated
 drop trigger BUSINESS_INFO_TRG;
 drop sequence BUSINESS_INFO_SEQ;
 drop table BUSINESS_INFO cascade constraints;
@@ -828,6 +830,7 @@ create table MAIN_RECEIPT_STATE_TYPE (
 
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '지불 전', '임시 저장용 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '지불 완료', '활성화된 영수증');
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 대기중 - 취소', '임시영수증 상태에서 취소됨');
 
 commit;
 
@@ -849,7 +852,8 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 
 create table MAIN_RECEIPT (
 
-	IDX					number(13,0)	unique
+	IDX					number(30,0)	unique
+	,PAYMENT_CODE		nvarchar2(45)
 	,BUYER_IDX			number(8,0)
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
 	,MONEY_AMOUNT		number(13,0)	not null
@@ -872,6 +876,13 @@ create table MAIN_RECEIPT (
 
 create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
 
+create function MAIN_RECPT_IDX_FUNC return number
+is
+begin
+	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100000000000000 + MAIN_RECEIPT_SEQ.nextval;
+end;
+/
+
 create trigger MAIN_RECEIPT_TRG
 	before insert on MAIN_RECEIPT
 	for each row
@@ -879,7 +890,7 @@ declare
 	accName ACCOUNT.NAME%type;
 begin
 	if(:NEW.IDX is null) then
-		:NEW.IDX := MAIN_RECEIPT_SEQ.nextval;
+		:NEW.IDX := MAIN_RECPT_IDX_FUNC;
 	end if;
 	if(:NEW.PAYMENT_TYPE_CODE is null) then
 		:NEW.PAYMENT_TYPE_CODE := 0;
@@ -901,6 +912,8 @@ comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
 
 comment on column MAIN_RECEIPT.IDX is '주 영수증 번호 - 후보키. 복합기본키, 인조식별자, 트리거있음';
 
+comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 환불 결정 요인';
+
 comment on column MAIN_RECEIPT.BUYER_IDX is '영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가';
 
 comment on column MAIN_RECEIPT.PAYMENT_TYPE_CODE is '결제타입 - 외래키. null불가. 트리거있음 (기본값 : 0) 안 써도 문제없이 작동하게 해둠';
@@ -921,6 +934,7 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 
 
 --drop trigger MAIN_RECEIPT_TRG;
+--drop function MAIN_RECPT_IDX_FUNC;
 --drop sequence MAIN_RECEIPT_SEQ;
 --drop table MAIN_RECEIPT cascade constraints;
 
@@ -937,7 +951,9 @@ create table LIST_RECPT_STATE_TYPE (
 	,constraint LIST_RECPT_STATE_PK primary key (CODE)
 );
 
-insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '기본값', '구현시 기능을 쓰지 않아도 작동하게 하기 위한 기본값');
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '임시 영수증', '결제 전 임시 영수증');
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '결제 완료', '이상 없이 결제가 완료된 영수증');
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 영수증 - 취소', '임시 영수증 상태에서 대기 하다 취소됨.');
 
 commit;
 
@@ -1445,7 +1461,7 @@ comment on column SALE_HIT.ACCOUNT_IDX is '계정번호 - 복합기본키 + 외�
 create table SALE_OPTION (
 
 	IDX				number(11,0)	unique
-	,SALE_IDX		number(10,0)	not null
+	,SALE_IDX		number(10,0)
 	,NAME			nvarchar2(25)	not null
 	,DESCRIPTION	nvarchar2(200)
 
@@ -1760,7 +1776,7 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 create table SALE_RECEIPT (
 
 	SALE_IDX			number(10,0)
-	,MAIN_RECPT_IDX		number(13,0)
+	,MAIN_RECPT_IDX		number(30,0)
 
 	,constraint SALE_RECPT_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
 	,constraint SALE_RECPT_SALE_FK foreign key (SALE_IDX) references SALE (IDX)
@@ -1781,7 +1797,7 @@ comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합
 
 create table SALE_OPTION_RECEIPT (
 
-	MAIN_RECPT_IDX			number(13,0)
+	MAIN_RECPT_IDX			number(30,0)
 	,SALE_IDX				number(10,0)
 	,SALE_OPTION_IDX		number(11,0)
 
@@ -1855,7 +1871,7 @@ comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코
 create table SALE_EVALUATION (
 
 	SALE_IDX				number(10,0)
-	,MAIN_RECPT_IDX			number(13,0)
+	,MAIN_RECPT_IDX			number(30,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
@@ -2566,7 +2582,7 @@ create table BID_CONTRACT_RECEIPT (
 	,BID_AMOUNT				number(11,0)
 
 	,MAIN_RECPT_BUYER		number(8,0)			not null
-	,MAIN_RECPT_IDX			number(13,0)		not null
+	,MAIN_RECPT_IDX			number(30,0)		not null
 	,CONTRACT_AMOUNT		number(10,0)		not null
 	
 	,TITLE					nvarchar2(40)		not null
@@ -2691,6 +2707,7 @@ create table MESSAGE_TYPE (
 
 insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (0, '일반', 'default 값 처리용 일반 타입(더미, 그냥 써도 됨)');
 insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (1, '경매 시스템 메세지', '경매 시스템 메세지 타입');
+insert into MESSAGE_TYPE (CODE, NAME, DESCRIPTION) values (2, '판매 시스템 메세지', '판매 시스템 메세지 타입');
 
 commit;
 
@@ -3755,7 +3772,6 @@ is
 	err_message			varchar2(255);
 
 begin
-
 	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
@@ -3941,7 +3957,7 @@ begin
 				
 				for BID_ROW in BID_CUR loop
 					update BID set STATE_CODE = 20, FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
-					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '진행중 이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
+					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '진행중 이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 1);
 				end loop;
 				
 				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
@@ -3954,7 +3970,7 @@ begin
 				
 				for BID_ROW in BID_CUR loop
 					update BID set STATE_CODE = 21,FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
-					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '낙찰을 대기중이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 0);
+					insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auction_title||''' 경매가 취소되었습니다.', '낙찰을 대기중이던 경매가 취소되어 해당 경매에 신청한 입찰이 취소되었습니다.', 1);
 				end loop;
 				
 				delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
@@ -3996,6 +4012,125 @@ end;
 --drop procedure CANCEL_AUCTION;
 
 
+----------------------------------------------- 영수증 처리용 프로시저 -----------------------------------------------
+
+
+/*===============================  1. 임시 영수증 확인 프로시저 ====================================
+
+	결과
+		2: 해당 영수증이 임시 대기 상태가 아니며 같은 결제번호로 요청이 들어옴 (누군가 의도적으로 중복값을 보냄. 환불 대상이 아님)
+		1: 성공
+		0: 에러
+		-1: 해당 번호의 임시 영수증이 없음.
+		-2: 해당 영수증이 처리 불가능한 상태, 다른 결제번호 ('임시 대기' 상태가 아님.)
+		-3: 해당 번호의 영수증이 있고, 임시 영수증인데 요청 계정이 다름
+		-4: 임시 처리한 영수증의 금액과 결제 정보의 금액이 다름.
+		-5: 임시 영수증에 저장된 옵션이 활성화 상태가 아님
+		-6: 구매한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함
+		-7: 뭔가 매우 잘못됨
+
+===================================================================================================*/
+
+create procedure CHECK_TEMP_RECPT (in_pay_code MAIN_RECEIPT.PAYMENT_CODE%type, in_acc_idx ACCOUNT.IDX%type, merchant_uid MAIN_RECEIPT.IDX%type, in_price MAIN_RECEIPT.MONEY_AMOUNT%type, isDone out number)
+is
+	null_checker		number;
+	main_rcpt_idx		MAIN_RECEIPT.IDX%type;
+	money_amount		MAIN_RECEIPT.MONEY_AMOUNT%type;
+	recpt_amount		SALE_OPTION_RECEIPT.AMOUNT%type;
+	acc_idx				ACCOUNT.IDX%type;
+	sale_title			SALE.TITLE%type;
+	pay_code			MAIN_RECEIPT.PAYMENT_CODE%type;
+	result_code			number;
+
+	err_code			number;
+	err_message			varchar2(255);
+	
+	cursor SALE_OPTION_CUR is
+		select * from SALE_OPTION where IDX in (select SALE_OPTION_IDX from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid)for update;
+begin
+	savepoint START_TRANSACTION;
+
+	select 0 into isDone from DUAL;
+	result_code:= 0;
+	
+	select count(1) into null_checker from MAIN_RECEIPT where IDX = merchant_uid;
+	
+	if (null_checker =0) then
+		result_code := -1;
+	else
+		select BUYER_IDX, STATE_CODE, MONEY_AMOUNT, PAYMENT_CODE into acc_idx, null_checker, money_amount, pay_code from MAIN_RECEIPT where IDX = merchant_uid;
+		
+		if (null_checker <>0) then
+			if (pay_code = in_pay_code) then
+				result_code := 2;
+			else
+				result_code := -2;
+			end if;
+			
+		elsif(acc_idx <> in_acc_idx) then
+			result_code := -3;
+		elsif (money_amount <> in_price) then
+			delete MAIN_RECEIPT where IDX = merchant_uid and BUYER_IDX = in_acc_idx;
+			result_code := -4;
+		else
+			select count(1) into null_checker from SALE_OPTION O inner join SALE_OPTION_RECEIPT R on O.IDX = R.SALE_OPTION_IDX where O.ISDEL <>0;
+			
+			if (null_checker <>0) then 
+				result_code := -5;
+			else
+				savepoint OPT_UPDATE;
+				
+				for SALE_OPTION_ROW in SALE_OPTION_CUR loop
+					select AMOUNT into recpt_amount from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid and SALE_IDX = SALE_OPTION_ROW.SALE_IDX and SALE_OPTION_IDX = SALE_OPTION_ROW.IDX;
+					
+					if (recpt_amount > SALE_OPTION_ROW.LEFT_AMOUNT ) then
+						rollback to OPT_UPDATE;
+						result_code := -6;
+						exit;
+					end if;
+					
+					update SALE_OPTION set LEFT_AMOUNT = LEFT_AMOUNT - recpt_amount where current of SALE_OPTION_CUR;
+					if (SALE_OPTION_ROW.LEFT_AMOUNT =0) then
+						select ACC_IDX, TITLE into acc_idx, sale_title from SALE where IDX = SALE_OPTION_ROW.SALE_IDX;
+						insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0,acc_idx,'판매글 '''||sale_title||''' 의 옵션 '''||SALE_OPTION_ROW.NAME||''' 이 모두 소진되었습니다.','해당 옵션의 재고가 모두 소진되었음을 알려드립니다.',2);
+					end if;
+					
+				end loop;
+				
+				if (result_code = 0) then
+					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
+					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
+					result_code := 1;
+				elsif(result_code is null) then
+					result_code := -7;
+				end if;
+			end if;
+			---경매 부분 추가 가능 부분.
+		end if;
+	end if;
+	
+	select result_code into isDone from DUAL;
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CHECK_TEMP_RECPT',isDone,'merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx);
+	
+	commit;
+	
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);	
+		insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
+		values ('CHECK_TEMP_RECPT', 0, 'ERROR!  merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx, err_code, err_message );
+	commit;
+	
+	select 0 into isDone from DUAL;
+end;
+/
+
+--drop procedure CHECK_TEMP_RECPT;
+
+
+
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
 /*
 --계정 썸네일 없는 계정 2개
@@ -4018,10 +4153,10 @@ insert into BUSINESS_INFO (ACC_IDX, BUSINESS_LICENSE_CODE, CORPORATION_NAME, REP
 --판매글 2개
 --이미지가 있는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT, FACE_IMG, MAIN_IMG)
-			values (2, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
+			values (4, '판매글제목1', '원산지원산지', '글내용글내용', '/img/face1.jpg','/img/main1.jpg');
 --이미지가 없는 경우
 insert into SALE (ACC_IDX, TITLE, ORIGIN, CONTENT)
-			values (3, '판매글제목1', '원산지원산지','글내용글내용');
+			values (5, '판매글제목1', '원산지원산지','글내용글내용');
 
 --판매옵션, 판매글 1번에 3개, 2번에 1개.
 insert into SALE_OPTION (SALE_IDX, NAME, DESCRIPTION, PRICE, UNIT, START_AMOUNT)
