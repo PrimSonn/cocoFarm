@@ -835,6 +835,7 @@ insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '지불
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '지불 완료', '활성화된 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 대기중 - 취소', '임시영수증 상태에서 취소됨');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3, '환불됨', '환불됨');
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4, '환불 영수증', '환불됨');
 commit;
 
 
@@ -867,14 +868,13 @@ create table MAIN_RECEIPT (
 
 	,STATE_CODE			number(2,0)		not null
 
-	,REFUND_TO			number(8,0)
 	,REFUND_OF			number(30,0)
 
 	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
 	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
 	,constraint M_RECEIPT_PAY_TYPE_FK foreign key (PAYMENT_TYPE_CODE) references PAYMENT_TYPE (CODE)
 	,constraint M_RECEIPT_STATE_FK foreign key (STATE_CODE) references MAIN_RECEIPT_STATE_TYPE (CODE)
-	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_TO, REFUND_OF) references MAIN_RECEIPT (BUYER_IDX, IDX)
+	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_OF) references MAIN_RECEIPT (IDX)
 );
 
 create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
@@ -915,7 +915,7 @@ comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
 
 comment on column MAIN_RECEIPT.IDX is '주 영수증 번호 - 후보키. 복합기본키, 인조식별자, 트리거있음';
 
-comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 환불 결정 요인';
+comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 결제 대행사의 결제번호';
 
 comment on column MAIN_RECEIPT.BUYER_IDX is '영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가';
 
@@ -930,8 +930,6 @@ comment on column MAIN_RECEIPT.PAID_CODE is '결제 코드 번호 - null 가능.
 comment on column MAIN_RECEIPT.CONTRACT_TIME is '결제시간 - null불가. 트리거있음 (강제로 insert 당시 시스템 시간을 넣음) 입찰과 관련되서 밀리초 까지 넣음';
 
 comment on column MAIN_RECEIPT.STATE_CODE is '주 영수증 상태 코드 - null불가. 트리거있음(기본값 0)';
-
-comment on column MAIN_RECEIPT.REFUND_TO is '환불받을 대상 계정 번호 - 복합 외래키 null가능. 환불 영수증 통합용 속성';
 
 comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - 복합 외래키 null가능. 환불 영수증 통합용 속성';
 
@@ -4142,6 +4140,53 @@ end;
 --drop procedure CHECK_TEMP_RECPT;
 
 
+/*==============================================================================================
+
+	환불 영수증만들기
+	결과값 1: 성공 0: 실패
+	어플리케이션에서 쓰이는 위치 상, 이미 모든 예외처리를 거친 부분이라 여기는 예외처리가 없음
+	나중에 다른 곳에 다시 써야 한다면 예외처리를 추가할 것.
+
+=============================================================================================*/
+
+create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, isDone out number)
+is
+	v_payment_code		MAIN_RECEIPT.PAYMENT_CODE%type;
+	v_buyer_idx			MAIN_RECEIPT.BUYER_IDX%type;
+	v_money_amount		MAIN_RECEIPT.MONEY_AMOUNT%type;
+	v_paid_name			MAIN_RECEIPT.PAID_NAME%type;
+	v_state_code		MAIN_RECEIPT.STATE_CODE%type;
+
+	err_code			number;
+	err_message			varchar2(255);
+begin
+	savepoint START_TRANSACTION;
+	
+	update MAIN_RECEIPT set STATE_CODE = 3 where IDX = in_recpt_idx;
+	select PAYMENT_CODE, BUYER_IDX, MONEY_AMOUNT, PAID_NAME, STATE_CODE
+		into v_payment_code, v_buyer_idx, v_money_amount, v_paid_name, v_state_code
+		from MAIN_RECEIPT where IDX = in_recpt_idx;
+	insert into MAIN_RECEIPT (PAYMENT_CODE, BUYER_IDX, MONEY_AMOUNT, PAID_NAME, STATE_CODE, REFUND_OF)
+		values (v_payment_code, v_buyer_idx, v_money_amount, v_paid_name, 4, in_recpt_idx);
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('REFUND_RECPT_MKR', 1, 'in_recpt_idx: '||in_recpt_idx);
+	commit;
+	select 1 into isDone from DUAL;
+	
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('REFUND_RECPT_MKR',0,'ERROR! (in_recpt_idx: '||in_recpt_idx||')', err_code, err_message );
+	commit;
+
+	select 0 into isDone from DUAL;
+end;
+/
+
+
+
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
 /*
@@ -4368,45 +4413,6 @@ end;
 
 
 */
-
-
-
-
-
-
-
-create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, isDone out number)
-is
-
-	err_code		number;
-	err_message		varchar2(255);
-	
-	cursor MAIN_RECPT_CUR is
-		select IDX, STATE_CODE, 
-begin
-	savepoint START_TRANSACTION;
-	
-	
-	
-	
-	
-	
-exception when OTHERS then
-	rollback to START_TRANSACTION;
-	
-	err_code := sqlcode;
-	err_message := substr(sqlerrm, 1, 255);
-	
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')', err_code, err_message );
-	commit;
-
-	select 0 into isDone from DUAL;
-end;
-/
-
-
-
-
 
 
 

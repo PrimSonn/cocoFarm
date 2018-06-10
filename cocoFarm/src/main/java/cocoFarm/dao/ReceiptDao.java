@@ -7,6 +7,7 @@ public interface ReceiptDao {
 	
 	public void tempRecpt(OptReceiptMkr paramHolder);
 	public void checkRecpt(RecptCallParamHolder paramHolder);
+	public void refundRecptMkr(RecptCallParamHolder paramHolder);
 	
 	public RecptCallParamHolder callTempRecptMkr(RecptCallParamHolder paramHolder);
 	public void tester (OptReceiptMkr paramHolder);

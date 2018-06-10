@@ -42,6 +42,7 @@ public class TestController {
 		
 		session.setAttribute("idx", Integer.valueOf(0));
 		session.setAttribute("type", Integer.valueOf(1));
+		session.setAttribute("name", "시스템");
 		mav.setViewName("main/cocomain");
 		return mav;
 	}

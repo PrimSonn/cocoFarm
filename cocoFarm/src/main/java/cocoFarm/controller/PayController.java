@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,7 +206,7 @@ public class PayController {
 	 =============================================================================================================================*/
 	@RequestMapping(value="/pay.do",method=RequestMethod.POST)
 	@ResponseBody
-	public String paycomple(String imp_uid, HttpSession session) {
+	public String paycomple(String imp_uid, HttpSession session, HttpServletResponse response) {
 		
 //		System.out.println("imp_uid: "+imp_uid+ ", session.idx: " + session.getAttribute("idx"));
 		String returnCode = null;
@@ -213,7 +214,8 @@ public class PayController {
 			returnCode =restSvc.checkPayment(imp_uid, (Integer)session.getAttribute("idx")).toString();
 		}
 		
-		return "{\"returnCode\":\""+returnCode+"\"}";
+		response.setContentType("text");
+		return returnCode;
 	}
 	
 	

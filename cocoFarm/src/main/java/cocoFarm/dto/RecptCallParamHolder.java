@@ -13,6 +13,14 @@ public class RecptCallParamHolder {
 	public RecptCallParamHolder() {
 	}
 	
+	public RecptCallParamHolder(String arg) {
+		this.arg = arg;
+	}
+	
+	public RecptCallParamHolder(Integer intArg) {
+		this.intArg = intArg;
+	}
+	
 	public RecptCallParamHolder(Integer accIdx, String arg, Integer isDone) {
 		this.accIdx=accIdx;
 		this.arg=arg;

@@ -171,14 +171,14 @@ public class RestSvcImpl implements RestSvc{
 						reason = "처리 과정 중, 무언가 매우 잘못됨";
 						break;
 					default:
-						reason = "error";
+						reason = "error. resultCode: "+resultCode;
 						break;
 				}
 				
 				accToken = tokenParser(post.apply(tokenReq, GET_TOKEN,null), "access_token");
 				if(accToken ==null || accToken == "") return -111;
 				
-				String refundReq = String.format("imp_uid=%s&reason=%s, args)"
+				String refundReq = String.format("imp_uid=%s&reason=%s"
 									,URLEncoder.encode(imp_uid, CHARSET)
 									,URLEncoder.encode(reason, CHARSET));
 				body = post.apply(refundReq, CANCEL_PAYMENT,accToken);
@@ -196,13 +196,16 @@ public class RestSvcImpl implements RestSvc{
 				String refundCode = tokenParser(body,"code");
 				
 				if(refundCode.equals("0")) {
-					//환불 영수증 생성
-					
-					
+					if(recptSvc.refundRecptMkr(merchant_uid)==1) {
+						//환불 영수증을 만든 후, 결과 성공(1)
+					}else {
+						return 113;//환불 영수증 만들기 실패
+					}
+				}else if(refundCode.equals("1")) {
+					//이미 취소된 영수증?
+					return 114;
 				}else {
-					
-					
-					
+					return 115;
 				}
 				
 			}
