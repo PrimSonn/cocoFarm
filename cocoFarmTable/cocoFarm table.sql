@@ -853,6 +853,7 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 create table MAIN_RECEIPT (
 
 	IDX					number(30,0)	unique
+	,PAYMENT_CODE		nvarchar2(45)
 	,BUYER_IDX			number(8,0)
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
 	,MONEY_AMOUNT		number(13,0)	not null
@@ -910,6 +911,8 @@ end;
 comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
 
 comment on column MAIN_RECEIPT.IDX is '주 영수증 번호 - 후보키. 복합기본키, 인조식별자, 트리거있음';
+
+comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 환불 결정 요인';
 
 comment on column MAIN_RECEIPT.BUYER_IDX is '영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가';
 
@@ -4015,17 +4018,20 @@ end;
 /*===============================  1. 임시 영수증 확인 프로시저 ====================================
 
 	결과
+		2: 해당 영수증이 임시 대기 상태가 아니며 같은 결제번호로 요청이 들어옴 (누군가 의도적으로 중복값을 보냄. 환불 대상이 아님)
+		1: 성공
+		0: 에러
 		-1: 해당 번호의 임시 영수증이 없음.
-		-2: 해당 영수증이 처리 불가능한 상태임 ('임시 대기' 상태가 아님.)
-		-3: 해당 번호의 영수증이 있고, 임시 영수증인데 요청 계정이 다름(뭔가 잘못됨, 환불해야 함!!)
-		-4: 임시 처리한 영수증의 금액과 결제 정보의 금액이 다름. (임시 영수증 삭제함, 환불해야됨!!)
-		-5: 임시 영수증에 저장된 옵션이 활성화 상태가 아님 (삭제되었거나, 그 외 비활성 상태, 역시 환불해야 함!!)
-		-6: 구매한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함 ( 환불해야 함!!!)
-		-7: 뭔가 매우 잘못됨 (환불해야 함!!)
+		-2: 해당 영수증이 처리 불가능한 상태, 다른 결제번호 ('임시 대기' 상태가 아님.)
+		-3: 해당 번호의 영수증이 있고, 임시 영수증인데 요청 계정이 다름
+		-4: 임시 처리한 영수증의 금액과 결제 정보의 금액이 다름.
+		-5: 임시 영수증에 저장된 옵션이 활성화 상태가 아님
+		-6: 구매한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함
+		-7: 뭔가 매우 잘못됨
 
 ===================================================================================================*/
 
-create procedure CHECK_TEMP_RECPT (in_acc_idx ACCOUNT.IDX%type, merchant_uid MAIN_RECEIPT.IDX%type, in_price MAIN_RECEIPT.MONEY_AMOUNT%type, isDone out number)
+create procedure CHECK_TEMP_RECPT (in_pay_code MAIN_RECEIPT.PAYMENT_CODE%type, in_acc_idx ACCOUNT.IDX%type, merchant_uid MAIN_RECEIPT.IDX%type, in_price MAIN_RECEIPT.MONEY_AMOUNT%type, isDone out number)
 is
 	null_checker		number;
 	main_rcpt_idx		MAIN_RECEIPT.IDX%type;
@@ -4033,6 +4039,7 @@ is
 	recpt_amount		SALE_OPTION_RECEIPT.AMOUNT%type;
 	acc_idx				ACCOUNT.IDX%type;
 	sale_title			SALE.TITLE%type;
+	pay_code			MAIN_RECEIPT.PAYMENT_CODE%type;
 
 	err_code			number;
 	err_message			varchar2(255);
@@ -4048,10 +4055,15 @@ begin
 	if (null_checker =0) then
 		select -1 into isDone from DUAL;
 	else
-		select BUYER_IDX, STATE_CODE, MONEY_AMOUNT into acc_idx, null_checker, money_amount from MAIN_RECEIPT where IDX = merchant_uid;
+		select BUYER_IDX, STATE_CODE, MONEY_AMOUNT, PAYMENT_CODE into acc_idx, null_checker, money_amount, pay_code from MAIN_RECEIPT where IDX = merchant_uid;
 		
 		if (null_checker <>0) then
-			select -2 into isDone from DUAL;
+			if (pay_code = in_pay_code) then
+				select 2 into isDone from DUAL;
+			else
+				select -2 into isDone from DUAL;
+			end if;
+			
 		elsif(acc_idx <> in_acc_idx) then
 			select -3 into isDone from DUAL;
 		elsif (money_amount <> in_price) then
@@ -4084,7 +4096,7 @@ begin
 				
 				if (isDone = 0) then
 					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
-					update MAIN_RECEIPT set STATE_CODE = 1 where IDX = merchant_uid;
+					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
 					select 1 into isDone from DUAL;
 				else
 					select -7 into isDone from DUAL;

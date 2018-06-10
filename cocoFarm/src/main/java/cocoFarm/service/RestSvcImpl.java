@@ -52,11 +52,16 @@ public class RestSvcImpl implements RestSvc{
 		
 	*============================================================*/
 
-	/*
+	/*============================================================================================================================
+	 * 
 	 * 결과값 설명
 	 * 		-100 이하: 코드상의 오류 혹은 각종 예외상황
 	 * 		-20: 결제상태가 "paid" 가 아님
-	 * 	아래는 DB 접속 결과 코드
+	 * 	아래는 DB 접속 결과 코드 (위의 경우가 아닌 경우 결과값으로 반환해옴)
+	 * 	   -결제 정보 확인 후 코드:
+	 * 		2: 해당 영수증이 임시 대기 상태가 아니며 같은 결제번호로 요청이 들어옴 (누군가 의도적으로 중복값을 보냄. 환불 대상이 아님)
+	 *		1: 성공
+	 *		0: 에러
 	 *  	-1: 해당 번호의 임시 영수증이 없음.
 	 *		-2: 해당 영수증이 처리 불가능한 상태임 ('임시 대기' 상태가 아님.)
 	 *		-3: 해당 번호의 영수증이 있고, 임시 영수증인데 요청 계정이 다름(뭔가 잘못됨, 환불해야 함!!)
@@ -64,7 +69,10 @@ public class RestSvcImpl implements RestSvc{
 	 *		-5: 임시 영수증에 저장된 옵션이 활성화 상태가 아님 (삭제되었거나, 그 외 비활성 상태, 역시 환불해야 함!!)
 	 *		-6: 구매한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함 ( 환불해야 함!!!)
 	 *		-7: 뭔가 매우 잘못됨 (환불해야 함!!)
-	 */
+	 *	서비스 안에서 환불 시도까지 하고 있음. (환불 영수증을 추가로 작성하고, 상태값 변화하는 부분 아직 미완성)
+	 *  결제 취소가 일어났을 때(사용자가 아임포트 결제를 하다가 취소했을 때) 임시 영수증을 삭제하기 위해 추가 로직이 필요.
+	 *  
+	 =============================================================================================================================*/
 	@Override
 	public Integer checkPayment(String imp_uid, Integer accIdx){
 
@@ -124,16 +132,20 @@ public class RestSvcImpl implements RestSvc{
 			if(merchant_uid ==null || moneyAmount ==null) return 109;
 			
 			//--------- 받아온 결제 정보를 DB의 정보와 비교
-			Integer resultCode = recptSvc.recptCheck(new RecptCallParamHolder(accIdx, merchant_uid, moneyAmount, 0));
+			Integer resultCode = recptSvc.recptCheck(new RecptCallParamHolder(imp_uid,accIdx, merchant_uid, moneyAmount, 0));
 			
 			if(resultCode==null) {
 				return 110;
-			}else if (resultCode>=-7 && resultCode <=-3) {
+			}else if (resultCode>-100 && resultCode <0) {//0인 경우의 환불은 해야할 지 말아야 할 지 모름(서버 측 에러상황) -100 이하도 마찬가지..
 				
-				accToken = tokenParser(post.apply(req, GET_TOKEN), "access_token");
-				if(accToken ==null || accToken == "") return -111;
 				String reason = null;
 				switch (resultCode) {
+					case -1:
+						reason = "해당 번호의 임시 영수증이 없음.";
+						break;
+					case -2:
+						reason = "해당 영수증이 처리 불가능한 상태임 ('임시 대기' 상태가 아님.)";
+						break;
 					case -3:
 						reason = "해당 결제와 요청 계정이 다름";
 						break;
@@ -149,7 +161,12 @@ public class RestSvcImpl implements RestSvc{
 					case -7:
 						reason = "처리 과정 중, 무언가 매우 잘못됨";
 						break;
+					default:
+						reason = "error";
+						break;
 				}
+				accToken = tokenParser(post.apply(req, GET_TOKEN), "access_token");
+				if(accToken ==null || accToken == "") return -111;
 				
 				req = String.format("imp_uid=%s&reason=%s, args)"
 									,URLEncoder.encode(imp_uid, CHARSET)
