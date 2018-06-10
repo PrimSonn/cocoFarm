@@ -247,8 +247,8 @@ function requestPayment() {
 								type: 'POST',
 								dataType: 'json',
 								data: {
-									text:rsp.merchant_uid
-									//imp_uid : rsp.imp_uid,
+ 									//merchant_uid : rsp.merchant_uid,
+									imp_uid : rsp.imp_uid,
 									//buyer_name :rsp.buyer_name 
 									}
 							}).done(function(data) {
