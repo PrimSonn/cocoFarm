@@ -14,7 +14,27 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
+<script type="text/javascript">
+$(document).ready(function() {	
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		/* $(".mypage_page01").load(page); */
+		
+		return false;
+	});
+});
+</script>
+
+
+
 <script>
+
+
+
+
+
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
 	var mainHtml = tableEl.innerHTML;
@@ -70,9 +90,9 @@ $(document).ready(function() {
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
-					<div class="mypagetitle03"><h2>일반 회원</h2> <h1>마이페이지</h1></div>
+					<div class="mypagetitle03"><h2>일반 회원</h2><h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp;</span>hwanmin0121</div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp;</span>환영합니다.</div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 				</div>
 			
@@ -81,20 +101,17 @@ $(document).ready(function() {
 					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
 					
 					<ul>
-						<li><a href="#">개인정보 수정</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="#">개인정보 수정</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					
-					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
+					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
 					
 					<ul>
-						<!-- nav-link는 load쓸 때 필요한 것 -->
-						<!-- <li class="nav-link"><a href="/product/insert.do">판매등록하기</a></li> -->
-						<li class="nav-link"><a href="/product">판매상품 조회/수정</a></li>
-						<li><a href="#">판매 결제 내역 조회 </a></li>
-						<!-- <li><a href="#">판매 결제 배송 승인</a></li> -->
+						
+						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li><a href="#">결제 내역 조회 </a></li>
+						
 					</ul>
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 					<ul>
