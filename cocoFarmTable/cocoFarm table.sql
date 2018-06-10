@@ -201,6 +201,9 @@ drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
+drop index TODAYS_FMR_FILE_IDX;
+drop table TODAYS_FARMER_FILE cascade constraints;
+
 drop trigger TODAYS_FARMER_EDIT_TRG;
 drop index TODAYS_FARMER_IDX;
 drop table TODAYS_FARMER cascade constraints;
@@ -831,7 +834,7 @@ create table MAIN_RECEIPT_STATE_TYPE (
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '지불 전', '임시 저장용 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '지불 완료', '활성화된 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 대기중 - 취소', '임시영수증 상태에서 취소됨');
-
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3, '환불됨', '환불됨');
 commit;
 
 
@@ -865,7 +868,7 @@ create table MAIN_RECEIPT (
 	,STATE_CODE			number(2,0)		not null
 
 	,REFUND_TO			number(8,0)
-	,REFUND_OF			number(13,0)
+	,REFUND_OF			number(30,0)
 
 	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
 	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
@@ -954,7 +957,7 @@ create table LIST_RECPT_STATE_TYPE (
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '임시 영수증', '결제 전 임시 영수증');
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '결제 완료', '이상 없이 결제가 완료된 영수증');
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 영수증 - 취소', '임시 영수증 상태에서 대기 하다 취소됨.');
-
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3, '환불됨', '환불됨.');
 commit;
 
 
@@ -2589,14 +2592,11 @@ create table BID_CONTRACT_RECEIPT (
 
 	,STATE_CODE				number(2,0)			not null
 
-	,REFUND_TARGET_IDX		number(13,0)
-
 	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
 	,constraint BID_CONT_RECPT_DELVRY foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
 	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
-	,constraint CONT_REFUND_FK foreign key (REFUND_TARGET_IDX) references BID_CONTRACT_RECEIPT (IDX)
 	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
 );
 
@@ -2637,8 +2637,6 @@ comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(�
 comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - 복제값 저장용 null불가';
 
 comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
-
-comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 IDX null가능';
 
 
 --drop trigger BID_CONTRACT_RECPT_TRG;
@@ -2901,8 +2899,6 @@ create table TODAYS_FARMER (
 	
 	,HIT			number(9,0) default 0
 	,LAST_EDITED	timestamp (0) with local time zone
-
-	,MAIN_IMG		varchar2(200 char)
 	
 	,ISDEL			number(1,0) default 0 not null
 
@@ -2941,8 +2937,6 @@ comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리�
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
 
-comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
-
 comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - 외래키, 기본값:0, null안됨. 삭제요청시 삭제코드만 바꾸면 나중에 다시 글을 쓸 수 없음!!(기본키 유일) 관리자가 블라인드 처리 하는 용으로만 사용!';
 
 
@@ -2950,6 +2944,24 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - �
 --drop index TODAYS_FARMER_IDX;
 --drop table TODAYS_FARMER cascade constraints;
 
+
+------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
+
+create table TODAYS_FARMER_FILE (
+
+	ACC_IDX					number(8,0)
+	,ORIGINAL_FILENAME		varchar2(600)
+	,STORED_FILENAME		varchar2(800)
+	,UPLOAD_DATE			date default SYSDATE
+
+	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+);
+
+create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
+
+
+--drop index TODAYS_FMR_FILE_IDX;
+--drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
 
@@ -4351,6 +4363,52 @@ end;
 /
 
 
+
+
+
+
+
+
+
+
+
+
+create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, isDone out number)
+is
+
+	err_code		number;
+	err_message		varchar2(255);
+	
+	cursor MAIN_RECPT_CUR is
+		select IDX, STATE_CODE, 
+begin
+	savepoint START_TRANSACTION;
+	
+	
+	
+	
+	
+	
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')', err_code, err_message );
+	commit;
+
+	select 0 into isDone from DUAL;
+end;
+/
+
+
+
+
+
+
+
+
 */
 
 
@@ -4358,12 +4416,3 @@ end;
 
 
 
-
-
-
-
-
-
-
-
-	

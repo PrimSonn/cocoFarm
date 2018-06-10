@@ -207,7 +207,7 @@ public class PayController {
 	@ResponseBody
 	public String paycomple(String imp_uid, HttpSession session) {
 		
-//		System.out.println("merchant_uid : " +merchant_uid + ", imp_uid: "+imp_uid+ ", session.idx: " + session.getAttribute("idx"));
+//		System.out.println("imp_uid: "+imp_uid+ ", session.idx: " + session.getAttribute("idx"));
 		String returnCode = null;
 		if((Integer)session.getAttribute("idx")!=null) {
 			returnCode =restSvc.checkPayment(imp_uid, (Integer)session.getAttribute("idx")).toString();

@@ -39,24 +39,28 @@ public class RestSvcImpl implements RestSvc{
 	private static final String GET_PAYCHECK = IMP_URL + IMP_PAYCHECK;
 	private static final String CANCEL_PAYMENT = GET_PAYCHECK + IMP_CANCEL;
 
-	/*============================================================
-	
-	결제정보 조회시 아임포트 응답 중 쓸 부분.
-	"response":
-	{"amount":15000
-		,"cancel_amount":0
-		,"cancel_history":[]
-		,"cancel_reason":null
-		,"cancel_receipt_urls":[]
-		,"cancelled_at":0
-		,"imp_uid":"imp_796796903542"
-		,"merchant_uid":"63"
-		,"status":"paid",}
-		
-	*============================================================*/
 
-	/*============================================================================================================================
+
+	/*==============================================================================================================================
 	 * 
+	 * 	merchant_uid:	아임포트에서 받아올 주 영수증 구분번호
+	 *	imp_uid:		아임포트 결제번호
+	 *	accToken:		아임포트 REST 서비스를 이용하기 위해 받아오는 접속 토큰(지속시간 짧음, 매번 받아야 함.)
+	 *	accIdx:			결제정보 인증용 계정번호, 세션에서 가져오기
+	 *	post:			POST 요청 후 응답을 문자열로 가져옴.
+	 *	
+	 *	결제정보 조회시 아임포트 응답 중 쓸 만한 부분.
+	 *	"response":
+	 *	{"amount":15000
+	 *		,"cancel_amount":0
+	 *		,"cancel_history":[]
+	 *		,"cancel_reason":null
+	 *		,"cancel_receipt_urls":[]
+	 *		,"cancelled_at":0
+	 *		,"imp_uid":"imp_796796903542"
+	 *		,"merchant_uid":"63"
+	 *		,"status":"paid",}
+	 *
 	 * 결과값 설명
 	 * 		-100 이하: 코드상의 오류 혹은 각종 예외상황
 	 * 		-20: 결제상태가 "paid" 가 아님
@@ -170,6 +174,7 @@ public class RestSvcImpl implements RestSvc{
 						reason = "error";
 						break;
 				}
+				
 				accToken = tokenParser(post.apply(tokenReq, GET_TOKEN,null), "access_token");
 				if(accToken ==null || accToken == "") return -111;
 				
@@ -178,18 +183,27 @@ public class RestSvcImpl implements RestSvc{
 									,URLEncoder.encode(reason, CHARSET));
 				body = post.apply(refundReq, CANCEL_PAYMENT,accToken);
 				if (body==null||body.equals("")) return 112;
-				
-				System.out.println(body);
-				
-				
-				
-				/*
+				/*=======================================================================
 				 * 
-				 * 환불 요청을 한 후의 로직? 
-				 * 
-				 * 
-				 * 
-				 * */
+				 * 환불 요청 결과 코드값
+				 * "code"
+				 * 1 이미 취소됨 "message": "이미 전액취소된 주문입니다.",
+				 * 0 성공
+				 *-1 결제취소 실패, 
+				 *"message" : "환불결과 메세지"
+				 *
+				 *=======================================================================*/
+				String refundCode = tokenParser(body,"code");
+				
+				if(refundCode.equals("0")) {
+					//환불 영수증 생성
+					
+					
+				}else {
+					
+					
+					
+				}
 				
 			}
 			
@@ -210,6 +224,10 @@ public class RestSvcImpl implements RestSvc{
 		}
 	}
 	
+	
+	/*
+	 *	아임포트와의 통신으로 받은 정보를 한 줄의 문자로 정리하기.
+	 */
 	private String getRespBody(HttpURLConnection conn, InputStream resp) throws UnsupportedEncodingException, IOException{
 		
 		if (resp ==null) return null;
@@ -232,10 +250,16 @@ public class RestSvcImpl implements RestSvc{
 		} else {return null;}
 		
 		resp.close();
-		
+//		respLine = respLine.trim();
 		return respLine;
 	}
 	
+	
+	/*
+	 *	GSon 쓰는거 배우기 귀찮아서 만듦 
+	 *  targe: 찾을 JSon의 키 값 (따음표 떼고 입력)
+	 *  target 에 해당하는 value 를 따음표까지 제거하고 문자열로 반환. 
+	 */
 	public static String tokenParser(String body, String target) throws IndexOutOfBoundsException{
 		
 		if(target==null||target.equals(""))return null;
