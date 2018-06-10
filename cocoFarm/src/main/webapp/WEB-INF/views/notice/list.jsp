@@ -20,9 +20,8 @@ $(document).ready(function() {
 		location.href="/notice/write.do"
 	});
 	
-	
 	$("#btnMain").click(function() {
-		location.href="/main"
+		location.href="/notice/list.do"
 	});
 	
 });

@@ -72,31 +72,18 @@ $(document).ready(function(){
 
 <div id="loginheader">
 
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<c:if test="${sessionScope.idx ne null }">
-			<li><a href="/login/logout.do">로그아웃</a></li>
-			</c:if>
-			<c:if test="${sessionScope.idx eq null }">
-			<li><a href="/login/login.do">로그인</a></li>
-			<li><a href="/login/join.do">회원가입</a></li>
-			</c:if>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
+<!--Mypage부분 header ver3부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><a href="/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button></div>
+				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+				<div class="search">
+					<form action="/seller.do" method="post">
+						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
+						</button>
+					</form> 
+				</div>
 		</div>
 		<div class="findIdPw_box">
 		<div class="findId_box">

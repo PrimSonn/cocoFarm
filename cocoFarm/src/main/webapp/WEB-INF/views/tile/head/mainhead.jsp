@@ -7,9 +7,28 @@
 	<div id="header_top">
 	<div class="container">
 		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
+			<c:choose>
+				<c:when test="${sessionScope.type==3}">
+					<li class="choose_color3">고 객</li>
+					<li>사업자</li>
+					<li>관리자</li>
+				</c:when>
+				<c:when test="${sessionScope.type==2}">
+					<li>고 객</li>
+					<li class="choose_color2"><a href="#">사업자</a></li>
+					<li>관리자</li>
+				</c:when>
+				<c:when test="${sessionScope.type==1}">
+					<li>고 객</li>
+					<li>사업자</li>
+					<li class="choose_color3">관리자</li>
+				</c:when>
+				<c:otherwise>
+					<li>고 객</li>
+					<li>사업자</li>
+					<li>사업자</li>
+				</c:otherwise>
+			</c:choose>
 		</ul>
 		
 		<ul class="left_list">
@@ -21,13 +40,13 @@
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<li><a href="#">알림</a></li>	
-			<li><a href="/product/insert.do">마이페이지</a></li>	
+			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 		</ul>
 	</div>
 	</div>
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+				<div class="logo"><a href="/main.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
 				<div class="search">
 					<form action="/seller.do" method="post">
 						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
