@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.ReceiptDao;
 import cocoFarm.dto.OptReceiptMkr;
 import cocoFarm.dto.RecptCallParamHolder;
-import cocoFarm.util.recptMaker.DataResolver;
+//import cocoFarm.util.recptMaker.DataResolver;
 import cocoFarm.util.recptMaker.SaleOptSerializer;
-import cocoFarm.util.recptMaker.Serializer;
+//import cocoFarm.util.recptMaker.Serializer;
 import cocoFarm.util.recptMaker.Tester;
 
 
@@ -54,6 +54,13 @@ public class ReceiptServiceImpl implements ReceiptService{
 		recptDao.checkRecpt(paramHolder);
 		
 		return paramHolder.getIsDone();
+	}
+
+	@Override
+	public Integer refundRecptMkr(String in_recpt_idx) {
+		RecptCallParamHolder holder = new RecptCallParamHolder(in_recpt_idx);
+		recptDao.refundRecptMkr(holder);
+		return holder.getIsDone();
 	}
 
 	

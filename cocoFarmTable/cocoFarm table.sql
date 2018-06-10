@@ -201,6 +201,9 @@ drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
+drop index TODAYS_FMR_FILE_IDX;
+drop table TODAYS_FARMER_FILE cascade constraints;
+
 drop trigger TODAYS_FARMER_EDIT_TRG;
 drop index TODAYS_FARMER_IDX;
 drop table TODAYS_FARMER cascade constraints;
@@ -317,7 +320,7 @@ drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
 
 drop table DELIVERY_STATE_TYPE cascade constraints;
 
-drop table LIST_RECPT_STATE_TYPE;
+drop table LIST_RECPT_STATE_TYPE;--deprecated
 
 drop table MAIN_RECEIPT_STATE_TYPE;
 
@@ -831,7 +834,8 @@ create table MAIN_RECEIPT_STATE_TYPE (
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '지불 전', '임시 저장용 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '지불 완료', '활성화된 영수증');
 insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 대기중 - 취소', '임시영수증 상태에서 취소됨');
-
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3, '환불됨', '환불됨');
+insert into MAIN_RECEIPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4, '환불 영수증', '환불됨');
 commit;
 
 
@@ -864,14 +868,13 @@ create table MAIN_RECEIPT (
 
 	,STATE_CODE			number(2,0)		not null
 
-	,REFUND_TO			number(8,0)
-	,REFUND_OF			number(13,0)
+	,REFUND_OF			number(30,0)
 
 	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
 	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
 	,constraint M_RECEIPT_PAY_TYPE_FK foreign key (PAYMENT_TYPE_CODE) references PAYMENT_TYPE (CODE)
 	,constraint M_RECEIPT_STATE_FK foreign key (STATE_CODE) references MAIN_RECEIPT_STATE_TYPE (CODE)
-	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_TO, REFUND_OF) references MAIN_RECEIPT (BUYER_IDX, IDX)
+	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_OF) references MAIN_RECEIPT (IDX)
 );
 
 create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
@@ -912,7 +915,7 @@ comment on table MAIN_RECEIPT is '주 영수증 (한 건의 결제에 해당)';
 
 comment on column MAIN_RECEIPT.IDX is '주 영수증 번호 - 후보키. 복합기본키, 인조식별자, 트리거있음';
 
-comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 환불 결정 요인';
+comment on column MAIN_RECEIPT.PAYMENT_CODE is '결제번호 - 결제 대행사의 결제번호';
 
 comment on column MAIN_RECEIPT.BUYER_IDX is '영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가';
 
@@ -928,8 +931,6 @@ comment on column MAIN_RECEIPT.CONTRACT_TIME is '결제시간 - null불가. 트�
 
 comment on column MAIN_RECEIPT.STATE_CODE is '주 영수증 상태 코드 - null불가. 트리거있음(기본값 0)';
 
-comment on column MAIN_RECEIPT.REFUND_TO is '환불받을 대상 계정 번호 - 복합 외래키 null가능. 환불 영수증 통합용 속성';
-
 comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - 복합 외래키 null가능. 환불 영수증 통합용 속성';
 
 
@@ -939,9 +940,9 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 --drop table MAIN_RECEIPT cascade constraints;
 
 
----------------------------------------------- 목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금) -----------------------------------------------------
+------------------------------ (취소: 개별 상태는 없음)목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금) -------------------------------
 -- 구조상 주 영수증 아래 상세 내역에 해당하는 개별 영수증이 따라붙기 때문에 생기는 코드.
-
+/*
 create table LIST_RECPT_STATE_TYPE (
 
 	CODE			number(2,0)
@@ -954,7 +955,7 @@ create table LIST_RECPT_STATE_TYPE (
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (0, '임시 영수증', '결제 전 임시 영수증');
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1, '결제 완료', '이상 없이 결제가 완료된 영수증');
 insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2, '임시 영수증 - 취소', '임시 영수증 상태에서 대기 하다 취소됨.');
-
+insert into LIST_RECPT_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3, '환불됨', '환불됨.');
 commit;
 
 
@@ -969,7 +970,7 @@ comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '목록 영수증 상태 
 
 --drop table LIST_RECPT_STATE_TYPE;
 
-
+*/
 ---------------------------------------------- (취소)목록 영수증 타입-----------------------------------------------------
 ---------------------------------------------- (취소) 목록 영수증 -----------------------------------------------------
 /*
@@ -1808,13 +1809,13 @@ create table SALE_OPTION_RECEIPT (
 	,UNIT					nvarchar2(20)	not null
 	,PRICE					number(13,0)	not null
 
-	,STATE_CODE				number(2,0)		not null
+--	,STATE_CODE				number(2,0)		not null
 
 	,constraint SALE_OPT_RECEIPT_PK primary key (MAIN_RECPT_IDX, SALE_IDX, SALE_OPTION_IDX)
 	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint SALEOPTRECPT_S_RECPT_FK foreign key (SALE_IDX, MAIN_RECPT_IDX) references SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX)
 	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_IDX, SALE_OPTION_IDX) references SALE_OPTION (SALE_IDX, IDX)
-	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
+--	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint SALE_OPT_RECPT_CHECK check (AMOUNT >0 and PRICE >0)
 );
 
@@ -1830,9 +1831,9 @@ begin
 		select SALE_IDX into saleIdx from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;
 		:NEW.SALE_IDX := saleIdx;
 	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
-	end if;
+--	if (:NEW.STATE_CODE is null) then
+--		:NEW.STATE_CODE := 0;
+--	end if;
 end;
 /
 
@@ -1855,7 +1856,7 @@ comment on column SALE_OPTION_RECEIPT.UNIT is '판매 옵션 단위 - null불가
 
 comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불가. 복제값 저장용';
 
-comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
+--comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
 
 
 --drop trigger SALE_OPT_RECPT_TRG;
@@ -2587,16 +2588,13 @@ create table BID_CONTRACT_RECEIPT (
 	
 	,TITLE					nvarchar2(40)		not null
 
-	,STATE_CODE				number(2,0)			not null
-
-	,REFUND_TARGET_IDX		number(13,0)
+--	,STATE_CODE				number(2,0)			not null
 
 	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
 	,constraint BID_CONT_RECPT_DELVRY foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
-	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
-	,constraint CONT_REFUND_FK foreign key (REFUND_TARGET_IDX) references BID_CONTRACT_RECEIPT (IDX)
+--	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
 );
 
@@ -2611,9 +2609,9 @@ begin
 	if (:NEW.IDX is null) then
 		:NEW.IDX := BID_CONTRACT_RECPT_SEQ.nextval;
 	end if;
-		if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
-	end if;
+--		if (:NEW.STATE_CODE is null) then
+--		:NEW.STATE_CODE := 0;
+--	end if;
 end;
 /
 
@@ -2636,9 +2634,7 @@ comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(�
 
 comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - 복제값 저장용 null불가';
 
-comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
-
-comment on column BID_CONTRACT_RECEIPT.REFUND_TARGET_IDX is '목록 영수증 환불 대상 IDX null가능';
+--comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
 
 
 --drop trigger BID_CONTRACT_RECPT_TRG;
@@ -2901,8 +2897,6 @@ create table TODAYS_FARMER (
 	
 	,HIT			number(9,0) default 0
 	,LAST_EDITED	timestamp (0) with local time zone
-
-	,MAIN_IMG		varchar2(200 char)
 	
 	,ISDEL			number(1,0) default 0 not null
 
@@ -2915,7 +2909,7 @@ create table TODAYS_FARMER (
 create index TODAYS_FARMER_IDX on TODAYS_FARMER (WRITTEN_DATE desc);
 
 create trigger TODAYS_FARMER_EDIT_TRG
-	before update of TITLE, CONTENT, MAIN_IMG  on TODAYS_FARMER
+	before update of TITLE, CONTENT on TODAYS_FARMER
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
@@ -2941,8 +2935,6 @@ comment on column TODAYS_FARMER.LAST_EDITED is '마지막 수정시각 - 트리�
 
 --comment on column TODAYS_FARMER.RECOMMEND is '추천? 점수? 보류중';
 
-comment on column TODAYS_FARMER.MAIN_IMG is '주 이미지 위치(경로+파일이름 전부) 저장. 원래이름은 필요 없음, 아마도.';
-
 comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - 외래키, 기본값:0, null안됨. 삭제요청시 삭제코드만 바꾸면 나중에 다시 글을 쓸 수 없음!!(기본키 유일) 관리자가 블라인드 처리 하는 용으로만 사용!';
 
 
@@ -2950,6 +2942,24 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - �
 --drop index TODAYS_FARMER_IDX;
 --drop table TODAYS_FARMER cascade constraints;
 
+
+------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
+
+create table TODAYS_FARMER_FILE (
+
+	ACC_IDX					number(8,0)
+	,ORIGINAL_FILENAME		varchar2(600)
+	,STORED_FILENAME		varchar2(800)
+	,UPLOAD_DATE			date default SYSDATE
+
+	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+);
+
+create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
+
+
+--drop index TODAYS_FMR_FILE_IDX;
+--drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
 
@@ -4098,7 +4108,7 @@ begin
 				end loop;
 				
 				if (result_code = 0) then
-					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
+--					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
 					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
 					result_code := 1;
 				elsif(result_code is null) then
@@ -4128,6 +4138,53 @@ end;
 /
 
 --drop procedure CHECK_TEMP_RECPT;
+
+
+/*==============================================================================================
+
+	환불 영수증만들기
+	결과값 1: 성공 0: 실패
+	어플리케이션에서 쓰이는 위치 상, 이미 모든 예외처리를 거친 부분이라 여기는 예외처리가 없음
+	나중에 다른 곳에 다시 써야 한다면 예외처리를 추가할 것.
+
+=============================================================================================*/
+
+create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, isDone out number)
+is
+	v_payment_code		MAIN_RECEIPT.PAYMENT_CODE%type;
+	v_buyer_idx			MAIN_RECEIPT.BUYER_IDX%type;
+	v_money_amount		MAIN_RECEIPT.MONEY_AMOUNT%type;
+	v_paid_name			MAIN_RECEIPT.PAID_NAME%type;
+	v_state_code		MAIN_RECEIPT.STATE_CODE%type;
+
+	err_code			number;
+	err_message			varchar2(255);
+begin
+	savepoint START_TRANSACTION;
+	
+	update MAIN_RECEIPT set STATE_CODE = 3 where IDX = in_recpt_idx;
+	select PAYMENT_CODE, BUYER_IDX, MONEY_AMOUNT, PAID_NAME, STATE_CODE
+		into v_payment_code, v_buyer_idx, v_money_amount, v_paid_name, v_state_code
+		from MAIN_RECEIPT where IDX = in_recpt_idx;
+	insert into MAIN_RECEIPT (PAYMENT_CODE, BUYER_IDX, MONEY_AMOUNT, PAID_NAME, STATE_CODE, REFUND_OF)
+		values (v_payment_code, v_buyer_idx, v_money_amount, v_paid_name, 4, in_recpt_idx);
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('REFUND_RECPT_MKR', 1, 'in_recpt_idx: '||in_recpt_idx);
+	commit;
+	select 1 into isDone from DUAL;
+	
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('REFUND_RECPT_MKR',0,'ERROR! (in_recpt_idx: '||in_recpt_idx||')', err_code, err_message );
+	commit;
+
+	select 0 into isDone from DUAL;
+end;
+/
+
 
 
 
@@ -4339,8 +4396,6 @@ end;
 
 
 
-
-
 create procedure TEST_PROC(num in number) is
 declare
 	type arr_type is varray(num) of number;
@@ -4351,19 +4406,13 @@ end;
 /
 
 
+
+
+
+
+
+
 */
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-	

@@ -227,7 +227,7 @@ function requestPayment() {
 				name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 				amount : ${allsum}, //결제금액 - 필수항목
 				buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-				buyer_name : '구매자이름보내기 김환민', //주문자명 - 선택항목
+				buyer_name : '${sessionScope.name}', //주문자명 - 선택항목
 				buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
 				buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
 				buyer_postcode : '123-456', //주문자우편번호 - 선택항목
@@ -243,24 +243,28 @@ function requestPayment() {
 						// 결제 완료 처리 로직
 						//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
 						jQuery.ajax({
-								url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
-								type: 'POST',
-								dataType: 'json',
-								data: {
+									url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
+									type: 'POST',
+									dataType: 'json',
+									data: {
  									//merchant_uid : rsp.merchant_uid,
 									imp_uid : rsp.imp_uid,
 									//buyer_name :rsp.buyer_name 
 									}
 							}).done(function(data) {
 								//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
-								if ( everythings_fine ) {
+								console.log(data);
+								if ( data==1 ) {
 									var msg = '결제가 완료되었습니다.';
 									msg += '\n고유ID : ' + rsp.imp_uid;
 									msg += '\n상점 거래ID : ' + rsp.merchant_uid;
 									msg += '\결제 금액 : ' + rsp.paid_amount;
 									msg += '카드 승인번호 : ' + rsp.apply_num;
 									alert(msg);
-								} else {
+								}else if (data<0 && data>-100 ){
+									alert('data: '+data)
+								}else {
+									alert("취소취소");
 									//[3] 아직 제대로 결제가 되지 않았습니다.
 									//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
 									/* 
@@ -291,6 +295,7 @@ function requestPayment() {
 					} else { // 결제 실패 로직
 							var msg = '결제에 실패하였습니다.';
 							msg += '에러내용 : ' + rsp.error_msg;
+							//임시 영수증 삭제 로직 추가.
 					}
 					alert(msg);
 				});

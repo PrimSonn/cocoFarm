@@ -70,6 +70,13 @@
 		)}
 	</select>
 	
+	<select id='refundRecptMkr' parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call REFUND_RECPT_MKR (
+			#{arg,jdbcType=NUMERIC,mode=IN}
+			,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
 	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
 		declare
 			mainRecpt number;
