@@ -124,23 +124,9 @@ function submitContents(elClickedObj) {
 </head>
 <body>
 <div id="mypageheader">
-
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
+<!--Mypage부분 header ver3부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+	
 	<div class="container">
 		<div id="header_boby">
 				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>

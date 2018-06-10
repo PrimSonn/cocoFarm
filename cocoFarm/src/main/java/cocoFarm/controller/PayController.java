@@ -217,4 +217,18 @@ public class PayController {
 	}
 	
 	
+	@RequestMapping(value="/payfail.do",method=RequestMethod.POST)
+	@ResponseBody
+	public String payfail(String imp_uid, HttpSession session) {
+		System.out.println(imp_uid);
+//		System.out.println("merchant_uid : " +merchant_uid + ", imp_uid: "+imp_uid+ ", session.idx: " + session.getAttribute("idx"));
+	/*	String returnCode = null;
+		if((Integer)session.getAttribute("idx")!=null) {
+			returnCode =restSvc.checkPayment(imp_uid, (Integer)session.getAttribute("idx")).toString();
+		}*/
+		
+		return "{\"returnCode\":\""+111+"\"}";
+	}
+	
+	
 }
