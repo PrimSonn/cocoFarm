@@ -320,7 +320,7 @@ drop table DELIVERY_TIME_WINDOW_TYPE cascade constraints;
 
 drop table DELIVERY_STATE_TYPE cascade constraints;
 
-drop table LIST_RECPT_STATE_TYPE;
+drop table LIST_RECPT_STATE_TYPE;--deprecated
 
 drop table MAIN_RECEIPT_STATE_TYPE;
 
@@ -942,9 +942,9 @@ comment on column MAIN_RECEIPT.REFUND_OF is '환불 대상 영수증 번호 - �
 --drop table MAIN_RECEIPT cascade constraints;
 
 
----------------------------------------------- 목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금) -----------------------------------------------------
+------------------------------ (취소: 개별 상태는 없음)목록 영수증 상태 코드 (목록 영수증: 개별적인 세부 영수증 - 옵션목록, 입찰 보증금, 낙찰금) -------------------------------
 -- 구조상 주 영수증 아래 상세 내역에 해당하는 개별 영수증이 따라붙기 때문에 생기는 코드.
-
+/*
 create table LIST_RECPT_STATE_TYPE (
 
 	CODE			number(2,0)
@@ -972,7 +972,7 @@ comment on column LIST_RECPT_STATE_TYPE.DESCRIPTION is '목록 영수증 상태 
 
 --drop table LIST_RECPT_STATE_TYPE;
 
-
+*/
 ---------------------------------------------- (취소)목록 영수증 타입-----------------------------------------------------
 ---------------------------------------------- (취소) 목록 영수증 -----------------------------------------------------
 /*
@@ -1811,13 +1811,13 @@ create table SALE_OPTION_RECEIPT (
 	,UNIT					nvarchar2(20)	not null
 	,PRICE					number(13,0)	not null
 
-	,STATE_CODE				number(2,0)		not null
+--	,STATE_CODE				number(2,0)		not null
 
 	,constraint SALE_OPT_RECEIPT_PK primary key (MAIN_RECPT_IDX, SALE_IDX, SALE_OPTION_IDX)
 	,constraint SALE_OPT_RECPT_DLVRY_FK foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint SALEOPTRECPT_S_RECPT_FK foreign key (SALE_IDX, MAIN_RECPT_IDX) references SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX)
 	,constraint SALE_OPT_RECPT_OPT_FK foreign key (SALE_IDX, SALE_OPTION_IDX) references SALE_OPTION (SALE_IDX, IDX)
-	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
+--	,constraint SALE_OPT_STATE_CODE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint SALE_OPT_RECPT_CHECK check (AMOUNT >0 and PRICE >0)
 );
 
@@ -1833,9 +1833,9 @@ begin
 		select SALE_IDX into saleIdx from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;
 		:NEW.SALE_IDX := saleIdx;
 	end if;
-	if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
-	end if;
+--	if (:NEW.STATE_CODE is null) then
+--		:NEW.STATE_CODE := 0;
+--	end if;
 end;
 /
 
@@ -1858,7 +1858,7 @@ comment on column SALE_OPTION_RECEIPT.UNIT is '판매 옵션 단위 - null불가
 
 comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불가. 복제값 저장용';
 
-comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
+--comment on column SALE_OPTION_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 - 외래키 (트리거 기본값 있음)';
 
 
 --drop trigger SALE_OPT_RECPT_TRG;
@@ -2590,13 +2590,13 @@ create table BID_CONTRACT_RECEIPT (
 	
 	,TITLE					nvarchar2(40)		not null
 
-	,STATE_CODE				number(2,0)			not null
+--	,STATE_CODE				number(2,0)			not null
 
 	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
 	,constraint BID_CONT_RECPT_DELVRY foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
 	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
 	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
-	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
+--	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
 	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
 );
 
@@ -2611,9 +2611,9 @@ begin
 	if (:NEW.IDX is null) then
 		:NEW.IDX := BID_CONTRACT_RECPT_SEQ.nextval;
 	end if;
-		if (:NEW.STATE_CODE is null) then
-		:NEW.STATE_CODE := 0;
-	end if;
+--		if (:NEW.STATE_CODE is null) then
+--		:NEW.STATE_CODE := 0;
+--	end if;
 end;
 /
 
@@ -2636,7 +2636,7 @@ comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(�
 
 comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - 복제값 저장용 null불가';
 
-comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
+--comment on column BID_CONTRACT_RECEIPT.STATE_CODE is '목록 영수증 상태 코드 -  외래키. null불가';
 
 
 --drop trigger BID_CONTRACT_RECPT_TRG;
@@ -2911,7 +2911,7 @@ create table TODAYS_FARMER (
 create index TODAYS_FARMER_IDX on TODAYS_FARMER (WRITTEN_DATE desc);
 
 create trigger TODAYS_FARMER_EDIT_TRG
-	before update of TITLE, CONTENT, MAIN_IMG  on TODAYS_FARMER
+	before update of TITLE, CONTENT on TODAYS_FARMER
 	for each row
 	when (NEW.LAST_EDITED is null)
 begin
@@ -4110,7 +4110,7 @@ begin
 				end loop;
 				
 				if (result_code = 0) then
-					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
+--					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
 					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
 					result_code := 1;
 				elsif(result_code is null) then
@@ -4351,8 +4351,6 @@ end;
 
 
 
-
-
 create procedure TEST_PROC(num in number) is
 declare
 	type arr_type is varray(num) of number;
@@ -4366,6 +4364,10 @@ end;
 
 
 
+
+
+
+*/
 
 
 
@@ -4402,14 +4404,6 @@ exception when OTHERS then
 end;
 /
 
-
-
-
-
-
-
-
-*/
 
 
 
