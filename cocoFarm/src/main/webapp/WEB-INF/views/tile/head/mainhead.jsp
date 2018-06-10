@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <div id="header">
 
@@ -12,8 +13,13 @@
 		</ul>
 		
 		<ul class="left_list">
+			<c:if test="${sessionScope.idx ne null }">
+			<li><a href="/login/logout.do">로그아웃</a></li>
+			</c:if>
+			<c:if test="${sessionScope.idx eq null }">
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
+			</c:if>
 			<li><a href="#">알림</a></li>	
 			<li><a href="/product/insert.do">마이페이지</a></li>	
 		</ul>
@@ -36,7 +42,7 @@
 				<li><a href="#">농부 스토리</a></li>	
 				<li><a href="#">자주 묻는 질문</a></li>	
 				<li><a href="/notice/list.do">공지사항</a></li>
-				<li><a href="#">회사소개</a></li>
+				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>
 		</div>
 		
