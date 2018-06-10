@@ -9,7 +9,7 @@ public class OptReceiptMkr {
 	public Integer accIdx;
 	public String paid_name;
 	public List<SaleOptSerializer> optList;
-	public Integer mainRcpt;
+	public String mainRcpt;
 	public Integer isDone;
 	
 	public OptReceiptMkr() {}
@@ -55,9 +55,9 @@ public class OptReceiptMkr {
 	}
 	public void setPaid_name(String paid_name) {
 		this.paid_name = paid_name;
-	}public Integer getMainRcpt() {
+	}public String getMainRcpt() {
 		return mainRcpt;
-	}public void setMainRcpt(Integer mainRcpt) {
+	}public void setMainRcpt(String mainRcpt) {
 		this.mainRcpt = mainRcpt;
 	}
 }
