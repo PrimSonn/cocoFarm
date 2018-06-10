@@ -14,8 +14,7 @@
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function() {
-	
+$(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 
