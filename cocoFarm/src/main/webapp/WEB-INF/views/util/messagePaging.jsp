@@ -10,7 +10,6 @@
 		<li>
 			<a href="/mypage/message.do?curPage=1&messageCate=${paging.messageCate }">
 				<span aria-hidden="true">&larr;</span>
-				처음
 			</a>
 		</c:if>
 		
@@ -39,12 +38,14 @@
 			<%-- 페이지 번호가 현재페이지면 파랑색으로 보이기 --%>
 			<c:if test="${paging.curPage eq page }">
 			<li class="active" id="paging" name="paging">
+				<a href="/mypage/message.do?curPage=${page }&messageCate=${paging.messageCate }">${page }</a>
+			</li>
 			</c:if>
 			<c:if test="${paging.curPage ne page }">
 			<li>
-			</c:if>
-			<a href="/mypage/message.do?curPage=${page }&messageCate=${paging.messageCate }">${page }</a>
+				<a href="/mypage/message.do?curPage=${page }&messageCate=${paging.messageCate }">${page }</a>
 			</li>
+			</c:if>
 		</c:forEach>
 		
 		<%-- 다음 페이지 버튼 --%>

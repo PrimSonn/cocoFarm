@@ -35,6 +35,17 @@ $(document).ready(function() {
 
 	$("#messageCate").trigger("change");
 	
+	$("#sendMessageBtn").click(function(e){
+		popupOpen();
+	});
+	function popupOpen(){
+		var url= "/mypage/writeMessage.do";    //팝업창 페이지 URL
+		var winWidth = 400;
+	    var winHeight = 500;
+	    var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
+		window.open(url,"",popupOption);
+	}
+	
 });
 
 </script>
@@ -71,13 +82,13 @@ $(document).ready(function() {
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<li><a id="alarm" href="#">알림</a></li>	
-			<li><a href="/mypage/mypage.do">마이페이지</a></li>	
+			<li><a href="/mypage/message.do">마이페이지</a></li>	
 		</ul>
 	</div>
 	</div>
 	<div class="container">
 		<div id="header_boby">
-			<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+			<div class="logo"><a href="/main/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
 			<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
 		</div>
 		<div class="mypage_box">
@@ -96,11 +107,12 @@ $(document).ready(function() {
 					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
 					<ul>
 						<li><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
+						<li><a href="/mypage/license.do">판매자 등록</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
 						<li><a href="#">장바구니 조회</a></li>
-						<li><a href="#">회원 탈퇴</a></li>
+						<li><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
 					</ul>
-					<c:if test="${sessionScope.type eq 2 or sessionScope.type eq 1 }">
+					<c:if test="${sessionScope.type ne 3}">
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					<ul>
 						<li><a href="#">판매등록하기</a></li>
@@ -128,6 +140,7 @@ $(document).ready(function() {
 					   <option value="1" <c:if test="${param.messageCate=='1' }">selected</c:if>>받은쪽지함</option>
 					   <option value="2" <c:if test="${param.messageCate=='2' }">selected</c:if>>보낸쪽지함</option>
 					</select>
+<!-- 					<button id="sendMessageBtn">쪽지 보내기</button> -->
 				</div>
 			
 				<div id="messageBox"></div>

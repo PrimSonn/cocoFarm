@@ -708,9 +708,38 @@ height:40px;
 }
 
 .pagination{
-	height: 50px;
-	display: inline-block;
+	text-align: center;
 }
+
+.pagination li{
+	display: inline;
+	vertical-align: middle;  
+}
+
+.pagination li a {
+    display:inline-block;  
+    vertical-align:top;  
+    padding:4px;  
+    margin-right:3px;  
+    width:15px !important;  
+    color:#000;  
+    font:bold 12px tahoma;  
+    border:1px solid #aaaaaa;  
+    text-align:center;  
+    text-decoration:none;  
+}
+
+active a:checked {  
+    color:#fff;  
+    background-color: #43e44f;  
+    border:1px solid #43e44f;  
+}  
+
+.pagination li a:hover, .pagination li a:focus {  
+    color:#fff;  
+    border:1px solid #43e44f;
+    background-color: #43e44f;  
+}  
 
 .save_button a{
 	/* padding:20px 20px 20px 20px; */
@@ -791,10 +820,25 @@ height:40px;
 /* 	border-radius: 100px; //둥근프로필 */
 }
 
-.pagination li{
-	width: 20px;
-	border: 1px solid black;
-	height:20px;
-	display:inline;
-    float: left;
+/* 사업자 등록 */
+.mypage_license .license_box {
+	margin:10px auto;
+	width: 780px;
+	height:100%;
+	
+}
+.mypage_license .license_box h1{
+	font-size: 18px;
+	
+}
+
+.mypage_box .mypage_license{
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	background-color:rgba(255,255,255,0.5);
+	height: 100%;
+	width: 810px;
+	position:relative;
+	float: right;
+	left: 0px;
+	border-radius: 5px;
 }

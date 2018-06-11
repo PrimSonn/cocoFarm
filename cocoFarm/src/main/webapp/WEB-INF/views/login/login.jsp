@@ -47,7 +47,7 @@ $(document).ready(function(){
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
+			<li><a href="/mypage/message.do">마이페이지</a></li>	
 		</ul>
 	</div>
 	</div>

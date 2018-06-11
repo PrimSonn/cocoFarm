@@ -18,7 +18,7 @@ import cocoFarm.util.Paging;
 @Controller
 public class BoardController {
 	
-	@Autowired BoardService boardService;
+	@Autowired BoardService boardService;     
 	
 	@RequestMapping(value="/board/list.do", method=RequestMethod.GET)
 	public String list(@RequestParam(defaultValue="0") int curPage, Paging search, Model model) {

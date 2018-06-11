@@ -99,37 +99,37 @@ $("#btnDelete").click(function() {
 });
 </script>
 <div>
-	<table>
+	<table class="message_table">
 		<thead>
 			<tr>
-				<th><input type="checkbox" id="checkAll" /></th>
-				<th>제목</th>
+				<th class="message_th"><input type="checkbox" id="checkAll" /></th>
+				<th class="message_th">제목</th>
 				<c:if test="${messageCate eq 1 }">
-					<th>보낸사람</th>
+					<th class="message_th">보낸사람</th>
 				</c:if>
 				<c:if test="${messageCate eq 2 }">
-					<th>받은사람</th>
+					<th class="message_th">받은사람</th>
 				</c:if>
 				<c:if test="${messageCate eq 1 }">
-					<th>보낸날짜</th>
+					<th class="message_th">보낸날짜</th>
 				</c:if>
 				<c:if test="${messageCate eq 2 }">
-					<th>받은날짜</th>
+					<th class="message_th">받은날짜</th>
 				</c:if>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${messageList }" var="message">
 			<tr>
-				<td><input type="checkbox" id="check${message.idx }"name="checkRow" value="${message.idx }" />${message.idx }</td>
-				<td><a href="#" onclick="messageView(${message.idx }, ${messageCate });">${message.title }</a></td>
+				<td class="message_td"><input type="checkbox" id="check${message.idx }"name="checkRow" value="${message.idx }" />${message.idx }</td>
+				<td class="message_td"><a href="#" onclick="messageView(${message.idx }, ${messageCate });">${message.title }</a></td>
 				<c:if test="${messageCate eq 1 }">
-					<td><a class="imgSelect" data-idx="${message.sender_idx }">${message.sender }</a></td>
+					<td class="message_td"><a class="imgSelect" data-idx="${message.sender_idx }">${message.sender }</a></td>
 				</c:if>
 				<c:if test="${messageCate eq 2 }">
-					<td><a class="imgSelect" data-idx="${message.receiver_idx }">${message.receiver }</a></td>
+					<td class="message_td"><a class="imgSelect" data-idx="${message.receiver_idx }">${message.receiver }</a></td>
 				</c:if>
-				<td><fmt:formatDate value="${message.written_time }" pattern="yyyy-MM-dd"/>​</td>
+				<td class="message_td"><fmt:formatDate value="${message.written_time }" pattern="yyyy-MM-dd"/>​</td>
 			</tr>
 		</c:forEach>
 		</tbody>
