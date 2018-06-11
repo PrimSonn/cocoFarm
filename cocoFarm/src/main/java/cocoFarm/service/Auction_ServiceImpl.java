@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import cocoFarm.dao.Auction_Dao;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
+import cocoFarm.dto.BidDto;
 import cocoFarm.util.Auction_Paging;
 
 @Service
@@ -90,5 +91,22 @@ public class Auction_ServiceImpl implements Auction_Service {
 	public void insertInquire(Auction_Inquire inquire) {
 		auctionDao.insertInquire(inquire);
 	}
+
+	@Override
+	public List getInquireList(Auction viewAuction) {
+		return auctionDao.selectInquire(viewAuction);
+	}
+
+	@Override
+	public void updateAnswer(Auction_Inquire inquire) {
+		auctionDao.updateAnswer(inquire);
+	}
+
+	@Override
+	public void putBid(BidDto bid) {
+		auctionDao.putBid(bid);
+	}
+	
+	
 
 }

@@ -19,10 +19,21 @@ public class Auction {
 	private Integer highest_bid;	//	최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐
 	
 	private MultipartFile img_file;	//	경매 물품 사진
-
+	
 	private Timestamp time_window;	// 경매 만료일자
 	
 	private String id;		// 경매 글 쓴 계정 id
+	
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	private String name;	// 경매 글 쓴이 이름
 	
 	private Timestamp systime;	// 오라클 현재시간
 	
