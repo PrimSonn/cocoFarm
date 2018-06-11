@@ -21,7 +21,7 @@ public class MainController {
 	@Autowired ProductService productService;
 
 	//2018 06월 11일 main 넣은것
-	@RequestMapping(value="/cocomain.do", method=RequestMethod.GET)
+	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
 	public ModelAndView main(HttpSession session, ModelAndView mav){
 		System.out.println(session.getAttribute("idx"));
 		System.out.println(session.getAttribute("type")); 

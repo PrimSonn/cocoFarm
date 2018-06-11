@@ -12,7 +12,7 @@
 		<result column="left_amount" property="leftAmount" />
 		<result column="last_edited" property="lastEdited" />
 		<!-- Cart에서 조회할 때 SaleOption에 idx, count를 직접 넣으려고 했음 -->
-<!-- 		<result column="count" property="proamount" /> -->
+<!-- 		<result column="count" property="proAmount" /> -->
 <!-- 		<result column="sale_opt_idx" property="idx" /> -->
 	</resultMap>
 

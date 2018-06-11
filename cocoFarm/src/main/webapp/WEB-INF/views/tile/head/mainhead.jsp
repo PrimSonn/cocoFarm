@@ -6,6 +6,8 @@
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	
 	$.ajax({
 		type : "POST",
 	   url : "/mypage/user/mes_arl.do",
@@ -15,9 +17,11 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-		   alert("실패"); 
+		   //alert("실패"); 
 	   }
 	});
+	 
+	
 });
 </script>
 <div id="header">

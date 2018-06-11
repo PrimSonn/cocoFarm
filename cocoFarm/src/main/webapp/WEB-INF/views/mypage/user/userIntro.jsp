@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> <!-- 주소 API -->
 <script type="text/javascript">
 $(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {

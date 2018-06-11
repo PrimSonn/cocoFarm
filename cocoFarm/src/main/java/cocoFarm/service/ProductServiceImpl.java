@@ -144,6 +144,7 @@ public class ProductServiceImpl implements ProductService {
 		for(int i=0; i<cartList.size(); i++) {
 			System.out.println(cartList.get(i));
 			saleOption = saleOptionDao.selectOptionByIdx(cartList.get(i).getSaleOptionIdx());
+			saleOption.setProAmount(cartList.get(i).getCount());
 			optionCart.add(i, saleOption);
 		}
 		System.out.println();
