@@ -658,47 +658,6 @@ height:40px;
 
 }
 
-/* 상품 등록 버튼 */
-.save_group{
-   font-family: 'Jeju Gothic';
-   font-size: 15px;
-   width:305px;
-   margin: 0px auto;
-   cursor: pointer;
-}
-.save_group div{
-   display:inline;
-}
-.save_button{
-   color:#fff;
-   border-radius:3px;
-   margin:10px 0px;
-   width:150px;
-   height:35px;
-   text-align: center;
-   line-height: 35px;
-   border:0px;
-   background-color:#43e44f;
-   opacity:0.9;
-   box-shadow: 0 1px 3px rgba(0,0,0,.13);
-   font-weight: 600;
-}
-
-.re_button{
-   color:#5b5b5b;
-   border-radius:3px;
-   margin:10px 0px;
-   width:150px;
-   height:35px;
-   text-align: center;
-   line-height: 35px;
-   border:1px solid #43e44f;
-   background-color:rgba(255,255,255,0.4);
-   box-shadow: 0 1px 3px rgba(0,0,0,.13);
-   font-weight: 600;
-   cursor: pointer;
-}
-
 /*  아직 페이징 번호 css 미완성 */
 .pageing_num {
 	margin: 10px auto;
@@ -921,3 +880,6 @@ active a:checked {
 	margin: 2px;
 	border-radius: 10px;
 }
+
+
+

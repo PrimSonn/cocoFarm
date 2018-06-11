@@ -116,10 +116,7 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-
 		return "redirect:/product";
-//		return "Mypage/seller/productList";
-
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
@@ -219,9 +216,9 @@ public class ProductController {
 
 		logger.info("-----------controller-----------");
 
-//		int accIdx = (Integer)session.getAttribute("idx");
-//		List<SaleOption> cartOptionList = productService.cartView(accIdx);
-		List<SaleOption> cartOptionList = productService.cartView(5);
+		int accIdx = (Integer)session.getAttribute("idx");
+		List<SaleOption> cartOptionList = productService.cartView(accIdx);
+//		List<SaleOption> cartOptionList = productService.cartView(5);
 		model.addAttribute("optionCart", cartOptionList);
 		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
 		
@@ -241,7 +238,7 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
-		return "mypage/user/productCart";
+		return "mypage/common/productCart";
 	}
 	
 //	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -260,9 +257,9 @@ public class ProductController {
 		logger.info("cart.do post!");
 		
 		List<SaleOption> saleList = option.getSaleOptions();
-		for(int i=0; i<saleList.size(); i++) {
-			logger.info("Option" + (i+1) + ": " + saleList.get(i));
-		}
+//		for(int i=0; i<saleList.size(); i++) {
+//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
+//		}
 		
 		// 상품을 등록하는 사람의 idx
 //		productService.insertBasket(option, (Integer)session.getAttribute("idx"));

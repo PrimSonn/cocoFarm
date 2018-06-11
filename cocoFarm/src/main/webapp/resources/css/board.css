@@ -1,5 +1,47 @@
 @charset "UTF-8";
 
+/* 상품 등록 버튼 */
+.save_group{
+   font-family: 'Jeju Gothic';
+   font-size: 15px;
+   width:305px;
+   margin: 0px auto;
+   cursor: pointer;
+}
+.save_group div {
+   display:inline;
+}
+.save_group .save_button {
+	color:#fff;
+	border-radius:3px;
+	margin:10px 0px;
+	width:150px;
+	height:35px;
+	text-align: center;
+	line-height: 35px;
+	border:0px;
+	background-color:#43e44f;
+	opacity:0.9;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-weight: 600;
+}
+
+.save_group .re_button{
+	color:#5b5b5b;
+	border-radius:3px;
+	margin:10px 0px;
+	width:150px;
+	height:35px;
+	text-align: center;
+	line-height: 35px;
+	border:1px solid #43e44f;
+	background-color:rgba(255,255,255,0.4);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-weight: 600;
+	cursor: pointer;
+}
+
+
 .product_list table {
 	margin: 20px auto;
 	width: 740px;
@@ -43,7 +85,7 @@
 	width: 100px;
 }
 
-.td_update {
+.tr_back .td_update {
 	background-color: #43e44f;
 	border: none;
 	color: white;
@@ -279,7 +321,7 @@
 }
 
 /* 장바구니 조회 */
-.purchase {
+.save_group .purchase {
 	background-color: #43e44f;
 	border: none;
 	color: white;
@@ -294,7 +336,7 @@
 	cursor: pointer;
 }
 
-.return {
+.save_group .return {
 	background-color: rgba(255, 255, 255, 0.4);
 	border: 1px solid #43e44f;
 	color: #5b5b5b;
@@ -309,7 +351,7 @@
 	cursor: pointer;
 }
 
-.basket_delete {
+.tr_back .basket_delete {
 	background-color: #bcbcbc;
 	border: none;
 	border-radius: 3px;
@@ -322,7 +364,7 @@
 	cursor: pointer;
 }
 
-.basket_delete:hover {
+.tr_back .basket_delete:hover {
 	opacity: 1
 }
 
@@ -413,16 +455,17 @@ input[id="checkAll"], input[id="checkRow"] {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
 
-.option_count {
+.tr_back .option_count {
 	float: right;
 }
 
-.button_minus, .button_plus {
+.option_count .button_minus, .tr_back .button_plus {
 	text-align: center;
 	line-height: 14px;
   display: inline-block;
 	width: 22px;
 	height: 16px;
+	margin: 0;
 	font-size: 15px;
 	border: 1px solid rgb(208, 212, 217);
 	background-color: #efefef;

@@ -32,9 +32,8 @@
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong class="session_name">${sessionScope.name}</strong>님&nbsp</span>hwanmin0121</div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp</span></div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
-		
 				</div>
 			
 				<div class="mypage_navbody">
@@ -66,6 +65,7 @@
 					<ul>
 						<li><a href="#">관리자에게 문의하기</a></li>
 					</ul>
+					
 					
 				</div>
 			

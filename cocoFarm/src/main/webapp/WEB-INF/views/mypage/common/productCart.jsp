@@ -14,7 +14,7 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
-<script>
+<script type="text/javascript">
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
 	var mainHtml = tableEl.innerHTML;
@@ -204,23 +204,9 @@ function onlyNumber(obj){
 </head>
 <body>
 <div id="mypageheader">
-
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
+<!--Mypage부분 header ver3부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+	
 	<div class="container">
 		<div id="header_boby">
 			<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
@@ -229,11 +215,10 @@ function onlyNumber(obj){
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
-					<div class="mypagetitle"><h2>판매회원</h2><h1>마이페이지</h1></div>
+					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp;</span>hwanmin0121</div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp</span></div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
-		
 				</div>
 			
 				<div class="mypage_navbody">
@@ -250,9 +235,8 @@ function onlyNumber(obj){
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
-						<!-- nav-link는 load쓸 때 필요한 것 -->
-						<li class="nav-link"><a href="/product/insert.do">판매등록하기</a></li>
-						<li class="nav-link"><a href="/product">판매상품 조회/수정</a></li>
+						<li><a href="/product/insert.do">판매등록하기</a></li>
+						<li><a href="/product">판매상품 조회/수정</a></li>
 						<li><a href="#">판매 결제 내역 조회 </a></li>
 						<li><a href="#">판매 결제 배송 승인</a></li>
 					</ul>
@@ -267,94 +251,95 @@ function onlyNumber(obj){
 						<li><a href="#">관리자에게 문의하기</a></li>
 					</ul>
 					
+					
 				</div>
 			
 			</div>
 			
-<div class="mypage_page01">
-	<div class="border">
-		<h1>장바구니 조회 </h1>
-		
-		<div class="product_list">
-		
-		<table align="center">
-			<tr class="tr_back">
-				<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
-				<th class="th_inform">상품정보</th>
-				<th class="th_price">상품금액</th>
-				<th class="th_delivery">배송비</th>
-			</tr>
-			
-			<c:forEach items="${productCart }" var="product">
-			<tr class="tr_back" id="tr_cartItem"	align="center">
-				<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
-				<td>
-					<div id="productCart">
-					<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
-					<div class="td_productName">${product.title }</div>
-					</div><br>
-				
-					<c:forEach items="${optionCart }" var="option" varStatus="status">
-					<c:if test="${option.saleIdx eq product.idx }">
-						<div class="td_optionName">${option.optionName }
-						
-							<div class="option_count">
-							<button class="button_minus">-</button>
-							<input type="text" name="saleOptions[${status.index}].proAmount" class="pronum_text" id="tt"
-										 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-							<button class="button_plus">+</button>
-							</div>
-						</div>
-					</c:if>
-					</c:forEach>
+			<div class="mypage_page01">
+				<div class="border">
+					<h1>장바구니 조회 </h1>
 					
-					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
-				</td>
-				<td>41,900원</td>
-				<td>무료</td>
-			</tr>
-			</c:forEach>
-			
-			<tr class="tr_back"	align="center">
-				<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
-				<th style="text-align: left;"><button class="basket_delete">삭제</button></th>
-				<th></th>
-				<th></th>
-			</tr>
-			
-		</table>
-		<div class="warning">카트에 담긴 상품은 최대 30일까지 보관되며 종료되거나 매진될 경우 자동으로 삭제됩니다.</div>
-		
-		</div>
-		
-		<table class="payment_amount">
-			<tr class="tr_payment">
-				<td class="name_price">총 주문금액</td>
-				<td class="name_price" id="border_payment">총 상품금액</td>
-				<td class="real_price" id="border_payment">19,900원</td>
-			</tr>
-			<tr class="tr_payment">
-				<td id="border_payment" style="width: 440px;"></td>
-				<td class="name_price" id="border_payment">배송비</td>
-				<td class="real_price" id="border_payment">2,500원</td>
-			</tr>
-		</table>
-		
-		<table class="payment_amount">
-			<tr class="tr_payment">
-				<td class="name_total" id="border_payment">결제 예상금액</td>
-				<td id="border_payment"></td>
-				<td class="real_total" id="border_payment">22,400원</td>
-			</tr>
-		</table>
-		
-		<div class="save_group">
-			<button class="return">쇼핑 계속하기</button>
-			<button class="purchase">구매하기</button>
-		</div>
-		
-	</div>
-</div>
+					<div class="product_list">
+					
+					<table align="center">
+						<tr class="tr_back">
+							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
+							<th class="th_inform">상품정보</th>
+							<th class="th_price">상품금액</th>
+							<th class="th_delivery">배송비</th>
+						</tr>
+						
+						<c:forEach items="${productCart }" var="product">
+						<tr class="tr_back" id="tr_cartItem"	align="center">
+							<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
+							<td>
+								<div id="productCart">
+								<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
+								<div class="td_productName">${product.title }</div>
+								</div><br>
+							
+								<c:forEach items="${optionCart }" var="option" varStatus="status">
+								<c:if test="${option.saleIdx eq product.idx }">
+									<div class="td_optionName">${option.optionName }
+									
+										<div class="option_count">
+										<button class="button_minus">-</button>
+										<input type="text" name="saleOptions[${status.index}].proAmount" class="pronum_text" id="tt"
+													 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+										<button class="button_plus">+</button>
+										</div>
+									</div>
+								</c:if>
+								</c:forEach>
+								
+								<div style="float: right;"><button class="td_update">옵션 변경</button></div>
+							</td>
+							<td>41,900원</td>
+							<td>무료</td>
+						</tr>
+						</c:forEach>
+						
+						<tr class="tr_back"	align="center">
+							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
+							<th style="text-align: left;"><button class="basket_delete">삭제</button></th>
+							<th></th>
+							<th></th>
+						</tr>
+						
+					</table>
+					<div class="warning">카트에 담긴 상품은 최대 30일까지 보관되며 종료되거나 매진될 경우 자동으로 삭제됩니다.</div>
+					
+					</div>
+					
+					<table class="payment_amount">
+						<tr class="tr_payment">
+							<td class="name_price">총 주문금액</td>
+							<td class="name_price" id="border_payment">총 상품금액</td>
+							<td class="real_price" id="border_payment">19,900원</td>
+						</tr>
+						<tr class="tr_payment">
+							<td id="border_payment" style="width: 440px;"></td>
+							<td class="name_price" id="border_payment">배송비</td>
+							<td class="real_price" id="border_payment">2,500원</td>
+						</tr>
+					</table>
+					
+					<table class="payment_amount">
+						<tr class="tr_payment">
+							<td class="name_total" id="border_payment">결제 예상금액</td>
+							<td id="border_payment"></td>
+							<td class="real_total" id="border_payment">22,400원</td>
+						</tr>
+					</table>
+					
+					<div class="save_group">
+						<button class="return">쇼핑 계속하기</button>
+						<button class="purchase">구매하기</button>
+					</div>
+					
+				</div>
+			</div>
 
 			</div>
 	</div>
