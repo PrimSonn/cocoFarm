@@ -1,4 +1,4 @@
-package cocoFarm.controller;
+﻿package cocoFarm.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,7 @@ public class LoginController {
 	public ModelAndView main(HttpSession session, ModelAndView mav){
 		System.out.println(session.getAttribute("idx"));
 		System.out.println(session.getAttribute("type")); 
+
 		mav.setViewName("main/cocomain");
 		return mav;
 	}

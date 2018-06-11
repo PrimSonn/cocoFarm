@@ -29,6 +29,7 @@ public class LoginServiceImpl implements LoginService {
 			System.out.println("loginDao : " + account);
 			session.setAttribute("idx", account.getIdx());
 			session.setAttribute("type", account.getAccount_type());
+			session.setAttribute("name", account.getName());
 			return true;
 		} else {
 			return false;

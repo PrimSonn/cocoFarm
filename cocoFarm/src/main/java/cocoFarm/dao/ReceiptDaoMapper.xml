@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='cocoFarm.dao.ReceiptDao'>
+
+	<select id='tempRecpt' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
+		declare
+			mainRecpt		number;
+			totMoney		number := 0;
+			opt_name		nvarchar2(25);
+  			opt_unit		nvarchar2(20);
+  			opt_price		number;
+  			
+  			err_code		number;
+			err_message		varchar2(255);
+  			
+			type sale_idxArr is table of number;
+  			saleArr sale_idxArr;
+
+			cursor SALE_CUR is
+				select distinct SALE_IDX from SALE_OPTION 
+					where IDX in <foreach item="optList" index="index" collection="optList" open="(" separator="," close=")">
+						#{optList.idx} </foreach> ;
+		begin
+			savepoint START_TRANSACTION;
+			
+			mainRecpt := MAIN_RECPT_IDX_FUNC;
+			<foreach item='optList' collection='optList'>
+				select (PRICE * #{optList.proAmount} + totMoney) money into totMoney from SALE_OPTION where IDX = #{optList.idx};
+			</foreach>
+			insert into MAIN_RECEIPT (IDX, BUYER_IDX, MONEY_AMOUNT) values (mainRecpt, #{accIdx}, totMoney);
+			
+			open SALE_CUR;
+			fetch SALE_CUR
+				bulk collect into saleArr;
+			close SALE_CUR;
+			
+			forall i in saleArr.first..saleArr.last
+				insert into SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) values (saleArr(i), mainRecpt);
+			<foreach item='optList' collection='optList'>
+				select NAME, UNIT, PRICE into opt_name, opt_unit, opt_price from SALE_OPTION where IDX = #{optList.idx};
+				insert into SALE_OPTION_RECEIPT (MAIN_RECPT_IDX, SALE_OPTION_IDX, NAME, AMOUNT, UNIT, PRICE)
+					values (mainRecpt, #{optList.idx}, opt_name, #{optList.proAmount}, opt_unit, opt_price);
+				insert into PLOGGER (NAME, RESULTCODE, CONTENT)
+					values ('tempOptRecpt',1,'mainRecpt: '||mainRecpt||', idx: '||#{optList.idx}||', name: '||opt_name||', amount: '||#{optList.proAmount}||', unit: '||opt_unit||', price: '||opt_price);
+			</foreach>
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('tempRecpt',1,'mainRecpt: '||mainRecpt||', totMoney: '||totMoney);
+			commit;
+			
+			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
+			#{isDone, jdbcType=NUMERIC, mode=OUT} := 1;
+			
+		exception when OTHERS then
+			rollback to START_TRANSACTION;
+
+			err_code := sqlcode;
+			err_message := substr(sqlerrm, 1, 255);
+			
+			insert into PLOGGER (NAME, RESULTCODE, ERR_CODE, ERR_MESSAGE) values ('tempRecpt', 0, err_code, err_message);
+			commit;
+		end;
+	</select>
+	
+	<select id="checkRecpt" parameterType = 'cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE'>
+		{call CHECK_TEMP_RECPT(
+			 #{arg,jdbcType=NUMERIC,mode=IN}
+			 ,#{accIdx,jdbcType=NUMERIC,mode=IN}
+		     ,#{arg2,jdbcType=NUMERIC,mode=IN}
+		     ,#{intArg,jdbcType=NUMERIC,mode=IN}
+		     ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
+	<select id='refundRecptMkr' parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call REFUND_RECPT_MKR (
+			#{arg,jdbcType=NUMERIC,mode=IN}
+			,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
+	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
+		declare
+			mainRecpt number;
+			isDone number;
+		begin
+			mainRecpt:=1;
+			isDone:=1;
+			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
+			#{isDone, jdbcType=NUMERIC, mode=OUT} := isDone;
+		end;
+	</select>
+
+	<select id="callTempRecptMkr" parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call TempRecptMkr(
+			#{accIdx, jdbcType=NUMERIC, mode=IN}
+			#{arg, jdbcType=NVARCHAR, mode=IN}
+			#{isDone, jdbcType=NUMERIC, mode=OUT}
+		)}
+	</select>
+
+</mapper>

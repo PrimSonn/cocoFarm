@@ -1,0 +1,412 @@
+@charset "UTF-8";
+/*글짜 폰트  */
+@import url('https://fonts.googleapis.com/css?family=Amiko');
+/*font-family: 'Amiko', sans-serif;  */
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*font-family: 'Jeju Gothic', serif;*/
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+/* font-family: 'Nanum Gothic', sans-serif; */
+
+#view_seller{
+	margin-top: 10px;
+}
+
+.prodisplay{
+	
+	position: relative;
+    float: left;
+    width: 210px;
+    height: 300px;
+    margin-right: 12px;
+    overflow:hidden; 
+    margin-bottom: 16px; 
+}
+
+
+.prodisplay_last{
+	
+	position: relative;
+    float: left;
+    width: 210px;
+    height: 300px;
+    margin-right: 0px;
+    overflow:hidden; 
+    margin-bottom: 16px; 
+}
+
+/*메인 view 상품 설정  */
+.pro_info{
+	width: 200px;
+	margin: 3px auto 0px auto;	
+}
+
+.pro_title{
+	display:-webkit-box;
+	font-family: 'Nanum Gothic';
+	font-size: 15px;
+	overflow: hidden;
+	width:100%;
+    max-height: 36px;
+    font-weight: 400;
+    line-height: 18px;
+    -webkit-box-orient:vertical;
+}
+
+.pro_price{
+	font-family: helvetica,sans-serif;
+	display:-webkit-box;
+	width:100%;
+	font-size: 17px;
+	margin-top: 1px;
+	font-weight: 700;
+}
+
+/*디테일 뷰 단 */
+.nav_map{
+	color: #222;
+    vertical-align: middle;
+	margin:10px 0;
+	font-family: 'Nanum Gothic', sans-serif;
+	font-size: 13px;
+	width: 100%;
+}
+.nav_map span{
+	margin-right: 7px;
+}
+.detail_body {
+	width: 100%;
+
+	/* border: 1px solid black; */
+	
+}
+.detail_body .pto{
+	width: 550px;
+	height: 550px;
+	float: left;
+}
+
+.detail_body .detailpro_info{
+	width: 450px;
+	border: 1px solid #efefef;
+	background-color:#fafafa;
+	float: right;
+	padding: 5px 48px 20px;
+	margin-bottom: 10px;
+	
+}
+
+.detailpro_info .detail_title{
+	font-family: 'Nanum Gothic', sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	margin:8px 0 2px 0;
+	position: relative;
+}
+
+.price_info{
+	/* border: 1px solid black; */
+	font-family: 'Nanum Gothic', sans-serif;
+}
+.price_info dl{
+	
+	padding: 11px 0px 8px 0px;
+}
+.detailpro_info img{
+	border: 1px solid #dddddd;
+	margin: 1px 0;
+	
+}
+.price_info dt{
+	display:inline;
+	/* border: 1px solid black; */
+	float: left;
+	height: 13px;
+	margin-bottom:5px; 
+	font-size: 11px;
+	padding: 2px 10px 1px 0;
+	color: #494949;
+}
+
+.price_info dd{
+	height:26px;
+	font-size: 13px;
+	vertical-align: top;
+	padding-left: 70px;
+		color: #494949;
+}
+.price_info dd p{
+	display:inline;
+	/* border: 1px solid black; */
+}
+
+/*판매가격  */
+.price_info .price_tem{
+	font-family: 'Tahoma','Nanum Gothic';
+	font-size: 20px;
+	font-weight: 800;
+	line-height: 20px;
+    color: #8f8f8f;
+    margin-bottom: 5px;
+	
+}
+
+/*할인가격  */
+.price_info .price_sale{
+	font-family: 'Tahoma','Nanum Gothic';
+	font-size: 20px;
+	font-weight: 800;
+	line-height: 20px;
+    color: #2f2f2f;
+	
+}
+
+/* 보더 박스 */
+.border_tbbox{
+	border-bottom: 1px solid #ededed;
+	/* border-top: 1px solid #ededed; */
+}
+
+
+/*옵션 박스  */
+.proselect_option{
+	width: 100%;
+	height: 30px;
+	border: 1px solid #ededed;
+	margin-bottom: 5px;
+	font-size: 14px; 
+	
+}
+.proselect_option option{
+	padding: 10px 0px;
+	
+}
+
+
+
+
+
+/*상세페이지 버튼  */
+.buy_button {
+	margin-top:20px;
+	width: 210px;
+	height: 45px;
+	
+	
+	color: #fff;
+	border: 0px;
+	background-color: #ea9b3c;
+	line-height: 45px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	 text-align: center;
+	border-radius:2px;
+	position: relative;
+}
+.buy_button span{
+	font-size: 15px;
+	font-family:'Jeju Gothic';
+	padding-left: 12px;
+}
+.buy_button img{
+	
+	position: absolute;
+	left:50px;
+	top: 11px;
+	border: 0px;
+	
+}
+
+.addcart_button{
+	width: 120px;
+	height: 45px;
+	font-size: 15px;
+	font-family:'Jeju Gothic';
+	background-color: #fff;
+	color :  #273743;
+	border: 1px solid #dfdfdf;
+} 
+
+.talk_button{
+	width: 110px;
+	height: 45px;
+	font-size: 15px;
+	font-family:'Jeju Gothic';
+	background-color: #fff;
+	color :  #273743;
+	border: 1px solid #dfdfdf;
+} 
+.detail_cnt {
+	width: 100%;
+	padding: 12px 0px;
+	height: 60px;
+	border-bottom: 1px solid rgb(208, 212, 217);
+	
+}
+.detail_cnt .option_name{
+	font-family: '나눔고딕','Nanum Gothic', sans-serif;
+	font-size: 14px;
+	margin: 4px;
+}
+
+.detail_cnt a{
+	float: left;
+	text-align:center;
+	line-height:30px;
+    display: inline-block;
+	width: 34px;
+	height: 34px;
+	font-size: 23px;
+	border: 1px solid rgb(208, 212, 217);
+	background-color: #efefef;
+	font-weight: lighter;
+	color: #a0a0a0;
+} 
+
+.detail_cnt .pronum_text{
+	float: left;
+	width: 34px;
+	height: 34px;
+	border-top: 1px solid rgb(208, 212, 217);
+	border-bottom:  1px solid rgb(208, 212, 217);
+	border-left: 0px;
+	border-right: 0px;
+}
+
+.detail_cnt .indiv_option_price{
+	float: left;
+	margin-left:10px;
+	width: 270px;
+	height: 35px;
+	line-height: 30px;
+	border: 1px solid rgb(208, 212, 217);
+	padding-right: 10px;
+	text-align: right;
+	font-size: 14px;
+
+}
+.delete_option{
+	font-size: 12px;
+	height: 35px;
+}
+.delete_option img{
+	position:relative;
+	top:4px;
+	border: 0px;
+	margin-left: 16px;
+}
+
+/*가격 총 합계 금액  */
+.sum_price{
+	margin-top:10px;
+	width: 100%;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	position:relative;
+	padding-bottom:100px;
+}
+.sum_price p{
+	display: inline;
+	
+}
+.sum_price .left_price{
+	width:300px;
+	float: right;
+	text-align: right;
+	right: 0px;
+	
+	
+}
+
+.sum_price .left_price em{
+	font-family: 'Tahoma','Nanum Gothic';
+	font-size: 20px;
+	font-weight: 800;
+	line-height: 24px;
+	margin-left:20px;
+    color: #fc3530;
+    vertical-align: bottom;
+}
+
+/* 상품 정보 */
+
+
+
+
+.item_info {
+	position:relative;
+	float: left;
+	width: 100%;
+	height: 50px;
+	line-height: 51px;
+	border-top:1px solid rgb(239, 239, 239);
+	border-bottom: 1px solid rgb(239, 239, 239);
+	margin-bottom: 4px;
+	overflow: hidden;
+	font-family: '나눔고딕','Nanum Gothic', sans-serif;
+	font-size: 14px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13); 
+	display: inline-block;
+}
+.item_info a{
+	padding-left: 20px;
+	font-weight: normal;
+	color: #464646;
+	font-size: 14px;
+	font-family: 'Jeju Gothic', serif;
+	
+}
+
+.info_open{
+	font-size: 14px;
+	display: block;
+	height: 100%;
+	}
+	
+.open_icon{
+	float: right;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding-right: 30px;
+
+}	
+/*테이블 */
+.tbl_spec{
+	width: 100%;
+	font-size: 14px;
+	line-height: 25px;
+	/* display: table-cell; */
+	vertical-align: inherit;
+	border-top: 1px dotted #b2b2b2;
+	border-bottom: 1px solid #efefef;
+	letter-spacing: 0;
+	border-collapse: collapse;
+}
+.tbl_spec tr{
+/* 	height:45px; */
+	border-bottom: 1px solid #eaeaea;
+	
+}
+.tbl_spec tr th{
+	text-align: left;
+	width: 320px;
+	color: #7b7b7b;
+	font-weight: 300;
+	padding: 13px 15px 11px 20px;
+}
+
+	
+/*판매자 정보창  */
+.seller_info {
+	position:relative;
+	float: left;
+	width: 100%;
+	height: 40px;
+	border: 1px solid black;
+	
+}
+#detail_option .pronum_text{
+	text-align: center;
+}
+
+
