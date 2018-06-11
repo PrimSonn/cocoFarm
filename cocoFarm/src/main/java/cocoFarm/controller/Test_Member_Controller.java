@@ -19,9 +19,9 @@ public class Test_Member_Controller {
 	private static final Logger logger = LoggerFactory.getLogger(Test_Member_Controller.class);
 	
 	@Autowired TestMemberService memberService;
-
-	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
-	public void mainview() {}
+//
+//	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
+//	public void mainview() {}
 	
 	
 	

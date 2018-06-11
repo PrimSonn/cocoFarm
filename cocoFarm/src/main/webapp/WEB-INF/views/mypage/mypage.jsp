@@ -130,7 +130,7 @@ $(document).ready(function() {
 	</div>
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+				<div class="logo"><a href="/main/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
 				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
 		</div>
 		<div class="mypage_box">
@@ -159,7 +159,7 @@ $(document).ready(function() {
 						<li><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
 					</ul>
 					
-					<c:if test="${sessionScope.type eq 2 or sessionScope.type eq 1 }">
+					<c:if test="${sessionScope.type ne 3}">
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					<ul>
 						<li><a href="#">판매등록하기</a></li>
@@ -176,7 +176,7 @@ $(document).ready(function() {
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
 					<ul>
-						<li><a href="#">관리자에게 문의하기</a></li>
+						<li><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
 					</ul>
 					
 					

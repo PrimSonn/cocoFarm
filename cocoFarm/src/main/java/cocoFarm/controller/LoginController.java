@@ -1,4 +1,4 @@
-package cocoFarm.controller;
+﻿package cocoFarm.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class LoginController {
 	@Autowired LoginService loginService;
 	@Autowired ServletContext context;
 	
-	@RequestMapping(value="/cocomain.do", method=RequestMethod.GET)
+	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
 	public ModelAndView main(HttpSession session, ModelAndView mav){
 		System.out.println(session.getAttribute("idx"));
 		System.out.println(session.getAttribute("type")); 
@@ -44,7 +44,7 @@ public class LoginController {
 	public String logout(HttpSession session){
 		session.invalidate();
 		
-		return "redirect:/cocomain.do";
+		return "redirect:/main/cocomain.do";
 	}
 	
 	@RequestMapping(value="/login/login.do", method=RequestMethod.GET)
@@ -56,7 +56,7 @@ public class LoginController {
 		System.out.println(account);
 		
 		if(loginService.login(account, session)) {
-			return "redirect:/cocomain.do";
+			return "redirect:/main/cocomain.do";
 		} else {
 			model.addAttribute("msg", "로그인 실패");
 			model.addAttribute("url", "/login/login.do");
@@ -94,7 +94,7 @@ public class LoginController {
 		System.out.println(account);
 		loginService.join(account);
 		
-		return "redirect:/cocomain.do"; 
+		return "redirect:/main/cocomain.do"; 
 	}
 	
 	@RequestMapping(value="/login/idCheck.do", method=RequestMethod.POST)
