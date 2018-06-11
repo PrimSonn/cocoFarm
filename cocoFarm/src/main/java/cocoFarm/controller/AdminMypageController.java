@@ -7,10 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cocoFarm.dto.Account;
 import cocoFarm.dto.LicenseDto;
+import cocoFarm.dto.Main_receipt;
 import cocoFarm.service.AdminMypageService;
+import cocoFarm.util.Paging;
 
 @Controller
 public class AdminMypageController {
@@ -19,18 +22,28 @@ public class AdminMypageController {
 	AdminMypageService adminMypageService;
 	
 	@RequestMapping(value="/mypage/wholeAcc.do", method=RequestMethod.GET)
-	public void wholeAcc(Account account, Model model) {
+	public void wholeAcc(@RequestParam(defaultValue="0") int curPage, Account account, Model model) {
 		
-		List wholeAccList = adminMypageService.wholeAcc(account);
+		int totalCount = adminMypageService.getTotalAcc();
+		
+		Paging paging = new Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+		
+		List wholeAccList = adminMypageService.wholeAcc(paging);
 		
 		model.addAttribute("wholeAccList", wholeAccList);
 		
 	}
 	
 	@RequestMapping(value="/mypage/delWholeAcc.do", method=RequestMethod.GET)
-	public void delWholeAcc(Account account, Model model) {
+	public void delWholeAcc(@RequestParam(defaultValue="0") int curPage, Account account, Model model) {
 		
-		List delWholeAccList = adminMypageService.delWholeAcc(account);
+		int totalCount = adminMypageService.getTotalDelAcc();
+		
+		Paging paging = new Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+		
+		List delWholeAccList = adminMypageService.delWholeAcc(paging);
 		
 		model.addAttribute("delWholeAccList", delWholeAccList);
 		
@@ -73,5 +86,13 @@ public class AdminMypageController {
 		return "redirect:/mypage/licenseList.do";
 	}
 	
+	@RequestMapping(value="/mypage/selectPayAll.do", method=RequestMethod.GET)
+	public void selectPayAll(Main_receipt main_receipt, Model model) {
+		
+		List mainReceiptList = adminMypageService.selectPayAll();
+		
+		model.addAttribute("mainReceiptList", mainReceiptList);
+		
+	}
 
 }

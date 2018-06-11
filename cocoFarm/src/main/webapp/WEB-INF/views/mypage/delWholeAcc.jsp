@@ -43,7 +43,8 @@
 		</tbody>
 	
 	</table>
-
+	<br>
+	<jsp:include page="/WEB-INF/views/util/delWholeAcc_paging.jsp" />
 </div>
 
 

@@ -48,7 +48,8 @@
 		</tbody>
 	
 	</table>
-
+	<br>
+	<jsp:include page="/WEB-INF/views/util/wholeAcc_paging.jsp" />
 </div>
 
 

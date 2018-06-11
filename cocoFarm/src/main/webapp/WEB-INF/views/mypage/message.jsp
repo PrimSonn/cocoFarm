@@ -126,6 +126,7 @@ $(document).ready(function() {
 					<ul>
 						<li><a href="/mypage/wholeAcc.do">전체회원조회</a></li>
 						<li><a href="/mypage/delWholeAcc.do">탈퇴회원조회</a></li>
+						<li><a href="#">전체결제내역조회</a></li>
 						<li><a href="/mypage/licenseList.do">판매자 등록 신청 조회 및 승인</a></li>
 					</ul>
 					</c:if>

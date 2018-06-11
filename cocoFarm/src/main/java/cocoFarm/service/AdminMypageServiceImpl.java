@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.AdminMypageDao;
 import cocoFarm.dto.Account;
 import cocoFarm.dto.LicenseDto;
+import cocoFarm.dto.Main_receipt;
+import cocoFarm.util.Paging;
 
 @Service
 public class AdminMypageServiceImpl implements AdminMypageService {
@@ -16,13 +18,23 @@ public class AdminMypageServiceImpl implements AdminMypageService {
 	AdminMypageDao adminMypageDao;
 	
 	@Override
-	public List wholeAcc(Account account) {
-		return adminMypageDao.wholeAcc(account);
+	public int getTotalAcc() {
+		return adminMypageDao.getAccAllCount();
 	}
 	
 	@Override
-	public List delWholeAcc(Account account) {
-		return adminMypageDao.delWholeAcc(account);
+	public int getTotalDelAcc() {
+		return adminMypageDao.getAccDelCount();
+	}
+	
+	@Override
+	public List wholeAcc(Paging paging) {
+		return adminMypageDao.wholeAcc(paging);
+	}
+	
+	@Override
+	public List delWholeAcc(Paging paging) {
+		return adminMypageDao.delWholeAcc(paging);
 	}
 	
 	@Override
@@ -48,6 +60,11 @@ public class AdminMypageServiceImpl implements AdminMypageService {
 	@Override
 	public void licenseNoMsg(int acc_idx) {
 		adminMypageDao.licenseNoMsg(acc_idx);
+	}
+	
+	@Override
+	public List selectPayAll() {
+		return adminMypageDao.selectPayAll();
 	}
 	
 }
