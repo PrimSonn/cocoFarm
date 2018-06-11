@@ -30,7 +30,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	@Autowired ServletContext context;
-	
+
 	@RequestMapping(value="/login/logout.do", method=RequestMethod.GET)
 	public String logout(HttpSession session){
 		session.invalidate();
