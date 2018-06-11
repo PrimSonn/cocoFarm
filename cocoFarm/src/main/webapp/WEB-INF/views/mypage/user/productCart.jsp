@@ -83,22 +83,22 @@ $(document).ready(function() {
 		
 		//방법1
 // 		체크된 대상들을 하나씩 꺼내서 문자열로 합치기
-// 		var names = "";
+// 		var productIdx = "";
 // 		var len = $checkboxes.length;
 // 		$checkboxes.each( function(idx) {
-// 			names += $(this).val();
+// 			productIdx += $(this).val();
 			
 // 			if( len-1 != idx ) {
-// 				names += ",";
+// 				productIdx += ",";
 // 			}
 // 		});
-// 		console.log(names);
+// 		console.log(productIdx);
 			
 		var map = $checkboxes.map(function() {
 			return $(this).val();
 		});
-		var names = map.get().join(",");
-		console.log("names : " + names);
+		var productIdx = map.get().join(",");
+		console.log("productIdx : " + productIdx);
 		
 // 		console.log( "map:" + map );	// 맵
 // 		console.log( "map->array : " + map.get() );	// 맵->배열
@@ -111,13 +111,57 @@ $(document).ready(function() {
 			.append(
 				$("<input>")
 					.attr("type", "hidden")
-					.attr("name", "names")
-					.attr("value", names)
+					.attr("name", "productIdx")
+					.attr("value", productIdx)
 			);
 		$(document.body).append($form);
 		$form.submit();
 	});
+	
+
+
+	/*플러스 버튼 눌렀을때  */
+	$(".option_count").on("click", ".button_plus", function() {
+		// 옵션 개수 최대값
+		if(Number($(this).parent().find(".pronum_text").val())==99) {
+			return;
+		}	
+		
+		var num=Number($(this).parent().find(".pronum_text").val())+1;
+		
+		console.log("optionCount: " + num);
+		var text_num=Number($(this).parent().find(".pronum_text").val(num));
+		
+		var original_price=Number($(this).parent().find(".num_option_price").data("unit"));
+		
+		console.log(original_price);
+		$(this).parent().find(".num_option_price").text(comma(original_price*num));
+		
+		price=0;
+		calcPrice();
+		
+	});
+
+	/* 마이너스 버튼 눌렀을때 */
+	$(".option_count").on("click",".button_minus", function() {
+		
+		if(Number($(this).parent().find(".pronum_text").val())==1) {
+			return;
+		}
+		var num = Number($(this).parent().find(".pronum_text").val())-1;
+		var text_num = Number($(this).parent().find(".pronum_text").val(num));
+		
+		var original_price=$(this).parent().find(".num_option_price").data("unit");
+		$(this).parent().find(".num_option_price").text(comma(original_price*num));
+		price=0;
+		calcPrice();
+		
+	});
 });
+
+function checkDelete() {
+	
+}
 
 //전체 체크/해제
 function checkAll() {
@@ -138,6 +182,22 @@ function checkAll() {
 			this.checked = false;	
 		});
 	}
+}
+
+/* 옵션 합산 계산  */
+function calcPrice(){
+	$(".option_count .num_option_price").each(function(idx) {
+		price += Number($(this).text().replace(/,/g, ''));
+	});
+// 	 $(".left_price em").text(price);
+	console.log(price);
+}
+
+/* 숫자만 입력 */
+function onlyNumber(obj){
+    val=obj.value;
+    re=/[^0-9]/gi;
+    obj.value=val.replace(re,"");
 }
 </script>
 
@@ -224,6 +284,7 @@ function checkAll() {
 				<th class="th_price">상품금액</th>
 				<th class="th_delivery">배송비</th>
 			</tr>
+			
 			<c:forEach items="${productCart }" var="product">
 			<tr class="tr_back" id="tr_cartItem"	align="center">
 				<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
@@ -232,11 +293,21 @@ function checkAll() {
 					<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
 					<div class="td_productName">${product.title }</div>
 					</div><br>
-					<c:forEach items="${optionCart }" var="option">
+				
+					<c:forEach items="${optionCart }" var="option" varStatus="status">
 					<c:if test="${option.saleIdx eq product.idx }">
-						<div class="td_optionName">${option.optionName }</div>
+						<div class="td_optionName">${option.optionName }
+						
+							<div class="option_count">
+							<button class="button_minus">-</button>
+							<input type="text" name="saleOptions[${status.index}].proAmount" class="pronum_text" id="tt"
+										 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+							<button class="button_plus">+</button>
+							</div>
+						</div>
 					</c:if>
 					</c:forEach>
+					
 					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
 				</td>
 				<td>41,900원</td>

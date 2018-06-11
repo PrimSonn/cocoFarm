@@ -412,3 +412,30 @@ input[id="checkAll"], input[id="checkRow"] {
 #border_payment {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
+
+.option_count {
+	float: right;
+}
+
+.button_minus, .button_plus {
+	text-align: center;
+	line-height: 14px;
+  display: inline-block;
+	width: 22px;
+	height: 16px;
+	font-size: 15px;
+	border: 1px solid rgb(208, 212, 217);
+	background-color: #efefef;
+	font-weight: lighter;
+	color: #a0a0a0;
+	cursor: pointer;
+}
+
+.option_count .pronum_text{
+	width: 18px;
+	height: 17px;
+	border-top: 1px solid rgb(208, 212, 217);
+	border-bottom:  1px solid rgb(208, 212, 217);
+	border-left: 0px;
+	border-right: 0px;
+}

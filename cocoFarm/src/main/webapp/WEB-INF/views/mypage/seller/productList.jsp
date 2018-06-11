@@ -86,15 +86,6 @@
 							<th class="th_update"></th>
 						</tr>
 						
-<!-- 						<tr class="tr_back"	align="center"> -->
-<%-- 							<td>${optionList.idx }</td> --%>
-<%-- 							<td>${optionList.optionName }</td> --%>
-<%-- 							<td>${optionList.startAmount }</td> --%>
-<%-- 							<td>${optionList.price }원</td> --%>
-<%-- 							<td><a href="/product/update.do?idx=${optionList.idx }">수정</a>&nbsp;&nbsp; --%>
-<!-- 									<a href="#">삭제</a></td> -->
-<!-- 						</tr> -->
-						
 						<c:forEach items="${optionList }" var="i">
 						<tr class="tr_back"	align="center">
 							<td>${i.idx }</td>
