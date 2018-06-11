@@ -203,7 +203,7 @@ drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
-drop index TODAYS_FMR_FILE_IDX;
+drop index TODAYS_FMR_FILE_IDX;--deprecated
 drop table TODAYS_FARMER_FILE cascade constraints;
 
 drop trigger TODAYS_FARMER_EDIT_TRG;
@@ -2945,7 +2945,7 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - �
 --drop table TODAYS_FARMER cascade constraints;
 
 
-------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
+------------------------------------------------  오늘의 농부 이미지  ----------------------------------------------------
 
 create table TODAYS_FARMER_FILE (
 
@@ -2954,13 +2954,13 @@ create table TODAYS_FARMER_FILE (
 	,STORED_FILENAME		varchar2(800)
 	,UPLOAD_DATE			date default SYSDATE
 
-	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+	,constraint TODAYS_FARMER_PK primary key (ACC_IDX)
+	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
 create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
 
 
---drop index TODAYS_FMR_FILE_IDX;
 --drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
