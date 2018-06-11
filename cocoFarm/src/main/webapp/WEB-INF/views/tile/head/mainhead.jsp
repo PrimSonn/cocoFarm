@@ -59,7 +59,7 @@
 				<li><a href="/seller.do">농수산물</a></li>
 				<li><a href="#">경매</a></li>
 				<li><a href="#">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
+				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>
