@@ -106,8 +106,8 @@ public class ProductController {
 		product.setMainImg(stored2);
 		
 		// 상품을 등록하는 사람의 idx
-		product.setAccIdx(2);
-//		product.setAccIdx((Integer)session.getAttribute("idx"));
+//		product.setAccIdx(2);
+		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
 		productService.insert(product);
 		
