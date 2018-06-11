@@ -31,29 +31,114 @@
 
 })
 
+function List() {
+	this.elements = {};
+}
+
+/* 장바구니 조회 연습... */
 function cartItems() {
-	var size = ${optionView }
-		
+	var productSize = "${productCart.size() }";
+	var optionName = "${optionCart[0].optionName }";
+	var optionSaleIdx = "${optionCart[0].saleIdx }";
+	var optionCart = new Array();
+	console.log("optionName: " + optionName);
+	console.log(optionCart);
+	console.log("size: " + productSize);
+	
+	var str = "";
+	for(var i=0; i<productSize; i++) {
+		str += '<div>'
+					+ '<img src="/proimg/${productCart[0].faceImg }" class="td_productImg" align="left" width="140px" height="140px" />'
+					+ '<div class="td_productName">${productCart[0].title }</div>'
+	}
+// 	document.getElementById("productCart").innerHTML = str;
+	
+// 	for(var i=0; i<productSize; i++) {
+// 		var productImg = "/proimg/${productCart[0].faceImg }";
+// 		$(".td_productImg").attr("src", "productImg");
+// 	}
+// 	$(".td_productName").text("${productCart[0].title }");
+	
 }
 
 $(document).ready(function() {
-	
 	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
+// 	$.ajax({
+// 		type: "POST"
+// 		, url: "/product/cart.do"
+// 		, data: {
+// 			// 장바구니 상품
+// 		}
+// 		, dataType: "json"
+// 		, success: function(data) {
 			
-		}
-	})
-	
+// 		}
+// 	})
+	// 선택체크 삭제
+	$(".basket_delete").click(function() {
+
+		// 선택된 체크박스
+		var $checkboxes
+		 = $("input:checkbox[name='checkRow']:checked");
+		
+		//방법1
+// 		체크된 대상들을 하나씩 꺼내서 문자열로 합치기
+// 		var names = "";
+// 		var len = $checkboxes.length;
+// 		$checkboxes.each( function(idx) {
+// 			names += $(this).val();
+			
+// 			if( len-1 != idx ) {
+// 				names += ",";
+// 			}
+// 		});
+// 		console.log(names);
+			
+		var map = $checkboxes.map(function() {
+			return $(this).val();
+		});
+		var names = map.get().join(",");
+		console.log("names : " + names);
+		
+// 		console.log( "map:" + map );	// 맵
+// 		console.log( "map->array : " + map.get() );	// 맵->배열
+// 		console.log( "array tostring : " + map.get().join(",") ); // toString
+
+		// 전송 폼
+		var $form = $("<form>")
+			.attr("action", "/product/deleteCart.do")
+			.attr("method", "post")
+			.append(
+				$("<input>")
+					.attr("type", "hidden")
+					.attr("name", "names")
+					.attr("value", names)
+			);
+		$(document.body).append($form);
+		$form.submit();
+	});
 });
 
+//전체 체크/해제
+function checkAll() {
+	// checkbox들
+	var $checkboxes=$("input:checkbox[name='checkRow']");
 
+	// checkAll 체크상태 (true:전체선택, false:전체해제)
+	var check_status = $("#checkAll").is(":checked");
+	
+	if( check_status ) {
+		// 전체 체크박스를 checked로 바꾸기
+		$checkboxes.each(function() {
+			this.checked = true;	
+		});
+	} else {
+		// 전체 체크박스를 checked 해제하기
+		$checkboxes.each(function() {
+			this.checked = false;	
+		});
+	}
+}
 </script>
 
 </head>
@@ -98,7 +183,7 @@ $(document).ready(function() {
 					<ul>
 						<li><a href="#">개인정보 수정</a></li>
 						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
 						<li><a href="#">회원 탈퇴</a></li>
 					</ul>
 					
@@ -134,58 +219,38 @@ $(document).ready(function() {
 		
 		<table align="center">
 			<tr class="tr_back">
-				<th class="th_checkbox"><input type="checkbox" id="chk_all" name="chk_all"></th>
+				<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
 				<th class="th_inform">상품정보</th>
 				<th class="th_price">상품금액</th>
 				<th class="th_delivery">배송비</th>
 			</tr>
-			
+			<c:forEach items="${productCart }" var="product">
 			<tr class="tr_back" id="tr_cartItem"	align="center">
-				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td>
+				<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
 				<td>
-					<div>
-					<img src="http://img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2018-06-01%2F71d3322e2b354009b318d5d8b2388e71.jpg" align="left" width="140px" height="140px" />
-					<div class="td_productName">경주 체리 2kg</div></div><br>
-					<div class="td_optionName">옵션1</div>
-					<div class="td_optionName">옵션2</div>
+					<div id="productCart">
+					<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
+					<div class="td_productName">${product.title }</div>
+					</div><br>
+					<c:forEach items="${optionCart }" var="option">
+					<c:if test="${option.saleIdx eq product.idx }">
+						<div class="td_optionName">${option.optionName }</div>
+					</c:if>
+					</c:forEach>
 					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
 				</td>
 				<td>41,900원</td>
 				<td>무료</td>
 			</tr>
+			</c:forEach>
 			
-<!-- 			<tr class="tr_back"	align="center"> -->
-<!-- 				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td> -->
-<!-- 				<td> -->
-<!-- 					<img src="//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2017-09-13%2Fd0dec3bc1c8248f39457849e7700f097.jpg" align="left" width="140px" height="140px" /> -->
-<!-- 					<div class="td_productName">김천 거봉포도 4kg</div><br> -->
-<!-- 					<div class="td_optionName">옵션1</div> -->
-<!-- 					<div class="td_optionName">옵션2</div> -->
-<!-- 					<div class="td_optionName">옵션3</div> -->
-<!-- 					<div style="float: right;"><button class="td_update">옵션 변경</button></div> -->
-<!-- 				</td> -->
-<!-- 				<td>39,900원</td> -->
-<!-- 				<td>무료</td> -->
-<!-- 			</tr> -->
-			
-<!-- 			<tr class="tr_back"	align="center"> -->
-<!-- 				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td> -->
-<!-- 				<td> -->
-<!-- 					<img src=//img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2018-05-29%2F88430634ff4f429ca0c2d4f4a7dca337.jpg  align="left" width="140px" height="140px" /> -->
-<!-- 					<div class="td_productName">고령 멜론 4종 혼합세트</div><br> -->
-<!-- 					<div class="td_optionName">옵션1</div> -->
-<!-- 					<div style="float: right;"><button class="td_update">옵션 변경</button></div> -->
-<!-- 				</td> -->
-<!-- 				<td>29,900원</td> -->
-<!-- 				<td>무료</td> -->
-<!-- 			</tr> -->
-		
 			<tr class="tr_back"	align="center">
-				<th><input type="checkbox" id="chk_all" name="chk_all"></th>
+				<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
 				<th style="text-align: left;"><button class="basket_delete">삭제</button></th>
 				<th></th>
 				<th></th>
 			</tr>
+			
 		</table>
 		<div class="warning">카트에 담긴 상품은 최대 30일까지 보관되며 종료되거나 매진될 경우 자동으로 삭제됩니다.</div>
 		

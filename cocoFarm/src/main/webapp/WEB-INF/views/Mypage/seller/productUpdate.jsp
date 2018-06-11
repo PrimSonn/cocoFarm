@@ -74,7 +74,7 @@ function onlyNumber(obj){
 function optionSelect(sVal) {
 	
 	// 이 방식으로 하면 ${optionView[0].optionName } 적용이 안돼! 외않되!
-	var str = ""
+	var str = "";
 	for(var i=0; i<sVal; i++) {
 		str += '<ul>'
 			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" style="resize:none" rows="1" cols="30" placeholder="15자 이내에 글자">${optionView[0].optionName }</textarea></li>'
@@ -109,7 +109,7 @@ function optionSelect(sVal) {
 	else if(sVal == 2) str = str2;
 	else if(sVal == 3) str = str3;
 		
-	document.getElementById("option_boby").innerHTML = str;
+	document.getElementById("option_body").innerHTML = str;
 }
 
 // 네이버 스마트에디터를 사용하는 방법
@@ -250,7 +250,7 @@ function submitContents(elClickedObj) {
 								</ul>
 							</div>
 							
-							<div id="option_boby">
+							<div id="option_body">
 								<ul>
 									<li><p>옵션 제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
 																	style="resize:none" rows="1" cols="30"></textarea></li>
