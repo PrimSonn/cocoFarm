@@ -106,8 +106,8 @@ public class ProductController {
 		product.setMainImg(stored2);
 		
 		// 상품을 등록하는 사람의 idx
-		product.setAccIdx(2);
-//		product.setAccIdx((Integer)session.getAttribute("idx"));
+//		product.setAccIdx(2);
+		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
 		productService.insert(product);
 		
@@ -116,10 +116,7 @@ public class ProductController {
 			productService.insert(product, saleList.get(i));
 		}
 		
-
 		return "redirect:/product";
-//		return "Mypage/seller/productList";
-
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
@@ -214,13 +211,16 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-	public String basketList(Model model) {
+	public String basketList(Model model, HttpSession session) {
 		logger.info("cart.do get!");
 
 		logger.info("-----------controller-----------");
 
-		List<SaleOption> cartOptionList = productService.cartView(5);
+		int accIdx = (Integer)session.getAttribute("idx");
+		List<SaleOption> cartOptionList = productService.cartView(accIdx);
+//		List<SaleOption> cartOptionList = productService.cartView(5);
 		model.addAttribute("optionCart", cartOptionList);
+		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
 		
 		Product product = null;
 		List<Product> cartProductList = new ArrayList<>();
@@ -228,7 +228,6 @@ public class ProductController {
 		int saleIdx = cartOptionList.get(0).getSaleIdx();
 		product = productService.productView(saleIdx);
 		cartProductList.add(product);
-		System.out.println(product);
 		
 		for(int i=0; i<cartOptionList.size(); i++) {
 			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
@@ -236,12 +235,10 @@ public class ProductController {
 				product = productService.productView(saleIdx);
 				cartProductList.add(product);
 			} else { continue; }
-			System.out.println("Product Title: " + product.getTitle());
 		}
-		
 		model.addAttribute("productCart", cartProductList);
 		
-		return "mypage/user/productCart";
+		return "mypage/common/productCart";
 	}
 	
 //	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -260,9 +257,9 @@ public class ProductController {
 		logger.info("cart.do post!");
 		
 		List<SaleOption> saleList = option.getSaleOptions();
-		for(int i=0; i<saleList.size(); i++) {
-			logger.info("Option" + (i+1) + ": " + saleList.get(i));
-		}
+//		for(int i=0; i<saleList.size(); i++) {
+//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
+//		}
 		
 		// 상품을 등록하는 사람의 idx
 //		productService.insertBasket(option, (Integer)session.getAttribute("idx"));
@@ -274,9 +271,9 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/deleteCart.do", method=RequestMethod.POST)
-	public String deleteBasket(String names) {
-		if( !"".equals(names) && names != null) {
-			int saleIdx = Integer.parseInt(names);
+	public String deleteBasket(String productIdx) {
+		if( !"".equals(productIdx) && productIdx != null) {
+			int saleIdx = Integer.parseInt(productIdx);
 			productService.deleteCart(saleIdx);
 		}
 		return "redirect:/product/cart.do";
