@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import cocoFarm.dao.TestBidDao;
-import cocoFarm.dto.TestBidDto;
+import cocoFarm.dto.BidDto;
 
 @SuppressWarnings("unused")
 @Controller
 public class TestController {
 
-	@Autowired TestBidDao bidDao;
+//	@Autowired TestBidDao bidDao;
 //	
 //	@RequestMapping(value="main",method=RequestMethod.GET)
 //	public ModelAndView mainGet(ModelAndView mv) {

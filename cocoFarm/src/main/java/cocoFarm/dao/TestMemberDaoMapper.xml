@@ -26,6 +26,16 @@
 		SELECT name FROM account
 		WHERE id = #{id }	
 	</select>
+	
+	<select id="getUserIdx" parameterType="cocoFarm.dto.Account" resultType="String">
+		SELECT idx FROM account
+		WHERE id = #{id}
+	</select>
+	
+	<select id="getUsertype" parameterType="cocoFarm.dto.Account" resultType="int">
+		SELECT type_code FROM account
+		WHERE id= #{id}
+	</select>
 
 </mapper>
 

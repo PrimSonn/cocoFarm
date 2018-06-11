@@ -4,6 +4,7 @@ import java.util.List;
 
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
+import cocoFarm.dto.BidDto;
 import cocoFarm.util.Auction_Paging;
 
 public interface Auction_Service {
@@ -68,4 +69,26 @@ public interface Auction_Service {
 	 * @param inquire - 문의글 내용
 	 */
 	public void insertInquire(Auction_Inquire inquire);
+	
+	/**
+	 * 경매 문의글 리스트
+	 * 
+	 * @param viewAuction 경매 번호
+	 * @return List - 문의글 리스트
+	 */
+	public List getInquireList(Auction viewAuction);
+	
+	/**
+	 * 경매 문의 답변
+	 * 
+	 * @param inquire - 경매글번호, 문의글번호, 답변내용
+	 */
+	public void updateAnswer(Auction_Inquire inquire);
+	
+	/**
+	 * 경매 입찰
+	 * 
+	 * @param bid - 입찰 내용
+	 */
+	public void putBid(BidDto bid);
 }
