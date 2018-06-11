@@ -19,22 +19,9 @@
 <body>
 <div id="mypageheader">
 
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
+<!--Mypage부분 header ver3부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+	
 	<div class="container">
 		<div id="header_boby">
 				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
@@ -45,7 +32,7 @@
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp</span>hwanmin0121</div>
+					<div class="mypagewho"><span><strong class="session_name">${sessionScope.name}</strong>님&nbsp</span>hwanmin0121</div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 		
 				</div>

@@ -1,0 +1,90 @@
+
+결제조회
+"response":
+	{"amount":15000
+		,"cancel_amount":0
+		,"cancel_history":[]
+		,"cancel_reason":null
+		,"cancel_receipt_urls":[]
+		,"cancelled_at":0
+		,"imp_uid":"imp_796796903542"
+		,"merchant_uid":"63"
+		,"status":"paid",}
+ㅁ
+
+
+
+환불 요청 코드값
+0 성공
+-1 결제취소 실패, "message" : "메세지"
+1 이미 취소됨 "message": "이미 전액취소된 주문입니다.",
+
+
+**환불 이후 영수증 쓰기 (전체 환불)
+
+환불 영수증 만들기
+대상 영수증 내용 복제 -> 환불 영수증
+대상 영수증에 대한 모든 목록 영수증 복제 -> 환불 목록 영수증
+
+
+
+주 영수증 환불상태로 바꾸기
+목록 영수증 환불상태로 바꾸기
+
+
+
+{
+  "code": 0,
+  "message": null,
+  "response": {
+    "amount": 590,
+    "apply_num": "",
+    "bank_code": null,
+    "bank_name": null,
+    "buyer_addr": "서울특별시 강남구 삼성동",
+    "buyer_email": "iamport@siot.do",
+    "buyer_name": "구매자이름보내기 김환민",
+    "buyer_postcode": "123-456",
+    "buyer_tel": "010-1234-5678",
+    "cancel_amount": 590,
+    "cancel_history": [
+      {
+        "pg_tid": "061017010271808121",
+        "amount": 590,
+        "cancelled_at": 1528617771,
+        "reason": "test",
+        "receipt_url": null
+      }
+    ],
+    "cancel_reason": "test",
+    "cancel_receipt_urls": [],
+    "cancelled_at": 1528617771,
+    "card_code": null,
+    "card_name": null,
+    "card_quota": 0,
+    "cash_receipt_issued": false,
+    "channel": "pc",
+    "currency": "KRW",
+    "custom_data": null,
+    "escrow": false,
+    "fail_reason": null,
+    "failed_at": 0,
+    "imp_uid": "imp_538662726528",
+    "merchant_uid": "201806101701030300000000000022",
+    "name": "주문명:결제테스트",
+    "paid_at": 1528617690,
+    "pay_method": "phone",
+    "pg_provider": "danal",
+    "pg_tid": "061017010271808121",
+    "receipt_url": null,
+    "status": "cancelled",
+    "user_agent": "sorry_not_supported_anymore",
+    "vbank_code": null,
+    "vbank_date": 0,
+    "vbank_holder": null,
+    "vbank_name": null,
+    "vbank_num": null
+  }
+}
+
+

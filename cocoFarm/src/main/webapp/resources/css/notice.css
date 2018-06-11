@@ -1,0 +1,204 @@
+@charset "UTF-8";
+/*글짜 폰트  */
+@import url('https://fonts.googleapis.com/css?family=Amiko');
+/*font-family: 'Amiko', sans-serif;  */
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*font-family: 'Jeju Gothic', serif;*/
+
+.list_title {
+	margin-top:15px;
+	font-family: 'Jeju Gothic';
+	font-size: 24px;	
+	margin-bottom: 10px;
+	color:#404040;
+}
+
+.table-striped {
+	margin-top:25px;
+	width: 100%;
+	border-radius:3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	
+}
+.table-striped th {
+	height: 40px;
+	background-color: #f2f8fd;
+	
+}
+
+.table-striped tbody tr{
+	height: 40px;
+	text-align: center;
+	border-bottom: 1px solid #efefef;
+}
+.btn_page{
+	margin-top: 15px;
+	
+}
+#btnMain{
+	width: 130px; 
+	height: 30px;
+	border-radius:2px;
+	background-color: #89e8f5;
+	color:#fff;
+	border: 0px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+
+#btnWrite{
+	width: 130px; 
+	height: 30px;
+	border-radius:2px;
+	background-color: #89e8f5;
+	color:#fff;
+	border: 0px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	float: right;
+
+}
+
+
+
+.text-center{
+	text-align: center;
+	
+}
+
+.paging li{
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	margin-left: 5px;
+	border: 1px solid #efefef;
+	font-size: 13px;
+}
+
+/*공지사항 읽기 부분  */
+.list_title01{
+	margin-top:30px;
+	font-family: 'Jeju Gothic';
+	font-size: 24px;	
+	margin-bottom: 10px;
+	color:#404040;
+	padding-left: 15px;
+}
+.table_board .table_title{
+	height: 34px;
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	border-bottom: 1px solid #efefef;
+	line-height: 34px;
+	padding-left: 15px;
+	border-top: 2px solid #707070;
+}
+.table_board .table_title p{
+	display: inline-block;
+	
+}
+.table_num_time{
+	height: 34px;
+	font-family: 'Jeju Gothic', serif;
+	font-size: 12px;
+	border-bottom: 1px solid #efefef;
+	line-height: 34px;
+	padding-left: 15px;
+	
+}
+.table_num_time .no1{
+	position:relative;
+	
+}
+.table_num_time .no2{
+	position:absolute;
+	right: 15px;
+}
+.board_content{
+	width: 75%;
+	min-height:350px;
+	margin: 15px auto;
+	border:1px solid #efefef;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	padding: 20px 30px 20px 30px;
+	
+}
+
+.border_update_btn {
+	width: 80px;
+	height: 27px;
+	border: 1px solid #5fbdf5;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	background-color: #fff;
+	color:#119cf0;
+	line-height:27px;
+	border-radius: 1px;
+	font-family: 'Jeju Gothic', serif;
+	vertical-align: top;
+}
+.border_delete_btn {
+		width: 80px;
+	height: 27px;
+	border: 1px solid #5fbdf5;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	background-color: #fff;
+	color:#119cf0;
+	line-height:27px;
+	border-radius: 1px;
+	font-family: 'Jeju Gothic', serif;
+	vertical-align: top;
+	
+}
+.form-control{
+	height:28px;
+	width: 700px;
+	margin-top: 12px;
+	border: 1px solid #5fbdf5;
+	box-shadow: 0 1px 2px rgba(0,0,0,.03);
+	padding-left: 15px;
+	border-radius: 2px;
+}
+
+.table_title_update {
+	height: 52px;
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	border-bottom: 1px solid #efefef;
+	line-height: 50px;
+	padding-left: 15px;
+	border-top: 2px solid #707070;
+	
+}
+
+.form-group{ 
+	
+	margin:20px auto;
+	width: 1070px; 
+	font-size: 14px;
+}
+
+.btn-primary{
+	width: 80px;
+	height: 27px;
+	border: 1px solid #5fbdf5;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	background-color: #fff;
+	color:#119cf0;
+	line-height:27px;
+	border-radius: 1px;
+	font-family: 'Jeju Gothic', serif;
+	vertical-align: top;
+}
+.btn-danger{
+	width: 80px;
+	height: 27px;
+	border: 1px solid #5fbdf5;
+	box-shadow: 0 1px 2px rgba(0,0,0,.13);
+	background-color: #fff;
+	color:#119cf0;
+	line-height:27px;
+	border-radius: 1px;
+	font-family: 'Jeju Gothic', serif;
+	vertical-align: top;
+	
+}

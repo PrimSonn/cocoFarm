@@ -9,7 +9,7 @@
 		<li>
 			<a href="/notice/list.do?curPage=1">
 				<span aria-hidden="true">&larr;</span>
-				처음
+				
 			</a>
 		</c:if>
 		

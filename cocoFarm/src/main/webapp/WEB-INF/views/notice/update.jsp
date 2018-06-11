@@ -3,13 +3,19 @@
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Notice Edit</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/notice.css">
 
 <!-- Jquery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
+ 
 <!-- Bootstrap -->
+<!-- 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> 
+ -->
 
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
@@ -45,26 +51,40 @@ $(document).ready(function() {
 });
 
 </script>
-</head><body>
+</head>
+<body>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
+
+
 
 <div class="container">
-<h1>수정 페이지</h1>
+<h1 class=list_title01>수정 페이지</h1>
 
 <form action="/notice/update.do" method="post">
 	<input type="hidden" name="idx" value="${view.idx }" />
 	
-	<div class="form-group">
-		<label for="writer">작성자</label>
+	<div class="table_board">
+		<div class="table_title_update">
+		<input type="text" id="title" name="title" class="form-control" value="${view.title }" />
+		</div>
+	
+	
 	</div>
 	
+	<!-- 
+	<div class="form-group">
+		<label for="writer">작성자</label>
+	</div> -->
+	<%-- 
 	<div class="form-group">
 		<label for="title" >제목</label>
 		<input type="text" id="title" name="title" class="form-control" value="${view.title }" />			
 	</div>
-	
+	 --%>
 	<div class="form-group">
-		<label for="content">본문</label>
-		<textarea rows="10" style="width:100%" id="content" name="content">${view.content }</textarea>	
+		<!-- <label for="content">본문</label> -->
+		<textarea rows="10" style="width:90%" id="content" name="content">${view.content }</textarea>	
 	</div>	
 
 	<div class="text-center">
