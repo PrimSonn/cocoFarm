@@ -5,7 +5,7 @@
 <mapper namespace="cocoFarm.dao.Auction_Dao">
 
 	<sql id="selectAuction">
-		SELECT A.*,aq.time_window , AC.ID, to_timestamp(to_char(systimestamp,'yy/mm/dd hh24missff3'),'yy/mm/dd hh24missff3') as systime
+		SELECT A.*,aq.time_window , AC.ID, AC.name, to_timestamp(to_char(systimestamp,'yy/mm/dd hh24missff3'),'yy/mm/dd hh24missff3') as systime
 		FROM AUCTION A 
 		INNER JOIN AUCTION_DUE_QUE AQ 
 		ON ( A.IDX = AQ.AUCTION_IDX ) 
@@ -75,8 +75,8 @@
 	</insert>
 
 	<insert id="insertInquire" parameterType="cocoFarm.dto.Auction_Inquire">
-		INSERT INTO Auction_Inquire(autcion_idx, writer_idx, content)
-		VALUES( #{autcion_idx}, #{writer_idx }, #{content })
+		INSERT INTO Auction_Inquire(auction_idx, writer_idx, content)
+		VALUES( #{auction_idx}, #{writer_idx }, #{content })
 	</insert>
 
 
@@ -95,7 +95,43 @@
 	</select>
 
 
+	<select id="selectInquire" parameterType="cocoFarm.dto.Auction" resultType="cocoFarm.dto.Auction_Inquire">
+	SELECT rownum rnum, AC.id, AC.name, B.* FROM (
+			SELECT
+				idx,
+				auction_idx,
+				writer_idx,
+				CONTENT,
+				written_time,
+				answer,
+				answer_time
+			FROM auction_inquire
+			WHERE auction_idx = #{idx }
+		) B INNER JOIN account AC ON ( AC.idx =  B.writer_idx)
+		ORDER BY written_time DESC
+	</select>
+	
+	<update id="updateAnswer" parameterType="cocoFarm.dto.Auction_Inquire">
+	UPDATE auction_inquire
+		SET
+			answer = #{answer}
+	WHERE auction_idx = #{auction_idx} AND idx =#{idx }
+	</update>
+	
+	
+	<select id="getBidList" resultType='cocoFarm.dto.BidDto'>
+	</select>
 
+	<select id="putBid" parameterType="cocoFarm.dto.BidDto" statementType="CALLABLE">
+	    {call BIDDER(
+	      #{auction_idx,jdbcType=NUMERIC,mode=IN}
+	      ,#{amount,jdbcType=NUMERIC,mode=IN}
+	      ,#{bidder_idx,jdbcType=NUMERIC,mode=IN}
+	      ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+	    )}
+	</select>
+	
+	
 <!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
 <!-- 		DELETE board -->
 <!-- 		WHERE boardno = #{boardno } -->

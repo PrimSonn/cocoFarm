@@ -5,12 +5,12 @@ import java.text.SimpleDateFormat;
 
 public class TestBidDto {
 
-	private Integer auction_idx;
-	private Integer amount;
-	private Timestamp bid_time;
-	private Integer bidder_idx;
-	private Integer state_code;
-	private Integer isDone;
+	private Integer auction_idx;	//	대상 경매 번호 - 복합기본키. 외래키 (경매)
+	private Integer amount;			//	입찰액 - 복합 기본키, 0이상
+	private Timestamp bid_time;		//	입찰 시각 - null불가. 트리거 있음: 새 입찰 등록시, 시스템 시각 지정
+	private Integer bidder_idx;		//	입찰자 계정번호 - 외래키 (계정) null불가
+	private Integer state_code;		//	입찰 상태 코드 - 외래키. 트리거 있음 (기본값 1) null불가
+	private Integer isDone;			//	입찰 종료 시각 (지불기간 만료/취소/대금지불 등)
 
 	@Override
 	public String toString() {
