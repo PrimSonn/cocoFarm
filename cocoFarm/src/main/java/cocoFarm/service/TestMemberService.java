@@ -25,6 +25,9 @@ public interface TestMemberService {
 	 */
 	public String getUsernick(Account member);
 
+	public String getUserIdx(Account member);
+	
+	public int getUsertype(Account member);
 }
 
 

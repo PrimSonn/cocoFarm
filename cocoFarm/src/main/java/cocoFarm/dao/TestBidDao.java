@@ -2,10 +2,10 @@ package cocoFarm.dao;
 
 import java.util.List;
 
-import cocoFarm.dto.TestBidDto;
+import cocoFarm.dto.BidDto;
 
 public interface TestBidDao {
 
-	public List<TestBidDto> getBidList();
-	public void putBid(TestBidDto bid);
+	public List<BidDto> getBidList();
+	public void putBid(BidDto bid);
 }

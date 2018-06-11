@@ -169,7 +169,7 @@ function checkAll() {
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
-					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
+					<div class="mypagetitle"><h2>판매회원</h2><h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
 					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp;</span>hwanmin0121</div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>

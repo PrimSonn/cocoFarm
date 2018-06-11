@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cocoFarm.dao.TestBidDao;
 import cocoFarm.dto.TestBidDto;
 import cocoFarm.service.ReceiptService;
+import cocoFarm.service.RestSvc;
 
 @SuppressWarnings("unused")
 @Controller
@@ -21,15 +22,40 @@ public class TestController {
 
 	@Autowired TestBidDao bidDao;
 	@Autowired ReceiptService recptSvc;
+	@Autowired RestSvc restSvc;
 	
 	@RequestMapping(value="recptSvc",method=RequestMethod.GET)
 	public ModelAndView recptSvc(ModelAndView mv) {
 		
 		recptSvc.test();
-		mv.setViewName("Main/cocomain");
+		mv.setViewName("main/cocomain");
 		return mv;
 	}
 	
+	@RequestMapping(value="getIn",method=RequestMethod.POST)
+	public ModelAndView getInPost(ModelAndView mav,HttpSession session) {
+		return getIn(mav,session);
+	}
+	
+	@RequestMapping(value="getIn",method=RequestMethod.GET)
+	public ModelAndView getIn(ModelAndView mav,HttpSession session) {
+		
+		session.setAttribute("idx", Integer.valueOf(0));
+		session.setAttribute("type", Integer.valueOf(1));
+		session.setAttribute("name", "시스템");
+		mav.setViewName("main/cocomain");
+		return mav;
+	}
+	
+	@RequestMapping(value="restTest",method=RequestMethod.GET)
+	public ModelAndView restTest(ModelAndView mav) {
+		
+		
+		System.out.println("-------------------------------\r\nrestSvc result: "+restSvc.checkPayment("imp_1234325435", 0)+"\r\n");
+		mav.setViewName("main/cocomain");
+		return mav;
+	}
+
 //	@RequestMapping(value="main",method=RequestMethod.GET)
 //	public ModelAndView mainGet(ModelAndView mv) {
 //		
@@ -52,15 +78,15 @@ public class TestController {
 //			}
 //		}
 //		
-////		for(Object key : request.getParameterMap().keySet()) {
-////			System.out.println("[key: "+key+", value: "+request.getParameter((String) key)+"]");
-////			for(String val : (String[])request.getParameterMap().get(key)) {
-////				System.out.println(val);
-////			}
-////		}
+//		for(Object key : request.getParameterMap().keySet()) {
+//			System.out.println("[key: "+key+", value: "+request.getParameter((String) key)+"]");
+//			for(String val : (String[])request.getParameterMap().get(key)) {
+//				System.out.println(val);
+//			}
+//		}
 //		
 //		mv.setViewName("redirect:auction/bidder");
-////		mv.setViewName("redirect:/");
+//		mv.setViewName("redirect:/");
 //		return mv;
 //	}
 //

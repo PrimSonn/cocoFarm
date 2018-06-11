@@ -24,28 +24,19 @@
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
 			
 <script type="text/javascript">
-
 /*총 가격 초기화  */
 var allsum=0;
 /* 총수량 초기화 */
 var allamount=0;
 var option={}
 var optionlist=new Array();
-
 <c:forEach items="${pro}" var="pro_data" varStatus="status1">
 var sumcon=[];
 var amountcon=[];
 var sum${status1.count}=0;
 var allamount${status1.count}=0;
-
-
-
-
 $(document).ready(function() {
-
-
 	<c:forEach items="${opt}" var="data" varStatus="status">
-
 //		console.log("idx : " + ${data.idx});
 	//console.log("amount : " + ${amount});
 	//console.log("amount11 : " + ${amount.get(status.index)});
@@ -55,8 +46,6 @@ $(document).ready(function() {
 	
 	option.proAmount=${amount.get(status.index)};
 	optionlist.push(option);
-
-
 	 
 	var option_num${status.index}=Number(${data.idx});
 	var option${status.index}=Number(${data.price});	
@@ -64,11 +53,9 @@ $(document).ready(function() {
 	sum${status1.count}+=(option${status.index})*(amount${status.index});
 	allamount${status1.count}+=amount${status.index};
 	</c:forEach>
-
 	sumcon.push(sum${status1.count});
 	amountcon.push(allamount${status1.count});
 	</c:forEach>
-
 	
 	
 	
@@ -133,7 +120,6 @@ $(document).ready(function() {
 	 var oder_num=today+unit_num+1541;
 	<c:set var="today" value="today"/>
 	<c:set var="oder_num" value="oder_num"/>
-
 	
 	
 	// iamport 변수 초기화
@@ -147,7 +133,6 @@ $(document).ready(function() {
 	    str = String(str);
 	    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 	}
-
 	function uncomma(str) {
 	    str = String(str);
 	    return str.replace(/[^\d]+/g, '');
@@ -185,164 +170,150 @@ $(document).ready(function() {
 		
 		//각각의 idx = ${data.idx} // saleOptions[${status.index}].proAmount
 		//각각의 수량 amount= amount${status.index}
-
 		
 		console.log("배송지명"+mem_name);
 		console.log("배송지" +mem_deliver);
 		console.log("배송지" +mem_deliver);
-
 		requestPayment();
 	});
 });
-
 	
-
-
-// 결제 요청 - 결제 모듈 불러오기
-function save() {
+function requestPayment() {
+	
+	var Main_Rcpt = -1;
+	var is_Done = 0;
+	
 	/*수령인 */
 	var mem_name =$(".mem_name").val();
 	/*수령장소  */
 	var mem_deliver=$(".mem_deliver").val();
 	
-	 
-	 console.log(optionlist);
-
-		JSON.stringify(optionlist);
-		var dff=JSON.stringify(optionlist);
+	console.log(optionlist);
+	JSON.stringify(optionlist);
+	var dff=JSON.stringify(optionlist);
 		
-		console.log(dff); 
-		$.ajax({
-           type : "POST",
-           url : "/paycomple.do",
-           dataType : "json",
-           data : {
-        	   optionlist:dff,
-        	   memname: mem_name
-           },
-           success : function(data) {
-              console.log(data.result);
-          
-              alert("성공");
-           },
-           error : function(e) {
-        	  console.log(e.responseText);
-        	   
-        	   alert("실패"); 
-           }
-        });
-}
-
-
-function requestPayment() {
-	save();
-	   
-	   IMP.request_pay({
-	    pg : 'html5_inicis', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
-	    pay_method : 'card', //결제방식 - 'samsung':삼성페이, 'card':신용카드, 'trans':실시간계좌이체, 'vbank':가상계좌, 'phone':휴대폰소액결제
-	    merchant_uid : 'merchant_'+new Date().getTime(), //고유주문번호 - random, unique
-	    name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
-	    amount : ${allsum}, //결제금액 - 필수항목
-	    buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-	    buyer_name : '구매자이름보내기 김환민', //주문자명 - 선택항목
-	    buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
-	    buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
-	    buyer_postcode : '123-456', //주문자우편번호 - 선택항목
-	    m_redirect_url : 'https://www.yourdomain.com/payments/complete' //모바일결제후 이동페이지 - 선택항목, 모바일에서만 동작
-	}, function(rsp) { // callback - 결제 이후 호출됨, 이곳에서 DB에 저장하는 로직을 작성한다
-
-		if ( rsp.success ) { // 결제 성공 로직
-	        var msg = '결제가 완료되었습니다.';
-	        msg += '고유ID :' + rsp.imp_uid;
-	        msg += '상점 거래ID :' + rsp.merchant_uid;
-	        msg += '결제 금액 :' + rsp.paid_amount;
-	        msg += '카드 승인번호 :' + rsp.apply_num;
-	        
-	        // 결제 완료 처리 로직
-			//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
-			jQuery.ajax({
-				url: "/paycomple.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
-				type: 'POST',
-				dataType: 'json',
-				data: {
-					
-					imp_uid : rsp.imp_uid,
-					buyer_name :rsp.buyer_name
-					}
-			}).done(function(data) {
-				//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
-				if ( everythings_fine ) {
-					var msg = '결제가 완료되었습니다.';
-					msg += '\n고유ID : ' + rsp.imp_uid;
-					msg += '\n상점 거래ID : ' + rsp.merchant_uid;
-					msg += '\결제 금액 : ' + rsp.paid_amount;
-					msg += '카드 승인번호 : ' + rsp.apply_num;
-					
-					alert(msg);
-	    		} else {
-	    			//[3] 아직 제대로 결제가 되지 않았습니다.
-	    			//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
-	    		}
-	    	});
-	        
-	    } else { // 결제 실패 로직
-	        var msg = '결제에 실패하였습니다.';
-	        msg += '에러내용 : ' + rsp.error_msg;
-	    }
-	    alert(msg);
+	console.log(dff); 
+	$.ajax({
+	   type : "POST",
+	   url : "/paycomple.do",
+	   dataType : "json",
+	   async: false,
+	   data : {
+		   optionlist:dff,
+		   memname: mem_name
+	   },
+		success : function(data) {
+		console.log('data.MainRcpt: '+data.MainRcpt);
+			Main_Rcpt=data.MainRcpt;
+		is_Done = data.isDone;
+		alert("성공");
+	   },
+	   error : function(e) {
+		  console.log(e.responseText);
+		   
+		   alert("실패"); 
+	   }
 	});
+	console.log('--------------------');
+	console.log('Main_Rcpt: '+Main_Rcpt);
+	console.log('is_Done: '+is_Done);
+	console.log('--------------------');
+	var result =0;
+	if(is_Done != 0) {
+		IMP.request_pay({
+				pg : 'danal', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
+				pay_method : 'phone', //결제방식 - 'samsung':삼성페이, 'card':신용카드, 'trans':실시간계좌이체, 'vbank':가상계좌, 'phone':휴대폰소액결제
+				merchant_uid : Main_Rcpt, //고유주문번호 - random, unique
+				name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
+				amount : ${allsum}, //결제금액 - 필수항목
+				buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
+				buyer_name : '${sessionScope.name}', //주문자명 - 선택항목
+				buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
+				buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
+				buyer_postcode : '123-456', //주문자우편번호 - 선택항목
+				m_redirect_url : 'https://www.yourdomain.com/payments/complete' //모바일결제후 이동페이지 - 선택항목, 모바일에서만 동작
+			}, function(rsp) { // callback - 결제 이후 호출됨, 이곳에서 DB에 저장하는 로직을 작성한다
+					if ( rsp.success ) { // 결제 성공 로직
+						var msg = '결제가 완료되었습니다.';
+						msg += '고유ID :' + rsp.imp_uid;
+						msg += '상점 거래ID :' + rsp.merchant_uid;
+						msg += '결제 금액 :' + rsp.paid_amount;
+						msg += '카드 승인번호 :' + rsp.apply_num;
+				
+						// 결제 완료 처리 로직
+						//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+						jQuery.ajax({
+									url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
+									type: 'POST',
+									dataType: 'json',
+									async: false,
+									data: {
+ 									//merchant_uid : rsp.merchant_uid,
+									imp_uid : rsp.imp_uid,
+									//buyer_name :rsp.buyer_name 
+									}
+							}).done(function(data) {
+								//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
+								result = parseInt(data);
+								if ( result==1 ) {
+									var msg = '결제가 완료되었습니다.';
+									msg += '\n고유ID : ' + rsp.imp_uid;
+									msg += '\n상점 거래ID : ' + rsp.merchant_uid;
+									msg += '\결제 금액 : ' + rsp.paid_amount;
+									msg += '카드 승인번호 : ' + rsp.apply_num;
+									alert(msg);
+								}else if (result<0 && result>-100 ){
+									alert('data: '+data)
+								}else {
+									alert("취소취소, data: " +data);
+									//[3] 아직 제대로 결제가 되지 않았습니다.
+									//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
+									/* 
+									$.ajax({
+										   type : "POST",
+										   url : "/payfail.do",
+										   dataType : "json",
+										   async: false,
+										   data : {
+											   imp_uid : rsp.imp_uid
+										   },
+											success : function(data) {
+											console.log('data.MainRcpt: '+data.MainRcpt);
+												Main_Rcpt=data.MainRcpt;
+											is_Done = data.isDone;
+											alert("취소시 에이젝스 성공");
+										   },
+										   error : function(e) {
+											  console.log(e.responseText);
+											   
+											   alert("취소시 에이젝스 실패"); 
+										   }
+										});
+									 */	
+								}
+							});
+				
+					} else { // 결제 실패 로직
+							var msg = '결제에 실패하였습니다.';
+							msg += '에러내용 : ' + rsp.error_msg;
+							//임시 영수증 삭제 로직 추가.
+					}
+// 					alert(msg);
+				});
+	} else{
+		alert('임시저장 실패');
+		//임시 영수증 삭제 로직 추가.
+	}
 }
-
 $(function() {
 	$(".address_btn").postcodifyPopUp(); 
 });
-
-
 </script>
 </head>
 <body>
-<div id="header_detail">
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="/product/insert.do">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
-	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<!--2018년 5월 25일 hwanmin 추가   -->
-				<div class="search">
-					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
-						</button>
-					</form> 
-				</div>
-		
-		</div>
-		<div id="header_nav">
-			<ul class="nav">
-				<li><a href="/seller.do">농수산물</a></li>
-				<li><a href="#">경매</a></li>
-				<li><a href="#">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
-				<li><a href="#">공지사항</a></li>
-				<li><a href="#">회사소개</a></li>
-			</ul>
-		</div>
-	</div>
-</div>
 <div class="container">
 	<div class="odberheader">
 		<h1>주문/결제</h1>

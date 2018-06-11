@@ -23,7 +23,7 @@
 		begin
 			savepoint START_TRANSACTION;
 			
-			mainRecpt := MAIN_RECEIPT_SEQ.nextval;
+			mainRecpt := MAIN_RECPT_IDX_FUNC;
 			<foreach item='optList' collection='optList'>
 				select (PRICE * #{optList.proAmount} + totMoney) money into totMoney from SALE_OPTION where IDX = #{optList.idx};
 			</foreach>
@@ -33,9 +33,6 @@
 			fetch SALE_CUR
 				bulk collect into saleArr;
 			close SALE_CUR;
-<!-- 			select distinct SALE_IDX bulk collect into saleArr from SALE_OPTION -->
-<!-- 				where IDX in <foreach item="optList" index="index" collection="optList" open="(" separator="," close=")"> -->
-<!-- 									#{optList.idx} </foreach> ; -->
 			
 			forall i in saleArr.first..saleArr.last
 				insert into SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) values (saleArr(i), mainRecpt);
@@ -47,8 +44,10 @@
 					values ('tempOptRecpt',1,'mainRecpt: '||mainRecpt||', idx: '||#{optList.idx}||', name: '||opt_name||', amount: '||#{optList.proAmount}||', unit: '||opt_unit||', price: '||opt_price);
 			</foreach>
 			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('tempRecpt',1,'mainRecpt: '||mainRecpt||', totMoney: '||totMoney);
-			#{isDone,jdbcType=NUMERIC,mode=OUT} := 1;
-			#{mainRcpt,jdbcType=NUMERIC,mode=OUT} := mainRecpt;
+			commit;
+			
+			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
+			#{isDone, jdbcType=NUMERIC, mode=OUT} := 1;
 			
 		exception when OTHERS then
 			rollback to START_TRANSACTION;
@@ -58,8 +57,35 @@
 			
 			insert into PLOGGER (NAME, RESULTCODE, ERR_CODE, ERR_MESSAGE) values ('tempRecpt', 0, err_code, err_message);
 			commit;
-
-			#{isDone,jdbcType=NUMERIC,mode=OUT} := 0;
+		end;
+	</select>
+	
+	<select id="checkRecpt" parameterType = 'cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE'>
+		{call CHECK_TEMP_RECPT(
+			 #{arg,jdbcType=NUMERIC,mode=IN}
+			 ,#{accIdx,jdbcType=NUMERIC,mode=IN}
+		     ,#{arg2,jdbcType=NUMERIC,mode=IN}
+		     ,#{intArg,jdbcType=NUMERIC,mode=IN}
+		     ,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
+	<select id='refundRecptMkr' parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call REFUND_RECPT_MKR (
+			#{arg,jdbcType=NUMERIC,mode=IN}
+			,#{isDone,jdbcType=NUMERIC,mode=OUT}
+		)}
+	</select>
+	
+	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
+		declare
+			mainRecpt number;
+			isDone number;
+		begin
+			mainRecpt:=1;
+			isDone:=1;
+			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
+			#{isDone, jdbcType=NUMERIC, mode=OUT} := isDone;
 		end;
 	</select>
 

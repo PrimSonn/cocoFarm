@@ -19,9 +19,9 @@ public class Test_Member_Controller {
 	private static final Logger logger = LoggerFactory.getLogger(Test_Member_Controller.class);
 	
 	@Autowired TestMemberService memberService;
-
-	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
-	public void mainview() {}
+//
+//	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
+//	public void mainview() {}
 	
 	
 	
@@ -46,6 +46,8 @@ public class Test_Member_Controller {
 			
 			session.setAttribute("login", true);
 			session.setAttribute("id", member.getId());
+			session.setAttribute("type", memberService.getUsertype(member));
+			session.setAttribute("idx", memberService.getUserIdx(member));
 			session.setAttribute("name", memberService.getUsernick(member));
 			
 			logger.info("세션상태 : " + session.getAttribute("login"));

@@ -3,6 +3,7 @@ package cocoFarm.service;
 import java.util.List;
 
 import cocoFarm.dto.Board;
+import cocoFarm.dto.BoardFile;
 import cocoFarm.util.Paging;
 
 public interface BoardService {
@@ -20,5 +21,9 @@ public interface BoardService {
 	public void update(Board board);
 	
 	public void delete(Board board);
+	
+	public BoardFile getFileup(Board viewBoard);
+
+
 	
 }

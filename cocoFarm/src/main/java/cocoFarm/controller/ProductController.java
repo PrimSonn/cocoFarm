@@ -56,7 +56,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
-	public String insert() {
+	public String insert(HttpSession session) {
 		logger.info("insert.do get!");
 		return "Mypage/seller/productInsert";
 	}
@@ -281,4 +281,7 @@ public class ProductController {
 		}
 		return "redirect:/product/cart.do";
 	}
+	
+
+	
 }

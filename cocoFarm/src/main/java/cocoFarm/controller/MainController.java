@@ -20,7 +20,12 @@ public class MainController {
 	
 	@RequestMapping(value="/main.do",method=RequestMethod.GET)
 	public String helloWorld() {
-		return "cocomain";
+		return "main/cocomain";
+	}
+	
+	@RequestMapping(value="main.do",method=RequestMethod.POST)
+	public String mainPost() {
+		return helloWorld();
 	}
 	
 	//판매 상세 정보
@@ -71,6 +76,15 @@ public class MainController {
 		
 		return "main/mainseller/sellerDetail";
 	}
+	
+	
+	//판매 상세 정보
+	@RequestMapping(value="/companyinfo.do",method=RequestMethod.GET)
+	public String companyInfo(Product product, Model model) {
+		
+		return "companyinfo/comintro";
+	}
+	
 	
 	
 }
