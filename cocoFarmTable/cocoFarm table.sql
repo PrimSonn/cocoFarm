@@ -864,7 +864,7 @@ create table MAIN_RECEIPT (
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
 	,MONEY_AMOUNT		number(13,0)	not null
 	,PAID_NAME			nvarchar2(15)	not null
-	,PAID_CODE			nvarchar2(20)
+	,PAID_DESC			nvarchar2(200)
 
 	,CONTRACT_TIME		timestamp(3) with local time zone not null
 
@@ -927,7 +927,7 @@ comment on column MAIN_RECEIPT.MONEY_AMOUNT is '돈돈돈 - null불가';
 
 comment on column MAIN_RECEIPT.PAID_NAME is '결제자 이름 - null불가. 결제정보에서 가져올 수 있다면 가져오고 없으면 적당히 넣기';
 
-comment on column MAIN_RECEIPT.PAID_CODE is '결제 코드 번호 - null 가능. 뭔가 결제정보에 추가적인 정보를 저장해야 한다면 여기에 넣기';
+comment on column MAIN_RECEIPT.PAID_DESC is '결제 정보 - null 가능. 뭔가 결제정보에 추가적인 정보를 저장해야 한다면 여기에 넣기';
 
 comment on column MAIN_RECEIPT.CONTRACT_TIME is '결제시간 - null불가. 트리거있음 (강제로 insert 당시 시스템 시간을 넣음) 입찰과 관련되서 밀리초 까지 넣음';
 
@@ -1827,15 +1827,31 @@ create trigger SALE_OPT_RECPT_TRG
 	before insert on SALE_OPTION_RECEIPT
 	for each row
 declare
-	saleIdx SALE.IDX%type;
+	opt_saleIdx		SALE.IDX%type;
+	opt_name		SALE_OPTION.NAME%type;
+	opt_unit		SALE_OPTION.UNIT%type;
+	opt_price		SALE_OPTION.PRICE%type;
 begin
-	if (:NEW.SALE_IDX is null) then
-		select SALE_IDX into saleIdx from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;
-		:NEW.SALE_IDX := saleIdx;
+	if(:NEW.SALE_IDX is null or :NEW.NAME is null or :NEW.UNIT is null or :NEW.PRICE is null) then
+	
+		select SALE_IDX, NAME, UNIT, PRICE into opt_saleIdx, opt_name, opt_unit, opt_price from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;
+		
+		if (:NEW.SALE_IDX is null) then
+			:NEW.SALE_IDX := opt_saleIdx;
+		end if;
+		if (:NEW.NAME is null) then
+			:NEW.NAME := opt_name;
+		end if;
+		if (:NEW.UNIT is null) then
+			:NEW.UNIT := opt_unit;
+		end if;
+		if (:NEW.PRICE is null) then
+			:NEW.PRICE := opt_price;
+		end if;
+	--	if (:NEW.STATE_CODE is null) then
+	--		:NEW.STATE_CODE := 0;
+	--	end if;
 	end if;
---	if (:NEW.STATE_CODE is null) then
---		:NEW.STATE_CODE := 0;
---	end if;
 end;
 /
 
@@ -2577,40 +2593,39 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 
 create table BID_CONTRACT_RECEIPT (
 
-	IDX						number(13,0)
-
-	,DELIVERY_IDX			number(13,0)
-
+	MAIN_RECPT_IDX			number(30,0)		not null
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
-	,MAIN_RECPT_BUYER		number(8,0)			not null
-	,MAIN_RECPT_IDX			number(30,0)		not null
-	,CONTRACT_AMOUNT		number(10,0)		not null
+	,DELIVERY_IDX			number(13,0)
+
+--	,CONTRACT_AMOUNT		number(10,0)		not null
 	
 	,TITLE					nvarchar2(40)		not null
 
 --	,STATE_CODE				number(2,0)			not null
 
-	,constraint BID_CONTRCT_RECPT_PK primary key (IDX) 
+	,constraint BID_CONTRCT_RECPT_PK primary key (MAIN_RECPT_IDX, AUCTION_IDX, BID_AMOUNT) 
 	,constraint BID_CONT_RECPT_DELVRY foreign key (DELIVERY_IDX) references DELIVERY (IDX) on delete set null
-	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_BUYER, MAIN_RECPT_IDX) references MAIN_RECEIPT (BUYER_IDX, IDX)
-	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT) on delete set null
+	,constraint BID_CONTRCT_M_RECPT_FK foreign key (MAIN_RECPT_IDX) references MAIN_RECEIPT (IDX)
+	,constraint BID_CONT_RECPT_BID_FK foreign key (AUCTION_IDX, BID_AMOUNT) references BID (AUCTION_IDX, AMOUNT)
 --	,constraint BID_CONT_RECPT_STATE_FK foreign key (STATE_CODE) references LIST_RECPT_STATE_TYPE (CODE)
-	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
+--	,constraint BID_CONTRACT_CHECK check (CONTRACT_AMOUNT >0)
 );
-
-create index BID_CONTRCT_RECPT_INDX on BID_CONTRACT_RECEIPT (MAIN_RECPT_BUYER, MAIN_RECPT_IDX);
-
-create sequence BID_CONTRACT_RECPT_SEQ start with 1 increment by 1;
 
 create trigger BID_CONTRACT_RECPT_TRG
 	before insert on BID_CONTRACT_RECEIPT
 	for each row
+declare
+	v_title		nvarchar2(40);
 begin
-	if (:NEW.IDX is null) then
-		:NEW.IDX := BID_CONTRACT_RECPT_SEQ.nextval;
+	if(:NEW.TITLE is null) then
+		select TITLE into v_title from AUCTION where IDX = :NEW.AUCTION_IDX;
+		:NEW.TITLE := v_title;
 	end if;
+--	if (:NEW.CONTRACT_AMOUNT is null) then
+--		null;
+--	end if;
 --		if (:NEW.STATE_CODE is null) then
 --		:NEW.STATE_CODE := 0;
 --	end if;
@@ -2628,11 +2643,9 @@ comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외�
 
 comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
 
-comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_BUYER is '주 영수증 구매자 - 복합외래키. null불가';
+comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  외래키. null불가';
 
-comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합외래키. null불가';
-
-comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
+--comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
 
 comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - 복제값 저장용 null불가';
 
@@ -2641,14 +2654,13 @@ comment on column BID_CONTRACT_RECEIPT.TITLE is '낙찰 대상 경매 제목 - �
 
 --drop trigger BID_CONTRACT_RECPT_TRG;
 --drop sequence BID_CONTRACT_RECPT_SEQ;
---drop index BID_CONTRCT_RECPT_INDX;
 --drop table BID_CONTRACT_RECEIPT cascade constraints;
 
 
------------------------------------------------  낙찰 완료 입찰 정보 -----------------------------------------------
+-----------------------------------------------  (취소: 불필요한 중복 데이터)낙찰 완료 입찰 정보 -----------------------------------------------
 -- 낙찰된 입찰 목록 (입찰의 서브타입 형태)
 -- 트리거로 정보 관리중: 낙찰금 영수증 발생시 자동으로 입력
-
+/*
 create table BID_CONTRACT (
 
 	AUCTION_IDX			number(10,0)
@@ -2682,6 +2694,7 @@ comment on column BID_CONTRACT.RECPT_IDX is '낙찰금 지불 영수증 번호 -
 
 comment on column BID_CONTRACT.CONTRACT_TIME is '낙찰 완료 목록에 등록된 시간 - null불가';
 
+*/
 
 --drop trigger BID_CONTRACT_TRG;
 --drop table BID_CONTRACT cascade constraints;
@@ -4334,18 +4347,12 @@ purge recyclebin;
 /* 작업중 프로시저
 
 
-
 	결과값
 		1. 성공
 		0. 오라클 에러
 		-1. 해당 입찰이 존재하지 않거나 낙찰 대금을 지불할 수 없는 상태임
 
 aaa
-
-
-
-
-
 
 create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
 is
@@ -4415,3 +4422,207 @@ end;
 
 */
 
+
+create function r_decoder ( i number, target nvarchar2 )
+return number is
+begin
+	return to_number(substr(target,i+2, to_number( substr(target,i,i+1))));
+end;
+/
+
+create function r_pointer ( i number, target nvarchar2 )
+return number is
+begin
+	return 2+to_number(substr(target,i,i+1));
+end;
+/
+
+create type holder is varray(1000) of number;
+
+
+create procedure TEMP_RCPT_MKR (in_acc_idx ACCOUNT.IDX%type, in_paid_name MAIN_RECEIPT.PAID_NAME%type, in_data nvarchar2(2000)
+								main_rcpt_idx out MAIN_RECEIPT.IDX, isDone out number)
+is
+	t_optnion_idx		holder := holder();
+	t_option_amount		holder := holder();
+	t_bid_target		holder := holder();
+	t_bid_amount		holder := holder();
+	sale_holder			holder := holder();
+
+	i					number :=1;
+	checker				nvarchar2;
+	mainRecpt			number;
+	tot					number;
+	cnt					number;
+	
+	err_code			number;
+	err_message			varchar2(255);
+
+begin
+	savepoint START_TRANSACTION;
+	
+	while i < length(in_data) loop
+	
+		checker := substr(in_data,i,i+1);
+		i := i+2;
+		
+		if(checker = '01') then
+			t_optnion_idx.extend;
+			t_optnion_idx(t_optnion_idx.last):=exec r_decoder(i, in_data);
+			i := exec r_pointer (i , in_data);
+			
+			t_option_amount.extend;
+			t_option_amount(t_option_amount.last):=exec r_decoder(i, in_data);
+			i := exec r_pointer (i , in_data);
+			
+		elsif(checker = '02') then
+			t_bid_target.extend;
+			t_bid_target(t_bid_target.last):=exec r_decoder(i, in_data);
+			i := exec r_pointer (i , in_data);
+			
+			t_bid_amount.extend;
+			t_bid_amount(t_bid_amount.last):=exec r_decoder(i, in_data);
+			i := exec r_pointer (i , in_data);
+		else
+			i := 0;
+			exit;
+		end if;
+		
+	end loop;
+	
+	
+	if (i=0) then
+		select -1 into isDone from DUAL;
+		--직렬화 오류 로그
+	elsif (i=3) then
+		select -2 into isDone from DUAL;
+		--데이터 없음 로그
+	else
+		if (t_optnion_idx.last>0) then
+			select count(1) into cnt from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_optnion_idx)) and ISDEL =0;
+			if (cnt <> t_optnion_idx.last) then
+				goto invalid_option;
+			end if;
+			
+			tot := 0;
+			for j in t_option_amount.first..t_option_amount.last loop
+				select PRICE * t_option_amount(j) + tot into tot from SALE_OPTION where IDX = t_optnion_idx(j);
+			end loop;
+			
+			sale_holder.extend(t_option_amount.last);
+			select distinct SALE_IDX bulk collect into sale_holder from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_optnion_idx);
+			
+			mainRecpt := exec MAIN_RECPT_IDX_FUNC;
+			insert into MAIN_RECEIPT (IDX, BUYER_IDX, MONEY_AMOUNT, PAID_NAME) values (mainRecpt, in_acc_idx, tot, in_paid_name);
+			
+			for j in sale_holder.first..sale_holder.last loop
+				insert into SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) values (sale_holder(j), mainRecpt);
+			end loop;
+			
+			for j in t_optnion_idx.first..t_optnion_idx.last loop
+				insert into SALE_OPTION_RECEIPT (MAIN_RECPT_IDX, SALE_OPTION_IDX, AMOUNT) values (mainRecpt, t_optnion_idx(j), t_option_amount(j));
+			end loop;
+			
+		end if;
+		
+		if (t_bid_target.last>0) then
+			select count(1), sum(BID_AMOUNT) into cnt, tot from BID_CONTRACT_QUE where AUCTION_IDX in (select COLUMN_VALUE from table (t_bid_target));
+			if(cnt<>t_bid_target.last) then
+				goto invalid_bid;
+			end if;
+			
+			if (mainRecpt is null) then
+				mainRecpt := exec MAIN_RECPT_IDX_FUNC;
+				insert into MAIN_RECEIPT (IDX, BUYER_IDX, MONEY_AMOUNT, PAID_NAME) values (mainRecpt, in_acc_idx, tot, in_paid_name);
+			else
+				update MAIN_RECEIPT set MONEY_AMOUNT = MONEY_AMOUNT + tot where IDX = mainRecpt;
+			end if;
+			
+			for j in t_bid_target.first..t_bid_target.last loop
+				insert into BID_CONTRACT_RECEIPT (MAIN_RECPT_IDX, AUCTION_IDX, BID_AMOUNT) values (mainRecpt, t_bid_target(j), t_bid_amount(j));
+			end loop;
+		end if;
+		
+		---------------------------*****************working..
+		select 1 into isDone from DUAL;
+		<<invalid_option>>
+		select -1 into isDone from DUAL;
+		<<invalid_bid>>
+		select -2 into isDone from DUAL;
+		
+	end if;
+	
+	
+exception when others then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
+		values ('BID_DUE_CHECK',0,'ERROR!!!. (no_lesser_bid: '||no_lesser_bid||', was_lesser_bid: '||was_lesser_bid||')',err_code, err_message);
+	commit;
+	
+	select 0 into isDone from DUAL;
+end;
+/
+
+
+
+
+/* some reference
+
+CREATE OR REPLACE TYPE str_tab_type IS VARRAY(10) OF VARCHAR2(200);
+
+DECLARE
+  l_str_tab str_tab_type;
+  l_count NUMBER;
+BEGIN
+  l_str_tab := str_tab_type();
+  l_str_tab.extend(2);
+  l_str_tab(1) := 'TABLE';
+  l_str_tab(2) := 'INDEX';
+
+  SELECT COUNT(*) INTO l_count
+  FROM all_objects
+  WHERE object_type IN (SELECT COLUMN_VALUE FROM TABLE(l_str_tab));
+END;
+/
+
+
+
+
+
+create table TESTER (
+col1 number
+);
+insert into TESTER values (1);
+insert into TESTER values (2);
+insert into TESTER values (3);
+insert into TESTER values (4);
+insert into TESTER values (5);
+insert into TESTER values (5);
+insert into TESTER values (5);
+
+declare
+    h holder := holder();
+    h2 holder := holder(100);
+    i number;
+begin
+    h.extend(7);
+    h(1) :=5;
+    i := h(h.last);
+    if i is null then i :=-1; end if;
+    select col1 bulk collect into h from TESTER;
+    for j in h.first..h.last loop
+    dbms_output.put_line(h(j));
+    end loop;
+    select distinct col1 bulk collect into h2 from TESTER where col1 in (select COLUMN_VALUE from table(h));
+    for j in h2.first..h2.last loop
+    dbms_output.put_line(h2(j));
+    end loop;
+end;
+/
+
+
+*/
