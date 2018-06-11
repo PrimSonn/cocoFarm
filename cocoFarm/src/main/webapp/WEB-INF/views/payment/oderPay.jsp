@@ -43,15 +43,13 @@ $(document).ready(function() {
 	//list 만들기 
 	option = new Object();
 	option.idx=${data.idx};
-	
 	option.proAmount=${amount.get(status.index)};
 	optionlist.push(option);
-	 
 	var option_num${status.index}=Number(${data.idx});
 	var option${status.index}=Number(${data.price});	
 	var amount${status.index}=Number(${amount.get(status.index)});
-	sum${status1.count}+=(option${status.index})*(amount${status.index});
-	allamount${status1.count}+=amount${status.index};
+	sum${status1.count}=(option${status.index})*(amount${status.index});
+	allamount${status1.count}=amount${status.index};
 	</c:forEach>
 	sumcon.push(sum${status1.count});
 	amountcon.push(allamount${status1.count});
@@ -59,7 +57,7 @@ $(document).ready(function() {
 	
 	
 	
-	
+	console.log(amountcon);
 	
 	
 	//합산 금액 배열로 만든거 

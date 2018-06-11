@@ -1,5 +1,7 @@
 package cocoFarm.controller;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,8 +34,6 @@ public class MessageController {
 		
 		int idx = (Integer) session.getAttribute("idx");
 		
-		int alarmCnt = messageService.getAlarmCount(idx);
-		model.addAttribute("alarmCnt", alarmCnt);
 	}
 	   
 	@RequestMapping(value="/mypage/readMessage.do", method=RequestMethod.POST)
@@ -179,6 +179,18 @@ public class MessageController {
 		}
 		
 		return "redirect:/mypage/message.do";
+	}
+	@RequestMapping(value="/mypage/user/mes_arl.do", method=RequestMethod.POST)
+	public void mes_arl(Writer writer, HttpSession session) {
+		int idx = (int)session.getAttribute("idx");
+		
+		int alarmCnt = messageService.getAlarmCount(idx);
+		
+		try {
+			writer.append("{\"alarmCnt\":" + alarmCnt + "}");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

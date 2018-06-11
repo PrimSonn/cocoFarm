@@ -399,7 +399,7 @@ background-position:center 0px;}
 .mypage_box .mypage_page01{
 	box-shadow: 0 1px 3px rgba(0,0,0,.13);
 	background-color:rgba(255,255,255,0.5);
-	height: 100%;
+	min-height: 529px;
 	width: 810px;
 	position:relative;
 	float: right;
@@ -773,29 +773,66 @@ height:40px;
 }
 
 /* 회원정보 수정 */
-.mypage_box .mypage_updateAccount {
-    box-shadow: 0 1px 3px rgba(0,0,0,.13);
-    background-color: rgba(255,255,255,0.5);
-    height: 574px;
-    width: 810px;
-    position: relative;
-    float: right;
-    left: 0px;
-    border-radius: 5px;
-}
-.mypage_updateAccount .border {
+
+.border {
 	margin:10px auto;
 	width: 780px;
 	height:100%;
 }
-.mypage_updateAccount .border h1{
+.border h1{
 	font-size: 18px;
 }
-.mypage_updateAccount .profile {
+.profile {
 	width: 200px;
 	height: 200px;
+	border-radius: 200px;
 /* 	border-radius: 100px; //둥근프로필 */
 }
+.border button {
+   margin: 5px 0;
+   background-color: #ffffff99;
+    color: #2f2f2f;
+    width: 100px;
+    height: 20px;
+    border: 1px solid #616161;
+    border-radius: 2px;
+    opacity: 0.9;
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+.modify_account {
+   margin: 15px 0;
+}
+.modify_account input {
+   border: 1px solid rgb(169, 169, 169);
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    border-radius: 3px;
+    color: #616161;
+    background: rgba(255,255,255,0.6);
+    font-size: 13px;   
+}
+.modify_account #updateBtn {
+   margin: 5px 0;
+   background-color: #ffffff99;
+    color: #2f2f2f;
+    width: 100px;
+    height: 20px;
+    border: 1px solid #616161;
+    border-radius: 2px;
+    opacity: 0.9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+.modify_account h1 {
+   margin: 5px 0;
+}
+
+
+
+
+
+
+
+
+
 
 .pagination li{
 	width: 20px;
@@ -804,6 +841,9 @@ height:40px;
 	display:inline;
     float: left;
 }
+
+
+
 
 .buy_button, .addcart_button, .talk_button {
 	cursor: pointer;
@@ -819,7 +859,7 @@ height:40px;
 	
 }
 .choose_color2{
-	color:#fff;
+	color:#fff !important;
 	background-color: #7ccef1;
 	padding: 7px 22px !important;
 	margin-top: 5px !important;
@@ -827,3 +867,13 @@ height:40px;
 	
 }
 
+/* 2018-06-11 알람 */
+#alarm + span {
+	background-color: green;
+    color: white;
+    font-weight: bold;
+	
+	padding: 4px;
+	margin: 2px;
+	border-radius: 10px;
+}
