@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="cocoFarm.dao.AdminMypageDao">
+
+	<resultMap type="cocoFarm.dto.LicenseDto" id="viewDto">
+		<result property="license_storedName" column="LICENSE_IMG"/>
+	</resultMap>
+
+	<select id="getAccAllCount" resultType="int">
+		SELECT count(*) FROM account 
+	</select>
+	
+	<select id="getAccDelCount" resultType="int">
+		SELECT count(*) FROM account WHERE isdel = 1
+	</select>
+
+	<select id="wholeAcc" parameterType="cocoFarm.util.Paging" resultType="cocoFarm.dto.Account">
+		SELECT * FROM (SELECT rownum rnum, b.* FROM (
+			SELECT * FROM account 
+			WHERE isdel = 0
+			ORDER BY idx DESC) b ORDER BY rnum) 
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+	
+	<select id="delWholeAcc" parameterType="cocoFarm.util.Paging" resultType="cocoFarm.dto.Account">
+		SELECT * FROM (SELECT rownum rnum, b.* FROM (
+			SELECT * FROM account 
+			WHERE isdel = 1
+			ORDER BY idx DESC) b ORDER BY rnum) 
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	</select>
+	
+	<select id="licenseList" resultType="cocoFarm.dto.LicenseDto">
+		SELECT B.*, A.name FROM business_info B 
+		INNER JOIN account A ON A.IDX = B.ACC_IDX WHERE ACCOUNT_TYPE = 3
+	</select>
+	
+	<select id="licenseView" parameterType="cocoFarm.dto.LicenseDto" resultMap="viewDto">
+		SELECT * FROM business_info WHERE idx = #{idx }
+	</select>
+	
+	<update id="licenseOk" parameterType="int">
+		UPDATE account SET account_type = 2 WHERE idx = #{acc_idx }
+	</update>
+	
+	<insert id="licenseOkMsg" parameterType="int">
+		INSERT INTO message (sender_idx, receiver_idx, title, content) 
+		VALUES (1, #{acc_idx }, '판매자 등록 승인 관련', '판매자 등록 신청이 승인 되셨습니다.')
+	</insert>
+	
+	<insert id="licenseNoMsg" parameterType="int">
+		INSERT INTO message (sender_idx, receiver_idx, title, content) 
+		VALUES (1, #{acc_idx }, '판매자 등록 거절 관련', '판매자 등록 신청이 거절 되셨습니다.판매자 등록 삭제 후에 사업자 등록증의 내용을 정확히 입력하여 다시 등록 하여 주시면 감사하겠습니다.')
+	</insert>
+	
+	<select id="selectPayAll" resultType="cocoFarm.dto.Main_receipt">
+		SELECT * FROM main_receipt
+	</select>
+
+</mapper>
