@@ -22,8 +22,8 @@ public class BoardController {
 	@Autowired BoardService boardService;     
 	
 	@RequestMapping(value="/board/list.do", method=RequestMethod.GET)
-	public String list(@RequestParam(defaultValue="0") int curPage, Paging search, Model model) {
-
+	public String list(@RequestParam(defaultValue="0") int curPage, HttpSession session, Paging search, Model model) {
+		
 		// 페이지 처리
 		int totalCount = boardService.getTotal();			// 전체 게시글 수							
 		Paging paging = new Paging(totalCount, curPage);
@@ -32,9 +32,6 @@ public class BoardController {
 		// 페이징 처리된 게시글 목록	
 		List list = boardService.getPagingList(paging);		// 전체 게시글 조회
 		model.addAttribute("list", list);
-		
-		System.out.println("list:"+list.get(0));
-		
 				
 		return "board/list";
 	}

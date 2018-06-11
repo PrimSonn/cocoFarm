@@ -30,16 +30,7 @@ public class LoginController {
 	
 	@Autowired LoginService loginService;
 	@Autowired ServletContext context;
-	
-	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
-	public ModelAndView main(HttpSession session, ModelAndView mav){
-		System.out.println(session.getAttribute("idx"));
-		System.out.println(session.getAttribute("type")); 
 
-		mav.setViewName("main/cocomain");
-		return mav;
-	}
-	
 	@RequestMapping(value="/login/logout.do", method=RequestMethod.GET)
 	public String logout(HttpSession session){
 		session.invalidate();
@@ -124,7 +115,7 @@ public class LoginController {
 		System.out.println(account);
 		loginService.updateAccount(account);
 		
-		return "redirect:/mypage/user/updateAccount.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/user/updateProfile.do", method=RequestMethod.POST)
@@ -155,7 +146,7 @@ public class LoginController {
 
 		loginService.updateProfile(account);
 		
-		return "redirect:/mypage/user/updateAccount.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/deleteAcc.do", method=RequestMethod.GET)

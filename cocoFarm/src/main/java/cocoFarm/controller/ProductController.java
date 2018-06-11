@@ -35,7 +35,7 @@ public class ProductController {
 	
 	@RequestMapping(value="/seller/mypage/nav", method=RequestMethod.GET)
 	public String nav() {
-		return "Mypage/seller/mypage_load";
+		return "mypage/seller/mypage_load";
 	}
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
@@ -52,13 +52,13 @@ public class ProductController {
 		model.addAttribute("optionList", optionList);
 //		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
-		return "Mypage/seller/productList";
+		return "mypage/seller/productList";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert(HttpSession session) {
 		logger.info("insert.do get!");
-		return "Mypage/seller/productInsert";
+		return "mypage/seller/productInsert";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
@@ -146,7 +146,7 @@ public class ProductController {
 		
 //		session.setAttribute("saleIdx", productView.getIdx());
 		
-		return "Mypage/seller/productUpdate";
+		return "mypage/seller/productUpdate";
 	}
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
@@ -241,7 +241,7 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
-		return "Mypage/user/productCart";
+		return "mypage/user/productCart";
 	}
 	
 //	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -266,7 +266,7 @@ public class ProductController {
 		
 		// 상품을 등록하는 사람의 idx
 //		productService.insertBasket(option, (Integer)session.getAttribute("idx"));
-		productService.insertCart(option, 5);
+//		productService.insertCart(option, 2);
 		
 //		model.addAttribute("optionCart", option);
 		

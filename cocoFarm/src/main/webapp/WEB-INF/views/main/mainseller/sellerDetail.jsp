@@ -28,7 +28,6 @@ var test =0;
 	+'<span class="delete_option"><img class="optionImg${status.count}" src="/img/main/delete_icon.PNG"></span>'
 	+'</div>';
 	var price_pro${status.count} = ${data.price};
-	
 </c:forEach>
 
 var bla = $('.pronum_text').val();
