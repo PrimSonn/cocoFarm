@@ -154,6 +154,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure REFUND_RECPT_MKR;
+
 drop procedure CHECK_TEMP_RECPT;
 
 drop procedure CANCEL_AUCTION;
@@ -4184,7 +4186,7 @@ exception when OTHERS then
 end;
 /
 
-
+--drop procedure REFUND_RECPT_MKR;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
