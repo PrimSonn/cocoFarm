@@ -218,7 +218,7 @@ function requestPayment() {
 	console.log('Main_Rcpt: '+Main_Rcpt);
 	console.log('is_Done: '+is_Done);
 	console.log('--------------------');
-	
+	var result =0;
 	if(is_Done != 0) {
 		IMP.request_pay({
 				pg : 'danal', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
@@ -246,6 +246,7 @@ function requestPayment() {
 									url: "/pay.do", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
 									type: 'POST',
 									dataType: 'json',
+									async: false,
 									data: {
  									//merchant_uid : rsp.merchant_uid,
 									imp_uid : rsp.imp_uid,
@@ -253,7 +254,7 @@ function requestPayment() {
 									}
 							}).done(function(data) {
 								//[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
-								var result = parseInt(data);
+								result = parseInt(data);
 								if ( result==1 ) {
 									var msg = '결제가 완료되었습니다.';
 									msg += '\n고유ID : ' + rsp.imp_uid;
@@ -264,7 +265,7 @@ function requestPayment() {
 								}else if (result<0 && result>-100 ){
 									alert('data: '+data)
 								}else {
-									alert("취소취소");
+									alert("취소취소, data: " +data);
 									//[3] 아직 제대로 결제가 되지 않았습니다.
 									//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
 									/* 
@@ -297,7 +298,7 @@ function requestPayment() {
 							msg += '에러내용 : ' + rsp.error_msg;
 							//임시 영수증 삭제 로직 추가.
 					}
-					alert(msg);
+// 					alert(msg);
 				});
 	} else{
 		alert('임시저장 실패');

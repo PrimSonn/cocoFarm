@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import cocoFarm.dao.TestBidDao;
-<<<<<<< HEAD
 import cocoFarm.dto.TestBidDto;
 import cocoFarm.service.ReceiptService;
 import cocoFarm.service.RestSvc;
-=======
-import cocoFarm.dto.BidDto;
->>>>>>> c3486713cef8ea3cb114fb375ddc8412687de222
 
 @SuppressWarnings("unused")
 @Controller
