@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -213,17 +214,44 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-	public String basketList(Option option
-							, Product product
-							, Model model) {
+	public String basketList(Model model) {
 		logger.info("cart.do get!");
-		List<SaleOption> saleList = option.getSaleOptions();
+
+		logger.info("-----------controller-----------");
+
+		List<SaleOption> cartOptionList = productService.cartView(5);
+		model.addAttribute("optionCart", cartOptionList);
 		
-		model.addAttribute("productCart", product);
-		model.addAttribute("optionCart", option);
+		Product product = null;
+		List<Product> cartProductList = new ArrayList<>();
+		
+		int saleIdx = cartOptionList.get(0).getSaleIdx();
+		product = productService.productView(saleIdx);
+		cartProductList.add(product);
+		System.out.println(product);
+		
+		for(int i=0; i<cartOptionList.size(); i++) {
+			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
+				saleIdx = cartOptionList.get(i).getSaleIdx();
+				product = productService.productView(saleIdx);
+				cartProductList.add(product);
+			} else { continue; }
+			System.out.println("Product Title: " + product.getTitle());
+		}
+		
+		model.addAttribute("productCart", cartProductList);
 		
 		return "mypage/user/productCart";
 	}
+	
+//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
+//	@ResponseBody
+//	public List<HashMap<String, Object>> getItems() {
+//	public HashMap<String, Object> getItems() {
+//		
+//		
+//		return null;
+//	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
@@ -231,15 +259,26 @@ public class ProductController {
 							, Model model) {
 		logger.info("cart.do post!");
 		
-//		List<SaleOption> saleList = option.getSaleOptions();
-//		for(int i=0; i<saleList.size(); i++) {
-//			logger.info("Option" + i+1 + ": " + saleList.get(i));
-//		}
+		List<SaleOption> saleList = option.getSaleOptions();
+		for(int i=0; i<saleList.size(); i++) {
+			logger.info("Option" + (i+1) + ": " + saleList.get(i));
+		}
 		
 		// 상품을 등록하는 사람의 idx
 //		productService.insertBasket(option, (Integer)session.getAttribute("idx"));
 //		productService.insertCart(option, 2);
 		
+//		model.addAttribute("optionCart", option);
+		
+		return "redirect:/product/cart.do";
+	}
+	
+	@RequestMapping(value="/product/deleteCart.do", method=RequestMethod.POST)
+	public String deleteBasket(String names) {
+		if( !"".equals(names) && names != null) {
+			int saleIdx = Integer.parseInt(names);
+			productService.deleteCart(saleIdx);
+		}
 		return "redirect:/product/cart.do";
 	}
 	

@@ -28,6 +28,16 @@ public interface TestMemberDao {
 	 * @return
 	 */
 	public String getUsernick(Account member);
+	
+	public String getUserIdx(Account member);
+	
+	/**
+	 * 계정 타입 검사
+	 * 
+	 * @param idx 계정 idx
+	 * @return 타입 반환
+	 */
+	public int getUsertype(Account member);
 }
 
 

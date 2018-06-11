@@ -154,6 +154,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure REFUND_RECPT_MKR;
+
 drop procedure CHECK_TEMP_RECPT;
 
 drop procedure CANCEL_AUCTION;
@@ -201,7 +203,7 @@ drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
 
-drop index TODAYS_FMR_FILE_IDX;
+drop index TODAYS_FMR_FILE_IDX;--deprecated
 drop table TODAYS_FARMER_FILE cascade constraints;
 
 drop trigger TODAYS_FARMER_EDIT_TRG;
@@ -2943,7 +2945,7 @@ comment on column TODAYS_FARMER.ISDEL is '삭제 확인 코드(블라인드) - �
 --drop table TODAYS_FARMER cascade constraints;
 
 
-------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
+------------------------------------------------  오늘의 농부 이미지  ----------------------------------------------------
 
 create table TODAYS_FARMER_FILE (
 
@@ -2952,13 +2954,13 @@ create table TODAYS_FARMER_FILE (
 	,STORED_FILENAME		varchar2(800)
 	,UPLOAD_DATE			date default SYSDATE
 
-	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX)
+	,constraint TODAYS_FARMER_PK primary key (ACC_IDX)
+	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
 create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
 
 
---drop index TODAYS_FMR_FILE_IDX;
 --drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
@@ -4140,9 +4142,8 @@ end;
 --drop procedure CHECK_TEMP_RECPT;
 
 
-/*==============================================================================================
+/*=============================== 2. 환불 영수증만들기 =======================================
 
-	환불 영수증만들기
 	결과값 1: 성공 0: 실패
 	어플리케이션에서 쓰이는 위치 상, 이미 모든 예외처리를 거친 부분이라 여기는 예외처리가 없음
 	나중에 다른 곳에 다시 써야 한다면 예외처리를 추가할 것.
@@ -4185,7 +4186,7 @@ exception when OTHERS then
 end;
 /
 
-
+--drop procedure REFUND_RECPT_MKR;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
@@ -4413,6 +4414,4 @@ end;
 
 
 */
-
-
 

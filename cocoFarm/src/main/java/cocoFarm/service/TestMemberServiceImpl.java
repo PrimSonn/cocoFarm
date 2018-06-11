@@ -35,6 +35,16 @@ public class TestMemberServiceImpl implements TestMemberService {
 		return memberDao.getUsernick(member);
 	}
 
+	@Override
+	public String getUserIdx(Account member) {
+		return memberDao.getUserIdx(member);
+	}
+
+	@Override
+	public int getUsertype(Account member) {
+		return memberDao.getUsertype(member);
+	}
+
 	
 }
 

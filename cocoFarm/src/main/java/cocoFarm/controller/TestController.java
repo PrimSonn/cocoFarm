@@ -55,7 +55,7 @@ public class TestController {
 		mav.setViewName("main/cocomain");
 		return mav;
 	}
-	
+
 //	@RequestMapping(value="main",method=RequestMethod.GET)
 //	public ModelAndView mainGet(ModelAndView mv) {
 //		
@@ -78,15 +78,15 @@ public class TestController {
 //			}
 //		}
 //		
-////		for(Object key : request.getParameterMap().keySet()) {
-////			System.out.println("[key: "+key+", value: "+request.getParameter((String) key)+"]");
-////			for(String val : (String[])request.getParameterMap().get(key)) {
-////				System.out.println(val);
-////			}
-////		}
+//		for(Object key : request.getParameterMap().keySet()) {
+//			System.out.println("[key: "+key+", value: "+request.getParameter((String) key)+"]");
+//			for(String val : (String[])request.getParameterMap().get(key)) {
+//				System.out.println(val);
+//			}
+//		}
 //		
 //		mv.setViewName("redirect:auction/bidder");
-////		mv.setViewName("redirect:/");
+//		mv.setViewName("redirect:/");
 //		return mv;
 //	}
 //

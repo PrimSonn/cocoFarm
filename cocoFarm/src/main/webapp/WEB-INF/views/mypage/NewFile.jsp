@@ -135,15 +135,47 @@ $(document).ready(function() {
 			
 			<div class="mypage_updateAccount">
 				<div class="messageForm">
-					<h1>쪽지함</h1>
-					<select id="messageCate" name="messageCate">
-					   <option value="1" <c:if test="${param.messageCate=='1' }">selected</c:if>>받은쪽지함</option>
-					   <option value="2" <c:if test="${param.messageCate=='2' }">selected</c:if>>보낸쪽지함</option>
-					</select>
-<!-- 					<button id="sendMessageBtn">쪽지 보내기</button> -->
+					<div>
+					   <table>
+					      <thead>
+					         <tr>
+					            <th>제목</th>
+					            <c:if test="${messageCate eq 1 }">
+					               <th>보낸사람</th>
+					            </c:if>
+					            <c:if test="${messageCate eq 2 }">
+					               <th>받은사람</th>
+					            </c:if>
+					            <c:if test="${messageCate eq 1 }">
+					               <th>보낸날짜</th>
+					            </c:if>
+					            <c:if test="${messageCate eq 2 }">
+					               <th>받은날짜</th>
+					            </c:if>
+					         </tr>
+					      </thead>
+					      <tbody>
+					         <tr>
+					            <td>${message.title }</td>
+					            <c:if test="${messageCate eq 1 }">
+					               <td>${sender }</td>
+					            </c:if>
+					            <c:if test="${messageCate eq 2 }">
+					               <td>${receiver }</td>
+					            </c:if>
+					            <td>${message.written_time }</td>
+					         </tr>
+					         <tr>
+					         	<th colspan="3" style="text-align: center;">내용</th>
+					         </tr>
+					         <tr>
+					         	<td colspan="3" style="text-align: center;">${message.content }</td>
+					         </tr>
+					      </tbody>
+					   </table>
+					   <a href="/mypage/message.do"><button>목록</button></a>
+					</div>
 				</div>
-			
-				<div id="messageBox"></div>
 			</div>
 			
 		</div>

@@ -19,7 +19,7 @@ import cocoFarm.util.Paging;
 @Controller
 public class BoardController {
 	
-	@Autowired BoardService boardService;
+	@Autowired BoardService boardService;     
 	
 	@RequestMapping(value="/board/list.do", method=RequestMethod.GET)
 	public String list(@RequestParam(defaultValue="0") int curPage, HttpSession session, Paging search, Model model) {
@@ -32,9 +32,6 @@ public class BoardController {
 		// 페이징 처리된 게시글 목록	
 		List list = boardService.getPagingList(paging);		// 전체 게시글 조회
 		model.addAttribute("list", list);
-		
-/*		System.out.println("list:"+list.get(0));
-*/		
 				
 		return "board/list";
 	}

@@ -198,7 +198,6 @@
 .buy_button span{
 	font-size: 15px;
 	font-family:'Jeju Gothic';
-	padding-left: 12px;
 }
 .buy_button img{
 	
@@ -322,5 +321,44 @@
     vertical-align: bottom;
 	
 }
+
+.item_info {
+	position:relative;
+	float: left;
+	width: 100%;
+	height: 50px;
+	line-height: 51px;
+	border-top:1px solid rgb(239, 239, 239);
+	border-bottom: 1px solid rgb(239, 239, 239);
+	margin-bottom: 4px;
+	overflow: hidden;
+	font-family: '나눔고딕','Nanum Gothic', sans-serif;
+	font-size: 14px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13); 
+	display: inline-block;
+}
+.item_info a{
+	padding-left: 20px;
+	font-weight: normal;
+	color: #464646;
+	font-size: 14px;
+	font-family: 'Jeju Gothic', serif;
+	
+}
+
+.info_open{
+	font-size: 14px;
+	display: block;
+	height: 100%;
+	}
+	
+.open_icon{
+	float: right;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding-right: 30px;
+
+}	
 
 

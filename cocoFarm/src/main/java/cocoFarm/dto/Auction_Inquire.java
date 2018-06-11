@@ -6,7 +6,7 @@ public class Auction_Inquire {
 
 	
 	private Integer idx;			//경매 문의글 번호 - 기본키, 인조식별자 트리거있음
-	private Integer autcion_idx;	//경매글 번호 - null불가. 외래키
+	private Integer auction_idx;	//경매글 번호 - null불가. 외래키
 	private Integer writer_idx;		//문의 계정 번호 - null불가. 외래키
 	private String content;			//문의내용 - null불가
 	private Timestamp written_time;	//문의글 작성시각 - null불가, 트리거있음(기본값 시스템시간처리)
@@ -14,6 +14,36 @@ public class Auction_Inquire {
 	private Timestamp answer_time;	//문의글 답변 시각 - null가능, 트리거있음 (답변 작성시 자동으로 시간 기입)
 	private Integer isdel;			//삭제 혹은 이외의(블라인드 따위) 글 상태 - 외래키 null불가 트리거있음 (기본값 0)
 	
+	private String id;				//댓글 작성자 이름..? 아이디로 하는게 편하지 않을까.. 싶기도 한데 아이디로할까?
+	
+	private String name;
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	public String getId() {
+		return id;
+	}
+
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+
 	public Integer getIdx() {
 		return idx;
 	}
@@ -26,14 +56,14 @@ public class Auction_Inquire {
 
 
 
-	public Integer getAutcion_idx() {
-		return autcion_idx;
+	public Integer getAuction_idx() {
+		return auction_idx;
 	}
 
 
 
-	public void setAutcion_idx(Integer autcion_idx) {
-		this.autcion_idx = autcion_idx;
+	public void setAuction_idx(Integer auction_idx) {
+		this.auction_idx = auction_idx;
 	}
 
 
@@ -112,8 +142,8 @@ public class Auction_Inquire {
 
 	@Override
 	public String toString() {
-		return "Auction [idx="+idx
-				+", autcion_idx="+autcion_idx
+		return "Auction_Inquire [idx="+idx
+				+", auction_idx="+auction_idx
 				+", writer_idx="+writer_idx
 				+", content="+content
 				+", written_time="+written_time
