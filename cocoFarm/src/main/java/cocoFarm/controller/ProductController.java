@@ -228,10 +228,12 @@ public class ProductController {
 		Product product = null;
 		List<Product> cartProductList = new ArrayList<>();
 		
-		int saleIdx = cartOptionList.get(0).getSaleIdx();
-		product = productService.productView(saleIdx);
-		cartProductList.add(product);
-		
+		int saleIdx = 0;
+		if(cartOptionList.get(0) != null) {
+			saleIdx = cartOptionList.get(0).getSaleIdx();
+			product = productService.productView(saleIdx);
+			cartProductList.add(product);
+		}
 		for(int i=0; i<cartOptionList.size(); i++) {
 			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
 				saleIdx = cartOptionList.get(i).getSaleIdx();
@@ -289,7 +291,6 @@ public class ProductController {
 		Gson gson = new Gson();
 //		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
 //		resultMap = JsonArray.fromObject(comment);
-		
 		
 //		List list = gson.fromJson(comment, List.class);
 		logger.info("-------------------comment-----------------");
