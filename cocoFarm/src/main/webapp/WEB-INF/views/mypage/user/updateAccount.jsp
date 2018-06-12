@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> <!-- 주소 API -->
 <script type="text/javascript">
 function call_postcode() {
     new daum.Postcode({
@@ -49,54 +48,70 @@ function call_postcode() {
         }
     }).open();
 }
+
+
 </script>
 
 </head>
 <body>
-				<div class="border">
+				<div class="border01">
+					<h1>프로필 수정</h1>
 					<div class="modify_profile">
-						<h1>프로필 수정</h1>
-						<div>
+						
+						<div class="account_update">
 							<img class="profile" src="/img/profile/${account.thumb_loc }">
-<!-- 							<img class="profile" src="/imgs/profile/지도.jpg_a5d9d675"> -->
 							<form action="/mypage/user/updateProfile.do" method="post" enctype="multipart/form-data">
 								<input type="file" id="profile" name="profile" /><br>
-								<button>프로필 적용</button>
+								<!-- <button class="img_submit">이미지 적용</button> -->
+								<button class="profile_btn">프로필 적용</button>
 							</form>
 						</div>
 					</div>
 				
 					<div class="modify_account">
-						<h1>회원정보 수정</h1>
 						<div class="border_save">
 							<form action="/mypage/user/updateAccount.do" method="post">
 							<input type="hidden" id="idCheck" name="idCheck" value="N" />
 							<input type="hidden" name="account_type" value="3" />
-						
+							<div class="input_group">
 							<label for="id" class="">아이디 : </label>
-							<input type="text" id="id" name="id" value="${account.id }" class="" readonly="readonly"/><br/>
+							<input type="text" id="id" name="id" value="${account.id }" class="id_hold" readonly="readonly"/><br/>
+							</div>
+							<div class="input_group">
+							<label for="pw" class="">비밀번호 수정 : </label>
+							<input type="text" id="pw" name="pw" class=" " placeholder="비밀번호 입력해주세요."/><br/>
+							</div>
 							
-							<label for="pw" class=" ">비밀번호 수정 : </label>
-							<input type="text" id="pw" name="pw" class=" "/><br/>
+							<div class="input_group">
 							<label for="pwCheck" class=" ">비밀번호 수정 확인 : </label>
-							<input type="text" id="pwCheck" name="pwCheck" class=" "/><br/>
+							<input type="text" id="pwCheck" name="pwCheck" class=""  placeholder="비밀번호 수정 확인"/><br/>
+							</div>
 							
+							<div class="input_group">
 							<label for="name" class=" ">이름 : </label>
-							<input type="text" id="name" name="name" value="${account.name }" class=" "/><br/>
+							<input type="text" id="name" name="name" value="${account.name }" class=""/><br/>
+							</div>
 							
+							<div class="input_group">
 							<label for="email" class=" ">이메일 : </label>
-							<input type="text" id="email" name="email" value="${account.email }" class=" "/><br/>
+							<input type="text" id="email" name="email" value="${account.email }" class=""/><br/>
+							</div>
 							
+							<div class="input_group">
 							<label for="phone" class=" ">전화번호 : </label>
-							<input type="text" id="phone" name="phone" value="${account.phone }" class=" "/><br/>
+							<input type="text" id="phone" name="phone" value="${account.phone}" class=""/><br/>
+							</div>
 							
-							<label for="postnum" class=" ">주소 : </label>
+							<div class="input_group input_address">
+							<label for="postnum" class="postnum">주소 : </label>
 							<input type="text" id="postnum" name="postnum" value="${account.postnum }" readonly="readonly" class=" "/>
-							<button type="button" onclick="call_postcode();" class="">우편번호 찾기</button><br/>
-							
+							<button type="button" onclick="call_postcode();" class="button_postnum">우편번호 찾기</button><br/>
 							<input type="text" id="addr" name="addr" value="${account.addr }" readonly="readonly" class=" "/>
-							<input type="text" id="detailed_addr" name="detailed_addr" value="${account.detailed_addr }" class=" "/><br/>
+							<input type="text" id="detailed_addr" name="detailed_addr" value="${account.detailed_addr}" class=" "/><br/>
+							</div>
+							<div class="center">
 							<input type="submit" id="updateBtn" class="" value="수정 하기" />
+							</div>
 							</form>
 						</div>
 					</div>

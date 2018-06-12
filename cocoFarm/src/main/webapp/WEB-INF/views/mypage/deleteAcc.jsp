@@ -11,7 +11,7 @@
 
 
 function windowOpen() {
-	console.log("idx = " + ${sessionScope.idx } );
+	console.log("idx = " + ${sessionScope.idx});
 	var url = "/mypage/deleteAccNewWindow.do";
 	window.open(url, '회원탈퇴', 'width=450px, height=350px, toolbar=no, menubar=no, scrollbars=no, resizable=no');
 }
@@ -22,14 +22,16 @@ function windowOpen() {
 <title>Insert title here</title>
 </head>
 <body>
-
+<div class="delete_page">
 <h1>회원탈퇴</h1>
-<hr>
+</div>
 
-<h2>회원 탈퇴</h2><br>
-<p>회원 탈퇴를 원하시면 탈퇴 버튼을 누르세요.</p><br>
+<div class="delete_text">
+<p>회원 탈퇴를 원하시면 탈퇴 버튼을 누르세요.</p>
+</div>
+<div class="delete_btns">
 <button id="deleteAcc" name="deleteAcc" onclick="windowOpen();">탈퇴</button>
-<a href="/mypage/mypage.do"><button>취소</button></a>
-
+<a href="/mypage/mypage.do"><button class="cancel_btn">취소</button></a>
+</div>
 </body>
 </html>
