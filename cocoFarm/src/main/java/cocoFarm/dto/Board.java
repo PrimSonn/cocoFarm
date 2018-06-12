@@ -11,7 +11,7 @@ public class Board {
 //	private String writerid;
 	private String content;
 	private Date written_date;
-	private String main_img;
+	private String main_img; //여기에 프로필 사진 조회해서 가지고 오기 
 	private int hit;
 	private int recommend;
 	

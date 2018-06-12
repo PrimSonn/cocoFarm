@@ -34,13 +34,9 @@ public class PayController {
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.GET)
 	public String payVieworder(SaleOption saleoption) {
-		/*System.out.println(saleoption.getProAmount());*/
-		
-		
+
 		return "payment/oderPay";
 	}
-	
-	
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.POST)
 	public String payorder(Option option,Model model) {

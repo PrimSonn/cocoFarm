@@ -30,31 +30,33 @@ var allsum=0;
 var allamount=0;
 var option={}
 var optionlist=new Array();
-<c:forEach items="${pro}" var="pro_data" varStatus="status1">
-var sumcon=[];
-var amountcon=[];
-var sum${status1.count}=0;
-var allamount${status1.count}=0;
+
 $(document).ready(function() {
+	
+	<c:forEach items="${pro}" var="pro_data" varStatus="status1">
+	var sumcon=[];
+	var amountcon=[];
+	var sum${status1.count}=0;
+	var allamount${status1.count}=0;
 	<c:forEach items="${opt}" var="data" varStatus="status">
-//		console.log("idx : " + ${data.idx});
+	console.log("idx111111 : " + ${data.idx});
+	console.log("price11111 : " + ${amount.get(status.index)});
 	//console.log("amount : " + ${amount});
 	//console.log("amount11 : " + ${amount.get(status.index)});
 	//list 만들기 
-	option = new Object();
-	option.idx=${data.idx};
-	option.proAmount=${amount.get(status.index)};
-	optionlist.push(option);
-	var option_num${status.index}=Number(${data.idx});
-	var option${status.index}=Number(${data.price});	
-	var amount${status.index}=Number(${amount.get(status.index)});
-	sum${status1.count}=(option${status.index})*(amount${status.index});
-	allamount${status1.count}=amount${status.index};
+		option = new Object();
+		option.idx=${data.idx};
+		option.proAmount=${amount.get(status.index)};
+		optionlist.push(option);
+		var option_num${status.index}=Number(${data.idx});
+		var option${status.index}=Number(${data.price});	
+		var amount${status.index}=Number(${amount.get(status.index)});
+		sum${status1.count}=(option${status.index})*(amount${status.index});
+		allamount${status1.count}=amount${status.index};
+		</c:forEach>
+		sumcon.push(sum${status1.count});
+		amountcon.push(allamount${status1.count});
 	</c:forEach>
-	sumcon.push(sum${status1.count});
-	amountcon.push(allamount${status1.count});
-	</c:forEach>
-	
 	
 	
 	console.log(amountcon);
@@ -90,6 +92,7 @@ $(document).ready(function() {
 	};
 	
 	console.log("총수량"+allamount);
+	console.log("총가격"+allsum);
 	<c:set var="allsum" value="allsum"/>
 	<c:set var="allamount" value="allamount"/>
 	

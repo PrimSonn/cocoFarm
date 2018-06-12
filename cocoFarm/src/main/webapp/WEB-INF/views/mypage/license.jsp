@@ -17,18 +17,48 @@ function onlyNumber(obj) {
 $(document).ready(function() {
 	
 	$(".license_submit_btn").click(function() {
-		console.log($("#business_license_code").val());
-		
 		 if($("#business_license_code").val()=="") {
 		  alert("등록번호를 입력해주세요.");
 		  return false;
-		 }else{
-			 alert("통과"); 
-		 }
+		 }else if($("#business_reg_date").val()==""){
+			alert("개업연월일를 입력해주세요"); 
+			return false;
+		 }else if($("#corporation_name").val()==""){
+			alert("법인명을 입력해주세요");
+			return false;
+		 }else if($("#representative").val()==""){
+			alert("대표자를 입력해주세요");
+			return false;
+		 }else if($("#business_addr").val()==""){
+			alert("사업장 소재지를 입력해주세요");
+			return false;
+		}else if($("#business_detailed_addr").val()==""){
+			alert("상세주소를  입력해주세요");
+			return false;
+		}else if($("#headhquarter_addr").val()==""){
+			alert("본점 소재지를  입력해주세요");
+			return false;
+		}else if($("#headhquarter_detailed_addr").val()==""){
+			alert("본점 소재지 상세주소를  입력해주세요");
+			return false;
+		}else if($("#business_category").val()==""){
+			alert("업태를  입력해주세요");
+			return false;
+		}else if($("#business_type").val()==""){
+			alert("종류를  입력해주세요");
+			return false;
+		}else if($("#business_category").val()==""){
+			alert("본점 소재지 상세주소를  입력해주세요");
+			return false;
+		}else if($("#license_img").val()==""){
+			alert("사진을 올려주세요");
+			return false;
+		}else{
+			submitContents($(this));
+		}
 		
 		
-		
-		
+	
 		
 		/* if($("#business_license_code input[type=text]").val()==0) {
 		  alert("카테고리를 선택해주세요.");
@@ -50,7 +80,7 @@ $(document).ready(function() {
 	  return false;
 		} */
 		
-		/* submitContents($(this)); */
+		/*  */
 	});
 });
 
@@ -125,12 +155,15 @@ $(document).ready(function() {
 	</table>
 	
 	
-	
+	<div class="btn_center">	
+	<button class="license_submit_btn">등록하기</button>
+	</div>
 
 	
-	<a href="javascript:history.back()">돌아가기</a>
-	</form>	
-<button class="license_submit_btn">등록하기</button>
+	<!-- <a href="javascript:history.back()">돌아가기</a> -->
+	</form>
+	
+
 </div>
 </body>
 </html>

@@ -36,7 +36,7 @@ public class MypageController {
 		
 		*/
 		if((Integer)session.getAttribute("type")<=1){
-			return "mypage/user/userIntro1";
+			return "mypage/admin/adminIntro";
 		}else if((Integer)session.getAttribute("type")==2) {
 			return "mypage/seller/productIntro";
 		}else {

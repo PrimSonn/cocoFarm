@@ -24,6 +24,8 @@ public interface BoardService {
 	
 	public BoardFile getFileup(Board viewBoard);
 
-
+	//2018년 6월 12일 hwanmin 작업
+	public List<Board> getboardMainList();
+	
 	
 }

@@ -118,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertCart(Option option, int accIdx) {
 		SaleOption saleOption = null;
-		System.out.println("option size: " + option.getSaleOptions().size());
+//		System.out.println("option size: " + option.getSaleOptions().size());
 		
 		// 장바구니에 이미 등록되어 있는 경우
 		
@@ -200,6 +200,12 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getSale_Option(String salequery) {
 		return productDao.getSale_Option(salequery);
+	}
+	
+	@Override
+	public List<Product> getProViewMainList(){
+		
+		return productDao.ProViewMainList();
 	}
 	
 }

@@ -33,6 +33,65 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
+	
+
+	//판매 상세 정보 옴김
+	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
+	public String viewList(Model model) {
+		System.out.println(productService.getProMainList());
+		model.addAttribute("seller",(productService.getProMainList()));
+		
+		return "main/mainseller/sellermain";
+	}
+	
+	
+	//판매 상세 정보
+	@RequestMapping(value="/seller.do",method=RequestMethod.POST)
+	public String searchviewList(Product product, Model model) {
+		System.out.println(product.getSearch_name());
+		model.addAttribute("seller",(productService.getSerchList(product)));
+		return "main/mainseller/sellermain";
+	}
+	
+	
+	//판매 디테일 뷰
+	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
+	public String detailProView(Product product,SaleOption saleoption,Model model) {
+		System.out.println(product.getIdx());
+		
+		/*List<Product> pList;
+		pList = productService.getDetailList(product);
+		model.addAttribute("product",(productService.getDetailList(product)));
+		for(Product p :pList) {
+			System.out.println(p.getTitle());
+		}*/
+		
+		/*System.out.println(productService.getDetailList(product).getTitle());*/
+		
+		model.addAttribute("product",(productService.getDetailList(product)));
+	
+		
+		model.addAttribute("option",(productService.getOptionList(saleoption)));
+		
+		List<SaleOption> sList;
+		sList = productService.getOptionList(saleoption);
+		for(SaleOption s :sList) {
+			System.out.println(s.getPrice());
+		}
+		/*System.out.println(productService.getDetailList(product).getFaceImg());*/
+		
+		return "main/mainseller/sellerDetail";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@RequestMapping(value="/seller/mypage/nav", method=RequestMethod.GET)
 	public String nav() {
 		return "mypage/seller/mypage_load";
@@ -209,46 +268,36 @@ public class ProductController {
 		
 		return "redirect:/product";
 	}
-	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-	public String basketList(Model model, HttpSession session) {
-		logger.info("cart.do get!");
+	   public String basketList(Model model, HttpSession session) {
+	      logger.info("cart.do get!");
+	      logger.info("-----------controller-----------");
+	      int accIdx = (Integer)session.getAttribute("idx");
+	      
+	      List<SaleOption> cartOptionList = null;
+	      cartOptionList = productService.cartView(accIdx);
+	      model.addAttribute("optionCart", cartOptionList);
 
-		logger.info("-----------controller-----------");
-
-		int accIdx = (Integer)session.getAttribute("idx");
-		List<SaleOption> cartOptionList = productService.cartView(accIdx);
-//		List<SaleOption> cartOptionList = productService.cartView(5);
-		model.addAttribute("optionCart", cartOptionList);
-		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
-		
-		Product product = null;
-		List<Product> cartProductList = new ArrayList<>();
-		
-		int saleIdx = cartOptionList.get(0).getSaleIdx();
-		product = productService.productView(saleIdx);
-		cartProductList.add(product);
-		
-		for(int i=0; i<cartOptionList.size(); i++) {
-			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
-				saleIdx = cartOptionList.get(i).getSaleIdx();
-				product = productService.productView(saleIdx);
-				cartProductList.add(product);
-			} else { continue; }
-		}
-		model.addAttribute("productCart", cartProductList);
-		
-		return "mypage/common/productCart";
-	}
-	
-//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-//	@ResponseBody
-//	public List<HashMap<String, Object>> getItems() {
-//	public HashMap<String, Object> getItems() {
-//		
-//		
-//		return null;
-//	}
+	      List<Product> cartProductList = null;
+	      Product product = null;
+	      
+	      int saleIdx = 0;
+	      if(cartOptionList.size() != 0) {
+	         saleIdx = cartOptionList.get(0).getSaleIdx();
+	         product = productService.productView(saleIdx);
+	         cartProductList.add(product);
+	      }
+	      for(int i=0; i<cartOptionList.size(); i++) {
+	         if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
+	            saleIdx = cartOptionList.get(i).getSaleIdx();
+	            product = productService.productView(saleIdx);
+	            cartProductList.add(product);
+	         } else { continue; }
+	      }
+	      model.addAttribute("productCart", cartProductList);
+	      
+	      return "mypage/common/mypageCart";
+	   }
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option

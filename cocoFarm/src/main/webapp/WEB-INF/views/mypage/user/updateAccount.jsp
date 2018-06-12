@@ -7,6 +7,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <script type="text/javascript">
+
+/* 
+$(document).ready(function() {
+	$(".profile_btn").click(function() {
+		console.log($("#profile").val()); 
+		if($("#profile").val()=="") {
+		  alert("프로필 사진을 입력해주세요. ");
+		  return false;
+		 }else{
+		//submitContents($(this));
+		}
+		 
+	}); 
+	*/
+
 function call_postcode() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -48,7 +63,6 @@ function call_postcode() {
         }
     }).open();
 }
-
 
 </script>
 

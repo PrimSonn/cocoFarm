@@ -12,7 +12,13 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("#loginBtn").click(function(){		
+	$(".login_box").keypress(function(e){
+	       if(e.which == 13)
+	           $("#loginBtn").click();
+	   });
+	$("#loginBtn").click(function(){
+		
+		
 		if(!$("#id").val()){
 			alert("아이디를 입력해주세요");
 			return false;
