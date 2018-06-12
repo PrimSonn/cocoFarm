@@ -2,19 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>    
-        
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>${product.title }</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-			
 <script type="text/javascript">
 var test =0;
 <c:forEach items="${option}" var="data" varStatus="status">
@@ -28,15 +27,15 @@ var test =0;
 	+'<span class="delete_option"><img class="optionImg${status.count}" src="/img/main/delete_icon.PNG"></span>'
 	+'</div>';
 	var price_pro${status.count} = ${data.price};
-	
 </c:forEach>
 
 var bla = $('.pronum_text').val();
 var price = 0;
 var num=1;
 var sum=0;
+
+
 $(document).ready(function() {
-	
 	
 	//콤마찍기
 	function comma(str) {
@@ -82,6 +81,7 @@ $(document).ready(function() {
 		reselect();
 		calcPrice();
 	});
+	
 	$("#detail_option").on("click", "img.optionImg1", function() {
 				console.log($('.proselect_option option[value=1]').val());
 				/* $('.proselect_option option[value=1]').val())=="1") */
@@ -93,8 +93,6 @@ $(document).ready(function() {
 		calcPrice();
 	});
 		
-
-	
 		/* $(".proselect_option").on("change", function(){ */
 	
 		/*   $(".pronum_text").on("keypress",function() {
@@ -146,132 +144,179 @@ $(document).ready(function() {
 		console.log($(".num_option_price").parent().find(".num_option_price").text());
 		calcPrice();
 		
-		});
+	});
 	
 		
-		/*플러스 버튼 눌렀을때  */
-		$("#detail_option").on("click", ".button_plus", function(){
-			if(Number($(this).parent().find(".pronum_text").val())==99){
-				return;
-			}	
-			
-			var num=Number($(this).parent().find(".pronum_text").val())+1;
-			var text_num=Number($(this).parent().find(".pronum_text").val(num));
-			
-			var original_price=Number($(this).parent().find(".num_option_price").data("unit"));
-			
-			console.log(original_price);
-			$(this).parent().find(".num_option_price").text(comma(original_price*num));
-			
-			price=0;
-			calcPrice();
-			
-		});
+	/*플러스 버튼 눌렀을때  */
+	$("#detail_option").on("click", ".button_plus", function() {
+		if(Number($(this).parent().find(".pronum_text").val())==99){
+			return;
+		}	
+		
+		var num=Number($(this).parent().find(".pronum_text").val())+1;
+		var text_num=Number($(this).parent().find(".pronum_text").val(num));
+		
+		var original_price=Number($(this).parent().find(".num_option_price").data("unit"));
+		
+		console.log(original_price);
+		$(this).parent().find(".num_option_price").text(comma(original_price*num));
+		
+		price=0;
+		calcPrice();
+		
+	});
 
-		/*마이너스 버튼 눌렀을때 */
-		$("#detail_option").on("click",".button_minus", function(){
-			if(Number($(this).parent().find(".pronum_text").val())==1){
-				return;
-			}
-			var num=Number($(this).parent().find(".pronum_text").val())-1;
-			var text_num=Number($(this).parent().find(".pronum_text").val(num));
-			
-			var original_price=$(this).parent().find(".num_option_price").data("unit");
-			$(this).parent().find(".num_option_price").text(comma(original_price*num));
-			price=0;
-			calcPrice();
-		});
+	/*마이너스 버튼 눌렀을때 */
+	$("#detail_option").on("click",".button_minus", function() {
+		if(Number($(this).parent().find(".pronum_text").val())==1){
+			return;
+		}
+		var num=Number($(this).parent().find(".pronum_text").val())-1;
+		var text_num=Number($(this).parent().find(".pronum_text").val(num));
 		
-		/*상품 정보 눌렀을때   */
-		$('.open_icon').on('click', function(){
-			if($(this).parent().parent().hasClass("info_open")==true){
-				$(this).parent().parent().removeClass('info_open');
-				$(this).text("열기");
-			}else{
-				$(this).parent().parent().addClass("info_open");
-				$(this).text("닫기");
-			}
-			
-			
-		});
-		/* 구매하기 버튼 눌렀을대 써밋 */
-		$(".buy_button").click(function() {
-			$(".option_form").attr("action", "/orderpay.do");
-			$(".option_form").submit();
-			/* 
-			if($(".category option:selected").val()==0) {
-			  alert("카테고리를 선택해주세요.");
-			  return false;
-			} else if($.trim($("#title").val())=="") {
-			  alert("제목을 입력해주세요.");
-			  return false;
-			} else if($("textarea[name=optionName]").val()==""){
-			  alert("옵션을 입력해주세요.");
-			  return false;
-			} else if($("textarea[name=startAmount]").val()==""){
-		    alert("판매수량을 입력해주세요.");
-		    return false;
-			} else if($("textarea[name=unit]").val()==""){
-	      alert("단위를 입력해주세요.");
-	      return false;
-			} else if($("textarea[name=price]").val()==""){
-	      alert("판매가격을 입력해주세요.");
-	      return false;
-			} 
-			 */
+		var original_price=$(this).parent().find(".num_option_price").data("unit");
+		$(this).parent().find(".num_option_price").text(comma(original_price*num));
+		price=0;
+		calcPrice();
+	});
 		
-		});
+	/* 상품 정보 눌렀을때   */
+	$('.open_icon').on('click', function() {
+		if($(this).parent().parent().hasClass("info_open")==true) {
+			$(this).parent().parent().removeClass('info_open');
+			$(this).text("열기");
+		} else {
+			$(this).parent().parent().addClass("info_open");
+			$(this).text("닫기");
+		}
+	});
 		
-		/* 장바구니 버튼 눌렀을 때 */
-		$(".addcart_button").click(function() {
-			$(".option_form").attr("action", "/product/cart.do");
-			$(".option_form").submit();
-		});
+	/* 구매하기 버튼 눌렀을대 써밋 */
+	$(".buy_button").click(function() {
+		$(".option_form").attr("action", "/orderpay.do");
+		$(".option_form").submit();
+		/* 
+		if($(".category option:selected").val()==0) {
+		  alert("카테고리를 선택해주세요.");
+		  return false;
+		} else if($.trim($("#title").val())=="") {
+		  alert("제목을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=optionName]").val()==""){
+		  alert("옵션을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=startAmount]").val()==""){
+	    alert("판매수량을 입력해주세요.");
+	    return false;
+		} else if($("textarea[name=unit]").val()==""){
+      alert("단위를 입력해주세요.");
+      return false;
+		} else if($("textarea[name=price]").val()==""){
+      alert("판매가격을 입력해주세요.");
+      return false;
+		} 
+		 */
 	
 	});
-	/* 숫자만 입력 시키게 하는것 */
-	function onlyNumber(obj){
-	    val=obj.value;
-	    re=/[^0-9]/gi;
-	    obj.value=val.replace(re,"");
-	}
-	
-	/*옵션 합산 계산  */
-	function calcPrice(){
-		$("#detail_option .num_option_price").each(function(idx){
 		
-			price += Number($(this).text().replace(/,/g, ''));
-		});
+	/* 장바구니 버튼 눌렀을 때 */
+	$(".addcart_button").click(function() {
+		$(".option_form").attr("action", "/product/cart.do");
+		$(".option_form").submit();
+	});
+});
+
+/* 상품평 등록 눌렀을 때 */
+function insertComment() {
+	var saleIdx = ${product.idx };
+	var commScore = 5;
+	var commTitle = "제목";
+	var content = $("#commentContent").val();
+	var commentList = [saleIdx, commScore, commTitle, content];
+	console.log(commentList);
+	
+	var arr = new Array();
+	var obj = new Object();
+	
+	obj.saleIdx = ${product.idx };
+	obj.content = $("#commentContent").val();
+	arr.push(obj);
+	
+	$.ajax({
+		type: "POST"
+		, url: "/product/insertComment.do"
+		, dataType: "json"
+		, data: {
+			comment: JSON.stringify(arr)
+
+		}
+		,success: function(data) {
+			console.log("success data: " + data);
+		}
+	});
+}
 		
-		
-		 $(".left_price em").text(price);
-		console.log(price);
-		
-	}
+/* 숫자만 입력 시키게 하는것 */
+function onlyNumber(obj) {
+    val=obj.value;
+    re=/[^0-9]/gi;
+    obj.value=val.replace(re,"");
+}
 	
-	/*선택창 옵션으로 올리기  */
-	function reselect(){
-		$(".proselect_option option:eq(0)").prop("selected", true);
-	}
+/*옵션 합산 계산  */
+function calcPrice() {
+	$("#detail_option .num_option_price").each(function(idx) {
+		price += Number($(this).text().replace(/,/g, ''));
+	});
 	
-	
-	
-	
-	
+	$(".left_price em").text(price);
+	console.log(price);	
+}
+
+/*선택창 옵션으로 올리기  */
+function reselect() {
+	$(".proselect_option option:eq(0)").prop("selected", true);
+}
 
 </script>
 </head>
 <body>
-<!--detail부분 header ver2부분  -->
-<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
+<div id="header_detail">
 
+<!--Mypage부분 header ver3부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+
+	<div class="container">
+		<div id="header_boby">
+				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
+				<!--2018년 5월 25일 hwanmin 추가   -->
+				<div class="search">
+					<form action="/seller.do" method="post">
+						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
+						</button>
+					</form> 
+				</div>
+		
+		</div>
+		<div id="header_nav">
+			<ul class="nav">
+				<li><a href="/seller.do">농수산물</a></li>
+				<li><a href="#">경매</a></li>
+				<li><a href="#">농부 스토리</a></li>	
+				<li><a href="#">자주 묻는 질문</a></li>	
+				<li><a href="#">공지사항</a></li>
+				<li><a href="#">회사소개</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
 <div class="container">
 	<div class="nav_map">
-		<span><strong><a href="">메인</a></strong></span><span>></span><span><a href="">농산물</a></span><span>></span><span>채소/과일</span><span>></span><span>현재상품</span>
+		<span><strong><a href="">메인</a></strong></span><span></span><span><a href="">농산물</a></span><span>></span><span>채소/과일</span><span>></span><span>현재상품</span>
 	</div>
 	<div class="detail_body">
 		<div class="pto">
-		<img src="/proimg/${product.faceImg}"  width="100%">
+		<img src="/proimg/${product.faceImg }"  width="100%">
 		</div>
 		<div class="detailpro_info">
 			<p>상품 번호 : 3l30482</p>
@@ -288,7 +333,7 @@ $(document).ready(function() {
 							<dd><p class="price_sale">3800</p>원</dd>
 
 							<dt>판매자</dt>
-							<dd><p>${product.name}</p></dd>
+							<dd><p>${product.name }</p></dd>
 						</dl>
 					</div>
 					<img src="/img/main/detail_banner01.jpg" width="100%">
@@ -355,6 +400,58 @@ $(document).ready(function() {
 	</div>
 	
 	<div class="item_info">
+		<a>상품 후기
+			<span class='open_icon'>열기</span>
+		</a>
+		
+		<!-- 상품 후기 등록 -->
+		<div class="form-inline text-center">
+		
+			<input type="text" size="7" class="form-control"
+				id="commentWriter"
+				value="${sessionScope.name }" readonly="readonly"/>
+			<textarea rows="3" cols="60"
+				class="form-control" id="commentContent"></textarea>
+			
+			<button class="insertComm_button"
+						onclick="insertComment();">상품평 등록</button>
+		</div>
+		
+		<div class="cont_cmt">
+			<ul class="list_cmt">
+				<li>
+					<div class="cmt_cont">
+						<span class="wrap_profile">
+<!-- 							<img src="계정이미지" width="32" height="32" class="thumb_g" alt=""> -->
+							<span>계정 아이디</span>
+						</span>
+<!-- 						<span class="별이미지">별점</span> -->
+						
+						<div class="wrap_cont">
+						
+<!-- 							<span class="info_score"> -->
+<!-- 								<span class="img_kakaofarmer bg_star"> -->
+<!-- 									<span class="img_kakaofarmer bar_star" style="width: 100%;">5점</span> -->
+<!-- 								</span> -->
+<!-- 							</span> -->
+							
+							<span class="txt_prod">김천 거봉포도 4kg</span>
+							
+							<p class="desc_cmt">
+								<span><span>맛잇엇어요</span></span>
+							</p>
+						</div>
+						
+					</div>
+				</li>
+		
+			</ul><a href="/product/93/review" class="btn_all #review_all"><!-- react-text: 59 -->상품평 전체보기<!-- /react-text -->
+				<span class="img_kakaofarmer ico_arr"></span></a>
+		</div>
+		
+	</div>
+	
+	<div class="item_info">
 		<a>상품 고시 정보
 		
 		<span class='open_icon'>열기</span>
@@ -400,7 +497,7 @@ $(document).ready(function() {
 		<tbody>
 			<tr>
 				<th>사업자 법인명</th>
-				<td>${product.corporation_name}</td>
+				<td>${product.corporation_name }</td>
 			</tr>
 			<tr>
 				<th>대표자 이름</th>
@@ -421,11 +518,13 @@ $(document).ready(function() {
 		</tbody>
 		</table>
 	</div>
+	
 	<div class="item_info">
 		<a>상세 이미지 정보 
 			<span class='open_icon'>열기</span>
 		</a>
-		<img src="/proimg/201711071833194501xxa.jpg" style="margin-top: 50px; display:block; margin: 0 auto;">
+<!-- 		/proimg/201711071833194501xxa.jpg -->
+		<img src="/proimg/${product.mainImg }" style="margin-top: 50px; display:block; margin: 0 auto;">
 	</div>
 </div>
 </body>

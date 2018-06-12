@@ -1,5 +1,6 @@
 package cocoFarm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cocoFarm.dao.ProductDao;
 import cocoFarm.dao.SaleOptionDao;
+import cocoFarm.dto.Cart;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
@@ -58,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public List optionView(int saleIdx) {
-//		List<SaleOption> saleList = saleOptionDao.selectOptionByIdx(saleIdx);
-		return saleOptionDao.selectOptionByIdx(saleIdx);
+//		List<SaleOption> saleList = saleOptionDao.selectOptionBySaleIdx(saleIdx);
+		return saleOptionDao.selectOptionBySaleIdx(saleIdx);
 	}
 	
 	@Override
@@ -75,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void update(Option option) {
 		// saleIdx를 통해 옵션 idx를 얻어 setting
-		List<SaleOption> optionIdx = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(0).getSaleIdx());
+		List<SaleOption> optionIdx = saleOptionDao.selectOptionBySaleIdx(option.getSaleOptions().get(0).getSaleIdx());
 
 		System.out.println("Before optionSize: " + optionIdx.size());
 //		System.out.println("Before option [idx1: " + optionIdx.get(0).getIdx() + "]");
@@ -116,14 +118,52 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertCart(Option option, int accIdx) {
 		SaleOption saleOption = null;
+//		System.out.println("option size: " + option.getSaleOptions().size());
+		
+		// 장바구니에 이미 등록되어 있는 경우
+		
+		
 		for(int i=0; i<option.getSaleOptions().size(); i++) {
-			System.out.println("SaleOption" + (i+1) + " idx: " + option.getSaleOptions().get(i).getIdx());
-			saleOption = saleOptionDao.selectOption(option.getSaleOptions().get(i).getIdx());
+			System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
+			
+			saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
 			saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
-			System.out.println("CART SaleOption" + (i+1) + ":" + saleOption);
+			
+			System.out.println("CART" + (i+1) + ":" + saleOption);
 			saleOptionDao.insertCart(saleOption, accIdx);
 		}
 	}
+	
+	@Override
+	public List cartView(int accIdx) {
+		// 장바구니 리스트 조회
+		List<Cart> cartList = saleOptionDao.selectCart(accIdx);
+		List<SaleOption> optionCart = new ArrayList<SaleOption>();
+		SaleOption saleOption;
+		
+		for(int i=0; i<cartList.size(); i++) {
+			System.out.println(cartList.get(i));
+			saleOption = saleOptionDao.selectOptionByIdx(cartList.get(i).getSaleOptionIdx());
+			saleOption.setProAmount(cartList.get(i).getCount());
+			optionCart.add(i, saleOption);
+		}
+		System.out.println();
+//		saleOption = saleOptionDao.selectOptionByIdx(cartList.get(0).getSaleOptionIdx());
+//		System.out.println(saleOption);
+//		optionCart.add(0, saleOption);
+		
+		return optionCart;
+//		return option;
+	}
+	
+	@Override
+	public void deleteCart(int saleIdx) {
+		List<SaleOption> optionIdx = saleOptionDao.selectOptionBySaleIdx(saleIdx);
+		for(int i=0; i<optionIdx.size(); i++) {
+			saleOptionDao.deleteCart(optionIdx.get(i).getIdx());
+		}
+	}
+	
 	
 	//2018_05_26 hwanmin work
 	@Override

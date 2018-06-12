@@ -24,3 +24,15 @@
 		<artifactId>jackson-mapper-asl</artifactId>
 	<version>1.9.13</version>
 </dependency>
+
+
+
+
+-1. 임시 영수증 생성됨.
+0. 결제정보 받아옴
+	0.1 결제정보 인증 - 총 금액, 계정
+1. 영수증 처리 (임시 영수증 -> 영수증)
+2. 낙찰 완료 처리 시도
+3. 환불 필요시 환불 시도
+4. 결과 반환
+

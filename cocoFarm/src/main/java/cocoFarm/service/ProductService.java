@@ -84,7 +84,6 @@ public interface ProductService {
 	 */
 	public List optionView(int saleIdx);
 	
-	
 	/**
 	 * 판매상품 옵션 개수 불러오기
 	 * 
@@ -96,9 +95,18 @@ public interface ProductService {
 	/**
 	 * 장바구니 담기
 	 * 
-	 * @param Option - 장바구니에 넣을 옵션 리스트
+	 * @param Option - 장바구니에 넣을 옵션 리스트, accIdx - 계정 idx
 	 */
 	public void insertCart(Option option, int accIdx);
+	
+	/**
+	 * 장바구니 조회
+	 * 
+	 * @param Option - 장바구니 옵션 리스트, accIdx - 계정 idx
+	 */
+	public List cartView(int accIdx);
+	
+	public void deleteCart(int saleIdx);
 	
 	
 	//2018_05_26 hwanmin work

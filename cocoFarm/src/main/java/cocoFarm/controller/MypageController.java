@@ -2,15 +2,19 @@ package cocoFarm.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Option;
+import cocoFarm.service.LoginService;
 
 @Controller
 public class MypageController {
+	@Autowired LoginService loginService;
 	
 	@RequestMapping(value="/mypage/mypage.do", method=RequestMethod.GET)
 	public void mypage(){}
@@ -20,7 +24,10 @@ public class MypageController {
 	public String mypageIntro(Option option
 							, HttpSession session
 							, Model model) {
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
 		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
 		
 		/*
 		if((Integer)session.getAttribute("type")==1) {
@@ -28,15 +35,22 @@ public class MypageController {
 		}else {
 		
 		*/
-		if(session.getAttribute("type")=="1"){
-			return "Mypage/user/userIntro1";
-		}else if(session.getAttribute("type")=="2") {
-			return "Mypage/user/userIntro2";
+		if((Integer)session.getAttribute("type")<=1){
+			return "mypage/user/userIntro1";
+		}else if((Integer)session.getAttribute("type")==2) {
+			return "mypage/seller/productIntro";
 		}else {
-			return "Mypage/user/userIntro";
+			return "mypage/common/productCart";
 		}
 		
 	}
 	
-	
+	/*@RequestMapping(value="/mypage/user/updateAccount.do", method=RequestMethod.GET)
+	public void updateAccount(HttpSession session, Model model){
+		int idx = (int)session.getAttribute("idx");
+//		System.out.println(idx);
+		Account account = loginService.selectAll(idx);
+		
+		model.addAttribute("account", account);
+	}*/
 }

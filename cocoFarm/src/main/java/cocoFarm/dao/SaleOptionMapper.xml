@@ -11,6 +11,9 @@
 		<result column="start_amount" property="startAmount" />
 		<result column="left_amount" property="leftAmount" />
 		<result column="last_edited" property="lastEdited" />
+		<!-- Cart에서 조회할 때 SaleOption에 idx, count를 직접 넣으려고 했음 -->
+<!-- 		<result column="count" property="proAmount" /> -->
+<!-- 		<result column="sale_opt_idx" property="idx" /> -->
 	</resultMap>
 
 	<sql id="selectSaleOption">
@@ -73,7 +76,7 @@
  		WHERE sale_idx = ${_parameter } AND isdel = 0
  	</select>
 	
-	<select id="selectOptionByIdx"
+	<select id="selectOptionBySaleIdx"
 					parameterType="int"
 					resultType="cocoFarm.dto.SaleOption">
 		SELECT * FROM (
@@ -126,7 +129,7 @@
 		WHERE idx = #{idx }
 	</delete>
 	
-	<select id="selectOption" parameterType="int"
+	<select id="selectOptionByIdx" parameterType="int"
 					resultMap="SaleOptionResult">
 		SELECT idx,sale_idx,name,description,price,unit,start_amount,left_amount,lastsold_time,written_time,last_edited,isdel
 		FROM SALE_OPTION
@@ -141,5 +144,17 @@
 			#{arg0.idx },
 			#{arg0.proAmount }	)
 	</insert>
+	
+	<select id="selectCart" parameterType="int"
+					resultType="cocoFarm.dto.Cart">
+		SELECT idx,acc_idx accIdx,sale_opt_idx saleOptionIdx,count,added_time addedTime
+		FROM CART
+		WHERE acc_idx = ${_parameter }
+	</select>
+	
+	<delete id="deleteCart" parameterType="int">
+		DELETE FROM CART
+		WHERE sale_opt_idx = ${_parameter }
+	</delete>
 	
 </mapper>

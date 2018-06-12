@@ -39,8 +39,6 @@ public class RestSvcImpl implements RestSvc{
 	private static final String GET_PAYCHECK = IMP_URL + IMP_PAYCHECK;
 	private static final String CANCEL_PAYMENT = GET_PAYCHECK + IMP_CANCEL;
 
-
-
 	/*==============================================================================================================================
 	 * 
 	 * 	merchant_uid:	아임포트에서 받아올 주 영수증 구분번호

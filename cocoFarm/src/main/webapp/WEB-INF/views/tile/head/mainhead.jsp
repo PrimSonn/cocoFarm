@@ -2,6 +2,24 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$.ajax({
+		type : "POST",
+	   url : "/mypage/user/mes_arl.do",
+	   dataType : "json",
+	   async: false,
+		success : function(data) {
+			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
+		},
+	   error : function(e) {
+		   alert("실패"); 
+	   }
+	});
+});
+</script>
 <div id="header">
 
 	<div id="header_top">
@@ -15,7 +33,7 @@
 				</c:when>
 				<c:when test="${sessionScope.type==2}">
 					<li>고 객</li>
-					<li class="choose_color2"><a href="#">사업자</a></li>
+					<li class="choose_color2">사업자</li>
 					<li>관리자</li>
 				</c:when>
 				<c:when test="${sessionScope.type==1}">
@@ -39,14 +57,14 @@
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
-			<li><a href="#">알림</a></li>	
+			<li><a href="#" id="alarm">알림</a></li>	
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 		</ul>
 	</div>
 	</div>
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><a href="/main.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
+				<div class="logo"><a href="/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
 				<div class="search">
 					<form action="/seller.do" method="post">
 						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
@@ -57,9 +75,15 @@
 		<div id="header_nav">
 			<ul class="nav">
 				<li><a href="/seller.do">농수산물</a></li>
+<<<<<<< HEAD
 				<li><a href="#">경매</a></li>
 				<li><a href="#">농부 스토리</a></li>	
 				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
+=======
+				<li><a href="/auction/auction_list.do">경매</a></li>
+				<li><a href="/board/list.do">농부 스토리</a></li>	
+				<li><a href="#">자주 묻는 질문</a></li>	
+>>>>>>> team/master
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>

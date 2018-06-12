@@ -44,28 +44,48 @@ public class PayController {
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.POST)
 	public String payorder(Option option,Model model) {
-
+		String query ="(";
+		List<Integer> listA = new ArrayList();
+		
+		
+		
 		
 		/*06월 04일 추가*/
 		try{
+			
 			List<SaleOption> saleList = option.getSaleOptions();
 			
-			//옵션 불러오는것 idx
-			String query ="(";
+			List<SaleOption> buffer = new ArrayList<SaleOption>();
 			
-			List<Integer> listA = new ArrayList();
-			
-			
-			for(int i=0; i<saleList.size()-1; i++) {
-				query += saleList.get(i).getIdx()+",";
-				listA.add(saleList.get(i).getProAmount());
+			for(SaleOption s : saleList) {
+				if(s.getIdx()!=0) {
+					buffer.add(s);
+				}
 			}
+
+			saleList=buffer;
+			
+			/*saleList.stream().filter((s)->s.getIdx()!=0).;*/
+			System.out.println(saleList);
+			for(int i=0; i<saleList.size()-1; i++) {
+				if(saleList.get(i)==null||saleList.get(i).equals("")) {
+					
+					continue;
+				}else {
+						query += saleList.get(i).getIdx()+",";
+						listA.add(saleList.get(i).getProAmount());
+				
+				}
+					
+			}
+			
+	
 			query +=saleList.get(saleList.size()-1).getIdx() +")";
 			listA.add(saleList.get(saleList.size()-1).getProAmount());
 			
-			System.out.println(query);
+			/*System.out.println(query);
 			System.out.println(listA);
-			
+			*/
 			
 			model.addAttribute("opt",(productService.getPayOption(query)));
 			System.out.println((productService.getPayOption(query)));
