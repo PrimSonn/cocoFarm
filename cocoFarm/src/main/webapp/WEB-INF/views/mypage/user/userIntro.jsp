@@ -37,14 +37,7 @@ $(document).ready(function() {
 });
 </script>
 
-
-
 <script>
-
-
-
-
-
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
 	var mainHtml = tableEl.innerHTML;
@@ -81,8 +74,6 @@ $(document).ready(function() {
 	})
 	
 });
-
-
 </script>
 
 </head>
