@@ -12,7 +12,7 @@
 <link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
-	src="https://code.jquery.com/jquery-2.2.4.js"></script>
+	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <script type="text/javascript">
 var test =0;
@@ -181,7 +181,7 @@ $(document).ready(function() {
 	});
 		
 	/* 상품 정보 눌렀을때   */
-	$('.open_icon').on('click', function() {
+	$(".open_icon").on('click', function() {
 		if($(this).parent().parent().hasClass("info_open")==true) {
 			$(this).parent().parent().removeClass('info_open');
 			$(this).text("열기");
@@ -228,19 +228,16 @@ $(document).ready(function() {
 
 /* 상품평 등록 눌렀을 때 */
 function insertComment() {
-	var saleIdx = ${product.idx };
-	var commScore = 5;
-	var commTitle = "제목";
-	var content = $("#commentContent").val();
-	var commentList = [saleIdx, commScore, commTitle, content];
-	console.log(commentList);
-	
 	var arr = new Array();
 	var obj = new Object();
 	
 	obj.saleIdx = ${product.idx };
+	obj.title = "${product.title }";
 	obj.content = $("#commentContent").val();
+	
 	arr.push(obj);
+	// JSON.stringify(__) - 문자열로 바꾸는 것! string화!
+	console.log(JSON.stringify(arr));
 	
 	$.ajax({
 		type: "POST"
@@ -248,10 +245,15 @@ function insertComment() {
 		, dataType: "json"
 		, data: {
 			comment: JSON.stringify(arr)
-
 		}
 		,success: function(data) {
-			console.log("success data: " + data);
+			
+			console.log(data);
+			console.log(data.title);
+			var result = data.json;
+			$.each(result, function(idx, val) {
+				console.log(idx + " " + val.title);
+			});
 		}
 	});
 }
@@ -292,8 +294,8 @@ function reselect() {
 				<!--2018년 5월 25일 hwanmin 추가   -->
 				<div class="search">
 					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
-						</button>
+						<input type="text" name="search_name" placeholder="농산물 검색하기">
+						<button class="search_icon" style="cursor:pointer"></button>
 					</form> 
 				</div>
 		
@@ -401,7 +403,7 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>상품 후기
-			<span class='open_icon'>열기</span>
+			<span class="open_icon">열기</span>
 		</a>
 		
 		<!-- 상품 후기 등록 -->
@@ -453,9 +455,7 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>상품 고시 정보
-		
-		<span class='open_icon'>열기</span>
-	
+			<span class="open_icon">열기</span>
 		</a>
 		<table class='tbl_spec'>
 		<tbody>
@@ -489,9 +489,7 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>판매자 정보
-		
-		<span class='open_icon'>열기</span>
-	
+			<span class="open_icon">열기</span>
 		</a>
 		<table class='tbl_spec'>
 		<tbody>
@@ -521,7 +519,7 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>상세 이미지 정보 
-			<span class='open_icon'>열기</span>
+			<span class="open_icon">열기</span>
 		</a>
 <!-- 		/proimg/201711071833194501xxa.jpg -->
 		<img src="/proimg/${product.mainImg }" style="margin-top: 50px; display:block; margin: 0 auto;">

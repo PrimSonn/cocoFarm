@@ -94,8 +94,9 @@
 		WHERE idx = #{idx }
 	</update>
 	
-	<insert id="insertBasket" parameterType="cocoFarm.dto.SaleOption">
-		
+	<insert id="insertComment" parameterType="cocoFarm.dto.Comment">
+		INSERT INTO SALE_EVALUATION (sale_idx,main_recpt_idx,score,title,content,last_edited,isdel)
+		VALUES (#{sale_idx }, 1, 5, #{title }, #{content }, sysdate, 0)
 	</insert>
 	
 	<!--hwanmin 2018_05_26 work-->

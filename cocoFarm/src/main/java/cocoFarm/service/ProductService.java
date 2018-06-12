@@ -2,6 +2,7 @@ package cocoFarm.service;
 
 import java.util.List;
 
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
@@ -102,11 +103,18 @@ public interface ProductService {
 	/**
 	 * 장바구니 조회
 	 * 
-	 * @param Option - 장바구니 옵션 리스트, accIdx - 계정 idx
+	 * @param accIdx - 계정 idx
 	 */
 	public List cartView(int accIdx);
 	
+	/**
+	 * 장바구니 삭제
+	 * 
+	 * @param saleIdx - 판매 상품 idx
+	 */
 	public void deleteCart(int saleIdx);
+	
+	public void insertComment(Comment comment);
 	
 	
 	//2018_05_26 hwanmin work
