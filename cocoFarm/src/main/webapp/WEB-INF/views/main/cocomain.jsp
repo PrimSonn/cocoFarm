@@ -89,7 +89,6 @@
 							<span class="pro_title">${data.title}</span>
 							<span class="pro_price"><fmt:formatNumber value="${data.min_price}" pattern="#,###"/>원</span> 
 							<span class="pro_origin">${data.origin}</span>
-					
 							</div>
 						</div>
 					</c:otherwise>

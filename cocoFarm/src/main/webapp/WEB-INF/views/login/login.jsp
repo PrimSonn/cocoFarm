@@ -40,15 +40,9 @@ $(document).ready(function(){
 <jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
 
 	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search">
-					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
-						</button>
-					</form> 
-				</div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+		
 		<div class="login_box">
 			<form id="loginForm" action="/login/login.do" method="post">
 			<p>
@@ -67,14 +61,8 @@ $(document).ready(function(){
 			</ul>
 			<div class="find_idpw"><a href="/login/findIdPw.do">아이디 / 비밀번호를 잊으셨나요?</a></div>
 			</form>
-	
 		</div>
-	
 	</div>
-	
-	
 </div>	
-
-
 </body>
 </html>

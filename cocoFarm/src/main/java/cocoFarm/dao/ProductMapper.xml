@@ -152,8 +152,5 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 	 inner join (select SALE_IDX, min(PRICE) MIN_PRICE from SALE_OPTION where ISDEL =0 group by  SALE_IDX) SO
 	on S.IDX = SO.SALE_IDX where S.ISDEL =0  ORDER BY idx desc)where rownum between 1 and 5
 	</select>
-	
-	
-	
-
+	 
 </mapper>

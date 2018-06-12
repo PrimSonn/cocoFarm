@@ -7,7 +7,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	
+	<c:if test="${sessionScope.idx ne null}">
 	$.ajax({
 		type : "POST",
 	   url : "/mypage/user/mes_arl.do",
@@ -20,9 +20,14 @@ $(document).ready(function(){
 		   //alert("실패"); 
 	   }
 	});
-	 
+	</c:if>
 	
-});
+
+	
+	function submit(){
+		alert("로그인이 필요합니다.");
+	}
+
 </script>
 <div id="header">
 
@@ -62,7 +67,12 @@ $(document).ready(function(){
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<li><a href="#" id="alarm">알림</a></li>	
+			<c:if test="${sessionScope.idx ne null }">
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
+			</c:if>
+			<c:if test="${sessionScope.idx eq null }">
+			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;"">마이페이지</a></li>	
+			</c:if>
 		</ul>
 	</div>
 	</div>

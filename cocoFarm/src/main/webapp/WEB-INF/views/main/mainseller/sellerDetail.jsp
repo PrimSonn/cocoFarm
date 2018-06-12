@@ -34,7 +34,6 @@ var price = 0;
 var num=1;
 var sum=0;
 
-
 $(document).ready(function() {
 	
 	//콤마찍기
@@ -192,30 +191,43 @@ $(document).ready(function() {
 	});
 		
 	/* 구매하기 버튼 눌렀을대 써밋 */
-	$(".buy_button").click(function() {
+	
+	
+	
+		<c:if test="${sessionScope.idx eq null}">
+		$(".buy_button").click(function() {
+			if($(".proselect_option option:selected").val()==0) {
+				  alert("카테고리를 선택해주세요.");
+				  return false;
+				} else {
+					alert("로그인 해주세요.");
+				}
+			
+			
+			
+		});
+		</c:if>
+		<c:if test="${sessionScope.idx ne null}">
+		$(".buy_button").click(function() {
+			if($(".proselect_option option:selected").val()==0) {
+				  alert("상품 옵션을 선택해주세요.");
+				  return false;
+				} else {
+					$(".option_form").attr("action", "/orderpay.do");
+					$(".option_form").submit(); 
+				}
+		});
+		</c:if>
+		
+			
+		/* 
+		$(".buy_button").click(function() {
+		
 		$(".option_form").attr("action", "/orderpay.do");
 		$(".option_form").submit();
-		/* 
-		if($(".category option:selected").val()==0) {
-		  alert("카테고리를 선택해주세요.");
-		  return false;
-		} else if($.trim($("#title").val())=="") {
-		  alert("제목을 입력해주세요.");
-		  return false;
-		} else if($("textarea[name=optionName]").val()==""){
-		  alert("옵션을 입력해주세요.");
-		  return false;
-		} else if($("textarea[name=startAmount]").val()==""){
-	    alert("판매수량을 입력해주세요.");
-	    return false;
-		} else if($("textarea[name=unit]").val()==""){
-      alert("단위를 입력해주세요.");
-      return false;
-		} else if($("textarea[name=price]").val()==""){
-      alert("판매가격을 입력해주세요.");
-      return false;
-		} 
 		 */
+	
+		
 	
 	});
 		
@@ -224,8 +236,9 @@ $(document).ready(function() {
 		$(".option_form").attr("action", "/product/cart.do");
 		$(".option_form").submit();
 	});
-});
-
+	
+	
+	
 /* 상품평 등록 눌렀을 때 */
 function insertComment() {
 	var saleIdx = ${product.idx };

@@ -282,7 +282,6 @@ public class ProductController {
 	      cartOptionList = productService.cartView(accIdx);
 	      model.addAttribute("optionCart", cartOptionList);
 
-<<<<<<< HEAD
 	      List<Product> cartProductList = null;
 	      Product product = null;
 	      
@@ -303,42 +302,7 @@ public class ProductController {
 	      
 	      return "mypage/common/mypageCart";
 	   }
-=======
-		int accIdx = (Integer)session.getAttribute("idx");
-		List<SaleOption> cartOptionList = productService.cartView(accIdx);
-		model.addAttribute("optionCart", cartOptionList);
-//		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
-		
-		Product product = null;
-		List<Product> cartProductList = new ArrayList<>();
-		
-		int saleIdx = 0;
-		if(cartOptionList.get(0) != null) {
-			saleIdx = cartOptionList.get(0).getSaleIdx();
-			product = productService.productView(saleIdx);
-			cartProductList.add(product);
-		}
-		for(int i=0; i<cartOptionList.size(); i++) {
-			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
-				saleIdx = cartOptionList.get(i).getSaleIdx();
-				product = productService.productView(saleIdx);
-				cartProductList.add(product);
-			} else { continue; }
-		}
-		model.addAttribute("productCart", cartProductList);
-		
-		return "mypage/common/productCart";
-	}
-	
-//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-//	@ResponseBody
-//	public List<HashMap<String, Object>> getItems() {
-//	public HashMap<String, Object> getItems() {
-//		
-//		
-//		return null;
-//	}
->>>>>>> e9c2ea63d1db77611a34258cfa4d1b235a5a139c
+
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
