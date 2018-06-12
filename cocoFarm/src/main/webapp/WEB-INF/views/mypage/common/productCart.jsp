@@ -15,6 +15,28 @@
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <script type="text/javascript">
+$(document).ready(function() {	
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	$(".mail_box").on("click", ".nav-link", function() {
+		var page = $(this).attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+});
+
+
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
 	var mainHtml = tableEl.innerHTML;
@@ -208,17 +230,16 @@ function onlyNumber(obj){
 <jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
 	
 	<div class="container">
-		<div id="header_boby">
-			<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-			<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
-					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
-					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp</span></div>
-					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
+					<div class="mypagetitle03"><h2>일반 회원</h2><h1>마이페이지</h1></div>
+					<div class="mypageimg"><img src="/img/profile/${account.thumb_loc}" ></div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp;</span>환영합니다.</div>
+					<div class="mail_box"><a class="nav-link" href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 				</div>
 			
 				<div class="mypage_navbody">
@@ -226,31 +247,29 @@ function onlyNumber(obj){
 					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
 					
 					<ul>
-						<li><a href="#">개인정보 수정</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="/product/cart.do">장바구니 조회</a></li>
-						<li><a href="#">회원 탈퇴</a></li>
+						<li class="nav-link"><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
+						<li class="nav-link"><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
+						<li class="nav-link"><a href="/mypage/license.do">사업자 등록하기</a></li>
 					</ul>
 					
-					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
+					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
 					
 					<ul>
-						<li><a href="/product/insert.do">판매등록하기</a></li>
-						<li><a href="/product">판매상품 조회/수정</a></li>
-						<li><a href="#">판매 결제 내역 조회 </a></li>
-						<li><a href="#">판매 결제 배송 승인</a></li>
+						
+						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li><a href="#">결제 내역 조회 </a></li>
+						
 					</ul>
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 					<ul>
-						<li><a href="#">경매등록하기</a></li>
+						<!-- <li><a href="#">경매등록하기</a></li> -->
 						<li><a href="#">경매 상품 조회하기</a></li>
 					</ul>
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
 					<ul>
-						<li><a href="#">관리자에게 문의하기</a></li>
+						<li class="nav-link"><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
 					</ul>
-					
 					
 				</div>
 			
