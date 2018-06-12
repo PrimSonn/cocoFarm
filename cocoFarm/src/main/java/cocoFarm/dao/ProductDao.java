@@ -37,4 +37,6 @@ public interface ProductDao {
 	public List getPayOption(String query);
 	
 	public List getSale_Option(String salequery);
+	
+	public List ProViewMainList();
 }

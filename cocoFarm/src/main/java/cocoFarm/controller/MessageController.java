@@ -141,6 +141,7 @@ public class MessageController {
 		
 		model.addAttribute("messageCate", messageCate);
 		model.addAttribute("message", message);
+	
 	}
 	
 	@RequestMapping(value="/mypage/delMessageList.do", method=RequestMethod.POST)

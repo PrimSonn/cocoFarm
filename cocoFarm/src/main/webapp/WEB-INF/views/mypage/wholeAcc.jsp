@@ -17,7 +17,7 @@
 <!-- 공지사항 글 등록 -->
 <!-- 오늘의 농부 글 등록 -->
 <div>
-	<table style="border: 1px solid;">
+	<table style="border: 1px solid; font-size:11px;">
 		<thead>
 			<tr>
 				<th>이름</th>
