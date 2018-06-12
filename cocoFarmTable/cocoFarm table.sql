@@ -158,6 +158,14 @@ drop procedure REFUND_RECPT_MKR;
 
 drop procedure CHECK_TEMP_RECPT;
 
+drop procedure TEMP_RCPT_MKR;
+
+drop type holder;
+/
+drop function r_pointer;
+
+drop function r_decoder;
+
 drop procedure CANCEL_AUCTION;
 
 drop procedure CANCEL_BID;
@@ -202,9 +210,6 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
-
-drop index TODAYS_FMR_FILE_IDX;
-drop table TODAYS_FARMER_FILE cascade constraints;
 
 drop index TODAYS_FMR_FILE_IDX;--deprecated
 drop table TODAYS_FARMER_FILE cascade constraints;
@@ -2596,7 +2601,7 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 
 create table BID_CONTRACT_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)		not null
+	MAIN_RECPT_IDX			number(30,0)
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
@@ -2638,15 +2643,13 @@ end;
 
 comment on table BID_CONTRACT_RECEIPT is '낙찰금 영수증';
 
-comment on column BID_CONTRACT_RECEIPT.IDX is '낙찰금 영수증 번호 - 기본키, 인조식별자';
+comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합 기본키, 외래키. null불가';
+
+comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합 기본키, 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
+
+comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합 기본키, 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
 
 comment on column BID_CONTRACT_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키 , null가능';
-
-comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
-
-comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
-
-comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  외래키. null불가';
 
 --comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
 
@@ -2974,9 +2977,7 @@ create table TODAYS_FARMER_FILE (
 	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
-create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
 
---drop index TODAYS_FMR_FILE_IDX;
 --drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
@@ -4064,7 +4065,7 @@ end;
 /
 
 create type holder is varray(1000) of number;
-
+/
 
 create procedure TEMP_RCPT_MKR (in_acc_idx ACCOUNT.IDX%type, in_paid_name MAIN_RECEIPT.PAID_NAME%type, in_data nvarchar2
 								,out_m_rcpt_idx out MAIN_RECEIPT.IDX%type, isDone out number)
@@ -4199,11 +4200,11 @@ exception when others then
 end;
 /
 
-
-
-
-
-
+--drop procedure TEMP_RCPT_MKR
+--drop type holder;
+--/
+--drop function r_pointer;
+--drop function r_decoder;
 
 
 /*===============================  2. 임시 영수증 확인 프로시저 ====================================
