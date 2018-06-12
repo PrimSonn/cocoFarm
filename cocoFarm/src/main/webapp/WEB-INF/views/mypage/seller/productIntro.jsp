@@ -8,6 +8,7 @@
 <title>농산물 판매 상품 등록</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 	
@@ -128,7 +129,7 @@ function submitContents(elClickedObj) {
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp</span></div>
+					<div class="mypagewho"><span><strong>${sessionScope.name }</strong>님&nbsp</span></div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 				</div>
 			
