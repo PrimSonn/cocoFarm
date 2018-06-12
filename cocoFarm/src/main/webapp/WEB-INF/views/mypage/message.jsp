@@ -49,19 +49,6 @@ $(document).ready(function() {
 });
 
 </script>
-
-<style type="text/css">
-#alarm::after {
-	background-color: green;
-    color: white;
-    font-weight: bold;
-	content: '${alarmCnt }';
-	padding: 2px;
-	margin: 2px;
-	border-radius: 10px;
-}
-</style>
-
 </head>
 <body>
 

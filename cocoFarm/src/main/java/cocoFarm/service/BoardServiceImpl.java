@@ -93,6 +93,14 @@ public class BoardServiceImpl implements BoardService {
 	public BoardFile getFileup(Board viewBoard) {
 		return boardDao.getFile(viewBoard);
 	}
+	
+	@Override
+	public List<Board> getboardMainList(){
+		
+		
+		return boardDao.getboardMainList();
+	}
+	
 
 	
 	

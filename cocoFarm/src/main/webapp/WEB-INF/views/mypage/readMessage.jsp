@@ -122,7 +122,7 @@ $("#btnDelete").click(function() {
 		<c:forEach items="${messageList }" var="message">
 			<tr>
 				<td class="message_td"><input type="checkbox" id="check${message.idx }"name="checkRow" value="${message.idx }" />${message.idx }</td>
-				<td class="message_td"><a href="#" onclick="messageView(${message.idx }, ${messageCate });">${message.title }</a></td>
+				<td class="message_td"><a class="nav-link" href="#" onclick="messageView(${message.idx }, ${messageCate });">${message.title }</a></td>
 				<c:if test="${messageCate eq 1 }">
 					<td class="message_td"><a class="imgSelect" data-idx="${message.sender_idx }">${message.sender }</a></td>
 				</c:if>

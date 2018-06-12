@@ -8,9 +8,11 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <!-- Bootstrap -->
+<!-- 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+  -->
 <!-- Naver SmartEditor -->
 <script type="text/javascript" src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
@@ -50,9 +52,9 @@ $(document).ready(function() {
 </script>
 </head><body>
 
-<div class="container">
+
 <h1>농부 스토리 작성</h1>
-<hr>
+
 
 <form action="/board/write.do" method="post" enctype="multipart/form-data">
 
@@ -88,7 +90,6 @@ $(document).ready(function() {
 	
 </form>
 
-</div>
 
 <!-- <textarea> 태그 아래쪽에 스마트에디터 초기화코드 삽입 -->
 <script type="text/javascript">

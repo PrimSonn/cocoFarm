@@ -202,4 +202,10 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.getSale_Option(salequery);
 	}
 	
+	@Override
+	public List<Product> getProViewMainList(){
+		
+		return productDao.ProViewMainList();
+	}
+	
 }

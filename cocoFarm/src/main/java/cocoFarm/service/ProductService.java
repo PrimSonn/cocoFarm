@@ -126,4 +126,8 @@ public interface ProductService {
 	public List<SaleOption> getPayOption(String query); 
 		
 	public List<Product> getSale_Option(String salequery);
+	
+	//2018 06월 12일 
+	public List<Product> getProViewMainList();
+	
 }

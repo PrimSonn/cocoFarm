@@ -60,7 +60,7 @@ public class LicenseController {
 		
 		
 		
-		return "redirect:/mypage/message.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/deleteLicense.do", method=RequestMethod.GET)
@@ -75,7 +75,7 @@ public class LicenseController {
 		
 		licenseService.deleteLicense(license);
 		
-		return "redirect:/mypage/message.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 }
