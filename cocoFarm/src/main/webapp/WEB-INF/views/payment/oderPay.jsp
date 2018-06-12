@@ -296,6 +296,7 @@ function requestPayment() {
 							msg += '에러내용 : ' + rsp.error_msg;
 							//임시 영수증 삭제 로직 추가.
 					}
+					alert('123123');
 // 					alert(msg);
 				});
 	} else{
