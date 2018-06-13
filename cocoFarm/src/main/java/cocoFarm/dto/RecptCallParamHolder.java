@@ -18,8 +18,19 @@ public class RecptCallParamHolder {
 		this.arg = arg;
 	}
 	
+	public RecptCallParamHolder(String arg, String arg2) {
+		this.arg = arg;
+		this.arg2 = arg2;
+	}
+	
 	public RecptCallParamHolder(Integer intArg) {
 		this.intArg = intArg;
+	}
+	
+	public RecptCallParamHolder(Integer accIdx, String arg, String arg2) {
+		this.accIdx=accIdx;
+		this.arg=arg;
+		this.arg2=arg2;
 	}
 	
 	public RecptCallParamHolder(Integer accIdx, String arg, Integer isDone) {
@@ -49,9 +60,10 @@ public class RecptCallParamHolder {
 		this.isDone=isDone;
 	}
 	
-	public RecptCallParamHolder(String arg, Integer accIdx, String arg2, Integer intArg, Integer isDone) {
-		this.arg=arg;
+	public RecptCallParamHolder(Integer accIdx, String arg, String arg2, Integer intArg, Integer isDone) {
+		
 		this.accIdx=accIdx;
+		this.arg=arg;
 		this.arg2=arg2;
 		this.intArg=intArg;
 		this.isDone=isDone;
