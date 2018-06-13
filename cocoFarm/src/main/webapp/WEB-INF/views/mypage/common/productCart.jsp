@@ -256,7 +256,7 @@ function onlyNumber(obj){
 					
 					<ul>
 						
-						<li><a href="/product/basket.do">장바구니 조회</a></li>
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
 						<li><a href="#">결제 내역 조회 </a></li>
 						
 					</ul>

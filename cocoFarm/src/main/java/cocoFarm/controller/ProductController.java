@@ -2,7 +2,6 @@
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
@@ -273,6 +271,7 @@ public class ProductController {
 		return "redirect:/product";
 	}
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
+<<<<<<< HEAD
 	   public String basketList(Model model, HttpSession session) {
 	      logger.info("cart.do get!");
 	      logger.info("-----------controller-----------");
@@ -303,6 +302,46 @@ public class ProductController {
 	      return "mypage/common/mypageCart";
 	   }
 
+=======
+	public String basketList(Model model, HttpSession session) {
+		logger.info("cart.do get!");
+		logger.info("-----------controller-----------");
+		int accIdx = (Integer)session.getAttribute("idx");
+		
+		List<SaleOption> cartOptionList = null;
+		cartOptionList = productService.cartView(accIdx);
+		model.addAttribute("optionCart", cartOptionList);
+
+		List<Product> cartProductList = null;
+		Product product = null;
+		
+		int saleIdx = 0;
+		if(cartOptionList.size() != 0) {
+			saleIdx = cartOptionList.get(0).getSaleIdx();
+			product = productService.productView(saleIdx);
+			cartProductList.add(product);
+		}
+		for(int i=0; i<cartOptionList.size(); i++) {
+			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
+				saleIdx = cartOptionList.get(i).getSaleIdx();
+				product = productService.productView(saleIdx);
+				cartProductList.add(product);
+			} else { continue; }
+		}
+		model.addAttribute("productCart", cartProductList);
+		
+		return "mypage/common/productCart";
+	}
+	
+//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
+//	@ResponseBody
+//	public List<HashMap<String, Object>> getItems() {
+//	public HashMap<String, Object> getItems() {
+//		
+//		
+//		return null;
+//	}
+>>>>>>> 67423a538591fcb5f3d3615c432484fbfbe7b439
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
@@ -333,23 +372,37 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
+	// 응답을 만들어서 보낸다(?)
 	@ResponseBody
-	public void insertComment(@RequestBody List comment,
+	public Map<String, Object> insertComment(String comment,
+			// @RequestBody: 요청 데이터를 그대로 받음
+//			@RequestBody List comment,
 //								Comment comment,
 								HttpSession session) {
 		Gson gson = new Gson();
 //		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
 //		resultMap = JsonArray.fromObject(comment);
+		List list = gson.fromJson(comment, List.class);
 		
-//		List list = gson.fromJson(comment, List.class);
 		logger.info("-------------------comment-----------------");
-//		logger.info("comment: " + list);
+		logger.info("list: " + list);
 		logger.info("comment: " + comment);
 		
-//		for(int i=0; i<list.size(); i++) {
-//			Map map = (Map)list.get(i);
-//			System.out.println(map);
-//		}
+		Map<String, Object> map = (Map) list.get(0);
+		Comment comm = new Comment();
+		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
+		comm.setScore(5);
+		comm.setTitle( (String) map.get("title") );
+		comm.setContent( (String) map.get("content") );
+		logger.info("map: " + map);
+		logger.info("saleIdx: " + ((Double)map.get("saleIdx")).intValue());
+		logger.info("comment: " + comm);
+		
+		productService.insertComment(comm);
+		
+		map.put("content", "123123");
+		map.put("id", "wje1224");
+		return map;
 	}
 	
 }

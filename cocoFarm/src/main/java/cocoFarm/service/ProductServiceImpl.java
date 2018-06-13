@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.ProductDao;
 import cocoFarm.dao.SaleOptionDao;
 import cocoFarm.dto.Cart;
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
@@ -147,7 +148,6 @@ public class ProductServiceImpl implements ProductService {
 			saleOption.setProAmount(cartList.get(i).getCount());
 			optionCart.add(i, saleOption);
 		}
-		System.out.println();
 //		saleOption = saleOptionDao.selectOptionByIdx(cartList.get(0).getSaleOptionIdx());
 //		System.out.println(saleOption);
 //		optionCart.add(0, saleOption);
@@ -162,6 +162,11 @@ public class ProductServiceImpl implements ProductService {
 		for(int i=0; i<optionIdx.size(); i++) {
 			saleOptionDao.deleteCart(optionIdx.get(i).getIdx());
 		}
+	}
+	
+	@Override
+	public void insertComment(Comment comment) {
+		productDao.insertComment(comment);
 	}
 	
 	
