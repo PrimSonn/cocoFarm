@@ -1,6 +1,6 @@
 # cocoFarm
 
-혹시 팀 버전을 받고 merging?  상태에서 git status 를 했을 때
+혹시 팀 버전을 받고 merging?  상태에서 git status 를 했을 때<br>
   cocoFarm/target/....
 같은게 있으면
   git rm -r --cached cocoFarm/target/
