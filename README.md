@@ -4,7 +4,7 @@
   cocoFarm/target/....<br>
 같은게 있으면<br>
   git rm -r --cached cocoFarm/target/<br>
-를 써 주세요.<br>
+를 써 주세요.<br><br>
 데이터 구조는 항상 최신으로 유지하세요.<br>
 개인적으로 더미 데이터가 따로 필요하면, insert하는 구문들을 따로 개인 폴더를 만들어서 저장하거나<br>
   sql파일의 더미 데이터 모아두는 부분에 끼워넣고 작업하시면 됩니다.<br><br>
