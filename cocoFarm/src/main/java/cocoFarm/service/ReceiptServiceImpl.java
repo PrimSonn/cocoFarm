@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.ReceiptDao;
 import cocoFarm.dto.OptReceiptMkr;
 import cocoFarm.dto.RecptCallParamHolder;
+import cocoFarm.util.recptMaker.DataResolver;
 //import cocoFarm.util.recptMaker.DataResolver;
 import cocoFarm.util.recptMaker.SaleOptSerializer;
 //import cocoFarm.util.recptMaker.Serializer;
@@ -27,27 +28,9 @@ public class ReceiptServiceImpl implements ReceiptService{
 		recptDao.tempRecpt(holder);
 		
 		System.out.println("holder: "+holder);
+		
 		return holder;
 	}
-
-	@Override
-	public void test() {
-		List<SaleOptSerializer> list = new ArrayList<SaleOptSerializer>();
-		list.add(new Tester(1));
-		list.add(new Tester(2));
-		list.add(new Tester(4));
-		OptReceiptMkr holder = new OptReceiptMkr(2,"name",list);
-		System.out.println(holder);
-		
-		recptDao.tempRecpt(holder);
-//		recptDao.tester(holder);
-		
-		System.out.println("isNull? " +(holder==null));
-		System.out.println(holder);
-		System.out.println("--------------------------------------");
-//		holder.getMainRcpt();
-	}
-
 	@Override
 	public Integer recptCheck(RecptCallParamHolder paramHolder) {
 		
@@ -58,11 +41,37 @@ public class ReceiptServiceImpl implements ReceiptService{
 
 	@Override
 	public Integer refundRecptMkr(String in_recpt_idx) {
+		
 		RecptCallParamHolder holder = new RecptCallParamHolder(in_recpt_idx);
 		recptDao.refundRecptMkr(holder);
+		
 		return holder.getIsDone();
 	}
 
+	@Override
+	public void test() {
+		
+		List<SaleOptSerializer> list = new ArrayList<SaleOptSerializer>();
+		list.add(new Tester(1));
+		list.add(new Tester(2));
+		list.add(new Tester(4));
+		OptReceiptMkr holder = new OptReceiptMkr(2,"name",list);
+		System.out.println(holder);
+		
+		/*
+		recptDao.tempRecpt(holder);
+//		recptDao.tester(holder);
+		System.out.println("isNull? " +(holder==null));
+		System.out.println(holder);
+		*/
+		
+		System.out.println("--------------------------------------");
+		System.out.println("DataSerialization Test: ");
+		System.out.println(DataResolver.resolve(list));
+		
+//		System.out.println(DataResolver.);
+//		holder.getMainRcpt();
+	}
 	
 //	@Override
 //	public boolean MakeTempReceipt(Integer accountIdx, List<Serializer> targetList) {

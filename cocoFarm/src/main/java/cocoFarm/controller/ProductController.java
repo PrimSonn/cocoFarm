@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -14,10 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
@@ -160,12 +166,10 @@ public class ProductController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		product.setFaceImg(stored1);
 		product.setMainImg(stored2);
 		
 		// 상품을 등록하는 사람의 idx
-//		product.setAccIdx(2);
 		product.setAccIdx((Integer)session.getAttribute("idx"));
 		
 		productService.insert(product);
@@ -278,6 +282,7 @@ public class ProductController {
 	      cartOptionList = productService.cartView(accIdx);
 	      model.addAttribute("optionCart", cartOptionList);
 
+<<<<<<< HEAD
 	      List<Product> cartProductList = null;
 	      Product product = null;
 	      
@@ -298,6 +303,42 @@ public class ProductController {
 	      
 	      return "mypage/common/mypageCart";
 	   }
+=======
+		int accIdx = (Integer)session.getAttribute("idx");
+		List<SaleOption> cartOptionList = productService.cartView(accIdx);
+		model.addAttribute("optionCart", cartOptionList);
+//		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
+		
+		Product product = null;
+		List<Product> cartProductList = new ArrayList<>();
+		
+		int saleIdx = 0;
+		if(cartOptionList.get(0) != null) {
+			saleIdx = cartOptionList.get(0).getSaleIdx();
+			product = productService.productView(saleIdx);
+			cartProductList.add(product);
+		}
+		for(int i=0; i<cartOptionList.size(); i++) {
+			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
+				saleIdx = cartOptionList.get(i).getSaleIdx();
+				product = productService.productView(saleIdx);
+				cartProductList.add(product);
+			} else { continue; }
+		}
+		model.addAttribute("productCart", cartProductList);
+		
+		return "mypage/common/productCart";
+	}
+	
+//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
+//	@ResponseBody
+//	public List<HashMap<String, Object>> getItems() {
+//	public HashMap<String, Object> getItems() {
+//		
+//		
+//		return null;
+//	}
+>>>>>>> e9c2ea63d1db77611a34258cfa4d1b235a5a139c
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
@@ -311,8 +352,7 @@ public class ProductController {
 //		}
 		
 		// 상품을 등록하는 사람의 idx
-//		productService.insertBasket(option, (Integer)session.getAttribute("idx"));
-//		productService.insertCart(option, 2);
+		productService.insertCart(option, (Integer)session.getAttribute("idx"));
 		
 //		model.addAttribute("optionCart", option);
 		
@@ -328,6 +368,24 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
-
+	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public void insertComment(@RequestBody List comment,
+//								Comment comment,
+								HttpSession session) {
+		Gson gson = new Gson();
+//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
+//		resultMap = JsonArray.fromObject(comment);
+		
+//		List list = gson.fromJson(comment, List.class);
+		logger.info("-------------------comment-----------------");
+//		logger.info("comment: " + list);
+		logger.info("comment: " + comment);
+		
+//		for(int i=0; i<list.size(); i++) {
+//			Map map = (Map)list.get(i);
+//			System.out.println(map);
+//		}
+	}
 	
 }
