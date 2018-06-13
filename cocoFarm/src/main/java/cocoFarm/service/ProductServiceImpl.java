@@ -1,6 +1,7 @@
 package cocoFarm.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,9 +167,18 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public void insertComment(Comment comment) {
+		System.out.println("------------------Insert Service-----------------");
 		productDao.insertComment(comment);
 	}
 	
+	@Override
+	public List<HashMap<String, Object>> getCommentList(int saleIdx) {
+		System.out.println("------------------Select Service-----------------");
+		System.out.println(productDao.selectAllComment(saleIdx));
+		return productDao.selectAllComment(saleIdx);
+	}
+	
+	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work
 	@Override

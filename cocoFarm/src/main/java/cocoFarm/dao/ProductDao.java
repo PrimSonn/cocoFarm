@@ -1,5 +1,6 @@
 package cocoFarm.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import cocoFarm.dto.Comment;
@@ -22,6 +23,10 @@ public interface ProductDao {
 	public void update(Product product);
 	
 	public void insertComment(Comment comment);
+	
+	public List<HashMap<String, Object>> selectAllComment(int sale_idx);
+	
+	/* ==================================================================================== */
 	
 	//hwanmin work 2018_05_26
 	

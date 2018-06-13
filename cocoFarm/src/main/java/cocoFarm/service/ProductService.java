@@ -1,5 +1,6 @@
 package cocoFarm.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import cocoFarm.dto.Comment;
@@ -114,8 +115,22 @@ public interface ProductService {
 	 */
 	public void deleteCart(int saleIdx);
 	
+	/**
+	 * 
+	 * 
+	 * Desc : 상품평 등록
+	 * @method : insertComment
+	 * @param comment - 상품평 정보
+	 * @return : void
+	 * @since  : 2018. 6. 13.
+	 * @author : jieun
+	 *
+	 */
 	public void insertComment(Comment comment);
 	
+	public List<HashMap<String, Object>> getCommentList(int saleIdx);
+	
+	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work
 	public List<Product> getProMainList();

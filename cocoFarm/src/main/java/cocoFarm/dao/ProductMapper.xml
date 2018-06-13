@@ -5,7 +5,17 @@
   
 <mapper namespace="cocoFarm.dao.ProductDao">
 
-	<!-- hash map -->
+	<!-- HashMap -->
+	<resultMap id="HashMap" type="java.util.HashMap">
+		<result column="sale_idx" property="sale_idx" />
+		<result column="main_recpt_idx" property="main_recpt_idx" />
+		<result column="score" property="score" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="reg_time" property="reg_time" />
+		<result column="last_edited" property="last_edited" />
+		<result column="isdel" property="isdel" />
+	</resultMap>
 
 	<resultMap id="ProductResult" type="cocoFarm.dto.Product">
 		<result column="acc_idx" property="accIdx" />
@@ -75,8 +85,7 @@
 					AND isdel = 0
 	</select>
 	
-	<select id="selectProductByIdx"
-					parameterType="int"
+	<select id="selectProductByIdx" parameterType="int"
 					resultMap="ProductResult">
 		<include refid="selectProduct" />
 		WHERE idx = ${_parameter } AND isdel = 0
@@ -96,8 +105,16 @@
 	
 	<insert id="insertComment" parameterType="cocoFarm.dto.Comment">
 		INSERT INTO SALE_EVALUATION (sale_idx,main_recpt_idx,score,title,content,last_edited,isdel)
-		VALUES (#{sale_idx }, 1, 5, #{title }, #{content }, sysdate, 0)
+		VALUES (#{sale_idx }, 2, #{score }, #{title }, #{content }, sysdate, 0)
 	</insert>
+	
+	<select id="selectAllComment" parameterType="int"
+					resultMap="HashMap">
+		SELECT * FROM SALE_EVALUATION
+		WHERE sale_idx = ${_parameter } AND isdel = 0
+	</select>
+	
+	<!-- ==================================================================================== -->
 	
 	<!--hwanmin 2018_05_26 work-->
  	<select id="ProMainList" resultType="cocoFarm.dto.Product">
