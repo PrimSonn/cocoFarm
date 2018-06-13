@@ -5,6 +5,7 @@ public class RecptCallParamHolder {
 	public Integer accIdx;
 	public String arg;
 	public String arg2;
+	public String arg3;
 	public Integer intArg;
 	public Integer intArg2;
 	public Integer isDone;
@@ -91,5 +92,11 @@ public class RecptCallParamHolder {
 	}
 	public void setIsDone(Integer isDone) {
 		this.isDone = isDone;
+	}
+	public String getArg3() {
+		return arg3;
+	}
+	public void setArg3(String arg3) {
+		this.arg3 = arg3;
 	}
 }

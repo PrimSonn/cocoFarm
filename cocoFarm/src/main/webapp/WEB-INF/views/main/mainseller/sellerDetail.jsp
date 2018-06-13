@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>    
@@ -12,9 +12,10 @@
 <link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
-	src="https://code.jquery.com/jquery-2.2.4.js"></script>
+	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <script type="text/javascript">
+
 var test =0;
 <c:forEach items="${option}" var="data" varStatus="status">
 	var sttr${status.count} = '<div id="one${status.count}" class="detail_cnt">'
@@ -34,7 +35,9 @@ var price = 0;
 var num=1;
 var sum=0;
 
-$(document).ready(function() {
+$(document).ready( function() {
+	/* 장바구니 버튼 눌렀을 때 */
+	insertCart();
 	
 	//콤마찍기
 	function comma(str) {
@@ -57,7 +60,7 @@ $(document).ready(function() {
 	}else{
 		var min_price=Math.min(price_pro1,price_pro2,price_pro3);
 	}
-	console.log(min_price); 
+// 	console.log(min_price); 
 	$(".price_tem").text(comma(min_price));
 	$(".price_sale").text(comma(min_price));
 	
@@ -91,23 +94,7 @@ $(document).ready(function() {
 		reselect();
 		calcPrice();
 	});
-		
-		/* $(".proselect_option").on("change", function(){ */
 	
-		/*   $(".pronum_text").on("keypress",function() {
- 			 console.log( "Handler for .keypress() called." );
-		}); */
-		 
-		/*  $(".pronum_text").on("change",".button_minus", function(){
-		
-		var text_num=Number($(this).parent().find(".pronum_text").val());
-		var original_price=$(this).parent().find(".num_option_price").data("unit");
-		$(this).parent().find(".num_option_price").text(original_price*num);
-		price=0;
-		calcPrice();
-		});  */
-			
-			
 	$(".proselect_option").on('change', function() {
 		
 		 if($(".proselect_option option:selected").hasClass("off")==true){
@@ -144,8 +131,8 @@ $(document).ready(function() {
 		calcPrice();
 		
 	});
-	
 		
+			
 	/*플러스 버튼 눌렀을때  */
 	$("#detail_option").on("click", ".button_plus", function() {
 		if(Number($(this).parent().find(".pronum_text").val())==99){
@@ -164,7 +151,7 @@ $(document).ready(function() {
 		calcPrice();
 		
 	});
-
+	
 	/*마이너스 버튼 눌렀을때 */
 	$("#detail_option").on("click",".button_minus", function() {
 		if(Number($(this).parent().find(".pronum_text").val())==1){
@@ -178,9 +165,9 @@ $(document).ready(function() {
 		price=0;
 		calcPrice();
 	});
-		
-	/* 상품 정보 눌렀을때   */
-	$('.open_icon').on('click', function() {
+			
+	/* 상품 정보 열기 눌렀을때   */
+	$(".open_icon").on('click', function() {
 		if($(this).parent().parent().hasClass("info_open")==true) {
 			$(this).parent().parent().removeClass('info_open');
 			$(this).text("열기");
@@ -189,83 +176,100 @@ $(document).ready(function() {
 			$(this).text("닫기");
 		}
 	});
-		
+			
 	/* 구매하기 버튼 눌렀을대 써밋 */
-	
-	
-	
-		<c:if test="${sessionScope.idx eq null}">
-		$(".buy_button").click(function() {
-			if($(".proselect_option option:selected").val()==0) {
-				  alert("카테고리를 선택해주세요.");
-				  return false;
-				} else {
-					alert("로그인 해주세요.");
-				}
-			
-			
-			
-		});
-		</c:if>
-		<c:if test="${sessionScope.idx ne null}">
-		$(".buy_button").click(function() {
-			if($(".proselect_option option:selected").val()==0) {
-				  alert("상품 옵션을 선택해주세요.");
-				  return false;
-				} else {
-					$(".option_form").attr("action", "/orderpay.do");
-					$(".option_form").submit(); 
-				}
-		});
-		</c:if>
-		
-			
-		/* 
-		$(".buy_button").click(function() {
-		
-		$(".option_form").attr("action", "/orderpay.do");
-		$(".option_form").submit();
-		 */
-	
-		
-	
+	<c:if test="${sessionScope.idx eq null}">
+	$(".buy_button").click(function() {
+		if($(".proselect_option option:selected").val()==0) {
+			  alert("카테고리를 선택해주세요.");
+			  return false;
+			} else {
+				alert("로그인 해주세요.");
+			}
 	});
-		
-	/* 장바구니 버튼 눌렀을 때 */
-	$(".addcart_button").click(function() {
-		$(".option_form").attr("action", "/product/cart.do");
-		$(".option_form").submit();
+	</c:if>
+	<c:if test="${sessionScope.idx ne null}">
+	$(".buy_button").click(function() {
+		if($(".proselect_option option:selected").val()==0) {
+			  alert("상품 옵션을 선택해주세요.");
+			  return false;
+			} else {
+				$(".option_form").attr("action", "/orderpay.do");
+				$(".option_form").submit(); 
+			}
 	});
-	
-	
-	
-/* 상품평 등록 눌렀을 때 */
-function insertComment() {
-	var saleIdx = ${product.idx };
-	var commScore = 5;
-	var commTitle = "제목";
-	var content = $("#commentContent").val();
-	var commentList = [saleIdx, commScore, commTitle, content];
-	console.log(commentList);
+	</c:if>
+
+
+	/* 상품 후기 열기 눌렀을때   */
+	$(".open_comment").on('click', function() {
+		if($(this).parent().parent().hasClass("info_open")==true) {
+			$(this).parent().parent().removeClass("info_open");
+			$(this).text("열기");
+		} else {
+// 			var page = "/common/insertComment.jsp";
+// 			$(".comment_cmt").load(page);
+			viewComment();
+			$(this).parent().parent().addClass("info_open");
+			$(this).text("닫기");
+		}
+		
+	});
+
+});
+
+/* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
+function viewComment() {
+	var productIdx = ${product.idx };
 	
 	var arr = new Array();
 	var obj = new Object();
 	
-	obj.saleIdx = ${product.idx };
-	obj.content = $("#commentContent").val();
-	arr.push(obj);
+	var cont = $("#commentContent").val();
+	
+	if(cont === "") {
+		arr.push(null);
+	} else {
+		obj.saleIdx = ${product.idx };
+		obj.title = "${product.title }";
+		obj.content = cont;
+		arr.push(obj);
+	}
+	// JSON.stringify(__) - 문자열로 바꾸는 것! string화!
+	console.log("request: " + JSON.stringify(arr));
 	
 	$.ajax({
 		type: "POST"
-		, url: "/product/insertComment.do"
-		, dataType: "json"
-		, data: {
-			comment: JSON.stringify(arr)
+			, url: "/product/viewComment.do"
+			, dataType: "json"
+			, data: {
+				sale_idx: productIdx
+				, insertComm: JSON.stringify(arr)
+			}
+			, success: function(data) {
+				console.log(data);
+				var result = data;
+				var str = "";
+				$.each(result, function(idx, val) {
+					console.log(idx + ": " + val);
 
-		}
-		,success: function(data) {
-			console.log("success data: " + data);
-		}
+					str += '<span class="wrap_profile">'
+						+	'<span class="comm_accName">계정 아이디</span></span>'
+						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'
+						+ '<div class="wrap_cont"><span class="txt_prod">${product.title }</span>'
+						+ '<p class="desc_cmt"><span><span class="comm_content">'+ result[idx].content +'</span></span></p>'
+						+ '</div>';
+				});
+				document.getElementById("comment_items").innerHTML = str;
+			}
+	});
+}
+
+function insertCart() {
+	/* 장바구니 버튼 눌렀을 때 */
+	$(".addcart_button").click(function() {
+		$(".option_form").attr("action", "/product/cart.do");
+		$(".option_form").submit();
 	});
 }
 		
@@ -388,11 +392,12 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>상품 후기
-			<span class='open_icon'>열기</span>
+			<span class="open_comment" id="open_comment">열기</span>
 		</a>
 		
+		<div class="comment_cmt">
 		<!-- 상품 후기 등록 -->
-		<div class="form-inline text-center">
+		<div class="form-inline text-cefnter" id="commentList">
 		
 			<input type="text" size="7" class="form-control"
 				id="commentWriter"
@@ -401,50 +406,46 @@ function reselect() {
 				class="form-control" id="commentContent"></textarea>
 			
 			<button class="insertComm_button"
-						onclick="insertComment();">상품평 등록</button>
+						onclick="viewComment();">상품평 등록</button>
 		</div>
 		
 		<div class="cont_cmt">
 			<ul class="list_cmt">
 				<li>
-					<div class="cmt_cont">
+					<div class="cmt_cont" id="comment_items">
 						<span class="wrap_profile">
 <!-- 							<img src="계정이미지" width="32" height="32" class="thumb_g" alt=""> -->
-							<span>계정 아이디</span>
+							<span class="comm_accName">계정 아이디</span>
 						</span>
-<!-- 						<span class="별이미지">별점</span> -->
-						
+						<br/><span class="comm_starImg"></span>점
 						<div class="wrap_cont">
-						
 <!-- 							<span class="info_score"> -->
 <!-- 								<span class="img_kakaofarmer bg_star"> -->
 <!-- 									<span class="img_kakaofarmer bar_star" style="width: 100%;">5점</span> -->
 <!-- 								</span> -->
 <!-- 							</span> -->
-							
-							<span class="txt_prod">김천 거봉포도 4kg</span>
-							
+							<span class="txt_prod">${product.title }</span>
 							<p class="desc_cmt">
-								<span><span>맛잇엇어요</span></span>
+								<span><span class="comm_content"></span></span>
 							</p>
 						</div>
-						
 					</div>
 				</li>
 		
 			</ul><a href="/product/93/review" class="btn_all #review_all"><!-- react-text: 59 -->상품평 전체보기<!-- /react-text -->
 				<span class="img_kakaofarmer ico_arr"></span></a>
 		</div>
+		</div>
+		
 		
 	</div>
 	
 	<div class="item_info">
 		<a>상품 고시 정보
-		
-		<span class='open_icon'>열기</span>
-	
+			<span class="open_icon">열기</span>
 		</a>
-		<table class='tbl_spec'>
+		
+		<table class="tbl_spec">
 		<tbody>
 			<tr>
 				<th>용 량</th>
@@ -476,11 +477,10 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>판매자 정보
-		
-		<span class='open_icon'>열기</span>
-	
+			<span class="open_icon">열기</span>
 		</a>
-		<table class='tbl_spec'>
+		
+		<table class="tbl_spec">
 		<tbody>
 			<tr>
 				<th>사업자 법인명</th>
@@ -508,9 +508,8 @@ function reselect() {
 	
 	<div class="item_info">
 		<a>상세 이미지 정보 
-			<span class='open_icon'>열기</span>
+			<span class="open_icon">열기</span>
 		</a>
-<!-- 		/proimg/201711071833194501xxa.jpg -->
 		<img src="/proimg/${product.mainImg }" style="margin-top: 50px; display:block; margin: 0 auto;">
 	</div>
 </div>

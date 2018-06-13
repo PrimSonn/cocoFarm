@@ -30,4 +30,27 @@ public class DataResolver {
 		
 		return serial;
 	}
+	
+	public static String resolve(List<? extends Serializer> target1, List<? extends Serializer> target2) {
+		
+		String st = resolve(target1) + resolve(target2);
+		
+		if (st.length()>2000) {
+			return null;
+		}else {
+			return resolve(target1) + resolve(target2);
+		}
+	}
+	
+	public static String resolve (String st, List<? extends Serializer> target1, List<? extends Serializer> target2) {
+		
+		st = st+resolve(target1, target2);
+		
+		if (st.length()>2000) {
+			return null;
+		}else {
+			return st+resolve(target1, target2);
+		}
+	}
+	
 }

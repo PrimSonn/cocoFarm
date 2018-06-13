@@ -17,7 +17,7 @@
 $(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
-
+// 		var page = "/product/insert.do";
 		$(".mypage_page01").load(page);
 		
 		// callback function
