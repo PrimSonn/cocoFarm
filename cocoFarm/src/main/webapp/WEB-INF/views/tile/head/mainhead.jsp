@@ -22,7 +22,7 @@ $(document).ready(function(){
 	});
 	</c:if>
 	
-
+});
 	
 	function submit(){
 		alert("로그인이 필요합니다.");

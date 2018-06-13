@@ -27,5 +27,6 @@ public interface BoardService {
 	//2018년 6월 12일 hwanmin 작업
 	public List<Board> getboardMainList();
 	
+	public List getboardList();
 	
 }

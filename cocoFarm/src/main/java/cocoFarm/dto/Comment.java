@@ -12,6 +12,14 @@ public class Comment {
 	private Date last_edited;
 	private int isdel;
 	
+	private String acc_name;
+	
+	public String getAcc_name() {
+		return acc_name;
+	}
+	public void setAcc_name(String acc_name) {
+		this.acc_name = acc_name;
+	}
 	public int getSale_idx() {
 		return sale_idx;
 	}
@@ -70,6 +78,7 @@ public class Comment {
 				+ ", reg_time=" + reg_time
 				+ ", last_edited=" + last_edited
 				+ ", isdel=" + isdel
+				+ ", acc_name=" + acc_name
 				+ "]";
 	}
 }

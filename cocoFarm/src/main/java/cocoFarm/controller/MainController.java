@@ -35,6 +35,8 @@ public class MainController {
 		model.addAttribute("seller",productService.getProViewMainList());
 		
 		/*boardService.getboardMainList();*/
+		model.addAttribute("farm",boardService.getboardMainList());
+		
 		/*
 	
 		SELECT acc_idx, title, content, written_date, hit, ISDEL,

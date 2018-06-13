@@ -101,7 +101,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.getboardMainList();
 	}
 	
-
+	@Override
+	public List getboardList(){
+		
+		return boardDao.boardSelectAll();
+	}
 	
 	
 }

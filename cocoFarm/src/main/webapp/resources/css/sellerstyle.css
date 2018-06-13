@@ -9,6 +9,7 @@
 
 #view_seller{
 	margin-top: 10px;
+	
 }
 
 .prodisplay{
@@ -328,10 +329,6 @@
 }
 
 /* 상품 정보 */
-
-
-
-
 .item_info {
 	position:relative;
 	float: left;
@@ -408,5 +405,13 @@
 #detail_option .pronum_text{
 	text-align: center;
 }
+
+/*메인에 띄우는 상품*/
+.pro_part{
+	height:370px;
+	margin-top: 24px;
+	
+}
+
 
 

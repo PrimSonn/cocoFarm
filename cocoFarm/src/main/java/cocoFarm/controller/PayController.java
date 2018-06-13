@@ -115,7 +115,7 @@ public class PayController {
 		for(int i=0; i<list.size(); i++) {
 			Map map = (Map) list.get(i);
 			SaleOption so = new SaleOption();
-			so.setIdx(((Double)map.get("idx")).intValue());
+			so.setIdx(( (Double)map.get("idx") ).intValue());
 			so.setProAmount( ((Double)map.get("proAmount")).intValue());
 			saleOptionList.add(so);
 //			System.out.println( map.get("idx"));

@@ -5,12 +5,18 @@
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<!-- 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-</head><body>
+ -->
+</head>
+<body>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
 <div class="container">
 
