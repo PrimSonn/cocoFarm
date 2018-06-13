@@ -1,7 +1,9 @@
 package cocoFarm.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
@@ -20,7 +22,11 @@ public interface ProductDao {
 	
 	public void update(Product product);
 	
-	public void insertBasket(SaleOption saleoption);
+	public void insertComment(Comment comment);
+	
+	public List<HashMap<String, Object>> selectAllComment(int sale_idx);
+	
+	/* ==================================================================================== */
 	
 	//hwanmin work 2018_05_26
 	
