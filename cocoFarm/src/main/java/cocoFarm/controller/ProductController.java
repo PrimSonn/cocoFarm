@@ -271,38 +271,6 @@ public class ProductController {
 		return "redirect:/product";
 	}
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-<<<<<<< HEAD
-	   public String basketList(Model model, HttpSession session) {
-	      logger.info("cart.do get!");
-	      logger.info("-----------controller-----------");
-	      int accIdx = (Integer)session.getAttribute("idx");
-	      
-	      List<SaleOption> cartOptionList = null;
-	      cartOptionList = productService.cartView(accIdx);
-	      model.addAttribute("optionCart", cartOptionList);
-
-	      List<Product> cartProductList = null;
-	      Product product = null;
-	      
-	      int saleIdx = 0;
-	      if(cartOptionList.size() != 0) {
-	         saleIdx = cartOptionList.get(0).getSaleIdx();
-	         product = productService.productView(saleIdx);
-	         cartProductList.add(product);
-	      }
-	      for(int i=0; i<cartOptionList.size(); i++) {
-	         if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
-	            saleIdx = cartOptionList.get(i).getSaleIdx();
-	            product = productService.productView(saleIdx);
-	            cartProductList.add(product);
-	         } else { continue; }
-	      }
-	      model.addAttribute("productCart", cartProductList);
-	      
-	      return "mypage/common/mypageCart";
-	   }
-
-=======
 	public String basketList(Model model, HttpSession session) {
 		logger.info("cart.do get!");
 		logger.info("-----------controller-----------");
@@ -330,7 +298,7 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
-		return "mypage/common/productCart";
+		return "mypage/common/mypageCart";
 	}
 	
 //	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -341,7 +309,6 @@ public class ProductController {
 //		
 //		return null;
 //	}
->>>>>>> 67423a538591fcb5f3d3615c432484fbfbe7b439
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
