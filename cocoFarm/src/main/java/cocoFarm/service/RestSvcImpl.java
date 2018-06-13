@@ -139,6 +139,7 @@ public class RestSvcImpl implements RestSvc{
 			if(merchant_uid ==null || moneyAmount ==null) return 109;
 			
 			//--------- 받아온 결제 정보를 DB의 정보와 비교
+			System.out.println("imp_uid: "+imp_uid+", accIdx: "+accIdx+", merchant_uid: "+merchant_uid+", moneyAmount: "+moneyAmount);
 			Integer resultCode = recptSvc.recptCheck(new RecptCallParamHolder(imp_uid,accIdx, merchant_uid, moneyAmount, 0));
 			
 			if(resultCode==null) {
