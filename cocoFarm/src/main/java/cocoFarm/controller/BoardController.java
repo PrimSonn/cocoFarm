@@ -31,7 +31,7 @@ public class BoardController {
 		
 		// 페이징 처리된 게시글 목록	
 		List list = boardService.getPagingList(paging);		// 전체 게시글 조회
-		model.addAttribute("list", list);
+		model.addAttribute("farm", list);
 				
 		return "board/list";
 	}
