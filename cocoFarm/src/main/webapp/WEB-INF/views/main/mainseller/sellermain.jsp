@@ -29,6 +29,7 @@ $(document).ready(function() {
 <!--body부분 시작  -->
 <div id="view_seller">
 	<div class="container">
+		<div class="seller_part">
 		<c:forEach items="${seller}" var="data" varStatus="status">
 			<c:choose>
 				<c:when test="${status.count%5==0}">
@@ -56,7 +57,14 @@ $(document).ready(function() {
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
+		</div>
 	</div>
 </div>
+
+<!--main부분 foot ver1부분  -->
+<jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
+		
+
+
 </body>
 </html>

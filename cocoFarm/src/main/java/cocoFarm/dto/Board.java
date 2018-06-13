@@ -15,6 +15,25 @@ public class Board {
 	private int hit;
 	private int recommend;
 	
+	/*2018년 6월 13일 추가*/
+	private String thumb_loc;
+	private String name;
+	
+	
+	
+	public String getThumb_loc() {
+		return thumb_loc;
+	}
+	public void setThumb_loc(String thumb_loc) {
+		this.thumb_loc = thumb_loc;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	private MultipartFile fileup;
 	
 	private String stored_filename;

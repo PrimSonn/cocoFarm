@@ -26,7 +26,7 @@ public class MainController {
 		model.addAttribute("seller",productService.getProViewMainList());
 		
 		
-		/*boardService.getboardMainList();*/
+		model.addAttribute("farm",boardService.getboardMainList());
 		
 		
 		

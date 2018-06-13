@@ -6,11 +6,11 @@
 
 <!-- Jquery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
+<!-- 
 <!-- Bootstrap -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
+ -->
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
  src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
@@ -46,7 +46,10 @@ $(document).ready(function() {
 
 </script>
 
-</head><body>
+</head>
+<body>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
 <div class="container">
 <h1>수정 페이지</h1>
