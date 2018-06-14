@@ -112,7 +112,26 @@
 			#{isDone, jdbcType=NUMERIC, mode=OUT} := isDone;
 		end;
 	</select>
-	
-	
+
+<!--
+	<select id="callTempRecptMkr" parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call TempRecptMkr(
+			#{accIdx, jdbcType=NUMERIC, mode=IN}
+			#{arg, jdbcType=NVARCHAR, mode=IN}
+			#{isDone, jdbcType=NUMERIC, mode=OUT}
+		)}
+	</select>
+-->	
+
+	<select id="paynee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
+		select M.*,A.NAME seller,SOR.* from MAIN_RECEIPT M
+			left join SALE_RECEIPT SR on M.IDX = SR.MAIN_RECPT_IDX
+			left join SALE S on SR.SALE_IDX = S.IDX
+			left join ACCOUNT A on S.ACC_IDX = A.IDX
+			left join SALE_OPTION_RECEIPT SOR on SR.MAIN_RECPT_IDX = SOR.MAIN_RECPT_IDX
+		where
+		M.STATE_CODE !=0 and
+		M.BUYER_IDX = #{idx} order by M.IDX desc
+	</select>
 
 </mapper>

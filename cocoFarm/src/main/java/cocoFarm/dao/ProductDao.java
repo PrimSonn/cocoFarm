@@ -45,4 +45,9 @@ public interface ProductDao {
 	public List getSale_Option(String salequery);
 	
 	public List ProViewMainList();
+
+//	2018년 06월 14일 판매자 결제내역조회
+	public List procPayNee(int accIdx);
+	
+	
 }

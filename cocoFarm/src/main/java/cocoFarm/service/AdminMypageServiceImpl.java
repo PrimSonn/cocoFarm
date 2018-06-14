@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.AdminMypageDao;
 import cocoFarm.dto.Account;
 import cocoFarm.dto.LicenseDto;
-import cocoFarm.dto.Main_receipt;
 import cocoFarm.util.Paging;
 
 @Service
@@ -63,8 +62,8 @@ public class AdminMypageServiceImpl implements AdminMypageService {
 	}
 	
 	@Override
-	public List selectPayAll() {
-		return adminMypageDao.selectPayAll();
+	public List adminPaynee() {
+		return adminMypageDao.adminPaynee();
 	}
 	
 }

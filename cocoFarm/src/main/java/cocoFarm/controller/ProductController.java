@@ -271,7 +271,16 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
-		return "mypage/common/productCart";
+		
+		
+		if((Integer)session.getAttribute("type")<=1){
+			return "mypage/admin/adminCart";
+		}else if((Integer)session.getAttribute("type")==2) {
+			return "mypage/seller/productCart";
+		}else {
+			return "mypage/user/userCart";
+			//return "mypage/common/productCart";
+		}
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
@@ -387,5 +396,17 @@ public class ProductController {
 		
 		return map;
 	}
+	
+	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
+	public String procPaynee(HttpSession session, Model model) {
+		
+		int accIdx = (int) session.getAttribute("idx");
+		
+		model.addAttribute("procPaynee", productService.procPayNee(accIdx));
+		
+		return "mypage/common/procPaynee";
+		
+	}
+	
 	
 }

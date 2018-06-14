@@ -67,8 +67,11 @@ function submit() {
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
-			<li><a href="#" id="alarm">알림</a></li>	
+			<c:if test="${sessionScope.idx eq null }">
+			<li><a href="/mypage/message.do" id="alarm">알림</a></li>	
+			</c:if>
 			<c:if test="${sessionScope.idx ne null }">
+			
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx eq null }">
