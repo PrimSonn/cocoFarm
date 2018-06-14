@@ -17,11 +17,8 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-<<<<<<< HEAD
-// 		   alert("실패"); 
-=======
+
 		   //alert("실패"); 
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 	   }
 	});
 	</c:if>
@@ -99,12 +96,7 @@ $(document).ready(function(){
 
 				<li><a href="/auction/auction_list.do">경매</a></li>
 				<li><a href="/board/list.do">농부 스토리</a></li>	
-<<<<<<< HEAD
-				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
-				
-=======
 				<li><a href="/main/faq.do" id="FAQ">자주 묻는 질문</a></li>	
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>
