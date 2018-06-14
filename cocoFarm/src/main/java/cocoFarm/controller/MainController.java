@@ -66,6 +66,11 @@ public class MainController {
 		
 		return "companyinfo/comintro";
 	}
+	//민주 페이지에 띄우기
+	@RequestMapping(value="/main/faq.do",method=RequestMethod.GET)
+	public void faq() {
+		
+	}
 	
 	
 	

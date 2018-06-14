@@ -248,4 +248,16 @@ public class PayController {
 	}
 	
 	
+	//2018년 06월 14일 상원이형 프로젝트 합치는거
+	@RequestMapping(value="/payNee.do", method=RequestMethod.GET)
+	public String paynee(HttpSession session, Model model) {
+		
+		int accIdx = (int) session.getAttribute("idx");
+		
+		model.addAttribute("paynee", receiptSvc.paynee(accIdx));
+		
+		return "mypage/common/payNee";
+	}
+	
+	
 }

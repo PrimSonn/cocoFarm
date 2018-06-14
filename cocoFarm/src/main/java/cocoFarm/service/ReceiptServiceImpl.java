@@ -73,17 +73,13 @@ public class ReceiptServiceImpl implements ReceiptService{
 //		holder.getMainRcpt();
 	}
 	
-//	@Override
-//	public boolean MakeTempReceipt(Integer accountIdx, List<Serializer> targetList) {
-//	
-//		RecptCallParamHolder holder = new RecptCallParamHolder( accountIdx, DataResolver.resolve(targetList), Integer.valueOf(0));
-//		recptDao.callTempRecptMkr(holder);
-//		
-//		if(holder.getIsDone()==1) {
-//			return true;
-//		}
-//		
-//		return false;
-//	}
-
+	//2018년 6월 14일 상원이형 작업
+	@Override
+	public List paynee(int accIdx) {
+		
+		return recptDao.paynee(accIdx);
+	}
+	
+	
+	
 }

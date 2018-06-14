@@ -146,7 +146,7 @@ function submitContents(elClickedObj) {
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
-					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
+					<div class="mypageimg"><img src="/img/profile/${account.thumb_loc}" ></div>
 					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp 환영합니다.</span></div>
 					<div class="mail_box"><a class="nav-link" href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>		
 				</div>

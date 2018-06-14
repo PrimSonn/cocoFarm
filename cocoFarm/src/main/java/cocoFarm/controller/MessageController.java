@@ -117,10 +117,10 @@ public class MessageController {
 		return mav;
 	}
 	
+	//2018년 06월 14일 민주 작업
 	@RequestMapping(value="/mypage/messageView.do", method=RequestMethod.POST)
 	public void messageView(int messageCate, Message message, Model model) {
-		
-		
+		System.out.println("메시지 보기!");
 		message = messageService.getOneMessage(message);
 		messageService.isRead(message);
 		System.out.println(messageCate);
@@ -129,20 +129,16 @@ public class MessageController {
 		
 		if( messageCate == 1 ) {
 			int senderIdx = message.getSender_idx();
-//			System.out.println(senderIdx);
-//			System.out.println(messageService.getSender(senderIdx));
 			model.addAttribute("sender", messageService.getSender(senderIdx));
 		}else {
 			int receiverIdx = message.getReceiver_idx();
-//			System.out.println(receiverIdx);
-//			System.out.println(messageService.getReceiver(receiverIdx));
 			model.addAttribute("receiver", messageService.getReceiver(receiverIdx));
 		}
 		
 		model.addAttribute("messageCate", messageCate);
 		model.addAttribute("message", message);
-	
 	}
+	
 	
 	@RequestMapping(value="/mypage/delMessageList.do", method=RequestMethod.POST)
 	public String deleteMessageList(String names, int messageCate) {
