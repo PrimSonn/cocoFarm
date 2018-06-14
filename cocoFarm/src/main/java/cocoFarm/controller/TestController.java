@@ -36,13 +36,14 @@ public class TestController {
 	@RequestMapping(value="getIn",method=RequestMethod.GET)
 	public ModelAndView getIn(ModelAndView mav, HttpSession session, String key) {
 		
-		if(key.equals("cocoSystem$1234")) {
-			session.setAttribute("idx", Integer.valueOf(0));
-			session.setAttribute("type", Integer.valueOf(0));
-			session.setAttribute("name", "시스템");
-			System.out.println("시스템 로그인!");
+		if(key!=null) {
+			if(key.equals("cocoSystem$1234")) {
+				session.setAttribute("idx", Integer.valueOf(0));
+				session.setAttribute("type", Integer.valueOf(0));
+				session.setAttribute("name", "시스템");
+				System.out.println("시스템 로그인!");
+			}
 		}
-		
 		mav.setViewName("main/cocomain");
 		return mav;
 	}
@@ -61,7 +62,9 @@ public class TestController {
 	@RequestMapping(value="getThreadStatus",method=RequestMethod.GET)
 	public ModelAndView getTreadStatus(ModelAndView mav, HttpSession session) {
 		
-		if((Integer)session.getAttribute("type")==0 && (Integer)session.getAttribute("idx")==0) {
+		if(session.getAttribute("idx")==null) {
+			mav.setViewName("main/cocomain");
+		}else if((Integer)session.getAttribute("type")==0 && (Integer)session.getAttribute("idx")==0) {
 			mav.addAllObjects(RunnerManager.getStatus());
 			mav.setViewName("util/threadStatus");
 		}else {
