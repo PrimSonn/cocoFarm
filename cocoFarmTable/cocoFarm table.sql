@@ -154,6 +154,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure TEMP_RECPT_CLEAR;
+
 drop procedure CANCEL_TEMP_RECPT;
 
 drop procedure REFUND_RECPT_MKR;
@@ -866,7 +868,7 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 
 create table MAIN_RECEIPT (
 
-	IDX					number(30,0)	unique
+	IDX					number(18,0)	unique
 	,PAYMENT_CODE		nvarchar2(45)
 	,BUYER_IDX			number(8,0)
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
@@ -878,7 +880,7 @@ create table MAIN_RECEIPT (
 
 	,STATE_CODE			number(2,0)		not null
 
-	,REFUND_OF			number(30,0)
+	,REFUND_OF			number(18,0)
 
 	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
 	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
@@ -887,12 +889,12 @@ create table MAIN_RECEIPT (
 	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_OF) references MAIN_RECEIPT (IDX)
 );
 
-create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
+create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1 maxvalue 99 cycle cache 49;
 
 create function MAIN_RECPT_IDX_FUNC return number
 is
 begin
-	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100000000000000 + MAIN_RECEIPT_SEQ.nextval;
+	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100 + MAIN_RECEIPT_SEQ.nextval;
 end;
 /
 
@@ -1787,7 +1789,7 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 create table SALE_RECEIPT (
 
 	SALE_IDX			number(10,0)
-	,MAIN_RECPT_IDX		number(30,0)
+	,MAIN_RECPT_IDX		number(18,0)
 	,SALE_TITLE			nvarchar2(40)
 
 	,constraint SALE_RECPT_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
@@ -1824,7 +1826,7 @@ comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '판매글 제목 -  트리거 
 
 create table SALE_OPTION_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)
+	MAIN_RECPT_IDX			number(18,0)
 	,SALE_IDX				number(10,0)
 	,SALE_OPTION_IDX		number(11,0)
 
@@ -1914,7 +1916,7 @@ comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불�
 create table SALE_EVALUATION (
 
 	SALE_IDX				number(10,0)
-	,MAIN_RECPT_IDX			number(30,0)
+	,MAIN_RECPT_IDX			number(18,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
@@ -2621,7 +2623,7 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 
 create table BID_CONTRACT_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)
+	MAIN_RECPT_IDX			number(18,0)
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
@@ -3602,6 +3604,7 @@ begin
 			update BID set STATE_CODE = case 
 											when (STATE_CODE = 1) then 3
 											when (STATE_CODE = 2) then 4
+											else STATE_CODE
 											end
 				where (AUCTION_IDX,AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX);
 			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
@@ -3630,7 +3633,6 @@ begin
 	
 	
 exception when OTHERS then
-
 	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
@@ -4004,7 +4006,7 @@ begin
 				update AUCTION set STATE_CODE = 2, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
 				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 6);
 				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 6;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_writter_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
 				
 				for BID_ROW in BID_CUR loop
 					update BID set STATE_CODE = 20, FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
@@ -4029,7 +4031,7 @@ begin
 				update AUCTION set STATE_CODE = 8, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
 				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 7);
 				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 7;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_writter_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
 				
 				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', 1, 'Success. Auction canceled after due. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
 				select 1 into isDone from DUAL;
@@ -4499,7 +4501,69 @@ exception when OTHERS then
 	commit;
 end;
 /
+
 --drop procedure CANCEL_TEMP_RECPT;
+
+
+/*================= 5. 임시 영수증 정리 ====================
+
+		타이머를 이용, 매 시간 마다 5분 이상 지난 임시 영수증을 정리함.
+
+===========================================================*/
+
+create procedure TEMP_RECPT_CLEAR (DBTIME out timestamp, NEXTCHECK out timestamp)
+is
+	recpt_idx_arr		holder := holder();
+	cnt					number;
+	list				nvarchar2(2000);
+
+	err_code			number;
+	err_message			varchar2(255);
+begin
+	savepoint START_TRANSACTION;
+	list := '';
+	
+	select count(1) into cnt from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0;
+	recpt_idx_arr.extend(cnt +50);
+	select T.IDX bulk collect into recpt_idx_arr 
+		from (select IDX, ROWNUM R from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0) T
+	where T.R<=100;
+	
+	delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete SALE_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete MAIN_RECEIPT where IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	
+	if(recpt_idx_arr.last>0) then
+		for i in 1..(recpt_idx_arr.last-1) loop
+			list := list || recpt_idx_arr(i) || ', ';
+		end loop;
+		list := list || recpt_idx_arr(recpt_idx_arr.last);
+	else
+		list := 'nothing selected';
+	end if;
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('TEMP_RECPT_CLEAR', 1, 'recpt_idx_arr: '||list);
+	commit;
+	
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(3, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+--	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(1, 'HOUR') into DBTIME, NEXTCHECK from DUAL;
+	
+exception when OTHERS then
+	rollback to START_TRANSACTION;
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('TEMP_RECPT_CLEAR', 0, 'ERROR', err_code, err_message);
+	commit;
+	
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(3, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+--	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(1, 'HOUR') into DBTIME, NEXTCHECK from DUAL;
+end;
+/
+
+--drop procedure TEMP_RECPT_CLEAR;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------

@@ -30,7 +30,9 @@ public final class RunnerManager {
 							Thread wasThere = 
 								member.put(method, new Thread( new CocoRunner( () ->{
 											try {
-												return (TimerDto)method.invoke(timerDao, new TimerDto());
+												TimerDto timer = new TimerDto();
+												method.invoke(timerDao, timer);
+												return timer;
 											} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 												e.printStackTrace();
 											}
