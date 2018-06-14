@@ -210,7 +210,7 @@
 					<input type="text" id="detailed_addr" name="detailed_addr" placeholder="상세주소" class="form-control"/>
 					</div>
 				</div>
-				<input type="submit" id="joinBtn" class="btn btn-primary center-block" value="회원가입 하기" />
+				<input type="submit" id="joinBtn" class="btn btn-primary center-block" onkeypress="if(event.keyCode==13) {$('#joinBtn').click()}" value="회원가입 하기" />
 				</form>
 			</div>
 	
