@@ -36,13 +36,14 @@ public class TestController {
 	@RequestMapping(value="getIn",method=RequestMethod.GET)
 	public ModelAndView getIn(ModelAndView mav, HttpSession session, String key) {
 		
-		if(key.equals("cocoSystem$1234")) {
-			session.setAttribute("idx", Integer.valueOf(0));
-			session.setAttribute("type", Integer.valueOf(0));
-			session.setAttribute("name", "시스템");
-			System.out.println("시스템 로그인!");
+		if(key!=null) {
+			if(key.equals("cocoSystem$1234")) {
+				session.setAttribute("idx", Integer.valueOf(0));
+				session.setAttribute("type", Integer.valueOf(0));
+				session.setAttribute("name", "시스템");
+				System.out.println("시스템 로그인!");
+			}
 		}
-		
 		mav.setViewName("main/cocomain");
 		return mav;
 	}

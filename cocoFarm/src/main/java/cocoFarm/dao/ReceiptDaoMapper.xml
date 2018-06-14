@@ -78,18 +78,6 @@
 			,#{isDone,jdbcType=NUMERIC,mode=OUT}
 		)}
 	</select>
-	
-	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
-		declare
-			mainRecpt number;
-			isDone number;
-		begin
-			mainRecpt:=1;
-			isDone:=1;
-			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
-			#{isDone, jdbcType=NUMERIC, mode=OUT} := isDone;
-		end;
-	</select>
 
 <!-- procedure TEMP_RCPT_MKR
 	(in_acc_idx ACCOUNT.IDX, in_paid_name MAIN_RECEIPT.PAID_NAME, in_data 
@@ -112,5 +100,19 @@
 	<select id="cancelRecpt" parameterType='java.lang.String' statementType='CALLABLE'>
 		{call CANCEL_TEMP_RECPT( #{${value}, jdbcType=NUMERIC, mode=IN} )} 
 	</select>
+	
+	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
+		declare
+			mainRecpt number;
+			isDone number;
+		begin
+			mainRecpt:=1;
+			isDone:=1;
+			#{mainRcpt, jdbcType=NUMERIC, mode=OUT} := mainRecpt;
+			#{isDone, jdbcType=NUMERIC, mode=OUT} := isDone;
+		end;
+	</select>
+	
+	
 
 </mapper>

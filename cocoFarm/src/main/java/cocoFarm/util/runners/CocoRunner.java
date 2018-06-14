@@ -30,6 +30,14 @@ public class CocoRunner implements Runnable{
 		while (RunnerManager.SHOULDRUN) {
 			System.out.println("-------"+name+" Start Running!--------");//----------------testcode
 			TimerDto timer = timerSupplier.get();
+			
+			//----------------testcode
+			if(timer ==null) {
+				System.out.println("timer Null");
+			}else {
+				System.out.println("dbTime: "+timer.getDbTime().toLocalDateTime()+", nextCheck: "+timer.getNextCheck().toLocalDateTime());
+			}
+			
 			sleepLength = timer == null ? sleepLength : (ChronoUnit.MILLIS.between(timer.getDbTime().toLocalDateTime(), timer.getNextCheck().toLocalDateTime()));
 			timer = null;//Mybatis 특성상 새 인스턴스를 계속해서 넣어야 하기 때문에 매번 생성하고 다시 없애야 함.
 			
