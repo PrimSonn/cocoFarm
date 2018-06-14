@@ -5,8 +5,8 @@
 <mapper namespace="cocoFarm.dao.LoginDao">
 	
 	<insert parameterType="cocoFarm.dto.Account" id="join">
-		INSERT INTO account(idx, id, pw, name, email, phone, postnum, addr, detailed_addr) 
-		VALUES (account_seq.nextval, #{id}, #{pw}, #{name}, #{email}, #{phone}, #{postnum}, #{addr}, #{detailed_addr})
+		INSERT INTO account(idx, id, pw, name, email, phone, postnum, addr, detailed_addr,thumb_loc) 
+		VALUES (account_seq.nextval, #{id}, #{pw}, #{name}, #{email}, #{phone}, #{postnum}, #{addr}, #{detailed_addr}, 'profile.jpg')
 	</insert>
 	
 	<select id="loginCheck" parameterType="cocoFarm.dto.Account" resultType="int">

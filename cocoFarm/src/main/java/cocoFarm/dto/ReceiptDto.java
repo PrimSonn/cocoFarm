@@ -12,6 +12,7 @@ public class ReceiptDto {
 	private int state_code;			//임시영수증 인지 체크하는 코드
 	private long refund_of;			//환불영수증번호
 	private String seller;			//판매자 이름
+	private String buyer;			//구매자 이름
 	private String name;			//옵션이름
 	private int amount;				//수량
 	private String unit;			//단위
@@ -98,6 +99,13 @@ public class ReceiptDto {
 		this.sale_title = sale_title;
 	}
 	
+	public String getBuyer() {
+		return buyer;
+	}
+	public void setBuyer(String buyer) {
+		this.buyer = buyer;
+	}
+	
 	@Override
 	public String toString() {
 		return "[ Receipt : idx = " + idx
@@ -108,6 +116,7 @@ public class ReceiptDto {
 				+ ", state_code = " + state_code
 				+ ", refund_of = " + refund_of
 				+ ", seller = " + seller
+				+ ", buyer = " + buyer
 				+ ", name = " + name
 				+ ", amount = " + amount
 				+ ", unit = " + unit
