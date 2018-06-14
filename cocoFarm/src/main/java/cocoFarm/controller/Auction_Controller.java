@@ -1,6 +1,5 @@
 package cocoFarm.controller;
 
-import java.awt.Window;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
@@ -38,12 +38,32 @@ public class Auction_Controller {
 //		session.setAttribute("idx", 1);
 //		System.out.println(session.getAttribute("idx"));
 //		auction.setWritter_idx(session.getAttribute("idx"));
-		auction.setWritter_idx(Integer.parseInt((String) session.getAttribute("idx")));
+//		auction.setWritter_idx(Integer.parseInt((String) session.getAttribute("idx")));
+		auction.setWritter_idx((Integer) session.getAttribute("idx"));
 		auctionService.write(auction);
 		System.out.println(auction);
 		
 		
 		return "redirect:/auction/auction_list.do";
+	}
+	
+//	==================================판매자 경매 등록 리스트=============================================
+	
+	@RequestMapping(value="/auction/auction_auctionCheck.do", method=RequestMethod.GET)
+	public void auctionCheck(Auction auction, HttpSession session, Model model) {
+		auction.setWritter_idx((Integer) session.getAttribute("idx"));
+		System.out.println(auctionService.getauctionList(auction));
+		model.addAttribute("auctionList", auctionService.getauctionList(auction));
+	}
+	
+	@RequestMapping(value="/auction/auction_cancel.do", method=RequestMethod.POST)
+	public String auctionCancel(Auction auction, HttpSession session) {
+		auction.setWritter_idx((Integer) session.getAttribute("idx"));
+		System.out.println(auction);
+		
+		auctionService.auctionCancel(auction);
+		
+		return "redirect:/auction/auction_auctionCheck.do";
 	}
 	
 //	==================================경매리스트=============================================
@@ -88,8 +108,8 @@ public class Auction_Controller {
 				
 				// 경매 상세 정보 전달
 				model.addAttribute("view", viewAuction);
+				model.addAttribute("bidderList",auctionService.getBidderList(viewAuction));
 				model.addAttribute("inquireList",auctionService.getInquireList(viewAuction));
-				
 				
 				
 //				System.out.println(viewAuction);
@@ -119,29 +139,27 @@ public class Auction_Controller {
 	
 //	==================================입찰==============================================
 	
-//	@RequestMapping(value="/auction/auctionBid.do", method=RequestMethod.POST)
-//	public String auctionBid(Auction auction, BidDto bid, HttpSession session) {
-//		System.out.println(bid);
-//		bid.setBidder_idx((Integer) session.getAttribute("idx"));
-//		return "redirect:/auction/auction_view.do?idx="+auction.getIdx();
-//	}
+
 	
 	@RequestMapping(value="/auction/auctionBid.do", method=RequestMethod.POST)
 	public String auctionBid(Auction auction,Model model, BidDto bid, HttpSession session) {
-		bid.setBidder_idx(Integer.parseInt((String) session.getAttribute("idx")));
-		System.out.println(bid);
-		
+		bid.setBidder_idx((Integer) session.getAttribute("idx"));
+//		System.out.println(bid);
+//		System.out.println(auction);
 		auctionService.putBid(bid);
 		
 		if(bid.getIsDone()==-1) {
 			model.addAttribute("msg", "최소 입찰가 보다 낮은 입찰을 하셨습니다.");			
 			model.addAttribute("check",0);
-		model.addAttribute("url", "/auction/bidPopup.do");
+		model.addAttribute("url", "/auction/bidPopup.do?highest_bid="+auction.getHighest_bid()
+				+"&start_price="+auction.getStart_price() 
+				+"&title="+auction.getTitle()
+				+"&name="+auction.getName() 
+				+"&idx="+bid.getAuction_idx());
 			return "util/auctionAlert";
 		}else if(bid.getIsDone()==1) {
 		model.addAttribute("msg", "입찰성공");
 		model.addAttribute("check",1);
-//		model.addAttribute("url", "saveok.jsp");
 		return "util/auctionAlert";
 		}
 		System.out.println(bid);
@@ -156,9 +174,28 @@ public class Auction_Controller {
 		}
 	
 	
-//	@RequestMapping(value="/auction/bidprocess.do", method=RequestMethod.POST)
-//	public void bidprocess() {
-//		
-//	}
+	
+//	==================================개인 입찰 목록 확인==============================================
+	
+	@RequestMapping(value="/auction/auction_bidCheck.do", method=RequestMethod.GET)
+	public void bidCheck(HttpSession session, Account account, BidDto bid, Model model) {
+		session.getAttribute("idx");
+		account.setIdx((Integer)session.getAttribute("idx"));
+//		System.out.println(account);
+//		System.out.println(auctionService.getMemberBid(account));
+		model.addAttribute("memberBidList",auctionService.getMemberBid(account));
+	}
+	
+	
+	
+//	==================================개인 입찰 취소==============================================
+	@RequestMapping(value="/auction/auction_bidCancel.do", method=RequestMethod.GET)
+	public String bidCancel(BidDto bid, HttpSession session) {
+		bid.setBidder_idx((Integer) session.getAttribute("idx"));
+		
+		auctionService.cancelBid(bid);
+		System.out.println(bid);
+		return "redirect:/auction/auction_bidCheck.do";
+	}
 	
 }

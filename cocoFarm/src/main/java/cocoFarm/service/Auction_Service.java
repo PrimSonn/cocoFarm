@@ -2,6 +2,7 @@ package cocoFarm.service;
 
 import java.util.List;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
@@ -91,4 +92,41 @@ public interface Auction_Service {
 	 * @param bid - 입찰 내용
 	 */
 	public void putBid(BidDto bid);
+	
+	/**
+	 * 경매 입찰자 상위리스트
+	 * 
+	 * @param viewAuction - 경매글 번호
+	 */
+	public List getBidderList(Auction viewAuction);
+	
+	/**
+	 * 개인 입찰 리스트
+	 * 
+	 * @param account - 계정번호
+	 * @return - 개인 입찰 리스트
+	 */
+	public List getMemberBid(Account account);
+	
+	/**
+	 * 경매 입찰 취소
+	 * 
+	 * @param bid - 개입 입찰 정보
+	 */
+	public void cancelBid(BidDto bid);
+	
+	/**
+	 * 등록 경매글 조회
+	 * 
+	 * @param auction - 판매자 idx
+	 * @return - 경매글 리스트
+	 */
+	public List getauctionList(Auction auction);
+	
+	/**
+	 * 경매 글 삭제
+	 * 
+	 * @param auction - 경매글 번호, 판매자 idx
+	 */
+	public void auctionCancel(Auction auction);
 }

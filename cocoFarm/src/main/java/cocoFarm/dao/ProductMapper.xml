@@ -170,5 +170,13 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 	 inner join (select SALE_IDX, min(PRICE) MIN_PRICE from SALE_OPTION where ISDEL =0 group by  SALE_IDX) SO
 	on S.IDX = SO.SALE_IDX where S.ISDEL =0  ORDER BY idx desc)where rownum between 1 and 5
 	</select>
+	
+	<select id="procPayNee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
+		SELECT M.*, SOR.*, A.NAME buyer from MAIN_RECEIPT M
+    		left join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
+   			left join SALE S on SOR.SALE_IDX = S.IDX
+   			left join ACCOUNT A on M.BUYER_IDX = A.IDX
+		WHERE S.ACC_IDX = #{accIdx }
+	</select>
 	 
 </mapper>

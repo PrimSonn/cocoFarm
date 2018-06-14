@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import cocoFarm.dao.Auction_Dao;
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
@@ -105,6 +106,31 @@ public class Auction_ServiceImpl implements Auction_Service {
 	@Override
 	public void putBid(BidDto bid) {
 		auctionDao.putBid(bid);
+	}
+
+	@Override
+	public List getBidderList(Auction viewAuction) {
+		return auctionDao.getBidderList(viewAuction);
+	}
+
+	@Override
+	public List getMemberBid(Account account) {
+		return auctionDao.getMemberBid(account);
+	}
+
+	@Override
+	public void cancelBid(BidDto bid) {
+		auctionDao.cancelBid(bid);
+	}
+
+	@Override
+	public List getauctionList(Auction auction) {
+		return auctionDao.getauctionList(auction);
+	}
+
+	@Override
+	public void auctionCancel(Auction auction) {
+		auctionDao.auctionCancel(auction);
 	}
 	
 	

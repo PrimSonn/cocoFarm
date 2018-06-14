@@ -40,7 +40,8 @@ public class MypageController {
 		}else if((Integer)session.getAttribute("type")==2) {
 			return "mypage/seller/productIntro";
 		}else {
-			return "mypage/common/productCart";
+			return "mypage/user/userIntro";
+			//return "mypage/common/productCart";
 		}
 		
 	}
