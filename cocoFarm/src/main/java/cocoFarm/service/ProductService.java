@@ -1,7 +1,9 @@
 package cocoFarm.service;
 
+import java.util.HashMap;
 import java.util.List;
 
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
@@ -102,12 +104,33 @@ public interface ProductService {
 	/**
 	 * 장바구니 조회
 	 * 
-	 * @param Option - 장바구니 옵션 리스트, accIdx - 계정 idx
+	 * @param accIdx - 계정 idx
 	 */
 	public List cartView(int accIdx);
 	
+	/**
+	 * 장바구니 삭제
+	 * 
+	 * @param saleIdx - 판매 상품 idx
+	 */
 	public void deleteCart(int saleIdx);
 	
+	/**
+	 * 
+	 * 
+	 * Desc : 상품평 등록
+	 * @method : insertComment
+	 * @param comment - 상품평 정보
+	 * @return : void
+	 * @since  : 2018. 6. 13.
+	 * @author : jieun
+	 *
+	 */
+	public void insertComment(Comment comment);
+	
+	public List<HashMap<String, Object>> getCommentList(int saleIdx);
+	
+	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work
 	public List<Product> getProMainList();
@@ -126,4 +149,8 @@ public interface ProductService {
 	public List<SaleOption> getPayOption(String query); 
 		
 	public List<Product> getSale_Option(String salequery);
+	
+	//2018 06월 12일 
+	public List<Product> getProViewMainList();
+	
 }

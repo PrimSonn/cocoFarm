@@ -17,7 +17,7 @@
 $(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
-
+// 		var page = "/product/insert.do";
 		$(".mypage_page01").load(page);
 		
 		// callback function
@@ -50,7 +50,6 @@ $(document).ready(function() {
 					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
 					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp;</span>hwanmin0121</div>
 					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
-		
 				</div>
 			
 				<div class="mypage_navbody">

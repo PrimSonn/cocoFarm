@@ -2,15 +2,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Board Write</title>
+<title>오늘의 농부 게시판 글쓰기</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/farmstory.css">
+
+
+
 
 <!-- Jquery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <!-- Bootstrap -->
+<!-- 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+  -->
 <!-- Naver SmartEditor -->
 <script type="text/javascript" src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
@@ -48,32 +56,39 @@ $(document).ready(function() {
 });
 
 </script>
-</head><body>
+</head>
+
+<body>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
 <div class="container">
-<h1>농부 스토리 작성</h1>
-<hr>
+<div class="magin_top_title">
+	<ul class="head_title">
+		<li class="title"><div class="title_icon"></div>농부 스토리 글쓰기 게시판</li>
+	</ul>
+
+</div>
+
 
 <form action="/board/write.do" method="post" enctype="multipart/form-data">
 
-<!-- 	<div class="form-group"> -->
-<!-- 		<label for="writer">작성자</label> -->
-<!-- 		<input type="text" id="writerid" name="writerid" value="관리자" readonly="readonly" class="form-control" /> -->
-<!-- 	</div> -->
+		<div class="form-group"> 
+		 	<label for="writer">작성자</label> 
+		 	<input type="text" id="writerid" name="writerid" value="${sessionScope.name}" readonly="readonly" class="form-control" />
+		 </div> 
 	
-	<!-- <select>
-		<option value="a">apple</option>
-		<option value="b">banana</option>
-	</select> -->
 	
-	<div class="form-group">
-		<label for="title">제목</label>
+	<div class="form-group form_title_text">
+		<label for="title">제 목</label>
 		<input type="text" id="title" name="title" class="form-control" />
 	</div>
 	
 	<div class="form-group">
-		<label for="content">내용</label>
-		<textarea rows="10" style="width:100%" id="content" name="content"></textarea>
+		<label for="content">내 용</label>
+		<div class="text_magin_auto">
+		<textarea class="form_write_textarea"rows="10" id="content" name="content"></textarea>
+		</div>
 	</div>
 	
 	<div class="form-group">
@@ -81,14 +96,13 @@ $(document).ready(function() {
 		<input type="file" id="fileup" name="fileup" />
 	</div>
 	
-	<div class="text-center">
+	<div class="form_btn_center">
 		<button id="btnWrite" class="btn btn-primary">작성</button>
 		<input type="reset" id="btnCancel" class="btn btn-danger" value="취소" />
 	</div>	
 	
 </form>
 
-</div>
 
 <!-- <textarea> 태그 아래쪽에 스마트에디터 초기화코드 삽입 -->
 <script type="text/javascript">
@@ -105,5 +119,5 @@ nhn.husky.EZCreator.createInIFrame({
     }
 });
 </script>
-
+</div>
 </body></html>

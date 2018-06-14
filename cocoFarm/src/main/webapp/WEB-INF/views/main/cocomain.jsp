@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>    
 <!DOCTYPE>
 <html>
 <head>
@@ -8,17 +9,54 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
+<link rel="stylesheet" type="text/css" href="/css/farmstory.css">
+
+
+
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function () {
 
+<<<<<<< HEAD
 		$(".Q").next().addClass("close");
 
 		$("#FAQ").click(function(e) {
 
 			$(".popupLayer_FAQ").show();
 			
+=======
+
+
+
+	$(document).ready(function () {
+	/* 	
+		//내용 넣어주기
+		<c:forEach items="${farm}" var="i" varStatus="status">
+		var oriText = '${i.content}';
+		var newText = oriText.replace(/<(\/p|p)([^>]*)>/gi,"");
+		console.log(newText);
+		$("#farm${status.count}").text(newText);
+		</c:forEach>
+		
+ */
+		$(".popupLayer_FAQ li:nth-child(2)").addClass("close");
+
+		$("#FAQ").click(function(e) {
+			
+			console.log(e.pageX);
+			console.log(e.pageY);
+			var divTop = e.pageY;
+			var divLeft = e.pageX;
+
+			$(".popupLayer_FAQ").css({
+				"top": divTop
+				, "left": divLeft
+				, "width": "300px"
+				, "height": "500px"
+				, "position": "absolute"
+			}).show();
+>>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 		});
 		
 		$(".Q").click(function() {
@@ -88,6 +126,7 @@
 
 </head>
 <body>
+<<<<<<< HEAD
 
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 <div class="popupLayer_FAQ">
@@ -113,6 +152,98 @@
 		<li class="close">흙으로 추억과 무성할 때 쉬이 이 토끼, 슬퍼하는 까닭이요, 있습니다. 비둘기, 자랑처럼 나는 사랑과 계십니다. 피어나듯이 내 쓸쓸함과 계십니다. 밤을 아침이 지나가는 이런 있습니다. 내린 나는 사람들의 아침이 듯합니다. 아이들의 흙으로 시인의 이름과, 덮어 나는 동경과 이름과 있습니다. 했던 별에도 이네들은 이름을 가득 거외다. 나는 별 이름자 했던 파란 이 듯합니다. 멀듯이, 소학교 오는 이 어머니, 것은 둘 덮어 있습니다. 써 별 강아지, 밤을 된 아무 무성할 봅니다. 아스라히 추억과 계집애들의 있습니다.</li>
 	</ul>
 </div>
+=======
+<div class="background_img">
+	<div class="img_one"><img src="/img/backgroundimg/back01.png" ></div>
+	<div class="img_two"><img src="/img/backgroundimg/back02.png" ></div>
+	<div class="img_three"><img src="/img/backgroundimg/back03.png" ></div>
+	</div>
+<!--main부분 header ver1부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
+	
+	
+	
+			<div class="farm_part">
+			<div class="container">
+				
+				<div class="farm_part_magin">
+					
+					<ul class="head_title">
+						<li class="title"><div class="title_icon"></div>오늘의 농부 스토리</li>
+						<li class="plus_btn">+ 더보기</li>
+					</ul>
+					
+					<div class="farm_listpart">
+					
+					<c:forEach items="${farm}" var="i" varStatus="status">
+						<c:choose>
+							<c:when test="${status.count%3==0}">
+							<div class="farm_board_board farm_board_last">
+								<p class="farm_boardtitle">${i.title}</p>
+								<div class="bar"></div>
+								<img alt="" src="/img/profile/${i.thumb_loc}" style="height:100px;">
+								<p class="farm_name">${i.name}</p>
+								<p class="quo_img"></p>
+								<div class="farm_boardcontent"><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.content}</a></div> 
+							</div>
+	
+							</c:when> 
+							<c:otherwise>
+							<div class="farm_board_board">
+								<p class="farm_boardtitle">${i.title}</p>
+								<div class="bar"></div>
+								<img alt="" src="/img/profile/${i.thumb_loc}" style="height:100px;">
+								<p class="farm_name">${i.name}</p>
+								<p class="quo_img"></p>
+								<div class="farm_boardcontent"><a href="/board/view.do?acc_idx=${i.acc_idx }">${i.content}</a></div> 
+							</div>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					</div>
+				</div>
+			</div>
+			</div>
 
+		<div class="container">
+			<div class="pro_part">
+			<ul class="head_title">
+						<li class="title"><div class="title_icon"></div>최근 입고된 농수산물</li>
+						<li class="plus_btn">+ 더보기</li>
+					</ul>
+			
+			<c:forEach items="${seller}" var="data" varStatus="status">
+				<c:choose>
+					<c:when test="${status.count%5==0}">
+						<div class="prodisplay_last">
+							<a href="/sellerDetail.do?idx=${data.idx}"><img class="img_click" height="210px" alt="${data.title}사진" src="/proimg/${data.faceImg}" style="overflow: hidden;"></a>
+							<div class="pro_info">
+							<span class="pro_title">${data.title}</span>
+							<span class="pro_price"><fmt:formatNumber value="${data.min_price}" pattern="#,###"/>원</span> 
+							<span class="pro_origin">${data.origin}</span>
+							</div>
+						</div>
+					</c:when> 
+					<c:otherwise>
+						<div class="prodisplay">
+							<a href="/sellerDetail.do?idx=${data.idx}"><img class="img_click" height="210px" alt="${data.title}사진" src="/proimg/${data.faceImg}"></a>
+							<div class="pro_info">
+							<span class="pro_title">${data.title}</span>
+							<span class="pro_price"><fmt:formatNumber value="${data.min_price}" pattern="#,###"/>원</span> 
+							<span class="pro_origin">${data.origin}</span>
+							</div>
+						</div>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+			</div>
+		</div>
+<!--main부분 foot ver1부분  -->
+<jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
+		
+		
+>>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
+
+	
 </body>
 </html>

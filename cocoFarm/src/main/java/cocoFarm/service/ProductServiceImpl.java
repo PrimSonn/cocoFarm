@@ -1,6 +1,7 @@
 package cocoFarm.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import cocoFarm.dao.ProductDao;
 import cocoFarm.dao.SaleOptionDao;
 import cocoFarm.dto.Cart;
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
@@ -147,7 +149,6 @@ public class ProductServiceImpl implements ProductService {
 			saleOption.setProAmount(cartList.get(i).getCount());
 			optionCart.add(i, saleOption);
 		}
-		System.out.println();
 //		saleOption = saleOptionDao.selectOptionByIdx(cartList.get(0).getSaleOptionIdx());
 //		System.out.println(saleOption);
 //		optionCart.add(0, saleOption);
@@ -164,6 +165,20 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 	
+	@Override
+	public void insertComment(Comment comment) {
+		System.out.println("------------------Insert Service-----------------");
+		productDao.insertComment(comment);
+	}
+	
+	@Override
+	public List<HashMap<String, Object>> getCommentList(int saleIdx) {
+		System.out.println("------------------Select Service-----------------");
+		System.out.println(productDao.selectAllComment(saleIdx));
+		return productDao.selectAllComment(saleIdx);
+	}
+	
+	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work
 	@Override
@@ -200,6 +215,12 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getSale_Option(String salequery) {
 		return productDao.getSale_Option(salequery);
+	}
+	
+	@Override
+	public List<Product> getProViewMainList(){
+		
+		return productDao.ProViewMainList();
 	}
 	
 }

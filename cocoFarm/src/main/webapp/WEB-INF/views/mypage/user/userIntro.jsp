@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="/css/board.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> <!-- 주소 API -->
 <script type="text/javascript">
 $(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
@@ -110,8 +110,8 @@ $(document).ready(function() {
 					
 					<ul>
 						
-						<li><a href="/product/basket.do">장바구니 조회</a></li>
-						<li><a href="#">결제 내역 조회 </a></li>
+						<li class="nav-link"><a href="/product/cart.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/payNee.do">결제 내역 조회111111 </a></li>
 						
 					</ul>
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
@@ -129,76 +129,23 @@ $(document).ready(function() {
 			
 			</div>
 			
-<div class="mypage_page01">
-	<div class="border">
-		<h1>장바구니 조회 </h1>
-		
-		<div class="product_list">
-		
-		<table align="center">
-			<tr class="tr_back">
-				<th class="th_checkbox"><input type="checkbox" id="chk_all" name="chk_all"></th>
-				<th class="th_inform">상품정보</th>
-				<th class="th_price">상품금액</th>
-				<th class="th_delivery">배송비</th>
-			</tr>
+		<div class="mypage_page01">
+			<div class="mypage_updateAccount">
+				<div class="messageForm">
+					<h1>쪽지함</h1>
+					<select id="messageCate" name="messageCate">
+					   <option value="1" <c:if test="${param.messageCate=='1' }">selected</c:if>>받은쪽지함</option>
+					   <option value="2" <c:if test="${param.messageCate=='2' }">selected</c:if>>보낸쪽지함</option>
+					</select>
+<!-- 					<button id="sendMessageBtn">쪽지 보내기</button> -->
+				</div>
 			
-			<tr class="tr_back" id="tr_cartItem"	align="center">
-				<td class="td_checkbox"><input type="checkbox" id="chk_basket" name="chk_basket"></td>
-				<td>
-					<div>
-					<img src="http://img1.daumcdn.net/thumb/C500x500.q75/?scode=farmer&fname=http%3A%2F%2Ft1.daumcdn.net%2Fkakaofarmer%2Fimages%2F2018-06-01%2F71d3322e2b354009b318d5d8b2388e71.jpg" align="left" width="140px" height="140px" />
-					<div class="td_productName">경주 체리 2kg</div></div><br>
-					<div class="td_optionName">옵션1</div>
-					<div class="td_optionName">옵션2</div>
-					<div style="float: right;"><button class="td_update">옵션 변경</button></div>
-				</td>
-				<td>41,900원</td>
-				<td>무료</td>
-			</tr>
-			
-		
-			<tr class="tr_back"	align="center">
-				<th><input type="checkbox" id="chk_all" name="chk_all"></th>
-				<th style="text-align: left;"><button class="basket_delete">삭제</button></th>
-				<th></th>
-				<th></th>
-			</tr>
-		</table>
-		<div class="warning">카트에 담긴 상품은 최대 30일까지 보관되며 종료되거나 매진될 경우 자동으로 삭제됩니다.</div>
-		
-		</div>
-		
-		<table class="payment_amount">
-			<tr class="tr_payment">
-				<td class="name_price">총 주문금액</td>
-				<td class="name_price" id="border_payment">총 상품금액</td>
-				<td class="real_price" id="border_payment">19,900원</td>
-			</tr>
-			<tr class="tr_payment">
-				<td id="border_payment" style="width: 440px;"></td>
-				<td class="name_price" id="border_payment">배송비</td>
-				<td class="real_price" id="border_payment">2,500원</td>
-			</tr>
-		</table>
-		
-		<table class="payment_amount">
-			<tr class="tr_payment">
-				<td class="name_total" id="border_payment">결제 예상금액</td>
-				<td id="border_payment"></td>
-				<td class="real_total" id="border_payment">22,400원</td>
-			</tr>
-		</table>
-		
-		<div class="save_group">
-			<button class="return">쇼핑 계속하기</button>
-			<button class="purchase">구매하기</button>
-		</div>
-		
-	</div>
-</div>
-
+				<div id="messageBox"></div>
 			</div>
+	
+	
+	
+		</div>
 	</div>
 </div>	
 </body>

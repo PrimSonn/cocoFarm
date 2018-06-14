@@ -4,6 +4,8 @@
 /*font-family: 'Amiko', sans-serif;  */
 @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
 /*font-family: 'Jeju Gothic', serif;*/
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+/* font-family: 'Nanum Gothic', sans-serif; */
 
 
 
@@ -222,7 +224,11 @@ background-position:center 0px;}
 }
 
 #loginheader .login_text{
+<<<<<<< HEAD
 /* 	font-family: 'Jeju Gothic'; */
+=======
+	
+>>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 	background-color:rgba(255,255,255,0.3);
 	width: 100%;
 	height: 40px;
@@ -409,7 +415,7 @@ background-position:center 0px;}
 
 .mypage_box .mypage_topbusiness{
 	
-	height: 250px;
+	height: 230px;
 	width: 100%;
 }
 .mypage_box .mypage_topbusiness .mypagetitle{
@@ -423,6 +429,7 @@ background-position:center 0px;}
 	
 	
 }
+
 .mypage_box .mypage_topbusiness .mypagetitle03{
 	
 	background-color:#f2bb13;
@@ -435,6 +442,23 @@ background-position:center 0px;}
 	
 }
 
+
+.mypage_box .mypage_topbusiness .mypagetitle01{
+	
+	background-color:#f38f4e;
+	opacity:0.8;
+	color:#fff;
+	height: 50px;
+	width: 100%;
+	text-align: center;
+	
+	
+}
+
+
+
+
+
 .mypage_box .mypage_topbusiness h2{
 	padding-top:5px;
 	font-size: 13px;
@@ -445,10 +469,11 @@ background-position:center 0px;}
 }
 .mypage_box .mypage_topbusiness .mypageimg{
 	
-	margin-top:10px;
+	
+	margin-top:14px;
 }
 .mypage_box .mypage_topbusiness .mypageimg img{
-	
+	border:1px solid #8bdfeb;
 	width: 80px;
 	height: 80px;
 	border-radius: 80px;
@@ -769,28 +794,62 @@ active a:checked {
 }
 .border h1{
 	font-size: 18px;
+	margin-top: 10px;
+	margin-left: 20px;
+	
 }
+.border01 h1{
+	font-size: 18px;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+
+/* 회원정보 수정 페이지 */
+.modify_profile {
+	width:100%;
+	height:200px;
+	display: inline;
+	
+	
+}
+
 .profile {
-	width: 200px;
-	height: 200px;
+	width: 110px;
+	height: 110px;
 	border-radius: 200px;
-/* 	border-radius: 100px; //둥근프로필 */
+	margin: 0px auto;
+	display: block;
 }
-.border button {
-   margin: 5px 0;
-   background-color: #ffffff99;
-    color: #2f2f2f;
-    width: 100px;
-    height: 20px;
-    border: 1px solid #616161;
-    border-radius: 2px;
-    opacity: 0.9;
-    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+
+.account_update form{
+	text-align: center;
+	
+} 
+.account_update .profile_btn{
+	width: 90px;
+	height: 28px;
+	background-color: #ebebeb;
+	font-family: 'Jeju Gothic', serif;
+	color:#6c6c6c;
+	border: 0px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border: 1px solid #bfbfbf;
+	border-radius:2px;
+	
 }
+
 .modify_account {
-   margin: 15px 0;
+	
+	width: 500px;
+	height: 400px;
+	display: block;
+   
+   margin: 15px auto 0px auto;
 }
-.modify_account input {
+.modify_account input[type=text]{
+	width:250px;
+	height: 25px;
    border: 1px solid rgb(169, 169, 169);
     box-shadow: 0 1px 3px rgba(0,0,0,.13);
     border-radius: 3px;
@@ -798,31 +857,118 @@ active a:checked {
     background: rgba(255,255,255,0.6);
     font-size: 13px;   
 }
-.modify_account #updateBtn {
-   margin: 5px 0;
-   background-color: #ffffff99;
-    color: #2f2f2f;
-    width: 100px;
-    height: 20px;
-    border: 1px solid #616161;
-    border-radius: 2px;
-    opacity: 0.9;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+
+.modify_account label{
+	width:115px;	
+	display: inline-block;
+}
+
+
+
+.modify_account .id_hold{
+	background-color:rgba(0, 0, 0, 0.02)!important; 
 }
 .modify_account h1 {
    margin: 5px 0;
 }
 
+.input_group{
+	margin:10px;
+	
+}
+#postnum{
+	width: 140px;
+	margin-right: 10px;	
+}
+.button_postnum {
+	height: 27px;
+	width: 90px;
+	background-color: #ebebeb;
+	font-family: 'Jeju Gothic', serif;
+	color:#6c6c6c;
+	
+	border: 1px solid #bfbfbf;
+	border-radius:2px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
 
-
-
-
+#addr{
+	margin: 10px 0px 10px 118px;
+}
+#detailed_addr{
+	margin:0px 0px 10px 118px;
+}
+.center{
+	width:200px;
+	text-align: center;
+	margin: 0px auto;
+	
+}
+#updateBtn{
+width:150px;
+height:35px;
+color: #fff;
+background-color: #43e44f;
+border-radius: 2px;
+box-shadow: 0 1px 3px rgba(0,0,0,.13);
+border: 0px;
+font-family: 'Jeju Gothic', serif;
+font-size: 14px;
+}
 
 
 
 
 
 /* 사업자 등록 */
+.license_page{
+font-family: 'Jeju Gothic', serif;
+font-size: 14px;
+	
+	
+}
+.license_page h1{
+	font-size: 18px;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+.license_page table tr{
+	height: 35px;
+	
+}
+
+.license_page table tr input[type=text]{
+	width: 220px;
+	height: 25px;
+	border: 1px solid rgb(169, 169, 169);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius: 2px;
+	background-color: rgba(255,255,255,0.6);
+	
+}
+
+.license_submit_btn{
+	width:150px;
+	height:35px;
+	color: #fff;
+	background-color: #43e44f;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border: 0px;
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	
+}
+
+
+.btn_center{
+	width: 152px;
+	height: 40px;
+	margin: 0px auto;	
+}
+
+
 .mypage_license .license_box {
 	margin:10px auto;
 	width: 780px;
@@ -851,6 +997,59 @@ active a:checked {
 .buy_button, .addcart_button, .talk_button {
 	cursor: pointer;
 }
+
+/* 2018년 06년 11일 회원 탈퇴   */
+.delete_page h1{
+		font-size: 18px;
+	margin-top: 10px;
+	margin-left: 20px;
+	
+}
+.delete_text{
+	width:	257px;
+	margin: 150px auto 0px auto;
+}
+.delete_text p{
+	
+	display:inline;
+	font-size: 14px;
+	
+}
+.delete_btns {
+
+	width:214px;
+	
+	margin: 20px auto 0px auto;
+	
+}
+.delete_btns #deleteAcc{
+	width: 100px;
+	height: 30px;
+	margin-right: 10px;
+	color: #3c3c3c;
+	background-color: #fff;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	border: 1px solid #43e44f;
+	
+	
+	
+	
+}
+.delete_btns .cancel_btn{
+	width: 100px;
+	height: 30px;
+	color: #fff;
+	background-color: #43e44f;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	border: 0px;
+}
+
 
 /* 2018년 6월 10일 추가 */
 .choose_color3{
@@ -881,5 +1080,145 @@ active a:checked {
 	border-radius: 10px;
 }
 
+
+/* 2018-06-12 관리자에게 1:1*/
+#writeInquiry h1{
+	font-size: 18px;
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+#writeInquiry label{
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+	margin-right: 10px;
+}
+
+.mentomen_center{
+	margin: 10px 0px;
+	
+}
+.mentomen_center input[type=text]{
+	
+	width: 220px;
+	height: 25px;
+	border: 1px solid rgb(169, 169, 169);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius: 2px;
+	background-color: rgba(255,255,255,0.6);
+	
+}
+.mentomen_content{
+	vertical-align: top;
+	
+}
+#content{
+	height: 320px;
+	background-color: rgba(255,255,255,0.6);
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius: 2px;
+}
+.mentowrite_btn{
+	width: 140px;
+	height: 32px;
+	color: #fff;
+	background-color: #43e44f;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	border: 0px;
+	
+}
+
+.mento_btncenter{
+	width: 140px;
+	margin: 0px auto;
+	
+}
+
+
+
+/*footer*/
+.footer{
+	width: 100%;
+	height: 170px;
+	background-color: #526355;
+	display:inline-block;
+	position: relative;
+
+}
+.footer_menu {
+	width: 100%;
+	height: 35px;
+	
+}
+.footer_menu li{
+	display: inline;
+	font-family: 'Nanum Gothic';
+	font-size: 13px;
+	color:#eaeaea;
+	line-height: 35px;
+	padding: 0px 20px;
+	border-left: 1px solid #fff;
+}
+.footer_img{
+	
+	width: 180px;
+	height: 90px;
+	display: inline-block;
+	float: left;
+	margin-right: 30px;
+}
+.footer_text{
+	font-family: 'Nanum Gothic';
+	float: left;
+	width: 700px;
+	position: relative;
+	display: inline-block;
+	color:#eaeaea;
+	font-size:13px;
+	line-height: 22px;
+}
+
+
+/* 백그라운드 메인 이미지 */
+.background_img{
+	z-index:9;
+	margin:0px auto;
+	width: 1100px;
+	position: relative;
+	
+	
+} 
+
+.img_one img{
+	width:170px;
+	height:170px;
+	z-index:9;
+	position: absolute;
+	top:500px;
+	left: -190px;
+	
+}
+.img_two img{
+	width:170px;
+	height:170px;
+	
+	z-index:9;
+	position: absolute;
+	top:770px;
+	right:-190px;
+}
+/*마늘  */
+.img_three img{
+	width:170px;
+	height:170px;
+	z-index:9;
+	position: absolute;
+	top:1070px;
+	left:-190px;
+}
 
 

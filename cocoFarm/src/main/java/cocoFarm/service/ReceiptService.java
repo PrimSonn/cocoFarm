@@ -15,4 +15,10 @@ public interface ReceiptService {
 	
 	public void test ();
 	public Integer recptCheck(RecptCallParamHolder paramHolder);
+	
+	//2018년 6월 14일 상원이형 작업
+	public List paynee(int accIdx);
+
+
+	
 }

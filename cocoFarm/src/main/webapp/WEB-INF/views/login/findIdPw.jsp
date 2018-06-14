@@ -86,15 +86,9 @@ $(document).ready(function(){
 <jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
 
 	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search">
-					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
-						</button>
-					</form> 
-				</div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+		
 		<div class="findIdPw_box">
 		<div class="findId_box">
 			<form id="findIdForm" action="/login/findId.do" method="post">

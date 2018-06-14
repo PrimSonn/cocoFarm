@@ -501,29 +501,73 @@ input[id="checkAll"], input[id="checkRow"] {
 }
 
 .box_cmt .cont_cmt .list_cmt {
-    border-top: 1px solid #f4f4f4;
+	border-top: 1px solid #f4f4f4;
 }
 
 .cmt_cont .wrap_cont {
-    overflow: hidden;
-    padding: 2px 0 20px;
-    border-bottom: 1px solid #f4f4f4;
+	overflow: hidden;
+	padding: 2px 0 20px;
+	border-bottom: 1px solid #f4f4f4;
 }
 
 .cmt_cont .wrap_cont .txt_prod {
-    display: block;
-    margin: 2px 51px 0 0;
-    font-size: 13px;
-    line-height: 17px;
-    color: #919191;
+	display: block;
+	margin: 2px 51px 0 0;
+	font-size: 13px;
+	line-height: 17px;
+	color: #919191;
 }
 
 .cmt_cont .wrap_cont .desc_cmt {
-    display: block;
-    max-height: none;
-    margin-top: 10px;
-    padding-right: 17px;
-    line-height: 21px;
-    color: #343434;
-    letter-spacing: -.5px;
+	display: block;
+	max-height: none;
+	margin-top: 10px;
+	padding-right: 17px;
+	line-height: 21px;
+	color: #343434;
+	letter-spacing: -.5px;
+}
+
+.item_info .open_icon {
+	cursor: pointer;
+}
+
+/* 상품 후기 정보 */
+.item_info {
+	position:relative;
+	float: left;
+	width: 100%;
+	height: 50px;
+	line-height: 51px;
+	border-top:1px solid rgb(239, 239, 239);
+	border-bottom: 1px solid rgb(239, 239, 239);
+	margin-bottom: 4px;
+	overflow: hidden;
+	font-family: '나눔고딕','Nanum Gothic', sans-serif;
+	font-size: 14px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13); 
+	display: inline-block;
+}
+
+.item_info a{
+	padding-left: 20px;
+	font-weight: normal;
+	color: #464646;
+	font-size: 14px;
+	font-family: 'Jeju Gothic', serif;
+}
+
+.info_open {
+	font-size: 14px;
+	display: block;
+	height: 100%;
+}
+	
+.open_comment {
+	float: right;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding-right: 30px;
+	cursor: pointer;
 }

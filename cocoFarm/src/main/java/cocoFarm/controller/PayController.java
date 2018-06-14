@@ -34,13 +34,9 @@ public class PayController {
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.GET)
 	public String payVieworder(SaleOption saleoption) {
-		/*System.out.println(saleoption.getProAmount());*/
-		
-		
+
 		return "payment/oderPay";
 	}
-	
-	
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.POST)
 	public String payorder(Option option,Model model) {
@@ -129,18 +125,17 @@ public class PayController {
 	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname,String text) {
 //		model.addAttribute("memname", memname);
 //		System.out.println(memname);
-		
+		System.out.println("확인 리스트"+optionlist);
 		System.out.println("확인 결제 확인"+text);
 		Gson gson=new Gson();
 		List list = gson.fromJson(optionlist, List.class);
 //		System.out.println("---optionlist---");
 		
-		
 		List<SaleOptSerializer> saleOptionList = new ArrayList<>();
 		for(int i=0; i<list.size(); i++) {
 			Map map = (Map) list.get(i);
 			SaleOption so = new SaleOption();
-			so.setIdx(((Double)map.get("idx")).intValue());
+			so.setIdx(( (Double)map.get("idx") ).intValue());
 			so.setProAmount( ((Double)map.get("proAmount")).intValue());
 			saleOptionList.add(so);
 			
@@ -250,6 +245,18 @@ public class PayController {
 		}*/
 		
 		return "{\"returnCode\":\""+111+"\"}";
+	}
+	
+	
+	//2018년 06월 14일 상원이형 프로젝트 합치는거
+	@RequestMapping(value="/payNee.do", method=RequestMethod.GET)
+	public String paynee(HttpSession session, Model model) {
+		
+		int accIdx = (int) session.getAttribute("idx");
+		
+		model.addAttribute("paynee", receiptSvc.paynee(accIdx));
+		
+		return "mypage/common/payNee";
 	}
 	
 	

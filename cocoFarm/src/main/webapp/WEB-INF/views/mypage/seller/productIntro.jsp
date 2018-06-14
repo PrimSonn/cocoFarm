@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,9 +24,28 @@ function onlyNumber(obj){
 	obj.value=val.replace(re,"");
 }
 
-/* 글자수 제한  */
+
 $(document).ready(function() {
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
 	
+	$(".mail_box").on("click", ".nav-link", function() {
+		var page = $(this).attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	
+	/* 글자수 제한  */
 	var textCountLimit = 15;
 	var textCountLimit2 = 40;
 	$('textarea[name=optionName]').keyup(function() {
@@ -120,17 +139,16 @@ function submitContents(elClickedObj) {
 <jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
 	
 	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+		
 		<div class="mypage_box">
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
-					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>${sessionScope.name }</strong>님&nbsp</span></div>
-					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
+					<div class="mypageimg"><img src="/img/profile/${account.thumb_loc}" ></div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp 환영합니다.</span></div>
+					<div class="mail_box"><a class="nav-link" href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>		
 				</div>
 			
 				<div class="mypage_navbody">
@@ -138,29 +156,30 @@ function submitContents(elClickedObj) {
 					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
 					
 					<ul>
-						<li><a href="#">개인정보 수정</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="/product/cart.do">장바구니 조회</a></li>
-						<li><a href="#">회원 탈퇴</a></li>
+						<li class="nav-link"><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
+						<li class="nav-link"><a href="#">결제 내역 조회</a></li>
+						<li class="nav-link"><a href="/product/cart.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/mypage/deleteLicense.do">판매자 등록 삭제</a></li>
+						<li class="nav-link"><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
+						
 					</ul>
 					
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 					
 					<ul>
-						<li><a href="/product/insert.do">판매등록하기</a></li>
-						<li><a href="/product">판매상품 조회/수정</a></li>
-						<li><a href="#">판매 결제 내역 조회 </a></li>
-						<li><a href="#">판매 결제 배송 승인</a></li>
+						<li class="nav-link"><a href="/product/insert.do">판매등록하기</a></li>
+						<li class="nav-link"><a href="/product">판매상품 조회/수정</a></li>
+						<li class="nav-link"><a href="#">판매 결제 내역 조회 </a></li>
 					</ul>
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 					<ul>
-						<li><a href="#">경매등록하기</a></li>
-						<li><a href="#">경매 상품 조회하기</a></li>
+						<li class="nav-link"><a href="#">경매등록하기</a></li>
+						<li class="nav-link"><a href="#">경매 상품 조회하기</a></li>
 					</ul>
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
 					<ul>
-						<li><a href="#">관리자에게 문의하기</a></li>
+						<li class="nav-link"><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
 					</ul>
 					
 					

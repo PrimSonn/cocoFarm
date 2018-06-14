@@ -11,10 +11,29 @@ public class Board {
 //	private String writerid;
 	private String content;
 	private Date written_date;
-	private String main_img;
+	private String main_img; //여기에 프로필 사진 조회해서 가지고 오기 
 	private int hit;
 	private int recommend;
 	
+	/*2018년 6월 13일 추가*/
+	private String thumb_loc;
+	private String name;
+	
+	
+	
+	public String getThumb_loc() {
+		return thumb_loc;
+	}
+	public void setThumb_loc(String thumb_loc) {
+		this.thumb_loc = thumb_loc;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	private MultipartFile fileup;
 	
 	private String stored_filename;

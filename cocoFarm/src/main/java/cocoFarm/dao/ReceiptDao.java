@@ -1,5 +1,7 @@
 package cocoFarm.dao;
 
+import java.util.List;
+
 import cocoFarm.dto.OptReceiptMkr;
 import cocoFarm.dto.RecptCallParamHolder;
 
@@ -11,4 +13,7 @@ public interface ReceiptDao {
 	
 	public RecptCallParamHolder callTempRecptMkr(RecptCallParamHolder paramHolder);
 	public void tester (OptReceiptMkr paramHolder);
+	
+//	2018년 6월 14일 상원이형 작업 - 일반 결제내역조회
+	public List paynee(int accIdx);
 }

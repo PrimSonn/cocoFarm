@@ -117,6 +117,7 @@ public class MessageController {
 		return mav;
 	}
 	
+	//2018년 06월 14일 민주 작업
 	@RequestMapping(value="/mypage/messageView.do", method=RequestMethod.POST)
 	public void messageView(int messageCate, Message message, Model model) {
 		System.out.println("메시지 보기!");
@@ -137,6 +138,7 @@ public class MessageController {
 		model.addAttribute("messageCate", messageCate);
 		model.addAttribute("message", message);
 	}
+	
 	
 	@RequestMapping(value="/mypage/delMessageList.do", method=RequestMethod.POST)
 	public String deleteMessageList(String names, int messageCate) {

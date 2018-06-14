@@ -3,6 +3,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -23,8 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
+import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
@@ -39,9 +40,37 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	
-	@RequestMapping(value="/seller/mypage/nav", method=RequestMethod.GET)
-	public String nav() {
-		return "mypage/seller/mypage_load";
+	//판매 상세 정보 옴김
+	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
+	public String viewList(Model model) {
+		System.out.println(productService.getProMainList());
+		model.addAttribute("seller",(productService.getProMainList()));
+		
+		return "main/mainseller/sellermain";
+	}
+	
+	
+	//판매 상세 정보
+	@RequestMapping(value="/seller.do",method=RequestMethod.POST)
+	public String searchviewList(Product product, Model model) {
+		System.out.println(product.getSearch_name());
+		model.addAttribute("seller",(productService.getSerchList(product)));
+		return "main/mainseller/sellermain";
+	}
+	
+	
+	//판매 디테일 뷰
+	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
+	public String detailProView(Product product
+								, SaleOption saleoption
+								, Model model) {
+		
+		logger.info("sellerDetail.do GET!!!");
+
+		model.addAttribute("product", (productService.getDetailList(product)));
+		model.addAttribute("option", (productService.getOptionList(saleoption)));
+		
+		return "main/mainseller/sellerDetail";
 	}
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
@@ -213,23 +242,22 @@ public class ProductController {
 		
 		return "redirect:/product";
 	}
-	
+
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
 		logger.info("cart.do get!");
-
 		logger.info("-----------controller-----------");
-
 		int accIdx = (Integer)session.getAttribute("idx");
-		List<SaleOption> cartOptionList = productService.cartView(accIdx);
-		model.addAttribute("optionCart", cartOptionList);
-//		logger.info("proAmount: " + cartOptionList.get(0).getProAmount());
 		
-		Product product = null;
+		List<SaleOption> cartOptionList = null;
+		cartOptionList = productService.cartView(accIdx);
+		model.addAttribute("optionCart", cartOptionList);
+
 		List<Product> cartProductList = new ArrayList<>();
+		Product product = null;
 		
 		int saleIdx = 0;
-		if(cartOptionList.get(0) != null) {
+		if(cartOptionList.size() != 0) {
 			saleIdx = cartOptionList.get(0).getSaleIdx();
 			product = productService.productView(saleIdx);
 			cartProductList.add(product);
@@ -245,15 +273,6 @@ public class ProductController {
 		
 		return "mypage/common/productCart";
 	}
-	
-//	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
-//	@ResponseBody
-//	public List<HashMap<String, Object>> getItems() {
-//	public HashMap<String, Object> getItems() {
-//		
-//		
-//		return null;
-//	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
@@ -283,24 +302,90 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public List<HashMap<String, Object>> comment(Comment comment
+											, Model model
+											, String insertComm) {
+		logger.info("viewComment.do POST !!!!");
+		
+		logger.info("sale_idx: " + comment.getSale_idx());
+		logger.info("-------view comment: " + insertComm);
+		
+		Gson gson = new Gson();
+		List list = gson.fromJson(insertComm, List.class);
+		
+		logger.info("-------------------comment-----------------");
+		logger.info("list: " + list);
+		logger.info("viewComment: " + comment);
+		if(list.get(0) != null) {
+			for(int i=0; i<list.size(); i++) {
+				Map<String, Object> map = (Map) list.get(i);
+				Comment comm = new Comment();
+				comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
+				comm.setScore(5);
+				comm.setTitle( (String) map.get("title") );
+				comm.setContent( (String) map.get("content") );
+				
+				productService.insertComment(comm);
+			}
+		}
+		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
+		Map<String, Object> item = new HashMap<>();
+//		item = productService.getCommentList(comment.getSale_idx());
+//		Comment comm = productService.getCommentList(comment.getSale_idx());
+		
+//		item.put("score", comm.getScore());
+//		item.put("content", comm.getContent());
+//		item.put("accName", comm.getAcc_name());
+		logger.info("####### Response commentList: " + item);
+		
+//		items.add(item);
+		items = productService.getCommentList(comment.getSale_idx());
+		return items;
+	}
+	
+	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
+	public void comm() {
+		logger.info("viewComment.do GET !!!!");
+	}
+	
+	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public void insertComment(@RequestBody List comment,
-//								Comment comment,
-								HttpSession session) {
-		Gson gson = new Gson();
+	public Map<String, Object> insertComment(String comment,
+											HttpSession session) {
+//											@RequestBody: 요청 데이터를 그대로 받음
+//											@RequestBody List comment,
+//											Comment comment,
+		
 //		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
 //		resultMap = JsonArray.fromObject(comment);
+		logger.info("insertComment.do POST !!!!");
 		
-//		List list = gson.fromJson(comment, List.class);
+		Gson gson = new Gson();
+		List list = gson.fromJson(comment, List.class);
+		
 		logger.info("-------------------comment-----------------");
-//		logger.info("comment: " + list);
+		logger.info("list: " + list);
 		logger.info("comment: " + comment);
 		
-//		for(int i=0; i<list.size(); i++) {
-//			Map map = (Map)list.get(i);
-//			System.out.println(map);
-//		}
+		Map<String, Object> map = (Map<String, Object>) list.get(0);
+		Comment comm = new Comment();
+		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
+		comm.setScore(5);
+		comm.setTitle( (String) map.get("title") );
+		comm.setContent( (String) map.get("content") );
+		logger.info("map: " + map);
+		logger.info("saleIdx: " + ((Double)map.get("saleIdx")).intValue());
+		logger.info("comment: " + comm);
+		
+		productService.insertComment(comm);
+
+		map.put("score", comm.getScore());
+		map.put("content", comm.getContent());
+		
+		return map;
 	}
 	
 }

@@ -2,14 +2,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Board Edit</title>
+<title>코코팜 농부게시판 수정페이지 입니다.</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/farmstory.css">
 
 <!-- Jquery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
-<!-- Bootstrap -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <!-- Naver SmartEditor -->
 <script type="text/javascript"
@@ -46,29 +46,35 @@ $(document).ready(function() {
 
 </script>
 
-</head><body>
+</head>
+<body>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
 <div class="container">
-<h1>수정 페이지</h1>
+<div class="magin_top_title">
+	<ul class="head_title">
+		<li class="title"><div class="title_icon"></div>농부 스토리 수정 게시판</li>
+	</ul>
 
+</div>
 <form action="/board/update.do" method="post">
 	<input type="hidden" name="acc_idx" value="${view.acc_idx }" />
 	
-	<div class="form-group">
-		<label for="writer">작성자</label>
+	<div class="form-group form_title_text">
+		<label for="title">제 목</label>
+		<input type="text" id="title" name="title" class="form-control" value="${view.title }"/>
 	</div>
 	
 	<div class="form-group">
-		<label for="title" >제목</label>
-		<input type="text" id="title" name="title" class="form-control" value="${view.title }" />
+		<label for="content">내 용</label>
+		<div class="text_magin_auto">
+		<textarea class="form_write_textarea"rows="10" id="content" name="content">${view.content }</textarea>
+		</div>
 	</div>
 	
-	<div class="form-group">
-		<label for="content">본문</label>
-		<textarea rows="10" style="width:100%" id="content" name="content">${view.content }</textarea>
-	</div>	
 
-	<div class="text-center">
+	<div class="form_btn_center">
 		<button class="btn btn-primary" id="btnUpdate">수정</button>
 		<input class="btn btn-danger" type="reset" id="cancel" value="취소" />
 	</div>

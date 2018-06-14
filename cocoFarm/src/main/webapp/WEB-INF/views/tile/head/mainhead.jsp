@@ -6,6 +6,8 @@
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	<c:if test="${sessionScope.idx ne null}">
 	$.ajax({
 		type : "POST",
 	   url : "/mypage/user/mes_arl.do",
@@ -15,10 +17,21 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
+<<<<<<< HEAD
 // 		   alert("실패"); 
+=======
+		   //alert("실패"); 
+>>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 	   }
 	});
+	</c:if>
+	
 });
+	
+	function submit(){
+		alert("로그인이 필요합니다.");
+	}
+
 </script>
 <div id="header">
 
@@ -33,7 +46,7 @@ $(document).ready(function(){
 				</c:when>
 				<c:when test="${sessionScope.type==2}">
 					<li>고 객</li>
-					<li class="choose_color2">사업자</li>
+					<li class="choose_color2">판매자</li>
 					<li>관리자</li>
 				</c:when>
 				<c:when test="${sessionScope.type==1}">
@@ -57,8 +70,16 @@ $(document).ready(function(){
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
-			<li><a href="#" id="alarm">알림</a></li>	
+			
+			<c:if test="${sessionScope.idx ne null }">
+			<li><a href="/mypage/message.do" id="alarm">알림</a></li>	
+			</c:if>
+			<c:if test="${sessionScope.idx ne null }">
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
+			</c:if>
+			<c:if test="${sessionScope.idx eq null }">
+			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;"">마이페이지</a></li>	
+			</c:if>
 		</ul>
 	</div>
 	</div>
@@ -78,8 +99,12 @@ $(document).ready(function(){
 
 				<li><a href="/auction/auction_list.do">경매</a></li>
 				<li><a href="/board/list.do">농부 스토리</a></li>	
+<<<<<<< HEAD
 				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
 				
+=======
+				<li><a href="/main/faq.do" id="FAQ">자주 묻는 질문</a></li>	
+>>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>
