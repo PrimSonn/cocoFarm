@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,11 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
+import cocoFarm.dto.Account;
+import cocoFarm.dto.Cart;
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
+import cocoFarm.service.LoginService;
 import cocoFarm.service.ProductService;
 import cocoFarm.util.Paging;
 
@@ -39,6 +41,7 @@ public class ProductController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
+	@Autowired LoginService loginService;
 	
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
@@ -165,11 +168,6 @@ public class ProductController {
 		// 대표이미지, 상세설명이미지
 //		model.addAttribute("productImg", )
 		
-		// 옵션 개수
-		// 필요 없었다... optionView.size()로 해결
-//		int num = productService.optionNumber(saleOption.getSaleIdx());
-//		model.addAttribute("optionNum", num);
-		
 		// 판매상품 옵션
 		List optionView = productService.optionView(saleOption.getSaleIdx());
 		model.addAttribute("optionView", optionView);
@@ -249,6 +247,12 @@ public class ProductController {
 		logger.info("-----------controller-----------");
 		int accIdx = (Integer)session.getAttribute("idx");
 		
+		List<Cart> cart = productService.selectCart(accIdx);
+		model.addAttribute("cart", cart);
+		
+		Account account = loginService.selectAll(accIdx);
+		model.addAttribute("account", account);
+		
 		List<SaleOption> cartOptionList = null;
 		cartOptionList = productService.cartView(accIdx);
 		model.addAttribute("optionCart", cartOptionList);
@@ -271,6 +275,8 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
+		
+		
 		return "mypage/common/productCart";
 	}
 	
@@ -279,11 +285,11 @@ public class ProductController {
 							, HttpSession session
 							, Model model) {
 		logger.info("cart.do post!");
-		
-		List<SaleOption> saleList = option.getSaleOptions();
-//		for(int i=0; i<saleList.size(); i++) {
-//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
-//		}
+
+		// 옵션 개수
+		// 필요 없었다... optionView.size()로 해결
+//		int num = productService.optionNumber(saleOption.getSaleIdx());
+//		model.addAttribute("optionNum", num);
 		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
@@ -302,20 +308,45 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
+	@ResponseBody
+	public List updateCart(String cart, HttpSession session) {
+		logger.info("updateCart.do POST !!!!");
+		
+		Gson gson = new Gson();
+		List list = gson.fromJson(cart, List.class);
+		
+		logger.info("cart: " + list);
+
+		System.out.println(list.get(0));
+		
+		Cart c = new Cart();
+		for(int i=0; i<list.size(); i++) {
+			Map<String, Integer> map = (Map) list.get(i);
+			System.out.println(map);
+//			c.setSaleOptionIdx(map.get("saleOptionIdx"));
+//			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
+//			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
+			
+			productService.updateCart(map);
+		}
+		List items = productService.selectCart((Integer)session.getAttribute("idx"));
+		
+		return items;
+	}
+	
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment
-											, Model model
 											, String insertComm) {
 		logger.info("viewComment.do POST !!!!");
 		
-		logger.info("sale_idx: " + comment.getSale_idx());
-		logger.info("-------view comment: " + insertComm);
+//		logger.info("sale_idx: " + comment.getSale_idx());
 		
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		logger.info("-------------------comment-----------------");
+		logger.info("-------------------Constroller comment-----------------");
 		logger.info("list: " + list);
 		logger.info("viewComment: " + comment);
 		if(list.get(0) != null) {
@@ -338,10 +369,11 @@ public class ProductController {
 //		item.put("score", comm.getScore());
 //		item.put("content", comm.getContent());
 //		item.put("accName", comm.getAcc_name());
-		logger.info("####### Response commentList: " + item);
 		
 //		items.add(item);
 		items = productService.getCommentList(comment.getSale_idx());
+		logger.info("####### Response commentList: " + items);
+		
 		return items;
 	}
 	
@@ -349,43 +381,5 @@ public class ProductController {
 	public void comm() {
 		logger.info("viewComment.do GET !!!!");
 	}
-	
-	// 상품후기 등록
-	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> insertComment(String comment,
-											HttpSession session) {
-//											@RequestBody: 요청 데이터를 그대로 받음
-//											@RequestBody List comment,
-//											Comment comment,
 		
-//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
-//		resultMap = JsonArray.fromObject(comment);
-		logger.info("insertComment.do POST !!!!");
-		
-		Gson gson = new Gson();
-		List list = gson.fromJson(comment, List.class);
-		
-		logger.info("-------------------comment-----------------");
-		logger.info("list: " + list);
-		logger.info("comment: " + comment);
-		
-		Map<String, Object> map = (Map<String, Object>) list.get(0);
-		Comment comm = new Comment();
-		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
-		comm.setScore(5);
-		comm.setTitle( (String) map.get("title") );
-		comm.setContent( (String) map.get("content") );
-		logger.info("map: " + map);
-		logger.info("saleIdx: " + ((Double)map.get("saleIdx")).intValue());
-		logger.info("comment: " + comm);
-		
-		productService.insertComment(comm);
-
-		map.put("score", comm.getScore());
-		map.put("content", comm.getContent());
-		
-		return map;
-	}
-	
 }

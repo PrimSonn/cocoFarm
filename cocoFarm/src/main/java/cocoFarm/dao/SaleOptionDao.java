@@ -1,6 +1,7 @@
 package cocoFarm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cocoFarm.dto.Cart;
 import cocoFarm.dto.SaleOption;
@@ -47,4 +48,6 @@ public interface SaleOptionDao {
 //	public List<SaleOption> selectCart(int accIdx);
 	
 	public void deleteCart(int saleOptionIdx);
+	
+	public void updateCart(Map cart);
 }

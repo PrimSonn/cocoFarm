@@ -2,6 +2,7 @@ package cocoFarm.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
@@ -108,12 +109,16 @@ public interface ProductService {
 	 */
 	public List cartView(int accIdx);
 	
+	public List selectCart(int accIdx);
+	
 	/**
 	 * 장바구니 삭제
 	 * 
 	 * @param saleIdx - 판매 상품 idx
 	 */
 	public void deleteCart(int saleIdx);
+	
+	public void updateCart(Map cart);
 	
 	/**
 	 * 

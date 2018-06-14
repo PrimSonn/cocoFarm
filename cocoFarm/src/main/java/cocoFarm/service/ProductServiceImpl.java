@@ -3,6 +3,7 @@ package cocoFarm.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,11 +159,21 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
+	public List selectCart(int accIdx) {
+		return saleOptionDao.selectCart(accIdx);
+	}
+	
+	@Override
 	public void deleteCart(int saleIdx) {
 		List<SaleOption> optionIdx = saleOptionDao.selectOptionBySaleIdx(saleIdx);
 		for(int i=0; i<optionIdx.size(); i++) {
 			saleOptionDao.deleteCart(optionIdx.get(i).getIdx());
 		}
+	}
+	
+	@Override
+	public void updateCart(Map cart) {
+		saleOptionDao.updateCart(cart);
 	}
 	
 	@Override

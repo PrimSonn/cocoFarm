@@ -403,8 +403,8 @@ input[id="checkAll"], input[id="checkRow"] {
 .warning {
 	color: #646464;
 	font-size: 12px;
-	top: 40px;
-	right: 345px;
+	top: 41px;
+	right: 325px;
 	position: absolute;
 }
 
