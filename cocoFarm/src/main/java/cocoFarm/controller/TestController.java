@@ -62,7 +62,9 @@ public class TestController {
 	@RequestMapping(value="getThreadStatus",method=RequestMethod.GET)
 	public ModelAndView getTreadStatus(ModelAndView mav, HttpSession session) {
 		
-		if((Integer)session.getAttribute("type")==0 && (Integer)session.getAttribute("idx")==0) {
+		if(session.getAttribute("idx")==null) {
+			mav.setViewName("main/cocomain");
+		}else if((Integer)session.getAttribute("type")==0 && (Integer)session.getAttribute("idx")==0) {
 			mav.addAllObjects(RunnerManager.getStatus());
 			mav.setViewName("util/threadStatus");
 		}else {
