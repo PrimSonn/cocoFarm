@@ -25,11 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
 import cocoFarm.dto.SaleOption;
+import cocoFarm.service.LoginService;
 import cocoFarm.service.ProductService;
 import cocoFarm.util.Paging;
 
@@ -39,7 +41,7 @@ public class ProductController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
-	
+	@Autowired LoginService loginService;
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
@@ -75,7 +77,14 @@ public class ProductController {
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
-							, Model model) {
+							, Model model,HttpSession session) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+		
+		
 		
 		int totalCount = productService.getListCount();
 		
@@ -245,6 +254,14 @@ public class ProductController {
 
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+		
+		
+		
+		
 		logger.info("cart.do get!");
 		logger.info("-----------controller-----------");
 		int accIdx = (Integer)session.getAttribute("idx");
@@ -279,7 +296,6 @@ public class ProductController {
 			return "mypage/seller/productCart";
 		}else {
 			return "mypage/user/userCart";
-			//return "mypage/common/productCart";
 		}
 	}
 	

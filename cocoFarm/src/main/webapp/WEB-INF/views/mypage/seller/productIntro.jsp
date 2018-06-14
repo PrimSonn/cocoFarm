@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
+<link rel="stylesheet" type="text/css" href="/css/message.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 	
@@ -25,6 +27,41 @@ function onlyNumber(obj){
 }
 
 $(document).ready(function() {
+	
+
+	$("#messageCate").change(function() {
+
+		var messageCate = $(this).val();
+		$.ajax({
+			type : "POST",
+			url : "/mypage/readMessage.do",
+			dataType : "html",
+			data : {
+				messageCate : messageCate
+				 , curPage: '${curPage }'
+			},
+			success : function(res) {
+// 				alert("성공");
+				$("#messageBox").html(res);
+			}
+		});
+	});
+
+	$("#messageCate").trigger("change");
+	
+	$("#sendMessageBtn").click(function(e){
+		popupOpen();
+	});
+	function popupOpen(){
+		var url= "/mypage/writeMessage.do";    //팝업창 페이지 URL
+		var winWidth = 400;
+	    var winHeight = 500;
+	    var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
+		window.open(url,"",popupOption);
+	}
+	
+	
+	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 		console.log(page);
@@ -148,106 +185,9 @@ function submitContents(elClickedObj) {
 			
 			
 			<div class="mypage_page01">
-				<div class="border">
-					<h1>농산물 판매 상품 등록 </h1>
-					<div class="border_save">
-					
-					<form action="/product/insert.do" id="insert" method="post" enctype="multipart/form-data">
-						<table>
-						<tr>
-							<th class="td_back1">상품 카테고리</th>
-							<td>
-								<SELECT class="category" name="category" SIZE=1>
-        					<OPTION VALUE=0 disabled="disabled" SELECTED>농작물 카테고리를 선택해주세요.</OPTION>
-       						<OPTION VALUE=1>과일/채소</OPTION>
-        					<OPTION VALUE=2>축산/수산</OPTION>
-        					<OPTION VALUE=3>가공식품</OPTION>
-		    				</SELECT>
-	    				</td>
-						</tr>
-						<tr>
-							<th class="td_back1">상품 제목</th>
-							<td><textarea id="title" name="title"
-									style="resize:none;" cols="50" rows="1"
-									placeholder="ex)&nbsp곡성 무농약 아로니아 1kg (냉동과)"></textarea></td>
-						</tr>
-						<tr>
-							<th class="td_back4">상품 부가 설명</th>
-							<td><textarea id="content" name="content" rows="10" cols="80" ></textarea></td>
-							<!-- <td><textarea style="resize:none;" placeholder="ex)제철과입니다." name="title" cols="50" rows="5"></textarea></td> -->
-						</tr>
-						<tr>
-							<th class="td_back1">대표이미지 등록하기</th>
-							<td><input type="file" id="faceImg" name="upload"></td>
-						</tr>
-						<tr>
-							<th class="td_back1">상세 설명 이미지 등록</th>
-							<td><input type="file" id="mainImg" name="upload"></td>
-						</tr>
-						<tr>
-							<th class="td_back1">원산지</th>
-							<td><textarea id="origin" name="origin" style="resize:none;" placeholder="ex)&nbsp경기도 광명시 광명동" cols="50" rows="1"></textarea></td>
-						</tr>
-						
-						<tr>
-							
-							<th>제품 선택 옵션</th>
-							<td>
-							<div class="option_cnt">
-								<ul>
-									<li>판매 옵션 개수 :</li>
-									<li>
-										<select name="option" onchange="optionSelect(this.value);">   
-		       						<option value="1" SELECTED>1개</option>
-		        					<option value="2" >2개</option>
-		        					<option value="3" >3개</option>
-		    						</select>
-	    						</li>
-								</ul>
-							</div>
-							
-							<div id="option_boby">
-								<ul>
-									<li><p>옵션 제목 </p><textarea name="saleOptions[0].optionName" placeholder="15자 이내에 글자"
-																	style="resize:none" rows="1" cols="30"></textarea> </li>
-									<li><p>총 판매 수량 </p><textarea name="saleOptions[0].startAmount" placeholder="숫자만 입력가능"
-																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="15"></textarea>개</li>	
-									<li><p>단위 </p><textarea name="saleOptions[0].unit" placeholder="ex) kg"
-																	style="resize:none" rows="1" cols="5"></textarea></li>	
-									<li><p>단위당 가격 </p><textarea name="saleOptions[0].price" placeholder="숫자만 입력가능"
-																	style="resize:none" onkeyup="onlyNumber(this)" rows="1" cols="14"></textarea>원</li>
-								</ul>
-							</div>
-							
-							</td>
-							
-						</tr>
-						</table>
-						
-						<script type="text/javascript">
-							var oEditors = [];
-							nhn.husky.EZCreator.createInIFrame({
-							    oAppRef: oEditors,
-							    elPlaceHolder: "content",
-							    sSkinURI: "/resources/smarteditor/SmartEditor2Skin.html",
-							    fCreator: "createSEditor2",
-							    htParams : {
-							    	bUseToolbar: false, // 툴바 사용여부
-							    	bUseVerticalResizer: false, //입력창 크기 조절바
-							    	bUseModeChanger: false, //모드 탭
-							    	
-							    }
-							});
-						</script>
-						
-							<div class="save_group">
-              	<div><button class="save_button">등록하기</button></div>
-                <div><button class="re_button">취소하기</button></div>
-              </div>
-							</form>
-						
-						</div>
-				</div>
+				
+				<jsp:include page="/WEB-INF/views/tile/message/message.jsp" flush="false"/>
+			
 			</div>
 		</div>
 	</div>

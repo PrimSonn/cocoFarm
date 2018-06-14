@@ -277,7 +277,7 @@ function onlyNumber(obj){
 								
 								<div style="float: right;"><button class="td_update">옵션 변경</button></div>
 							</td>
-							<td>41,900원</td>
+							<td>0원</td>
 							<td>무료</td>
 						</tr>
 						</c:forEach>

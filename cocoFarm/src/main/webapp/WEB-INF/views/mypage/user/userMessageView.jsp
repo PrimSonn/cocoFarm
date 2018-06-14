@@ -94,18 +94,42 @@ $(document).ready(function() {
 				
 				
 			<div class="mypage_page01">
-				<div class="mypage_updateAccount">
-					<div class="messageForm">
-						<h1>쪽지함</h1>
-						<select id="messageCate" name="messageCate">
-						   <option value="1" <c:if test="${param.messageCate=='1' }">selected</c:if>>받은쪽지함</option>
-						   <option value="2" <c:if test="${param.messageCate=='2' }">selected</c:if>>보낸쪽지함</option>
-						</select>
-					<!-- <button id="sendMessageBtn">쪽지 보내기</button> -->
-					</div>
-				
-					<div id="messageBox"></div>
-				</div>
+				<table>
+		<tr>
+			<th>제목</th>
+			<td>${message.title }</td>
+		</tr>
+		
+		<c:if test="${messageCate eq 1 }">
+		<tr>
+			<th>보낸사람</th>
+			<td>${sender }</td>
+		</tr>
+		<tr>
+			<th>보낸날짜</th>
+			<td>${message.written_time }</td>
+		</tr>
+		</c:if>
+		
+		<c:if test="${messageCate eq 2 }">
+		<tr>
+			<th>받은사람</th>
+			<td>${receiver }</td>
+		</tr>
+		<tr>
+			<th>받은날짜</th>
+			<td>${message.written_time }</td>
+		</tr>
+		</c:if>
+		
+		<tr>
+			<th>내용</th>
+			<td>${message.content }</td>
+		</tr>
+	</table>
+	<div>
+		<a onClick="closeLayer(this)" style="cursor:pointer;" title="닫기">취소</a>
+	</div>
 		
 		
 		
@@ -115,4 +139,3 @@ $(document).ready(function() {
 </div>
 </body>
 </html>
-
