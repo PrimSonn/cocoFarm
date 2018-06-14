@@ -7,15 +7,62 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>장바구니 조회</title>
+<title>마이페이지</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
+<link rel="stylesheet" type="text/css" href="/css/message.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> <!-- 주소 API -->
+<!-- Naver SmartEditor -->
+<script type="text/javascript"
+ src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+
 <script type="text/javascript">
-$(document).ready(function() {	
+/* 숫자만 입력 시키게 하는것 */
+function onlyNumber(obj){
+	val=obj.value;
+	re=/[^0-9]/gi;
+	obj.value=val.replace(re,"");
+}
+
+$(document).ready(function() {
+	
+
+	$("#messageCate").change(function() {
+
+		var messageCate = $(this).val();
+		$.ajax({
+			type : "POST",
+			url : "/mypage/readMessage.do",
+			dataType : "html",
+			data : {
+				messageCate : messageCate
+				 , curPage: '${curPage }'
+			},
+			success : function(res) {
+// 				alert("성공");
+				$("#messageBox").html(res);
+			}
+		});
+	});
+
+	$("#messageCate").trigger("change");
+	
+	$("#sendMessageBtn").click(function(e){
+		popupOpen();
+	});
+	function popupOpen(){
+		var url= "/mypage/writeMessage.do";    //팝업창 페이지 URL
+		var winWidth = 400;
+	    var winHeight = 500;
+	    var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
+		window.open(url,"",popupOption);
+	}
+	
+	
+	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 		console.log(page);
@@ -34,8 +81,94 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	
+	/* 글자수 제한  */
+	var textCountLimit = 15;
+	var textCountLimit2 = 40;
+	$('textarea[name=optionName]').keyup(function() {
+	     // 텍스트영역의 길이를 체크
+	     var textLength = $(this).val().length;
+	
+	     // 입력된 텍스트 길이를 #textCount 에 업데이트 해줌
+	     $('#textCount').text(textLength);
+	      
+	     // 제한된 길이보다 입력된 길이가 큰 경우 제한 길이만큼만 자르고 텍스트영역에 넣음
+	     if (textLength > textCountLimit) {
+	         $(this).val($(this).val().substr(0, textCountLimit));
+	     }
+	});
+
+	$(".save_button").click(function() {
+		if($(".category option:selected").val()==0) {
+		  alert("카테고리를 선택해주세요.");
+		  return false;
+		} else if($.trim($("#title").val())=="") {
+		  alert("제목을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=optionName]").val()==""){
+		  alert("옵션을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=startAmount]").val()==""){
+	    alert("판매수량을 입력해주세요.");
+	    return false;
+		} else if($("textarea[name=unit]").val()==""){
+      alert("단위를 입력해주세요.");
+      return false;
+		} else if($("textarea[name=price]").val()==""){
+      alert("판매가격을 입력해주세요.");
+      return false;
+		}
+		
+		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
+// 		var option = {
+// 			optionName: $("textarea[name=optionName]").val(),
+// 			startAmount: $("textarea[name=startAmount]").val(),
+// 			unit: $("textarea[name=unit]").val(),
+// 			price: $("textarea[name=price]").val()
+// 		};
+// 		alert(option.optionName);
+		
+		submitContents($(this));
+	});
+	
 });
+
+function optionSelect(sVal) {
+	var str = ""
+	for(var i=0; i<sVal; i++) {
+		str += '<ul>'
+			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
+			+'<li><p>총판매수량 </p><textarea name="saleOptions[' + i + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+			+'<li><p>단위 </p><textarea name="saleOptions[' + i + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+			+'<li><p>단위당가격 </p><textarea name="saleOptions[' + i + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+			+'</ul>';
+	}
+	document.getElementById("option_boby").innerHTML = str;
+	
+	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
+// 	$("#option_body1").show();
+// 	$("#option_body3").hide();
+// 	$("#option_body3").hide();
+	
+// 	if (sVal == "2") {
+// 		$("#option_body2").show();
+// 	} else if (sVal == "3") {
+// 		$("#option_body3").show();
+// 	}
+}
+
+// 네이버 스마트에디터를 사용하는 방법
+function submitContents(elClickedObj) {
+    // 에디터의 내용이 textarea에 적용된다.
+    oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+    try {
+      elClickedObj.form.submit();
+    } catch(e) {}
+}
+
 </script>
+
 
 <script>
 (function() {
@@ -94,18 +227,8 @@ $(document).ready(function() {
 				
 				
 			<div class="mypage_page01">
-				<div class="mypage_updateAccount">
-					<div class="messageForm">
-						<h1>쪽지함</h1>
-						<select id="messageCate" name="messageCate">
-						   <option value="1" <c:if test="${param.messageCate=='1' }">selected</c:if>>받은쪽지함</option>
-						   <option value="2" <c:if test="${param.messageCate=='2' }">selected</c:if>>보낸쪽지함</option>
-						</select>
-					<!-- <button id="sendMessageBtn">쪽지 보내기</button> -->
-					</div>
 				
-					<div id="messageBox"></div>
-				</div>
+				<jsp:include page="/WEB-INF/views/tile/message/message.jsp" flush="false"/>
 		
 		
 		

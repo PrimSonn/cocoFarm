@@ -14,7 +14,7 @@
 <body>
 
 <div>
-   <table class="message_table" style="border: 1px solid;">
+   <table class="message_table01" style="table-layout:fixed; word-break:break-all;" >
       <colgroup>
 					<col width="100px">
 					<col width="50">
@@ -25,7 +25,7 @@
 					<col width="110">
 					<col width="110">	
 		</colgroup>
-      <thead><caption>결제 내역</caption></thead>
+      <thead>
       	
       		
      
@@ -40,7 +40,7 @@
             <th class="message_th">총결제금액</th>
             <th class="message_th">결제 시간</th>
          </tr>
-      
+      </thead>
       <tbody>
       <c:forEach items="${paynee }" var="paynee">
          <tr>

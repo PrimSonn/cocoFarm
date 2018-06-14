@@ -14,11 +14,7 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-<<<<<<< HEAD
-// 		   alert("실패"); 
-=======
-		   //alert("실패"); 
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
+
 	   }
 	});
 	</c:if>
