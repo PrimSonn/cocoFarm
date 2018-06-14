@@ -86,7 +86,7 @@ function createSEditor2(elIRField, htParams, elSeAppContainer){
 	oEditor.registerPlugin(new nhn.husky.ActiveLayerManager());
 	oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGStyleGetter());							// 커서 위치 스타일 정보 가져오기
 
-	oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGEnterKey("P"));							// 엔터 시 처리, 현재는 P로 처리
+	oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGEnterKey("BR"));							// 엔터 시 처리, 현재는 P로 처리
 	
 	oEditor.registerPlugin(new nhn.husky.SE2M_ColorPalette(elAppContainer));				// 색상 팔레트
 	oEditor.registerPlugin(new nhn.husky.SE2M_FontColor(elAppContainer));					// 글자색

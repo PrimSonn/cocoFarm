@@ -28,9 +28,9 @@ public interface BoardDao {
 	
 	public BoardFile getFile(Board viewBoard);
 
+	/*2018년 6월 12일 hwanmin 추가 */
+	public List getboardMainList();
 	
-
-	
-	
+	public List boardSelectAll();
 
 }

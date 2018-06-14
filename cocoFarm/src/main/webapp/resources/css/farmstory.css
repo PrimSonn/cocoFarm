@@ -1,0 +1,178 @@
+@charset "UTF-8";
+/*글짜 폰트  */
+@import url('https://fonts.googleapis.com/css?family=Amiko');
+/*font-family: 'Amiko', sans-serif;  */
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*font-family: 'Jeju Gothic', serif;*/
+/*위치 메인에 있는 위치  */
+.farm_part {
+	padding-top:8px;
+	margin-top:15px;
+	width: 100%;
+	height: 400px;
+	background-color: #fafafa;
+	margin-bottom: 10px;
+	
+}
+.farm_part_magin{
+	margin-top: 10px;
+	
+}
+.head_title{
+	margin-bottom: 20px;
+	font-family: 'Jeju Gothic';
+}
+.head_title li{
+	display: inline;
+	
+}
+.title{
+	
+	font-size: 17px;
+	
+}
+
+
+.plus_btn {
+	float: right;
+
+	font-size: 15px;
+	margin: 10px;
+}
+
+.title_icon{
+	width: 7px;
+	height: 30px;
+	background-color: #96e2b5;
+	display: inline-block;
+	
+	vertical-align: middle;
+	margin: 0px 10px;
+}
+
+.title{
+	
+	font-size: 17px;
+	
+}
+
+.farmstory_head .farm_title{
+	margin-top:15px;
+	font-family: 'Jeju Gothic';
+	font-size: 24px;	
+	margin-bottom: 10px;
+	color:#404040;
+}
+
+.farm_board{
+	border:1px solid #efefef;
+	position: relative;
+    float: left;
+	width: 356px;
+	height:310px;
+	background-color:#fff;
+	margin-right: 12px;
+	border-radius: 3px;
+}
+
+.farm_board:last-child{
+	
+	margin-right: 0px;
+
+}
+
+
+.farm_board_board{
+	border:1px solid #efefef;
+	position: relative;
+    float: left;
+	width: 356px;
+	height:310px;
+	background-color:#fff;
+	margin-right: 12px;
+	border-radius: 3px;
+	margin-bottom: 15px;
+}
+
+.farm_board_last{
+	
+	margin-right: 0px;
+
+}
+
+
+
+
+
+
+
+
+
+
+.farm_boardtitle{
+	margin: 10px auto;
+	text-align:center;
+	font-size: 15px;
+	font-family: 'Jeju Gothic', serif;
+}
+
+.farm_board_board img{
+	display:block;
+	height:100px;
+	border:1px solid #efefef;
+	margin: 10px auto;
+	border-radius: 70px;
+}
+.farm_name {
+	font-size: 14px;
+	font-family: 'Jeju Gothic', serif;
+	text-align: center;
+	
+}
+.farm_board .bar{
+	width:50px;
+	height: 4px;
+	opacity: 0.6;
+	margin:0px auto;
+background: rgb(171,165,89);
+background: linear-gradient(90deg, rgba(171,165,89,0.6923144257703081) 0%, rgba(129,158,84,0.639093137254902) 51%, rgba(67,187,91,0.8183648459383753) 100%);
+}
+.quo_img{
+	width: 280px;
+	height: 24px;
+	
+	position:absolute;
+	top:184px;
+	left:38px;
+	background-size: 240px 24px;
+	background: url(/img/backgroundimg/quo.png) no-repeat;
+}
+.farm_boardcontent{
+	width: 240px;		
+	height: 112px;
+	 word-wrap: option;
+	overflow:hidden;
+	
+	font-size: 14px;
+	text-align: center;
+	margin: 10px auto;
+}
+
+
+.plus_btn button{
+	width: 80px;
+	height: 28px;
+	border: 0px;
+	background-color: #09ee2f;
+	font-family: 'Jeju Gothic', serif;
+	color: #fff;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+
+.page{
+	margin:10px 0px;
+	width:100%;
+	display: inline-block;
+	
+}

@@ -19,6 +19,18 @@ $(document).ready(function(){
 	});
 	</c:if>
 });
+
+function submit() {
+	<c:if test="${sessionScope.idx eq null}">
+	alert("로그인이 필요합니다.");
+	</c:if>
+	<c:if test="${sessionScope.idx ne null}">
+	console.log(333);
+	location.href="/mypageIntro.do";
+	</c:if>
+}
+
+
 </script>
 <div id="header_top">
 	<div class="container">
@@ -56,7 +68,12 @@ $(document).ready(function(){
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<li><a href="#" id="alarm">알림</a></li>	
+			<c:if test="${sessionScope.idx ne null }">
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
+			</c:if>
+			<c:if test="${sessionScope.idx eq null }">
+			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;"">마이페이지</a></li>	
+			</c:if>
 		</ul>
 	</div>
 </div>

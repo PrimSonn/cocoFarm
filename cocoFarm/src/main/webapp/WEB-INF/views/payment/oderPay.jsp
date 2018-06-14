@@ -38,38 +38,43 @@ $(document).ready(function() {
 	var amountcon=[];
 	var sum${status1.count}=0;
 	var allamount${status1.count}=0;
+	var allsum${status1.count}=0;// 가격초기화
 	<c:forEach items="${opt}" var="data" varStatus="status">
+	
 	console.log("idx111111 : " + ${data.idx});
 	console.log("price11111 : " + ${amount.get(status.index)});
 	//console.log("amount : " + ${amount});
 	//console.log("amount11 : " + ${amount.get(status.index)});
 	//list 만들기 
 		option = new Object();
-		option.idx=${data.idx};
-		option.proAmount=${amount.get(status.index)};
-		optionlist.push(option);
-		var option_num${status.index}=Number(${data.idx});
-		var option${status.index}=Number(${data.price});	
-		var amount${status.index}=Number(${amount.get(status.index)});
-		sum${status1.count}=(option${status.index})*(amount${status.index});
-		allamount${status1.count}=amount${status.index};
+		option.idx=${data.idx};//상품 번호 idx
+		option.proAmount=${amount.get(status.index)};//상품 양
+		optionlist.push(option);// 옵션 리스트에 넣기  여기까지는 list에 넣는거여서 컨트롤러에서 중요하게됨
+		
+		var option_num${status.index}=Number(${data.idx});//옵션 idx를 넣기
+		var option${status.index}=Number(${data.price});	// 상품 가격
+		var amount${status.index}=Number(${amount.get(status.index)}); //상품 양 
+		sum${status1.count}=(option${status.index})*(amount${status.index}); //sum0번에는 1개 옵션의 수량 *금액 나오고
+		allsum${status1.count}+=Number(sum${status1.count});//한개의 글에 총 금액 
+		allamount${status1.count}+=amount${status.index};//객체로 양 넣는거  list에 넣는거여서 컨트롤러에서 중요하게됨
 		</c:forEach>
-		sumcon.push(sum${status1.count});
+		
+		sumcon.push(allsum${status1.count});
 		amountcon.push(allamount${status1.count});
 	</c:forEach>
 	
 	
-	console.log(amountcon);
+	
 	
 	
 	//합산 금액 배열로 만든거 
 	<c:set var="sumcon" value="sumcon"/> 
-	
+	<c:set var="sumcon" value="sumcon"/> 
 	console.log(${pro.size()});
 	
 	/*총 수량 갯수  */
 	<c:set var="amountcon" value="amountcon"/>
-	
+	console.log("!!!!!"+${pro.size()});
 	/*금액 합계금액  */
 	console.log(${opt.size()});
 	console.log("배열"+${sumcon}.length);
@@ -206,8 +211,8 @@ function requestPayment() {
 		success : function(data) {
 		console.log('data.MainRcpt: '+data.MainRcpt);
 			Main_Rcpt=data.MainRcpt;
-		is_Done = data.isDone;
-		alert("성공");
+			is_Done = data.isDone;
+			alert("성공");
 	   },
 	   error : function(e) {
 		  console.log(e.responseText);
@@ -299,6 +304,7 @@ function requestPayment() {
 							msg += '에러내용 : ' + rsp.error_msg;
 							//임시 영수증 삭제 로직 추가.
 					}
+					alert('123123');
 // 					alert(msg);
 				});
 	} else{

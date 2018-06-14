@@ -158,6 +158,14 @@ drop procedure REFUND_RECPT_MKR;
 
 drop procedure CHECK_TEMP_RECPT;
 
+drop procedure TEMP_RCPT_MKR;
+
+drop type holder;
+/
+drop function r_pointer;
+
+drop function r_decoder;
+
 drop procedure CANCEL_AUCTION;
 
 drop procedure CANCEL_BID;
@@ -202,9 +210,6 @@ drop table TODAYS_FARMER_COMMENT cascade constraints;
 drop table TODAYS_FARMER_PICK cascade constraints;
 
 drop table TODAYS_FARMER_RECOMMEND cascade constraints;
-
-drop index TODAYS_FMR_FILE_IDX;
-drop table TODAYS_FARMER_FILE cascade constraints;
 
 drop index TODAYS_FMR_FILE_IDX;--deprecated
 drop table TODAYS_FARMER_FILE cascade constraints;
@@ -2596,7 +2601,7 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 
 create table BID_CONTRACT_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)		not null
+	MAIN_RECPT_IDX			number(30,0)
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
@@ -2638,15 +2643,13 @@ end;
 
 comment on table BID_CONTRACT_RECEIPT is '낙찰금 영수증';
 
-comment on column BID_CONTRACT_RECEIPT.IDX is '낙찰금 영수증 번호 - 기본키, 인조식별자';
+comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합 기본키, 외래키. null불가';
+
+comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합 기본키, 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
+
+comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합 기본키, 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
 
 comment on column BID_CONTRACT_RECEIPT.DELIVERY_IDX is '배송 번호 - 외래키 , null가능';
-
-comment on column BID_CONTRACT_RECEIPT.AUCTION_IDX is '경매번호 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
-
-comment on column BID_CONTRACT_RECEIPT.BID_AMOUNT is '입찰액 - 복합외래키 (입찰 기본키). 복합 유일 (입찰 기본키와 일치시킴)';
-
-comment on column BID_CONTRACT_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  외래키. null불가';
 
 --comment on column BID_CONTRACT_RECEIPT.CONTRACT_AMOUNT is '낙찰금 지불액(보증금 제외), null불가. 0이상';
 
@@ -2974,9 +2977,7 @@ create table TODAYS_FARMER_FILE (
 	,constraint TODAYS_FARMER_FILE_FK foreign key (ACC_IDX) references TODAYS_FARMER (ACC_IDX) on delete cascade
 );
 
-create index TODAYS_FMR_FILE_IDX on TODAYS_FARMER_FILE (ACC_IDX);
 
---drop index TODAYS_FMR_FILE_IDX;
 --drop table TODAYS_FARMER_FILE cascade constraints;
 
 ------------------------------------------------  오늘의 농부 추천  ----------------------------------------------------
@@ -4042,34 +4043,51 @@ end;
 
 ----------------------------------------------- 영수증 처리용 프로시저 -----------------------------------------------
 
-/*
+/*============================================================================
 
+010110210010120220010140240
 
-*/
+	직렬화해서 보낸 데이터 해석.
+	첫번째 2개 코드 읽기
+		01 -> 일반 판매
+		02 -> 경매
+	이후 2개 코드 읽기
+	이후 앞서 읽은 코드의 숫자 만큼 코드를 읽음
+	읽은 코드 -> 판매의 경우는 옵션번호, 경매의 경우는 경매번호
+	이후 2개 코드 읽기
+	이후 앞서 읽은 코드의 숫자 만큼 코드를 읽음
+	읽은 코드 -> 판매의 경우는 구매수량, 경매의 경우는 입찰액
+	
+	코드 밖으로 나갈 때 까지 반복.
+	
+	
+	
+
+============================================================================*/
 
 
 
 create function r_decoder ( i number, target nvarchar2 )
 return number is
 begin
-	return to_number(substr(target,i+2, to_number( substr(target,i,i+1))));
+	return to_number(substr(target, i+2, to_number( substr(target,i,2))));
 end;
 /
 
 create function r_pointer ( i number, target nvarchar2 )
 return number is
 begin
-	return 2+to_number(substr(target,i,i+1));
+	return i+2+to_number(substr(target, i, 2));
 end;
 /
 
 create type holder is varray(1000) of number;
-
+/
 
 create procedure TEMP_RCPT_MKR (in_acc_idx ACCOUNT.IDX%type, in_paid_name MAIN_RECEIPT.PAID_NAME%type, in_data nvarchar2
 								,out_m_rcpt_idx out MAIN_RECEIPT.IDX%type, isDone out number)
 is
-	t_optnion_idx		holder := holder();
+	t_option_idx		holder := holder();
 	t_option_amount		holder := holder();
 	t_bid_target		holder := holder();
 	t_bid_amount		holder := holder();
@@ -4080,6 +4098,7 @@ is
 	mainRecpt			number;
 	tot					number;
 	cnt					number;
+	done_code			number;
 	
 	err_code			number;
 	err_message			varchar2(255);
@@ -4087,28 +4106,34 @@ is
 begin
 	savepoint START_TRANSACTION;
 	
-	while i < length(in_data) loop
+	done_code := 0;
 	
-		checker := substr(in_data,i,i+1);
+	while i < length(in_data) loop
+	-- 010110210010120220010140240
+		checker := substr(in_data,i,2);
 		i := i+2;
 		
 		if(checker = '01') then
-			t_optnion_idx.extend;
-			t_optnion_idx(t_optnion_idx.last):= r_decoder(i, in_data);
+			t_option_idx.extend;
+			t_option_idx(t_option_idx.last):= r_decoder(i, in_data);
 			i := r_pointer (i , in_data);
+			dbms_output.put_line('t_option_idx add : '||t_option_idx(t_option_idx.last));
 			
 			t_option_amount.extend;
 			t_option_amount(t_option_amount.last):= r_decoder(i, in_data);
 			i := r_pointer (i , in_data);
+			dbms_output.put_line('t_option_amount add : '||t_option_amount(t_option_amount.last));
 			
 		elsif(checker = '02') then
 			t_bid_target.extend;
 			t_bid_target(t_bid_target.last):= r_decoder(i, in_data);
 			i := r_pointer (i , in_data);
+			dbms_output.put_line('t_bid_target add : '||t_bid_target(t_bid_target.last));
 			
 			t_bid_amount.extend;
 			t_bid_amount(t_bid_amount.last):= r_decoder(i, in_data);
 			i := r_pointer (i , in_data);
+			dbms_output.put_line('t_bid_amount add : '||t_bid_amount(t_bid_amount.last));
 		else
 			i := 0;
 			exit;
@@ -4118,38 +4143,46 @@ begin
 	
 	
 	if (i=0) then
-		select -1 into isDone from DUAL;
+		done_code := -1;
 		--직렬화 오류 로그
 	elsif (i=3) then
-		select -2 into isDone from DUAL;
+		done_code := -2;
 		--데이터 없음 로그
+	elsif ( i <> length(in_data)+1 ) then
+		done_code := -3;
+		select -3 into isDone from DUAL;
+		--직렬화 해석 오류 혹은 직렬화 오류
 	else
-		if (t_optnion_idx.last>0 or t_bid_target.last>0) then
+		if (t_option_idx.last>0 or t_bid_target.last>0) then
 		
-			if (t_optnion_idx.last>0) then
-				select count(1) into cnt from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_optnion_idx)) and ISDEL =0;
+			if (t_option_idx.last>0) then
+				select count(1) into cnt from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_option_idx)) and ISDEL =0;
 				
-				if (cnt <> t_optnion_idx.last) then
-					select -3 into isDone from DUAL;
+				if (cnt <> t_option_idx.last) then
+					done_code := -4;
 				else
 					tot := 0;
 					for j in 1..t_option_amount.last loop
-						select PRICE * t_option_amount(j) + tot into tot from SALE_OPTION where IDX = t_optnion_idx(j);
+						dbms_output.put_line('1. j: '||j);
+						select PRICE * t_option_amount(j) + tot into tot from SALE_OPTION where IDX = t_option_idx(j);
 					end loop;
 					
 					sale_holder.extend(t_option_amount.last);
-					select distinct SALE_IDX bulk collect into sale_holder from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_optnion_idx));
+					select distinct SALE_IDX bulk collect into sale_holder from SALE_OPTION where IDX in (select COLUMN_VALUE from table (t_option_idx));
 					
 					mainRecpt := MAIN_RECPT_IDX_FUNC;
 					select mainRecpt into out_m_rcpt_idx from DUAL;
+					dbms_output.put_line('mainRecpt: '||mainRecpt);
 					insert into MAIN_RECEIPT (IDX, BUYER_IDX, MONEY_AMOUNT, PAID_NAME) values (mainRecpt, in_acc_idx, tot, in_paid_name);
 					
 					for j in 1..sale_holder.last loop
+						dbms_output.put_line('2. j: '||j);
 						insert into SALE_RECEIPT (SALE_IDX, MAIN_RECPT_IDX) values (sale_holder(j), mainRecpt);
 					end loop;
 					
-					for j in 1..t_optnion_idx.last loop
-						insert into SALE_OPTION_RECEIPT (MAIN_RECPT_IDX, SALE_OPTION_IDX, AMOUNT) values (mainRecpt, t_optnion_idx(j), t_option_amount(j));
+					for j in 1..t_option_idx.last loop
+						dbms_output.put_line('3. j: '||j);
+						insert into SALE_OPTION_RECEIPT (MAIN_RECPT_IDX, SALE_OPTION_IDX, AMOUNT) values (mainRecpt, t_option_idx(j), t_option_amount(j));
 					end loop;
 				end if;
 				
@@ -4159,31 +4192,38 @@ begin
 				select count(1), sum(BID_AMOUNT) into cnt, tot from BID_CONTRACT_QUE where AUCTION_IDX in (select COLUMN_VALUE from table (t_bid_target));
 				
 				if(cnt<>t_bid_target.last) then
-					select -4 into isDone from DUAL;
+					done_code := -1;
 				else
 					if (mainRecpt is null) then
 						mainRecpt := MAIN_RECPT_IDX_FUNC;
 						select mainRecpt into out_m_rcpt_idx from DUAL;
+						dbms_output.put_line('mainRecpt: '||mainRecpt);
 						insert into MAIN_RECEIPT (IDX, BUYER_IDX, MONEY_AMOUNT, PAID_NAME) values (mainRecpt, in_acc_idx, tot, in_paid_name);
 					else
 						update MAIN_RECEIPT set MONEY_AMOUNT = MONEY_AMOUNT + tot where IDX = mainRecpt;
 					end if;
 					
 					for j in 1..t_bid_target.last loop
+						dbms_output.put_line('4. j: '||j);
 						insert into BID_CONTRACT_RECEIPT (MAIN_RECPT_IDX, AUCTION_IDX, BID_AMOUNT) values (mainRecpt, t_bid_target(j), t_bid_amount(j));
 					end loop;
 				end if;
 				
 			end if;
 			
-			select 1 into isDone from DUAL;
+			done_code := 1;
 		else
-			select -5 into isDone from DUAL;
+			done_code := -5;
 		end if;
-		
 	end if;
 	
-	commit;
+	select done_code into isDone from DUAL;
+	
+	if (done_code = 1) then
+		commit;
+	else
+		rollback to START_TRANSACTION;
+	end if;
 	
 exception when others then
 	rollback to START_TRANSACTION;
@@ -4199,11 +4239,11 @@ exception when others then
 end;
 /
 
-
-
-
-
-
+--drop procedure TEMP_RCPT_MKR
+--drop type holder;
+--/
+--drop function r_pointer;
+--drop function r_decoder;
 
 
 /*===============================  2. 임시 영수증 확인 프로시저 ====================================
