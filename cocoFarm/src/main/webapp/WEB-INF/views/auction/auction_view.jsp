@@ -37,7 +37,8 @@ var openWin;
             +"&title="+'${view.title }'
             +"&name="+'${view.name}'
             +"&idx="+'${view.idx}',
-                    "", "width=570, height=350, resizable = no, scrollbars = no");    
+                    "childForm",
+                    "width=570, height=350, resizable = no, location=no, scrollbars = no");    
 //             openWin.document.getElementById("cInput").value = document.getElementById("price_sale").value;
 //             openWin.document.getElementById("cInput").value;
         }
@@ -104,15 +105,7 @@ $(".btnAnswerInsert").click(function() {
 			name:"idx",
 			value:$(this).parent().find(".commentIdx").val()
 		})
-	)
-// 	.append(
-// 		$("<textarea>").attr({
-// 			type:"hidden",
-// 			name:"answer",
-// 			value:$(this).parent().parent().find(".answerContent").val()
-// 		})
-// 		);
-	.append(
+	).append(
 		$("<textarea>")
 			.attr("name", "answer")
 			.css("display", "none")
@@ -240,29 +233,51 @@ $('.open_icon').on('click', function(){
 									</dd>
 								</dl>
 							</div>
-							<div class="border_tbbox">
-								<dl>
-									<dt>원산지</dt>
-									<dd>
-										<p>경기도 광명시</p>
-									</dd>
-								</dl>
-							</div>
+							
 
 						</div>
 					</dd>
 				</dl>
 
 
-				<button class="buy_button" id="bid_btn" style="cursor: pointer;" onclick="openChild()">
+				<button class="buy_button" id="bid_btn" style="cursor: pointer; margin-left: 100px;" onclick="openChild()">
 					<span>입찰하기</span>
 				</button>
-				<button class="buy_button" id="bid_cancel_btn" style="cursor: pointer;">
-					<span>입찰취소</span>
-				</button>
-
 			</div>
+			
 		</div>
+			<div class="bidderList" style="margin:auto; ">
+			
+			
+			<h1 style="font-size: 15px; font-weight: bold; margin-left: 50px;">상위 입찰 목록</h1>
+			<h1 style="margin-left: 50px;">(상위 입찰은 5명까지 표시됩니다.)</h1><br>
+			
+			<table style="line-height:1.8; 2px solid #e7e7e7; width:1000px; margin:auto; text-align: center; margin-bottom: 40px; border-collapse: collapse;">
+			<thead style="background: #e7e7e7;">
+				<tr>
+				<th style="border-left: 1px solid #e7e7e7; border-bottom: 1px solid #e7e7e7; border-top: 1px solid #e7e7e7; border-right: 2px solid #ffffff; ">입찰자</th>
+				<th style="border-bottom: 1px solid #e7e7e7; border-top: 1px solid #e7e7e7; border-right: 2px solid #ffffff;" >입찰금</th>
+				<th style="border-top: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7">입찰시각</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:if test="${!empty bidderList }">
+				<c:forEach items="${bidderList }" var="bidderList">
+				<tr>
+				<td style="border: 1px solid #e7e7e7">${bidderList.name }</td>
+				<td style="border: 1px solid #e7e7e7">${bidderList.amount }</td>
+				<td style="border: 1px solid #e7e7e7">${bidderList.bid_time }</td>
+				</tr>
+				</c:forEach>
+				</c:if>
+			<c:if test="${empty bidderList }">
+			<tr>
+			<td colspan="3" style="border: 1px solid #e7e7e7"> 아직 입찰자가 존재하지 않습니다. </td>
+			</tr>
+			</c:if>
+			</tbody>
+			</table>
+			</div>
 		
 		<div class="item_info">
 		<a>상품 문의
@@ -273,11 +288,7 @@ $('.open_icon').on('click', function(){
 			<div>
 			<ul style="list-style: none; margin: 0; padding: 0;">
 			<li style="margin: 0 0 0 0; padding: 0 0 0 0; border: 0; float: left;">
-			<input type="text" size="7" 
-				id="commentWriter"
-				value="${sessionScope.id }" readonly="readonly"/>
-			
-			<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="margin-top: 20px; width: 950px; resize: none;"
+			<textarea class="autosize" onkeydown="resize(this)" onkeyup="resize(this)" style="margin-top: 20px; margin-left:50px; width: 950px; resize: none;"
 			 id="commentContent"></textarea>
 			 </li>
 			 <li style="margin:25px 18px 36px 25px; margin-left:25px; padding: 0 0 0 0; border: 0; float: left;">
@@ -286,10 +297,11 @@ $('.open_icon').on('click', function(){
 			</ul>
 		</div>	<!-- 댓글 입력 end -->
 			<div class="">
-			<table class="inquireTb" style="border: 1px solid; margin-left: 55px; width: 1005px; border-collapse: collapse;" >
+			<c:if test="${!empty inquireList }">
+			<table class="inquireTb" style="border: 1px solid; margin:auto; width: 1005px; border-collapse: collapse;" >
 <thead style="line-height: 2;">
 <tr>
-	<th style="border: 1px solid; width: 40px">글 번호</th>
+	<th style="border: 1px solid; width: 40px;">글 번호</th>
 	<th style="border: 1px solid; width: 70px;">글쓴이 이름</th>	
 	<th style="border: 1px solid; width: 500px;">내용</th>
 	<th style="border: 1px solid; width: 60px;">글쓴시간</th>
@@ -297,38 +309,33 @@ $('.open_icon').on('click', function(){
 </thead>
 <tbody>
 <c:forEach items="${inquireList }" var="inquireList" varStatus="status">
-<tr data-commentno="${inquireList.idx }" style="line-height: 3;" >
-	<td align="center" style="padding: 0 0 0 0; border: 1px solid;">${status.count }</td>
-	<td align="center" style="padding: 0 0 0 0; border: 1px solid;">${inquireList.name }</td>
-	<td align="left" style="padding: 0 0 0 0; border: 1px solid; line-height: 1.8;">${inquireList.content }</td>
-	<td align="center" style="padding: 0 0 0 0; border: 1px solid;">
-		<p><fmt:formatDate value="${inquireList.written_time }"
-			pattern="yy-MM-dd" /></p>
-		<p><fmt:formatDate value="${inquireList.written_time }"
-			pattern="HH:mm:ss" /></p>
-	</td>
+<tr style="line-height: 3;" >
+	<td align="center" style=" border: 1px solid;">${status.count }</td>
+	<td align="center" style=" border: 1px solid;">${inquireList.name }</td>
+	<td align="left" style=" border: 1px solid; line-height: 1.8;">${inquireList.content }</td>
+	<td align="center" >${inquireList.written_time }</td>
 </tr>
 <tr style="line-height: 5;">
 <td></td>
 <td><img alt="화살표" src="/auction_img/arrow.png" style="width: 30px; height: 30px; vertical-align: middle; padding-left: 30px;"></td>
-<td colspan="3" align="left" style="line-height: 1.8; height: 55px;">
+<td colspan="2" align="left" style="line-height: 1.8; height: 55px;">
 
 <c:choose>
 	<c:when test="${empty inquireList.answer }">
 <!-- 답글이 비어있을 때 보임 -->
 		<c:choose>
-		<c:when test="${sessionScope.type eq 2 && view.id eq sessionScope.id}">
+		<c:when test="${sessionScope.type eq 2 && view.writter_idx eq sessionScope.idx}">
 <!-- 사업자 계정인지 검사 -->
 <!-- 경매글 작성자인지 검사 -->
 <!-- 사업자계정에 경매글의 주인이면 보이는곳 -->
 			<div>
-			<ul style="list-style: none; margin: 0; padding: 0;">
-			<li style="margin: 0 0 0 0; padding: 0 0 0 0; border: 0; float: left;">
-			<textarea rows="5" cols="60" style="margin-top: 20px; width: 900px"
+			<ul style="list-style: none;">
+			<li style="margin: 0 0 0 0; float: left;">
+			<textarea rows="5" cols="60" style="margin-top: 20px; width: 780px; resize: none;"
 			 class="answerContent"></textarea>
 			 </li>
-			 <li style="margin:25px 18px 36px 25px; margin-left:25px; padding: 0 0 0 0; border: 0; float: left;">
-			<button class="btnAnswerInsert" class="" style="width: 50px; height: 30px;">답변</button>
+			 <li style="margin-left:22px; margin-top:35px; float: left;">
+			<button class="btnAnswerInsert" style="width: 50px; height: 30px;">답변</button>
 			 <input class="commentIdx" type="hidden" value="${inquireList.idx }"/>
 			</li>
 			</ul>
@@ -354,6 +361,7 @@ $('.open_icon').on('click', function(){
 </c:forEach>
 </tbody>
 </table>	<!-- 댓글 리스트 end -->
+</c:if>
 			</div>
 		</div>
 		
