@@ -12,6 +12,16 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	$(".findId_box").keypress(function(e){
+	    if(e.which == 13)
+	        $("#findIdBtn").click();
+	});
+	$(".findPw_box").keypress(function(e){
+	    if(e.which == 13)
+	        $("#findPwBtn").click();
+	});
+	
 	$("#findIdBtn").click(function(){		
 		if(!$("#name").val()){
 			alert("이름을 입력해주세요");

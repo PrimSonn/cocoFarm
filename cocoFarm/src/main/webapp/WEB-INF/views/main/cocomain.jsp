@@ -22,6 +22,8 @@
 		});
 		
 		$(".Q").click(function() {
+			$(this).toggleClass("open");
+			
 			if( $(this).next().hasClass("close") ) {
 				$(this).next().addClass("show").removeClass("close");
 			} else {
@@ -38,6 +40,12 @@
 	margin: 20px auto;
 	width: 1000px;
 	height: 700px;
+}
+.popupLayer_FAQ h1{
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	margin: 20px;
 }
 .popupLayer_FAQ ul {
 	margin: 20px;
@@ -58,6 +66,15 @@
     padding: 5px 5px;
 }
 
+.Q.open::before {
+	content: "∨";
+	color: green;
+    font-weight: bold;
+    display: inline;
+    vertical-align: middle;
+    padding: 5px 5px;
+}
+
 .close {
 	display: none;
 }
@@ -66,20 +83,15 @@
 	display: block;
     background-color: #efefef;
 }
-.popupLayer_FAQ h1{
-	font-size: 18px;
-	font-weight: bold;
-}
 
 </style>
 
 </head>
 <body>
 
-<!--main부분 header ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 <div class="popupLayer_FAQ">
-	<center><h1>자주 묻는 질문</h1></center>
+	<h1>자주 묻는 질문</h1>
 
 	<ul>
 		<li class="Q"><a>물방아 얼음 있음으로써 모래뿐일 것이다. 용기가 힘차게 같이, 그들의 피부가 아름다우냐?</a></li>

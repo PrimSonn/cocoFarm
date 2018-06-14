@@ -10,7 +10,11 @@
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function(){	
+	$(".login_box").keypress(function(e){
+	    if(e.which == 13)
+	        $("#loginBtn").click();
+	});
 	
 	$("#loginBtn").click(function(){		
 		if(!$("#id").val()){

@@ -4,19 +4,24 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript">
+
+$(document).ready(function() {
+	$("#messageView").hide();
+});
+
 function closeLayer( obj ) {
 	$(obj).parent().parent().hide();
 }
 var idx;
 $(function(){
 	$('.imgSelect').click(function(e) {
-		var divTop = e.pageY - 150;
-		var divLeft = e.pageX - 400;
+		var divTop = e.pageY+10;
+		var divLeft = e.pageX+10;
 		idx = $(this).data("idx");
 		$('.popupLayer').css({
 			"top": divTop,
 			"left": divLeft,
-			"position": "absolute"
+			"position": "fixed"
 		}).show();
 	});
 });
@@ -33,30 +38,39 @@ function popupOpen(){
 }
 
 function messageView( idx, messageCate ) {
-// 	idx = 메세지 idx 번호임.
-	console.log("no = " + idx);
-	console.log("o = " + messageCate);
-	
-	var $form = $("<form>").attr({
-		method:"post"
-		, action:"/mypage/messageView.do"
+	$.ajax({
+		type : "POST",
+		url : "/mypage/messageView.do",
+		dataType : "html",
+		data : {
+			messageCate : messageCate
+			, idx : idx 
+			 , curPage: '${curPage }'
+		},
+		success : function(res) {
+//				alert("성공");
+
+			var h = 600;
+			var w = 400;
+			
+			$("#messageView").html(res);
+				var divTop = window.innerHeight/2 - h/2;
+				var divLeft = window.innerWidth/2 - w/2;
+				idx = $(this).data("idx");
+				$('#messageView').css({
+					"top": divTop,
+					"left": divLeft,
+					"width": h+"px",
+					"height": w+"px",
+					"position": "fixed",
+					"background-color": "lightgray"
+				}).show();
+		}
+		, error: function(e) {
+			console.log("실패");
+		}
 	});
-	var $input1 = $("<input>").attr({
-		type:"hidden"
-		, name:"idx"
-		, value:idx
-	});
-	
-	var $input2 = $("<input>").attr({
-		type:"hidden"
-		, name:"messageCate"
-		, value:messageCate
-	});
-	
-	$form.append( $input1 ).appendTo( $(document.body) );
-	$form.append( $input2 ).appendTo( $(document.body) );
-	
-	$form.submit();
+
 }
 
 $("#btnDelete").click(function() {
@@ -147,3 +161,5 @@ $("#btnDelete").click(function() {
 		<a onClick="closeLayer(this)" style="cursor:pointer;" title="닫기">취소</a>
 	</div>
 </div>
+
+<div id="messageView"></div>

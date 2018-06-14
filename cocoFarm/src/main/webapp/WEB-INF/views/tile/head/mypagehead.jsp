@@ -13,7 +13,7 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-		   alert("실패"); 
+// 		   alert("실패"); 
 	   }
 	});
 });
@@ -53,7 +53,7 @@ $(document).ready(function(){
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
-			<li><a href="#" id="alarm">알림</a></li>	
+			<li><a href="" id="alarm">알림</a></li>	
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 		</ul>
 	</div>

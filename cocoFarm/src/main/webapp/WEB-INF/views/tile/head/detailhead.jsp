@@ -13,7 +13,7 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-		   alert("실패"); 
+// 		   alert("실패"); 
 	   }
 	});
 });
@@ -62,7 +62,7 @@ $(document).ready(function(){
 	</div>
 	<div class="container">
 		<div id="header_boby">
-				<div class="logo"><a href="/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
+				<div class="logo"><a href="/main/cocomain.do"><img src="/img/main/logo_color.png" alt="코코팜 로고"></a></div>
 				<div class="search">
 					<form action="/seller.do" method="post">
 						<input type="text" name="search_name" placeholder="농산물 검색하기"><button class="search_icon" style="cursor:pointer">
@@ -75,7 +75,7 @@ $(document).ready(function(){
 				<li><a href="/seller.do">농수산물</a></li>
 				<li><a href="/auction/auction_list.do">경매</a></li>
 				<li><a href="/board/list.do">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
+				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>
