@@ -2443,9 +2443,9 @@ create table CONTRACT_TIME_WINDOW_TYPE (
 );
 
 insert all
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 05, 'DAY') ,'5일 낙찰금 지불기한', '5일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 02, 'DAY') ,'2일 낙찰금 지불기한', '2일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 02, 'MINUTE') ,'1분 낙찰금 지불기한', '2분짜리 낙찰금 지불기한')
 select 1 from DUAL;
 
@@ -3517,8 +3517,6 @@ is
 	
 begin
 
-	savepoint START_TRANSACTION;
-
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
 		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
 	
@@ -3545,8 +3543,7 @@ begin
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
-	
+
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
 	
@@ -3579,13 +3576,11 @@ is
 	err_message		varchar2(255);
 
 	cursor AUCT_CUR is
-		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
+		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID, TIME_WINDOW_CODE from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
 begin
 	no_bid_cnt := 0;
 	has_bid_cnt := 0;
-	
-	savepoint START_TRANSACTION;
-	
+
 	for AUCTION_ROW in AUCT_CUR loop
 		select count(1) into bid_alive_cnt from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 		
@@ -3599,7 +3594,7 @@ begin
 			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no ALIVE_BID found on AUCTION.IDX: '||AUCTION_ROW.IDX);
 
 		else ----- 입찰금 지불 기간에 대한 기준 필요. 현재 테스트용 4번 코드 지정중.
-			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, 4);
+			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, AUCTION_ROW.TIME_WINDOW_CODE);
 			select BIDDER_IDX into bidder from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
 			update BID set STATE_CODE = case 
 											when (STATE_CODE = 1) then 3
@@ -3626,14 +3621,13 @@ begin
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , least(min(TIME_WINDOW),(select min(TIME_WINDOW)+SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE )) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , least(min(TIME_WINDOW),(select min(TIME_WINDOW)+SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE )) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3645,11 +3639,11 @@ exception when OTHERS then
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
 		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
 		if (has_next_time >0) then
-			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE;
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
@@ -3710,8 +3704,6 @@ begin
 	was_lesser_bid := 0;
 	no_lesser_bid := 0;
 
-	savepoint START_TRANSACTION;
-
 	select KARMA into karma_point from BAD_DEED_TYPE where CODE = 1;
 
 	for BID_ROW in BID_CUR loop
@@ -3758,14 +3750,12 @@ begin
 
 	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
 	if (next_bid_check >0 ) then
-		select SYSTIMESTAMP, least(PAYMENT_DUE, (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		select SYSTIMESTAMP, least(PAYMENT_DUE, (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE group by SYSTIMESTAMP;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 exception when others then
-
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3781,7 +3771,7 @@ exception when others then
 	else
 		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
 		if (next_bid_check >0) then 
-			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE;
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
@@ -3825,7 +3815,6 @@ is
 	err_message			varchar2(255);
 
 begin
-	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
 	
@@ -3943,7 +3932,6 @@ begin
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3983,8 +3971,6 @@ is
 	cursor BID_CUR is
 		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx) for update;
 begin
-
-	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from AUCTION where IDX = in_auction_idx;
 	
@@ -4048,7 +4034,6 @@ begin
 	commit;
 	
 exception when others then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4228,7 +4213,6 @@ begin
 	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('TEMP_RCPT_MKR', done_code, 'in_acc_idx: '||in_acc_idx||', in_paid_name: '||in_paid_name||', in_data: '||in_data);
 	
 exception when others then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4404,7 +4388,6 @@ begin
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);	
@@ -4452,7 +4435,6 @@ begin
 	select 1 into isDone from DUAL;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4479,7 +4461,6 @@ is
 	err_code			number;
 	err_message			varchar2(255);
 begin
-	savepoint START_TRANSACTION;
 
 	select STATE_CODE into null_checker from MAIN_RECEIPT where IDX = in_recpt_idx;
 	if(null_checker <> 0) then return;
@@ -4492,7 +4473,6 @@ begin
 	commit;
 
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4520,7 +4500,6 @@ is
 	err_code			number;
 	err_message			varchar2(255);
 begin
-	savepoint START_TRANSACTION;
 	list := '';
 	
 	select count(1) into cnt from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0;
@@ -4550,7 +4529,6 @@ begin
 --	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(1, 'HOUR') into DBTIME, NEXTCHECK from DUAL;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
