@@ -250,9 +250,6 @@ public class ProductController {
 		List<Cart> cart = productService.selectCart(accIdx);
 		model.addAttribute("cart", cart);
 		
-		Account account = loginService.selectAll(accIdx);
-		model.addAttribute("account", account);
-		
 		List<SaleOption> cartOptionList = null;
 		cartOptionList = productService.cartView(accIdx);
 		model.addAttribute("optionCart", cartOptionList);
@@ -260,6 +257,7 @@ public class ProductController {
 		List<Product> cartProductList = new ArrayList<>();
 		Product product = null;
 		
+		// 장바구니에 담긴 상품이 없다면 
 		int saleIdx = 0;
 		if(cartOptionList.size() != 0) {
 			saleIdx = cartOptionList.get(0).getSaleIdx();
@@ -274,8 +272,6 @@ public class ProductController {
 			} else { continue; }
 		}
 		model.addAttribute("productCart", cartProductList);
-		
-		
 		
 		return "mypage/common/productCart";
 	}
