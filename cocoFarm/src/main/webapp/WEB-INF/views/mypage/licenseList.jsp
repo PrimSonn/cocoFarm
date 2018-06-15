@@ -16,6 +16,7 @@ function licenseView(idx) {
 		method:"post"
 		, action:"/mypage/licenseView.do"
 	});
+	
 	var $input = $("<input>").attr({
 		type:"hidden"
 		, name:"idx"

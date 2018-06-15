@@ -11,6 +11,7 @@ $(document).ready(function() {
 
 function closeLayer( obj ) {
 	$(obj).parent().parent().hide();
+	$(obj).parent().parent().parent().hide();
 }
 var idx;
 $(function(){
@@ -45,26 +46,39 @@ function messageView( idx, messageCate ) {
 		data : {
 			messageCate : messageCate
 			, idx : idx 
-			 , curPage: '${curPage }'
+			, curPage:'${curPage }'
 		},
 		success : function(res) {
 //				alert("성공");
 
-			var h = 600;
+			var h = 500;
 			var w = 400;
 			
 			$("#messageView").html(res);
 				var divTop = window.innerHeight/2 - h/2;
 				var divLeft = window.innerWidth/2 - w/2;
-				idx = $(this).data("idx");
-				$('#messageView').css({
-					"top": divTop,
-					"left": divLeft,
-					"width": h+"px",
-					"height": w+"px",
+			idx = $(this).data("idx");
+			
+			$('#messageView').css({
+					"top": 0,
+					"left": 0, 
+					"width": "100%",
+					"height": "100%",
 					"position": "fixed",
-					"background-color": "lightgray"
+					"background-color": "rgba(0, 0, 0, 0.5)"
 				}).show();
+			
+			
+			$('.message_center').css({
+				"padding":"30px",
+				"top":  divTop,
+				"left": divLeft, 
+				"width": "450px",
+				"height": "400px",
+				"position": "fixed",
+				"background-color": "rgba(255, 255, 255)",
+				"border-radius":"5px"
+			}).show();
 		}
 		, error: function(e) {
 			console.log("실패");

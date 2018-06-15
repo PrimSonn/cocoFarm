@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
+<link rel="stylesheet" type="text/css" href="/css/message.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
@@ -277,7 +278,7 @@ function onlyNumber(obj){
 								
 								<div style="float: right;"><button class="td_update">옵션 변경</button></div>
 							</td>
-							<td>41,900원</td>
+							<td>0원</td>
 							<td>무료</td>
 						</tr>
 						</c:forEach>

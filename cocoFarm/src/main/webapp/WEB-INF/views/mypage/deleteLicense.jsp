@@ -32,11 +32,12 @@ function deleteLicense( idx ) {
 <title>Insert title here</title>
 </head>
 <body>
-
+<div class="del_license">
 <h1>사업자등록 삭제</h1>
-<hr>
 
-<button onclick="deleteLicense(${sessionScope.idx });">사업자등록증 삭제</button>
-
+<div class="del_license_center">
+<button class="del_btn"onclick="deleteLicense(${sessionScope.idx });">사업자등록증 삭제</button>
+</div>
+</div>
 </body>
 </html>

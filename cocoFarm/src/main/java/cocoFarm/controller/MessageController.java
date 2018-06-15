@@ -141,7 +141,14 @@ public class MessageController {
 	
 	
 	@RequestMapping(value="/mypage/delMessageList.do", method=RequestMethod.POST)
-	public String deleteMessageList(String names, int messageCate) {
+	public String deleteMessageList(String names, int messageCate,HttpSession session,Model model) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+		
+		
 		
 		System.out.println("names = " + names);
 		System.out.println("messageCate = " + messageCate);
@@ -175,8 +182,17 @@ public class MessageController {
 			}
 		}
 		
-		return "redirect:/mypage/message.do";
+		if((Integer)session.getAttribute("type")<=1){
+			return "mypage/admin/adminIntro";
+		}else if((Integer)session.getAttribute("type")==2) {
+			return "mypage/seller/productIntro";
+		}else {
+			return "mypage/user/userIntro";
+			//return "mypage/common/productCart";
+		}
 	}
+	
+	
 	@RequestMapping(value="/mypage/user/mes_arl.do", method=RequestMethod.POST)
 	public void mes_arl(Writer writer, HttpSession session) {
 		int idx = (int)session.getAttribute("idx");
