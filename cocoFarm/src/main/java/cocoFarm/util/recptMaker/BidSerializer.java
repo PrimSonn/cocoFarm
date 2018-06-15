@@ -9,7 +9,7 @@ public interface BidSerializer extends Serializer{
 	@Override
 	default String doSerialize(){
 		
-		if(getAuction_idx()==null||getAmount()==null||getAuction_idx()==0||getAmount()==0) return null;
+		if(getAuction_idx()==null||getAmount()==null||getAmount()==0) return null;
 		
 		String auctStr = getAuction_idx().toString();
 		String amountStr = getAmount().toString();
@@ -19,7 +19,7 @@ public interface BidSerializer extends Serializer{
 			.append(String.format("%02d", auctStr.length()))
 			.append(auctStr)
 			.append(String.format("%02d", amountStr.length()))
-			.append(auctStr).toString();
+			.append(amountStr).toString();
 //		return "02" + String.format("%02d", auctStr.length()) + auctStr + String.format("%02d", amountStr.length()) + amountStr;
 	}
 }
