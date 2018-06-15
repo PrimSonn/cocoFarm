@@ -23,9 +23,7 @@ public class ReceiptServiceImpl implements ReceiptService{
 
 	@Override
 	public RecptCallParamHolder makeTempReceipt(Integer accountIdx, String paid_name, Serializer target) {
-		
-		System.out.println("=================service=============");
-		System.out.println(target.doSerialize());
+
 		RecptCallParamHolder holder = new RecptCallParamHolder(accountIdx, paid_name, target.doSerialize());
 		recptDao.callTempRecptMkr(holder);
 		return holder;
@@ -33,10 +31,6 @@ public class ReceiptServiceImpl implements ReceiptService{
 	
 	@Override
 	public RecptCallParamHolder makeTempReceipt(Integer accountIdx, String paid_name, List<? extends Serializer> targetList) {
-		
-//		OptReceiptMkr holder = new OptReceiptMkr(accountIdx,paid_name, targetList);
-//		recptDao.tempRecpt(holder);
-//		System.out.println("holder: "+holder);
 		
 		RecptCallParamHolder holder = new RecptCallParamHolder(accountIdx, paid_name, DataResolver.resolve(targetList));
 		recptDao.callTempRecptMkr(holder);
@@ -75,33 +69,15 @@ public class ReceiptServiceImpl implements ReceiptService{
 		list.add(new Tester(1));
 		list.add(new Tester(2));
 		list.add(new Tester(4));
-//		OptReceiptMkr holder = new OptReceiptMkr(2,"name",list);
-//		System.out.println(holder);
 		
-		/*
-		recptDao.tempRecpt(holder);
-//		recptDao.tester(holder);
-		System.out.println("isNull? " +(holder==null));
-		System.out.println(holder);
-		*/
-		
-		System.out.println("--------------------------------------");
-		System.out.println("DataSerialization Test: ");
-		System.out.println("Serialized Data: "+DataResolver.resolve(list));
-		System.out.println("--------------------------------------");
 		RecptCallParamHolder param = new RecptCallParamHolder(0,"test",DataResolver.resolve(list));
 		recptDao.callTempRecptMkr(param);
-		System.out.println("main_recpt: "+param.getArg3()+", isDone: "+param.getIsDone());
-		
-//		System.out.println(DataResolver.);
-//		holder.getMainRcpt();
 	}
 
 	@Override
 	public void cancelPayment(String target) {
 		recptDao.cancelRecpt(target);
 	}
-	
 	
 	//2018년 6월 14일 상원이형 작업
 	@Override
