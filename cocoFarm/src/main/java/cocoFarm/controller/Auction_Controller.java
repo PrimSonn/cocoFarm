@@ -18,6 +18,7 @@ import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
 import cocoFarm.service.Auction_Service;
+import cocoFarm.service.LoginService;
 import cocoFarm.util.Auction_Paging;
 
 @Controller
@@ -26,6 +27,7 @@ public class Auction_Controller {
 	private static final Logger logger = LoggerFactory.getLogger(Auction_Controller.class);
 	
 	@Autowired Auction_Service auctionService;
+	@Autowired LoginService loginService;
 	
 //	==================================경매등록=============================================
 	/*임시로 로그인 세션 처리 idx=1*/
@@ -184,6 +186,11 @@ public class Auction_Controller {
 //		System.out.println(account);
 //		System.out.println(auctionService.getMemberBid(account));
 		model.addAttribute("memberBidList",auctionService.getMemberBid(account));
+		
+		//2018년 06월 15일 작업
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
 	}
 	
 	

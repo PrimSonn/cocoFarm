@@ -158,3 +158,52 @@
 	padding: 10px;
 	
 }
+
+#writeMessage h1 {
+	font-size: 18px;
+	text-align: center;
+}
+
+.writeMessage_box {
+	margin: 20px;
+}
+
+.writeMessage_box label {
+	width: 46px;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: right;
+}
+
+.writeMessage_box textArea {
+	border-radius: 3px;
+	width: 250px;
+	height: 250px;
+}
+
+.writeMessage_content {
+	margin-top: 10px;
+}
+
+.labelTop {
+    vertical-align: top;
+}
+
+.btn_wrMess {
+    margin: 0 auto;
+    display: block;
+}
+
+.btn_writeMessage {
+	width: 80px;
+    height: 20px;
+    border: 0px;
+    background-color: limegreen;
+    color: #fff; 
+}
+
+.message_read .message_tr{
+	height:31px ;
+	display:table-row;
+	margin: 10px 0px;
+}

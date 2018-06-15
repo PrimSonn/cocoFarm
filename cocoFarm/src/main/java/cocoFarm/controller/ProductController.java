@@ -206,42 +206,46 @@ public class ProductController {
 		
 		System.out.println(product.getIdx());
 		
-		// 이미지를 새로 등록
-		List<MultipartFile> list = f.getUpload();
 		
-		logger.info("faceImg: " + list.get(0).getOriginalFilename());
-		logger.info("mainImg: " + list.get(1).getOriginalFilename());
-		logger.info("size: " + list.size());
-		
-		// 고유 식별자
-		logger.info(UUID.randomUUID().toString());
-		String uID = UUID.randomUUID().toString().split("-")[0];
-		
-		// 파일이 저장될 경로
-		String realpath = context.getRealPath("resources/proimg");
-		logger.info(realpath);
-		
-		// 파일이 저장될 이름
-		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
-		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
-		
-		File dest1 = new File(realpath, stored1);
-		File dest2 = new File(realpath, stored2);
-		System.out.println(dest1);
-		System.out.println(dest2);
-		
-		// 실제 파일 업로드
-		try {
-			list.get(0).transferTo(dest1);
-			list.get(1).transferTo(dest2);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (f != null) {
+			// 이미지를 새로 등록
+			List<MultipartFile> list = f.getUpload();
+			
+			logger.info("faceImg: " + list.get(0).getOriginalFilename());
+			logger.info("mainImg: " + list.get(1).getOriginalFilename());
+			logger.info("size: " + list.size());
+			
+			// 고유 식별자
+			logger.info(UUID.randomUUID().toString());
+			String uID = UUID.randomUUID().toString().split("-")[0];
+			
+			// 파일이 저장될 경로
+			String realpath = context.getRealPath("resources/proimg");
+			logger.info(realpath);
+			
+			// 파일이 저장될 이름
+			String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
+			String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
+			
+			File dest1 = new File(realpath, stored1);
+			File dest2 = new File(realpath, stored2);
+			System.out.println(dest1);
+			System.out.println(dest2);
+			
+			// 실제 파일 업로드
+			try {
+				list.get(0).transferTo(dest1);
+				list.get(1).transferTo(dest2);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			product.setFaceImg(stored1);
+			product.setMainImg(stored2);
+			
 		}
-		
-		product.setFaceImg(stored1);
-		product.setMainImg(stored2);
 		
 		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
 //		if(list.get(0).getOriginalFilename().length()!=0
@@ -309,7 +313,7 @@ public class ProductController {
 		if((Integer)session.getAttribute("type")<=1){
 			return "mypage/admin/adminCart";
 		}else if((Integer)session.getAttribute("type")==2) {
-			return "mypage/seller/productCart";
+			return "mypage/seller/sellerCart";
 		}else {
 			return "mypage/user/userCart";
 		}

@@ -14,5 +14,12 @@
 	<delete id="deleteLicense" parameterType="cocoFarm.dto.LicenseDto">
 		DELETE business_info WHERE acc_idx = #{acc_idx }
 	</delete>
+	
+	<update id="updateAccType" parameterType="cocoFarm.dto.LicenseDto">
+      UPDATE account SET account_type = 3 WHERE idx = #{acc_idx }
+    </update>
 
+	<update id="updateSaleIsdel" parameterType="cocoFarm.dto.LicenseDto">
+		UPDATE sale SET isdel = 1 WHERE acc_idx = #{acc_idx }
+	</update>
 </mapper>

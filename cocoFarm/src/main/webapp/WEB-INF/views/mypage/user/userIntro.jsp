@@ -28,7 +28,18 @@ function onlyNumber(obj){
 }
 
 $(document).ready(function() {
-	
+	/* 장바구니 옵션 변경 버튼 */
+	$.ajax({
+		type: "POST"
+		, url: "/product/cart.do"
+		, data: {
+			// 장바구니 상품
+		}
+		, dataType: "json"
+		, success: function(data) {
+			
+		}
+	})
 
 	$("#messageCate").change(function() {
 
@@ -167,10 +178,6 @@ function submitContents(elClickedObj) {
     } catch(e) {}
 }
 
-</script>
-
-
-<script>
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
 	var mainHtml = tableEl.innerHTML;
@@ -187,26 +194,7 @@ function submitContents(elClickedObj) {
 
 })
 
-function cartItems() {
-// 	var size = ${optionView };
-}
 
-$(document).ready(function() {
-	
-	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
-			
-		}
-	})
-	
-});
 </script>
 
 </head>
