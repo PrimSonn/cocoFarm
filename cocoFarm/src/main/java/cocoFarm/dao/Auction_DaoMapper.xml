@@ -152,12 +152,12 @@
 	</select>
 	
 	<select id="getMemberBid" parameterType="cocoFarm.dto.Account" resultType="cocoFarm.dto.BidDto">
-		SELECT DISTINCT b.*,ac.title, adq.time_window
-		FROM bid b 
-		INNER JOIN bid_alive_que ba ON (b.bidder_idx = ba.bidder_idx) 
-		INNER JOIN auction ac ON (ac.idx = b.auction_idx) 
-		INNER JOIN auction_due_que adq ON (adq.auction_idx = b.auction_idx)
-		WHERE (b.state_code=1 OR b.state_code=2 OR b.state_code=3 OR b.state_code=4 ) AND b.bidder_idx=#{idx} ORDER BY BID_TIME DESC
+		SELECT DISTINCT b.*,ac.title,bcq.payment_due, greatest( coalesce(adq.time_window,to_timestamp('2000','yyyy')), coalesce(ac.closed_when,to_timestamp('2000','yyyy')), coalesce(ac.finished_when,to_timestamp('2000','yyyy'))) time_window
+      FROM bid b 
+      INNER JOIN auction ac ON (ac.idx = b.auction_idx) 
+      left JOIN bid_contract_que bcq ON (bcq.auction_idx = b.auction_idx)
+      left JOIN auction_due_que adq ON (adq.auction_idx = b.auction_idx)
+      WHERE (b.state_code=1 OR b.state_code=2 OR b.state_code=3 OR b.state_code=4) AND b.bidder_idx=#{idx} ORDER BY BID_TIME DESC
 	</select>
 	
 	<select id="getauctionList" parameterType="cocoFarm.dto.Auction" resultType="cocoFarm.dto.Auction">

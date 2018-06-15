@@ -17,6 +17,20 @@ public class BidDto implements BidSerializer{
 	private String title;			//	경매 제목
 	private String name;			//	경매 입찰자 이름
 	
+	private Timestamp payment_due;
+	
+	public String getPayment_due() {
+		if(payment_due !=null) {
+			return new SimpleDateFormat("YYYY/MM/dd HH:mm:ss").format(payment_due);
+		}else {
+			return "----/--/-- --:--:--";
+		}
+	}
+
+	public void setPayment_due(Timestamp payment_due) {
+		this.payment_due = payment_due;
+	}
+
 	public String getName() {
 		return name;
 	}

@@ -24,6 +24,8 @@ public class ReceiptServiceImpl implements ReceiptService{
 	@Override
 	public RecptCallParamHolder makeTempReceipt(Integer accountIdx, String paid_name, Serializer target) {
 		
+		System.out.println("=================service=============");
+		System.out.println(target.doSerialize());
 		RecptCallParamHolder holder = new RecptCallParamHolder(accountIdx, paid_name, target.doSerialize());
 		recptDao.callTempRecptMkr(holder);
 		return holder;
