@@ -3626,7 +3626,7 @@ begin
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , least(min(TIME_WINDOW),(select min(TIME_WINDOW)+SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE )) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
@@ -3758,7 +3758,7 @@ begin
 
 	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
 	if (next_bid_check >0 ) then
-		select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		select SYSTIMESTAMP, least(PAYMENT_DUE, (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;

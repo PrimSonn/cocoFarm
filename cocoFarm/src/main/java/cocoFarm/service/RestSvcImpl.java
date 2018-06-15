@@ -180,19 +180,25 @@ public class RestSvcImpl implements RestSvc{
 						reason = "해당 영수증이 처리 불가능한 상태임 ('임시 대기' 상태가 아님.)";
 						break;
 					case -3:
-						reason = "해당 결제와 요청 계정이 다름";
+						reason = "해당 결제와 요청 계정이 다름.";
 						break;
 					case -4:
 						reason = "임시 처리한 영수증의 금액과 결제 정보의 금액이 다름.";
 						break;
 					case -5:
-						reason = "대상 옵션이 활성화 상태가 아님 (삭제되었거나, 그 외 비활성 상태)";
+						reason = "대상 옵션이 활성화 상태가 아님 (삭제되었거나, 그 외 비활성 상태).";
 						break;
 					case -6:
-						reason = "구매를 요청한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함";
+						reason = "구매를 요청한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함.";
 						break;
 					case -7:
-						reason = "처리 과정 중, 무언가 매우 잘못됨";
+						reason = "처리 과정 중, 무언가 매우 잘못됨.";
+						break;
+					case -8:
+						reason = "대상 입찰중 하나 이상의 입찰이 낙찰 대기중이 아님.";
+						break;
+					case -9:
+						reason = "영수증의 대상 목록이 없음.";
 						break;
 					default:
 						reason = "error. resultCode: "+resultCode;

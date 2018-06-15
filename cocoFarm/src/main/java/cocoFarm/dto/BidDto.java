@@ -3,7 +3,9 @@ package cocoFarm.dto;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class BidDto {
+import cocoFarm.util.recptMaker.BidSerializer;
+
+public class BidDto implements BidSerializer{
 
 	private Integer auction_idx;	//	대상 경매 번호 - 복합기본키. 외래키 (경매)
 	private Integer amount;			//	입찰액 - 복합 기본키, 0이상
@@ -108,5 +110,6 @@ public class BidDto {
 	}public void setIsDone(Integer isDone) {
 		this.isDone = isDone;
 	}
-	
+
+
 }
