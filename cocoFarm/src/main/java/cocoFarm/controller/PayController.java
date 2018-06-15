@@ -135,7 +135,7 @@ public class PayController {
 		RecptCallParamHolder result=null;
 		
 		if(session.getAttribute("idx")!=null) {
-			result = receiptSvc.makeTempReceipt((Integer)session.getAttribute("idx"), null, saleOptionList);
+			result = receiptSvc.makeTempReceipt((Integer)session.getAttribute("idx"), buyer_name, saleOptionList);
 		}else {
 			//return to errpage
 		}
