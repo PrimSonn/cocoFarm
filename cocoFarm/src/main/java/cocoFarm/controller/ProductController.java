@@ -63,7 +63,12 @@ public class ProductController {
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
 	public String detailProView(Product product, SaleOption saleoption, Model model) {
 		
-		model.addAttribute("product", (productService.getDetailList(product)));
+		Product prod = productService.getDetailList(product);
+		
+		System.out.println(prod.getMainImg());
+		System.out.println(prod.getFaceImg());
+		
+		model.addAttribute("product", (prod));
 		model.addAttribute("option", (productService.getOptionList(saleoption)));
 		
 		return "main/mainseller/sellerDetail";

@@ -61,16 +61,16 @@
 			SELECT sale_seq.currval FROM DUAL
 		</selectKey>
 	</insert>
-	
+
 	<select id="selectAll" resultType="cocoFarm.dto.Product">
 		<include refid="selectProduct" />
 		ORDER BY idx
 	</select>
-	
+
 	<select id="countAll" resultType="int">
 		SELECT COUNT(*) FROM sale
 	</select>
-	
+
 	<select id="selectPage"
 					parameterType="cocoFarm.util.Paging"
 					resultMap="ProductResult">
@@ -84,13 +84,13 @@
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
 					AND isdel = 0
 	</select>
-	
+
 	<select id="selectProductByIdx" parameterType="int"
 					resultMap="ProductResult">
 		<include refid="selectProduct" />
 		WHERE idx = ${_parameter } AND isdel = 0
 	</select>
-	
+
 	<update id="update" parameterType="cocoFarm.dto.Product">
 		UPDATE SALE
 		SET title = #{title },
@@ -106,51 +106,52 @@
 				isdel = 0
 		WHERE idx = #{idx }
 	</update>
-	
+
 	<insert id="insertComment" parameterType="cocoFarm.dto.Comment">
 		INSERT INTO SALE_EVALUATION (sale_idx,main_recpt_idx,score,title,content,last_edited,isdel)
 		VALUES (#{sale_idx }, 2, #{score }, #{title }, #{content }, sysdate, 0)
 	</insert>
-	
+
 	<select id="selectAllComment" parameterType="int"
 					resultMap="HashMap">
 		SELECT * FROM SALE_EVALUATION
 		WHERE sale_idx = ${_parameter } AND isdel = 0
 	</select>
-	
+
 	<!-- ==================================================================================== -->
-	
+
 	<!--hwanmin 2018_05_26 work-->
  	<select id="ProMainList" resultType="cocoFarm.dto.Product">
  	select S.IDX, S.ACC_IDX, S.TITLE, S.ORIGIN, S.HIT, S.WRITTEN_TIME, S.LAST_EDITED, S.FACE_IMG as faceImg, SO.MIN_PRICE from SALE S
  inner join (select SALE_IDX, min(PRICE) MIN_PRICE from SALE_OPTION where ISDEL =0 group by  SALE_IDX) SO
 on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	</select>
- 	
+
  	<select id="SerchPro" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
  		select S.IDX, S.ACC_IDX, S.TITLE, S.ORIGIN, S.HIT, S.WRITTEN_TIME, S.LAST_EDITED, S.FACE_IMG as faceImg, SO.MIN_PRICE from SALE S
  		inner join (select SALE_IDX, min(PRICE) MIN_PRICE from SALE_OPTION where ISDEL =0 group by  SALE_IDX) SO
 		on S.IDX = SO.SALE_IDX where S.TITLE LIKE '%' || #{search_name} || '%'  
  	</select>
- 	
- 	<!--hwanmin 2018_05_31 detailview select  -->
- 	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultMap="ProductResult" resultType="cocoFarm.dto.Product">
 
- 		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
-		A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
-		B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,
-		B.business_addr business_addr,B.business_category business_category,
-		CAT.NAME AS CATEGORY_NAME FROM SALE S INNER JOIN Account A ON S.ACC_IDX = A.IDX INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
+ 	<!--hwanmin 2018_05_31 detailview select  -->
+ 	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
+ 		SELECT
+ 			S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
+			A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
+			B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,
+			B.business_addr business_addr,B.business_category business_category,
+			CAT.NAME AS CATEGORY_NAME FROM SALE S INNER JOIN Account A ON S.ACC_IDX = A.IDX INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
     	LEFT JOIN (
-        SELECT listagg(CONVERT(SC.NAME,'UTF8','AL16UTF16'), ', ')WITHIN GROUP (ORDER BY SC.NAME) AS NAME , SC.SALE_IDX
-            FROM (SELECT DISTINCT C.NAME AS NAME, SO.SALE_IDX SALE_IDX FROM SALE_OPTION SO
-            INNER JOIN SALE_OPT_CATEGORY SOC ON SO.IDX = SOC.SALE_OPT_IDX
-            INNER JOIN CATEGORY C ON SOC.CATEGORY_IDX = C.IDX
-            WHERE SALE_IDX = #{idx} AND C.NAME IS NOT NULL
-        ) SC GROUP BY SC.SALE_IDX
-   		 ) CAT
-  	  ON CAT.SALE_IDX = S.IDX WHERE S.IDX = #{idx} AND S.ISDEL =0
+		        SELECT listagg(CONVERT(SC.NAME,'UTF8','AL16UTF16'), ', ')WITHIN GROUP (ORDER BY SC.NAME) AS NAME , SC.SALE_IDX
+		            FROM (SELECT DISTINCT C.NAME AS NAME, SO.SALE_IDX SALE_IDX FROM SALE_OPTION SO
+		            INNER JOIN SALE_OPT_CATEGORY SOC ON SO.IDX = SOC.SALE_OPT_IDX
+		            INNER JOIN CATEGORY C ON SOC.CATEGORY_IDX = C.IDX
+		            WHERE SALE_IDX = #{idx} AND C.NAME IS NOT NULL
+					) SC GROUP BY SC.SALE_IDX
+				) CAT ON CAT.SALE_IDX = S.IDX 
+		WHERE S.IDX = #{idx} AND S.ISDEL =0
  	</select>
+
  	<select id="getOptionList" parameterType="cocoFarm.dto.SaleOption" resultType="cocoFarm.dto.SaleOption">
  		select s.idx idx, s.sale_idx saleidx,s.name optionName,s.description description,s.price price,s.unit unit,
 		s.start_amount startAmount,s.LEFT_AMOUNT leftAmount,s.LASTSOLD_TIME lastsoldTime,s.WRITTEN_TIME writtenTime,
@@ -158,7 +159,7 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 		from sale_OPTION s where Sale_idx=#{idx} AND isdel=0
 		ORDER BY idx
  	</select>
- 	
+
 	<select parameterType="String" id="getPayOption" resultType="cocoFarm.dto.SaleOption"> 
 	select S.idx idx,S.Sale_idx saleIdx, S.NAME optionName, S.DESCRIPTION DESCRIPTION,
 	s.price price from SALE_option S WHERE idx IN ${value} </select>
@@ -167,7 +168,6 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 	SELECT S.idx idx,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,
 	S.MAIN_IMG mainImg FROM SALE S WHERE idx in ${value} 
 	</select>
-	
 
 	<select id="ProViewMainList" resultType="cocoFarm.dto.Product">
 	SELECT * from (select S.IDX, S.ACC_IDX, S.TITLE, S.ORIGIN, S.HIT, S.WRITTEN_TIME, S.LAST_EDITED, S.FACE_IMG as faceImg, SO.MIN_PRICE from SALE S

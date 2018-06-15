@@ -35,14 +35,14 @@ public class NoticeController {
 				
 				return "notice/list";
 	}
-	
+
 	@RequestMapping(value="/notice/write.do", method=RequestMethod.GET)
 	public void write(Notice notice, HttpSession session) {
 	}
-	
+
 	@RequestMapping(value="/notice/write.do", method=RequestMethod.POST)
 	public String writeProcess(Notice notice, HttpSession session) {
-		
+
 		if((Integer)session.getAttribute("type")<=1) {
 			notice.setWriter_idx((Integer)session.getAttribute("type"));
 			noticeService.write(notice);
