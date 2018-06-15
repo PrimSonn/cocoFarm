@@ -25,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 
 import cocoFarm.dto.Account;
-<<<<<<< HEAD
 import cocoFarm.dto.Cart;
-=======
->>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
@@ -45,10 +42,7 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
-<<<<<<< HEAD
-	
-=======
->>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
+
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
@@ -265,27 +259,20 @@ public class ProductController {
 		}
 		productService.update(opt);
 		
-		
-		
-		
 		return "redirect:/product";
-	
-	
-	
 	}
 
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
+		logger.info("/product/cart.do GET !!!!");
+		logger.info("-----------controller-----------");
+		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
+
 		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
 		
-		
-		
-		
-		logger.info("cart.do get!");
-		logger.info("-----------controller-----------");
 		int accIdx = (Integer)session.getAttribute("idx");
 		
 		List<Cart> cart = productService.selectCart(accIdx);
@@ -294,7 +281,7 @@ public class ProductController {
 		List<SaleOption> cartOptionList = null;
 		cartOptionList = productService.cartView(accIdx);
 		model.addAttribute("optionCart", cartOptionList);
-
+		
 		List<Product> cartProductList = new ArrayList<>();
 		Product product = null;
 		
@@ -313,8 +300,6 @@ public class ProductController {
 			} else { continue; }
 		}
 		model.addAttribute("productCart", cartProductList);
-		
-		
 		
 		if((Integer)session.getAttribute("type")<=1){
 			return "mypage/admin/adminCart";
@@ -426,37 +411,6 @@ public class ProductController {
 	public void comm() {
 		logger.info("viewComment.do GET !!!!");
 	}
-		
-<<<<<<< HEAD
-=======
-//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
-//		resultMap = JsonArray.fromObject(comment);
-		logger.info("insertComment.do POST !!!!");
-		
-		Gson gson = new Gson();
-		List list = gson.fromJson(comment, List.class);
-		
-		logger.info("-------------------comment-----------------");
-		logger.info("list: " + list);
-		logger.info("comment: " + comment);
-		
-		Map<String, Object> map = (Map<String, Object>) list.get(0);
-		Comment comm = new Comment();
-		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
-		comm.setScore(5);
-		comm.setTitle( (String) map.get("title") );
-		comm.setContent( (String) map.get("content") );
-		logger.info("map: " + map);
-		logger.info("saleIdx: " + ((Double)map.get("saleIdx")).intValue());
-		logger.info("comment: " + comm);
-		
-		productService.insertComment(comm);
-
-		map.put("score", comm.getScore());
-		map.put("content", comm.getContent());
-		
-		return map;
-	}
 	
 	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
 	public String procPaynee(HttpSession session, Model model) {
@@ -468,7 +422,4 @@ public class ProductController {
 		return "mypage/common/procPaynee";
 		
 	}
-	
-	
->>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
 }
