@@ -129,4 +129,11 @@ public interface Auction_Service {
 	 * @param auction - 경매글 번호, 판매자 idx
 	 */
 	public void auctionCancel(Auction auction);
+	
+	/**
+	 * 메인 경매 글 리스트
+	 * 
+	 * @return - 종료임박 경매글 5개
+	 */
+	public List getAuctionMainList();
 }

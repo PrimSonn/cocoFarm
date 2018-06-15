@@ -1,6 +1,8 @@
 package cocoFarm.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,13 +14,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
+import cocoFarm.dto.RecptCallParamHolder;
+import cocoFarm.dto.SaleOption;
 import cocoFarm.service.Auction_Service;
+import cocoFarm.service.ReceiptService;
+import cocoFarm.service.RestSvc;
 import cocoFarm.util.Auction_Paging;
+import cocoFarm.util.recptMaker.SaleOptSerializer;
 
 @Controller
 public class Auction_Controller {
@@ -26,6 +36,8 @@ public class Auction_Controller {
 	private static final Logger logger = LoggerFactory.getLogger(Auction_Controller.class);
 	
 	@Autowired Auction_Service auctionService;
+	@Autowired ReceiptService receiptSvc;
+	@Autowired RestSvc restSvc;
 	
 //	==================================경매등록=============================================
 	/*임시로 로그인 세션 처리 idx=1*/
@@ -56,12 +68,13 @@ public class Auction_Controller {
 		model.addAttribute("auctionList", auctionService.getauctionList(auction));
 	}
 	
+	
 	@RequestMapping(value="/auction/auction_cancel.do", method=RequestMethod.POST)
 	public String auctionCancel(Auction auction, HttpSession session) {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
-		System.out.println(auction);
 		
 		auctionService.auctionCancel(auction);
+		System.out.println(auction);
 		
 		return "redirect:/auction/auction_auctionCheck.do";
 	}
@@ -182,8 +195,8 @@ public class Auction_Controller {
 		session.getAttribute("idx");
 		account.setIdx((Integer)session.getAttribute("idx"));
 //		System.out.println(account);
-//		System.out.println(auctionService.getMemberBid(account));
 		model.addAttribute("memberBidList",auctionService.getMemberBid(account));
+		System.out.println(auctionService.getMemberBid(account));
 	}
 	
 	
@@ -194,8 +207,36 @@ public class Auction_Controller {
 		bid.setBidder_idx((Integer) session.getAttribute("idx"));
 		
 		auctionService.cancelBid(bid);
-		System.out.println(bid);
+//		System.out.println(bid);
 		return "redirect:/auction/auction_bidCheck.do";
+	}
+	
+//	==================================경매 결재==============================================
+	@RequestMapping(value="/auction/auction_pay.do",method=RequestMethod.POST)
+	@ResponseBody
+	public String paycomplepots(HttpSession session, String auctionData, BidDto bid) {
+		
+		Gson gson=new Gson();
+		List list = gson.fromJson(auctionData, List.class);
+		System.out.println(bid);
+		
+		RecptCallParamHolder result=null;
+		if(session.getAttribute("idx")!=null) {
+			result = receiptSvc.makeTempReceipt((Integer)session.getAttribute("idx"), null, bid);
+		}else {
+			//return to errpage
+		}
+		if(result!=null) {
+			System.out.println("======== got Result =========");
+			System.out.println("isDone: "+result.getIsDone());
+			System.out.println("MainRcpt: "+result.getArg3());
+		}else {
+			System.out.println("failed!!!!");
+		}
+		
+		return "{\"MainRcpt\":\""+result.getArg3()+"\",\"isDone\":\""+result.getIsDone()+"\"}";
+//		
+//	}
 	}
 	
 }

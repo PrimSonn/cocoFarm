@@ -132,6 +132,11 @@ public class Auction_ServiceImpl implements Auction_Service {
 	public void auctionCancel(Auction auction) {
 		auctionDao.auctionCancel(auction);
 	}
+
+	@Override
+	public List getAuctionMainList() {
+		return auctionDao.getAuctionMainList();
+	}
 	
 	
 

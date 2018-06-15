@@ -3,7 +3,9 @@ package cocoFarm.dto;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class BidDto {
+import cocoFarm.util.recptMaker.BidSerializer;
+
+public class BidDto implements BidSerializer{
 
 	private Integer auction_idx;	//	대상 경매 번호 - 복합기본키. 외래키 (경매)
 	private Integer amount;			//	입찰액 - 복합 기본키, 0이상
@@ -15,6 +17,20 @@ public class BidDto {
 	private String title;			//	경매 제목
 	private String name;			//	경매 입찰자 이름
 	
+	private Timestamp payment_due;
+	
+	public String getPayment_due() {
+		if(payment_due !=null) {
+			return new SimpleDateFormat("YYYY/MM/dd HH:mm:ss").format(payment_due);
+		}else {
+			return "----/--/-- --:--:--";
+		}
+	}
+
+	public void setPayment_due(Timestamp payment_due) {
+		this.payment_due = payment_due;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -108,5 +124,6 @@ public class BidDto {
 	}public void setIsDone(Integer isDone) {
 		this.isDone = isDone;
 	}
-	
+
+
 }

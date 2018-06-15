@@ -28,6 +28,10 @@ textarea.autosize {min-height: 80px;}
 var openWin;
         function openChild()
         {
+        	var popupX = (window.screen.width / 2) - (570 / 2);
+
+        	var popupY= (window.screen.height /2) - (500 / 2);
+        	
         	console.log(document.getElementById("price_sale").value);
             // window.name = "부모창 이름"; 
             window.name = "parentForm";
@@ -38,7 +42,7 @@ var openWin;
             +"&name="+'${view.name}'
             +"&idx="+'${view.idx}',
                     "childForm",
-                    "width=570, height=350, resizable = no, location=no, scrollbars = no");    
+                    'width=570, height=350, left='+ popupX + ', top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);    
 //             openWin.document.getElementById("cInput").value = document.getElementById("price_sale").value;
 //             openWin.document.getElementById("cInput").value;
         }
@@ -199,12 +203,12 @@ $('.open_icon').on('click', function(){
 								<dt>경매 시작가</dt>
 								
 								<dd>
-									<p class="price_tem">${view.start_price }</p>
+									<p class="price_tem"><fmt:formatNumber type="number" value="${view.start_price }"/></p>
 									원
 								</dd>
 								<dt>현재 입찰가</dt>
 								<dd>
-									<p class="price_sale"><input type="hidden" id="price_sale" value="${view.highest_bid }"/> ${view.highest_bid }</p>
+									<p class="price_sale"><input type="hidden" id="price_sale" value="${view.highest_bid }"/><fmt:formatNumber type="number" value="${view.highest_bid }"/></p>
 									원
 								</dd>
 
@@ -265,7 +269,7 @@ $('.open_icon').on('click', function(){
 				<c:forEach items="${bidderList }" var="bidderList">
 				<tr>
 				<td style="border: 1px solid #e7e7e7">${bidderList.name }</td>
-				<td style="border: 1px solid #e7e7e7">${bidderList.amount }</td>
+				<td style="border: 1px solid #e7e7e7"><fmt:formatNumber type="number" value="${bidderList.amount }"/>원</td>
 				<td style="border: 1px solid #e7e7e7">${bidderList.bid_time }</td>
 				</tr>
 				</c:forEach>

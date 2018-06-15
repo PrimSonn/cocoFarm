@@ -22,9 +22,9 @@
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
 					
 					<ul>
-						
-						<li class="nav-link"><a href="/product/cart.do">장바구니 조회</a></li>
-						<li class="nav-link"><a href="/payNee.do">결제 내역 조회111111 </a></li>
+					
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/payNee.do">결제 내역 조회 </a></li>
 						
 					</ul>
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>

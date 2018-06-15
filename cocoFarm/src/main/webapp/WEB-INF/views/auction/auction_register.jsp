@@ -224,6 +224,7 @@ $(document).ready(function() {
 			       						<option value="1" SELECTED>3일</option>
 			        					<option value="2" >7일</option>
 			        					<option value="3" >28일</option>
+			        					<option value="4" >테스트용2분</option>
 			    						</select>
 		    						</li>
 								</ul>

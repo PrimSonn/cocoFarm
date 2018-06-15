@@ -61,7 +61,9 @@
 		SELECT M.* , SOR.*, S.ACC_IDX, A.NAME buyer FROM MAIN_RECEIPT M
 			left join ACCOUNT A on M.BUYER_IDX = A.IDX
    			left join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
-    		left join SALE S on SOR.SALE_IDX = S.IDX order by M.IDX desc
+    		left join SALE S on SOR.SALE_IDX = S.IDX 
+    		left join ACCOUNT B on M.BUYER_IDX = B.IDX
+    		order by M.IDX desc
 	</select>
 
 </mapper>
