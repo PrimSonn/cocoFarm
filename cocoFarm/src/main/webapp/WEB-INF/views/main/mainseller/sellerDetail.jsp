@@ -199,8 +199,7 @@ $(document).ready( function() {
 			}
 	});
 	</c:if>
-
-
+	
 	/* 상품 후기 열기 눌렀을때   */
 	$(".open_comment").on('click', function() {
 		if($(this).parent().parent().hasClass("info_open")==true) {
@@ -295,6 +294,20 @@ function reselect() {
 	$(".proselect_option option:eq(0)").prop("selected", true);
 }
 
+/* 2018-06-15 판매자에게 쪽지보내기 (김민주) */
+/* 쪽지보내기 */
+function popupOpen2(){
+	<c:if test="${sessionScope.idx eq null}">
+		alert("로그인 해주세요.");
+		return false;
+	</c:if>
+	
+	var url= "/mypage/writeMessage.do?msgTo=" + ${product.accIdx};    //팝업창 페이지 URL
+	var winWidth = 400;
+	var winHeight = 500;
+	var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
+	window.open(url,"",popupOption);
+}
 </script>
 </head>
 <body>
@@ -382,8 +395,7 @@ function reselect() {
 			
 			<button class="buy_button"><img src="/img/main/buy_icon.png" width="20px;"><span>구매하기</span></button>
 			<button class="addcart_button">장바구니 담기</button>
-			<button class="talk_button">판매자에게 쪽지</button>
-			
+			<button class="talk_button" onclick="popupOpen2();">판매자에게 쪽지</button>
 			</div>
 		
 		</div>

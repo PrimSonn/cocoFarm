@@ -14,14 +14,14 @@
 <body>
 
 <div>
-   <table class="message_table01" style="table-layout:fixed; word-break:break-all;" >
+   <table class="message_table01" style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;" >
       <colgroup>
 					<col width="100px">
-					<col width="50">
-					<col width="120">
-					<col width="90">
+					<col width="100px">
+					<col width="120px">
+					<col width="50px">
 					<%-- <col width="50"> --%>
-					<col width="50">
+					<col width="120px">
 					<col width="110">
 					<col width="110">	
 		</colgroup>
@@ -29,14 +29,15 @@
       	
       		
      
-         <tr>
+         <tr style="border-bottom:1px solid #ddd;">
             <th class="message_num">주문번호</th> <!--주문번호  -->
             <th class="message_th">판매자 이름</th>
-    
             <th class="message_th">구매한 옵션</th>
-            <th class="message_th">옵션 수량</th>
-            <!-- <th class="message_th">옵션 단위</th> -->
+            <th class="message_th">수량</th>
+            <th class="message_th">판매글 제목</th>
             <th class="message_th">옵션 단가</th>
+            <!-- <th class="message_th">옵션 단위</th> -->
+            
             <th class="message_th">총결제금액</th>
             <th class="message_th">결제 시간</th>
          </tr>
@@ -45,13 +46,14 @@
       <c:forEach items="${paynee }" var="paynee">
          <tr>
          	<td class="message_td">${paynee.idx}</td>
-            <td class="message_td">${paynee.sale_title }</td>
-            <td class="message_td">${paynee.seller }</td>
+         	<td class="message_td">${paynee.seller }</td>
+        	<td class="message_td">${paynee.name }</td> <!--구매한 옵션  -->
+           <td class="message_td">${paynee.amount }</td> <!--수량  -->
+           <td class="message_td">${paynee.sale_title }</td><!--판매글제목 -->
+           <td class="message_td">${paynee.price }</td>
             
-            <td class="message_td">${paynee.name }</td>
-            <td class="message_td">${paynee.amount }</td>
             <%-- <td class="message_td">${paynee.unit }</td> --%>
-            <td class="message_td">${paynee.price }</td>
+            
             <td class="message_td">${paynee.money_amount }</td>
             <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
          </tr>

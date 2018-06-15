@@ -24,4 +24,14 @@ public class LicenseServiceImpl implements LicenseService {
 		licenseDao.deleteLicense(license);
 		
 	}
+	
+	@Override
+	public void updateAccType(LicenseDto license) {
+		licenseDao.updateAccType(license);
+	}
+	
+	@Override
+	public void updateSaleIsdel(LicenseDto license) {
+		licenseDao.updateSaleIsdel(license);
+	}
 }

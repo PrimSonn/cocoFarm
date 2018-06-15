@@ -29,7 +29,7 @@ $(document).ready(function() {
 			, success: function(res) {
 				if( res.check == true ) {
 					alert("회원탈퇴가 완료되었습니다.");
-					window.opener.location.href="/cocomain.do"
+					window.opener.location.href="/main/cocomain.do"
 					self.close();
 				} 
 				else if( res.check == false ) {

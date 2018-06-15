@@ -62,6 +62,11 @@ public class AdminMypageServiceImpl implements AdminMypageService {
 	}
 	
 	@Override
+	public void licenseNo(int acc_idx) {
+		adminMypageDao.licenseNo(acc_idx);
+	}
+	
+	@Override
 	public List adminPaynee() {
 		return adminMypageDao.adminPaynee();
 	}

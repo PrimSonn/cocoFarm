@@ -21,6 +21,13 @@
 
 
 <script type="text/javascript">
+/* 숫자만 입력 시키게 하는것 */
+function onlyNumber(obj){
+	val=obj.value;
+	re=/[^0-9]/gi;
+	obj.value=val.replace(re,"");
+}
+
 $(document).ready(function() {
 	var IMP = window.IMP;
 	IMP.init('imp97619342');	// 가맹점 식별코드
@@ -185,95 +192,194 @@ $(document).ready(function() {
 		}
 	});
 	
+	
+	
+	
+	
+	
+	/* 장바구니 옵션 변경 버튼 */
+	$.ajax({
+		type: "POST"
+		, url: "/product/cart.do"
+		, data: {
+			// 장바구니 상품
+		}
+		, dataType: "json"
+		, success: function(data) {
+			
+		}
+	})
+
+	$("#messageCate").change(function() {
+
+		var messageCate = $(this).val();
+		$.ajax({
+			type : "POST",
+			url : "/mypage/readMessage.do",
+			dataType : "html",
+			data : {
+				messageCate : messageCate
+				 , curPage: '${curPage }'
+			},
+			success : function(res) {
+// 				alert("성공");
+				$("#messageBox").html(res);
+			}
+		});
+	});
+
+	$("#messageCate").trigger("change");
+	
+	$("#sendMessageBtn").click(function(e){
+		popupOpen();
+	});
+	function popupOpen(){
+		var url= "/mypage/writeMessage.do";    //팝업창 페이지 URL
+		var winWidth = 400;
+	    var winHeight = 500;
+	    var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
+		window.open(url,"",popupOption);
+	}
+	
+	
+	
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	$(".mail_box").on("click", ".nav-link", function() {
+		var page = $(this).attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	
+	/* 글자수 제한  */
+	var textCountLimit = 15;
+	var textCountLimit2 = 40;
+	$('textarea[name=optionName]').keyup(function() {
+	     // 텍스트영역의 길이를 체크
+	     var textLength = $(this).val().length;
+	
+	     // 입력된 텍스트 길이를 #textCount 에 업데이트 해줌
+	     $('#textCount').text(textLength);
+	      
+	     // 제한된 길이보다 입력된 길이가 큰 경우 제한 길이만큼만 자르고 텍스트영역에 넣음
+	     if (textLength > textCountLimit) {
+	         $(this).val($(this).val().substr(0, textCountLimit));
+	     }
+	});
+
+	$(".save_button").click(function() {
+		if($(".category option:selected").val()==0) {
+		  alert("카테고리를 선택해주세요.");
+		  return false;
+		} else if($.trim($("#title").val())=="") {
+		  alert("제목을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=optionName]").val()==""){
+		  alert("옵션을 입력해주세요.");
+		  return false;
+		} else if($("textarea[name=startAmount]").val()==""){
+	    alert("판매수량을 입력해주세요.");
+	    return false;
+		} else if($("textarea[name=unit]").val()==""){
+      alert("단위를 입력해주세요.");
+      return false;
+		} else if($("textarea[name=price]").val()==""){
+      alert("판매가격을 입력해주세요.");
+      return false;
+		}
+		
+		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
+// 		var option = {
+// 			optionName: $("textarea[name=optionName]").val(),
+// 			startAmount: $("textarea[name=startAmount]").val(),
+// 			unit: $("textarea[name=unit]").val(),
+// 			price: $("textarea[name=price]").val()
+// 		};
+// 		alert(option.optionName);
+		
+		submitContents($(this));
+	});
+	
 });
+
+function optionSelect(sVal) {
+	var str = ""
+	for(var i=0; i<sVal; i++) {
+		str += '<ul>'
+			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
+			+'<li><p>총판매수량 </p><textarea name="saleOptions[' + i + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
+			+'<li><p>단위 </p><textarea name="saleOptions[' + i + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
+			+'<li><p>단위당가격 </p><textarea name="saleOptions[' + i + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
+			+'</ul>';
+	}
+	document.getElementById("option_boby").innerHTML = str;
+	
+	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
+// 	$("#option_body1").show();
+// 	$("#option_body3").hide();
+// 	$("#option_body3").hide();
+	
+// 	if (sVal == "2") {
+// 		$("#option_body2").show();
+// 	} else if (sVal == "3") {
+// 		$("#option_body3").show();
+// 	}
+}
+
+// 네이버 스마트에디터를 사용하는 방법
+function submitContents(elClickedObj) {
+    // 에디터의 내용이 textarea에 적용된다.
+    oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+    try {
+      elClickedObj.form.submit();
+    } catch(e) {}
+}
+
+(function() {
+	var tableEl = document.querySelector('.tr_cartItem');
+	var mainHtml = tableEl.innerHTML;
+	var routerMap = {
+		'' : function() {
+			tableEl.innerHTML = mainHtml;
+		}
+	}
+	
+	function otherwise() {
+		tableEl.innerHTML =
+	    'Not Found';
+	}
+
+})
+
 </script>
-
-
-
 
 </head>
 <body>
 <div id="mypageheader">
 
-	<div id="header_top">
+	<!--Mypage부분 header ver3부분  -->
+	<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+	
 	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<c:if test="${sessionScope.idx ne null }">
-			<li><a href="/login/logout.do">로그아웃</a></li>
-			</c:if>
-			<c:if test="${sessionScope.idx eq null }">
-			<li><a href="/login/login.do">로그인</a></li>
-			<li><a href="/login/join.do">회원가입</a></li>
-			</c:if>
-			<li><a href="#">알림</a></li>	
-			<li><a href="/mypage/mypage.do">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
-	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+	
 		<div class="mypage_box">
-			<div class="mypage_nav">
-				<div class="mypage_topbusiness">
-					<div class="mypagetitle">
-					<c:if test="${sessionScope.type eq 1 }"><h2>관리자</h2></c:if>
-					<c:if test="${sessionScope.type eq 2 }"><h2>판매자 회원</h2></c:if> 
-					<c:if test="${sessionScope.type eq 3 }"><h2>일반 회원</h2></c:if>
-					<h1>마이페이지</h1></div>
-					<div class="mypageimg"><img class="profile" src="/img/profile/${account.thumb_loc }"></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp</span>hwanmin0121</div>
-					<div class="mail_box"><a href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
-		
-				</div>
-			
-				<div class="mypage_navbody">
-					
-					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
-					
-					<ul>
-						<li><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
-						<li><a href="/mypage/license.do">판매자 등록</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="#">장바구니 조회</a></li>
-						<li><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
-					</ul>
-					
-					<c:if test="${sessionScope.type eq 2 or sessionScope.type eq 1 }">
-					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
-					<ul>
-						<li><a href="#">판매등록하기</a></li>
-						<li><a href="#">판매상품 조회/수정</a></li>
-						<li><a href="#">판매 결제 내역 조회 </a></li>
-						<li><a href="#">판매 결제 배송 승인</a></li>
-					</ul>
-					</c:if>
-					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
-					<ul>
-						<li><a href="#">입찰 상품 조회하기</a></li>
-						<li><a href="#">낙찰 상품 조회하기</a></li>
-					</ul>
-					
-					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
-					<ul>
-						<li><a href="#">관리자에게 문의하기</a></li>
-					</ul>
-					
-					
-				</div>
-			
-			
-			
-			
-			</div>
+			<!--Mypage부분  판매자 인트로부분 -->
+			<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
+				
 			
 			<div class="mypage_page01">
 				<div class="border">
