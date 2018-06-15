@@ -21,13 +21,13 @@ public class TestController {
 	@Autowired ReceiptService recptSvc;
 	@Autowired RestSvc restSvc;
 	
-	@RequestMapping(value="recptSvc",method=RequestMethod.GET)
-	public ModelAndView recptSvc(ModelAndView mv) {
-		
-		recptSvc.test();
-		mv.setViewName("main/cocomain");
-		return mv;
-	}
+//	@RequestMapping(value="recptSvc",method=RequestMethod.GET)
+//	public ModelAndView recptSvc(ModelAndView mv) {
+//		
+//		recptSvc.test();
+//		mv.setViewName("main/cocomain");
+//		return mv;
+//	}
 	
 	/*
 	 * 개발자용 임시 뒷구멍.
@@ -48,13 +48,12 @@ public class TestController {
 		return mav;
 	}
 	
-	@RequestMapping(value="restTest",method=RequestMethod.GET)
-	public ModelAndView restTest(ModelAndView mav) {
-		
-		System.out.println("-------------------------------\r\nrestSvc result: "+restSvc.checkPayment("imp_1234325435", 0)+"\r\n");
-		mav.setViewName("main/cocomain");
-		return mav;
-	}
+//	@RequestMapping(value="restTest",method=RequestMethod.GET)
+//	public ModelAndView restTest(ModelAndView mav) {
+//		
+//		mav.setViewName("main/cocomain");
+//		return mav;
+//	}
 	
 	/*
 	 * 쓰레드 등의 상태 확인용 뒷구멍
