@@ -40,7 +40,8 @@ public class MypageController {
 		}else if((Integer)session.getAttribute("type")==2) {
 			return "mypage/seller/productIntro";
 		}else {
-			return "mypage/common/productCart";
+			return "mypage/user/userIntro";
+			//return "mypage/common/productCart";
 		}
 		
 	}
@@ -52,5 +53,36 @@ public class MypageController {
 		Account account = loginService.selectAll(idx);
 		
 		model.addAttribute("account", account);
-	}*/
+	}
+}*/
+
+
+@RequestMapping(value="/testIntro.do", method=RequestMethod.GET)
+public String testIntro(Option option
+						, HttpSession session
+						, Model model) {
+	int idx = (int)session.getAttribute("idx");
+	Account account = loginService.selectAll(idx);
+	System.out.println(session.getAttribute("type"));
+	model.addAttribute("account", account);
+	
+	/*
+	if((Integer)session.getAttribute("type")==1) {
+	
+	}else {
+	
+	*/
+	if((Integer)session.getAttribute("type")<=1){
+		return "mypage/admin/adminIntro";
+	}else if((Integer)session.getAttribute("type")==2) {
+		return "mypage/seller/productIntro";
+	}else {
+		return "mypage/user/loadtest";
+		//return "mypage/common/productCart";
+	}
+	
 }
+
+}
+
+

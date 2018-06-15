@@ -17,4 +17,10 @@
 			,#{nextCheck,jdbcType=TIMESTAMP,mode=OUT}
 		)}
 	</select>
+	<select id='tempRcptClear' resultMap='getTime' statementType='CALLABLE'>
+		{call TEMP_RECPT_CLEAR (
+			#{dbTime,jdbcType=TIMESTAMP,mode=OUT}
+			,#{nextCheck,jdbcType=TIMESTAMP,mode=OUT}
+		)}
+	</select>
 </mapper>

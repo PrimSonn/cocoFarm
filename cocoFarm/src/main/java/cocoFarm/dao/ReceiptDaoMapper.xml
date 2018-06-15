@@ -2,6 +2,7 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace='cocoFarm.dao.ReceiptDao'>
 
+	<!-- deprecated -->
 	<select id='tempRecpt' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
 		declare
 			mainRecpt		number;
@@ -62,9 +63,9 @@
 	
 	<select id="checkRecpt" parameterType = 'cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE'>
 		{call CHECK_TEMP_RECPT(
-			 #{arg,jdbcType=NUMERIC,mode=IN}
-			 ,#{accIdx,jdbcType=NUMERIC,mode=IN}
-		     ,#{arg2,jdbcType=NUMERIC,mode=IN}
+			 #{accIdx,jdbcType=NUMERIC,mode=IN}
+			 ,#{arg,jdbcType=NUMERIC,mode=IN}
+			 ,#{arg2,jdbcType=NUMERIC,mode=IN}
 		     ,#{intArg,jdbcType=NUMERIC,mode=IN}
 		     ,#{isDone,jdbcType=NUMERIC,mode=OUT}
 		)}
@@ -73,8 +74,31 @@
 	<select id='refundRecptMkr' parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
 		{call REFUND_RECPT_MKR (
 			#{arg,jdbcType=NUMERIC,mode=IN}
+			,#{arg2,jdbcType=NUMERIC,mode=IN}
 			,#{isDone,jdbcType=NUMERIC,mode=OUT}
 		)}
+	</select>
+
+<!-- procedure TEMP_RCPT_MKR
+	(in_acc_idx ACCOUNT.IDX, in_paid_name MAIN_RECEIPT.PAID_NAME, in_data 
+		,out_m_rcpt_idx out MAIN_RECEIPT.IDX%type, isDone out number) -->
+	<select id="callTempRecptMkr" parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
+		{call TEMP_RCPT_MKR(
+			#{accIdx, jdbcType=NUMERIC, mode=IN}
+			<if test="arg != null and arg != ''">
+			,#{arg, jdbcType=NVARCHAR, mode=IN}
+			</if>
+			<if test="arg = null or arg = ''">
+			,null
+			</if>
+			,#{arg2, jdbcType=NVARCHAR, mode=IN}
+			,#{arg3, jdbcType=NVARCHAR, mode=OUT}
+			,#{isDone, jdbcType=NUMERIC, mode=OUT}
+		)}
+	</select>
+	
+	<select id="cancelRecpt" parameterType='java.lang.String' statementType='CALLABLE'>
+		{call CANCEL_TEMP_RECPT( #{${value}, jdbcType=NUMERIC, mode=IN} )} 
 	</select>
 	
 	<select id='tester' parameterType='cocoFarm.dto.OptReceiptMkr' statementType='CALLABLE' >
@@ -89,12 +113,25 @@
 		end;
 	</select>
 
+<!--
 	<select id="callTempRecptMkr" parameterType='cocoFarm.dto.RecptCallParamHolder' statementType='CALLABLE' >
 		{call TempRecptMkr(
 			#{accIdx, jdbcType=NUMERIC, mode=IN}
 			#{arg, jdbcType=NVARCHAR, mode=IN}
 			#{isDone, jdbcType=NUMERIC, mode=OUT}
 		)}
+	</select>
+-->	
+
+	<select id="paynee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
+		select M.*,A.NAME seller,SOR.* from MAIN_RECEIPT M
+			left join SALE_RECEIPT SR on M.IDX = SR.MAIN_RECPT_IDX
+			left join SALE S on SR.SALE_IDX = S.IDX
+			left join ACCOUNT A on S.ACC_IDX = A.IDX
+			left join SALE_OPTION_RECEIPT SOR on SR.MAIN_RECPT_IDX = SOR.MAIN_RECPT_IDX
+		where
+		M.STATE_CODE !=0 and
+		M.BUYER_IDX = #{idx} order by M.IDX desc
 	</select>
 
 </mapper>

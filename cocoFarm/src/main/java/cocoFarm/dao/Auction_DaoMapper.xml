@@ -119,8 +119,19 @@
 	</update>
 	
 	
-	<select id="getBidList" resultType='cocoFarm.dto.BidDto'>
+
+	<select id="getBidderList" resultType='cocoFarm.dto.BidDto'>
+		<![CDATA[SELECT e.* FROM(
+		SELECT DISTINCT b.*,ac.title, adq.time_window, acnt.name
+		FROM bid b 
+		INNER JOIN bid_alive_que ba ON (b.bidder_idx = ba.bidder_idx)
+		INNER JOIN account acnt ON ( b.bidder_idx = acnt.idx )
+		INNER JOIN auction ac ON (ac.idx = b.auction_idx) 
+		INNER JOIN auction_due_que adq ON (adq.auction_idx = b.auction_idx)
+		WHERE  b.auction_idx=#{idx} AND (b.state_code=1 OR b.state_code=2) ORDER BY amount DESC) e WHERE rownum<=5]]>
 	</select>
+	
+	
 
 	<select id="putBid" parameterType="cocoFarm.dto.BidDto" statementType="CALLABLE">
 	    {call BIDDER(
@@ -131,7 +142,47 @@
 	    )}
 	</select>
 	
+	<select id="cancelBid" parameterType="cocoFarm.dto.BidDto" statementType="CALLABLE">
+	 	{call CANCEL_BID(
+	 		#{auction_idx,jdbcType=NUMERIC,mode=IN}
+	 		,#{amount,jdbcType=NUMERIC,mode=IN}
+	 		,#{bidder_idx,jdbcType=NUMERIC,mode=IN}
+	 		,#{isDone,jdbcType=NUMERIC,mode=OUT}
+	 	)}
+	</select>
 	
+	<select id="getMemberBid" parameterType="cocoFarm.dto.Account" resultType="cocoFarm.dto.BidDto">
+		SELECT DISTINCT b.*,ac.title,bcq.payment_due, greatest( coalesce(adq.time_window,to_timestamp('2000','yyyy')), coalesce(ac.closed_when,to_timestamp('2000','yyyy')), coalesce(ac.finished_when,to_timestamp('2000','yyyy'))) time_window
+      FROM bid b 
+      INNER JOIN auction ac ON (ac.idx = b.auction_idx) 
+      left JOIN bid_contract_que bcq ON (bcq.auction_idx = b.auction_idx)
+      left JOIN auction_due_que adq ON (adq.auction_idx = b.auction_idx)
+      WHERE (b.state_code=1 OR b.state_code=2 OR b.state_code=3 OR b.state_code=4) AND b.bidder_idx=#{idx} ORDER BY BID_TIME DESC
+	</select>
+	
+	<select id="getauctionList" parameterType="cocoFarm.dto.Auction" resultType="cocoFarm.dto.Auction">
+		SELECT ac.*, adq.time_window 
+		FROM auction ac 
+		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+		WHERE writter_idx = #{writter_idx}
+	</select>
+	
+	<select id="auctionCancel" parameterType="cocoFarm.dto.Auction" statementType="CALLABLE">
+		{call CANCEL_AUCTION(
+	 		#{idx,jdbcType=NUMERIC,mode=IN}
+	 		,#{writter_idx,jdbcType=NUMERIC,mode=IN}
+	 		,#{isDone,jdbcType=NUMERIC,mode=OUT}
+	 	)}
+	</select>
+	
+	<select id="getAuctionMainList" resultType="cocoFarm.dto.Auction">
+		<![CDATA[SELECT ac.*,adq.time_window 
+		FROM auction ac 
+		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+		WHERE ac.state_code=1 
+		AND rownum<=5 
+		ORDER BY time_window ASC]]>
+	</select>
 <!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
 <!-- 		DELETE board -->
 <!-- 		WHERE boardno = #{boardno } -->

@@ -25,7 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 
 import cocoFarm.dto.Account;
+<<<<<<< HEAD
 import cocoFarm.dto.Cart;
+=======
+>>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
@@ -42,7 +45,10 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
@@ -78,7 +84,14 @@ public class ProductController {
 	
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
-							, Model model) {
+							, Model model,HttpSession session) {
+		//추가 해준거 
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+		
+		
 		
 		int totalCount = productService.getListCount();
 		
@@ -157,9 +170,19 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
 	public String update(SaleOption saleOption
-//						, HttpSession session
+						, HttpSession session
 						, Model model) {
+		
 		logger.info("update.do get!");
+		
+		//추가 해준거 
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+
+		
+		
 		
 		// 판매상품, 대표이미지, 상세설명이미지
 		Product productView = productService.productView(saleOption.getSaleIdx());
@@ -185,42 +208,46 @@ public class ProductController {
 		
 		System.out.println(product.getIdx());
 		
-		// 이미지를 새로 등록
-		List<MultipartFile> list = f.getUpload();
 		
-		logger.info("faceImg: " + list.get(0).getOriginalFilename());
-		logger.info("mainImg: " + list.get(1).getOriginalFilename());
-		logger.info("size: " + list.size());
-		
-		// 고유 식별자
-		logger.info(UUID.randomUUID().toString());
-		String uID = UUID.randomUUID().toString().split("-")[0];
-		
-		// 파일이 저장될 경로
-		String realpath = context.getRealPath("resources/proimg");
-		logger.info(realpath);
-		
-		// 파일이 저장될 이름
-		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
-		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
-		
-		File dest1 = new File(realpath, stored1);
-		File dest2 = new File(realpath, stored2);
-		System.out.println(dest1);
-		System.out.println(dest2);
-		
-		// 실제 파일 업로드
-		try {
-			list.get(0).transferTo(dest1);
-			list.get(1).transferTo(dest2);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (f != null) {
+			// 이미지를 새로 등록
+			List<MultipartFile> list = f.getUpload();
+			
+			logger.info("faceImg: " + list.get(0).getOriginalFilename());
+			logger.info("mainImg: " + list.get(1).getOriginalFilename());
+			logger.info("size: " + list.size());
+			
+			// 고유 식별자
+			logger.info(UUID.randomUUID().toString());
+			String uID = UUID.randomUUID().toString().split("-")[0];
+			
+			// 파일이 저장될 경로
+			String realpath = context.getRealPath("resources/proimg");
+			logger.info(realpath);
+			
+			// 파일이 저장될 이름
+			String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
+			String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
+			
+			File dest1 = new File(realpath, stored1);
+			File dest2 = new File(realpath, stored2);
+			System.out.println(dest1);
+			System.out.println(dest2);
+			
+			// 실제 파일 업로드
+			try {
+				list.get(0).transferTo(dest1);
+				list.get(1).transferTo(dest2);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			product.setFaceImg(stored1);
+			product.setMainImg(stored2);
+			
 		}
-		
-		product.setFaceImg(stored1);
-		product.setMainImg(stored2);
 		
 		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
 //		if(list.get(0).getOriginalFilename().length()!=0
@@ -238,11 +265,25 @@ public class ProductController {
 		}
 		productService.update(opt);
 		
+		
+		
+		
 		return "redirect:/product";
+	
+	
+	
 	}
 
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+		
+		
+		
+		
 		logger.info("cart.do get!");
 		logger.info("-----------controller-----------");
 		int accIdx = (Integer)session.getAttribute("idx");
@@ -273,7 +314,15 @@ public class ProductController {
 		}
 		model.addAttribute("productCart", cartProductList);
 		
-		return "mypage/common/productCart";
+		
+		
+		if((Integer)session.getAttribute("type")<=1){
+			return "mypage/admin/adminCart";
+		}else if((Integer)session.getAttribute("type")==2) {
+			return "mypage/seller/sellerCart";
+		}else {
+			return "mypage/user/userCart";
+		}
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
@@ -378,4 +427,48 @@ public class ProductController {
 		logger.info("viewComment.do GET !!!!");
 	}
 		
+<<<<<<< HEAD
+=======
+//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
+//		resultMap = JsonArray.fromObject(comment);
+		logger.info("insertComment.do POST !!!!");
+		
+		Gson gson = new Gson();
+		List list = gson.fromJson(comment, List.class);
+		
+		logger.info("-------------------comment-----------------");
+		logger.info("list: " + list);
+		logger.info("comment: " + comment);
+		
+		Map<String, Object> map = (Map<String, Object>) list.get(0);
+		Comment comm = new Comment();
+		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
+		comm.setScore(5);
+		comm.setTitle( (String) map.get("title") );
+		comm.setContent( (String) map.get("content") );
+		logger.info("map: " + map);
+		logger.info("saleIdx: " + ((Double)map.get("saleIdx")).intValue());
+		logger.info("comment: " + comm);
+		
+		productService.insertComment(comm);
+
+		map.put("score", comm.getScore());
+		map.put("content", comm.getContent());
+		
+		return map;
+	}
+	
+	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
+	public String procPaynee(HttpSession session, Model model) {
+		
+		int accIdx = (int) session.getAttribute("idx");
+		
+		model.addAttribute("procPaynee", productService.procPayNee(accIdx));
+		
+		return "mypage/common/procPaynee";
+		
+	}
+	
+	
+>>>>>>> fc9e56733ab88685e33c612d07adc6b3d2436f2c
 }

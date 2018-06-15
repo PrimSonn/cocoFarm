@@ -51,13 +51,23 @@
 		VALUES (1, #{acc_idx }, '판매자 등록 승인 관련', '판매자 등록 신청이 승인 되셨습니다.')
 	</insert>
 	
+	<delete id="licenseNo" parameterType="int">
+		DELETE BUSINESS_INFO WHERE acc_idx = #{acc_idx }
+	</delete>
+	
 	<insert id="licenseNoMsg" parameterType="int">
 		INSERT INTO message (sender_idx, receiver_idx, title, content) 
 		VALUES (1, #{acc_idx }, '판매자 등록 거절 관련', '판매자 등록 신청이 거절 되셨습니다.판매자 등록 삭제 후에 사업자 등록증의 내용을 정확히 입력하여 다시 등록 하여 주시면 감사하겠습니다.')
 	</insert>
 	
-	<select id="selectPayAll" resultType="cocoFarm.dto.Main_receipt">
-		SELECT * FROM main_receipt
-	</select>
+	<!--결제 내역 조회  -->
+	<select id="adminPaynee" resultType="cocoFarm.dto.ReceiptDto">
+      SELECT M.* , SOR.*, S.ACC_IDX, A.NAME buyer, B.NAME seller, S.TITLE sale_title FROM MAIN_RECEIPT M
+			left join ACCOUNT A on M.BUYER_IDX = A.IDX
+   			left join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
+    		left join SALE S on SOR.SALE_IDX = S.IDX 
+    		left join ACCOUNT B on S.ACC_IDX = B.IDX
+    		order by M.IDX desc
+    </select>
 
 </mapper>

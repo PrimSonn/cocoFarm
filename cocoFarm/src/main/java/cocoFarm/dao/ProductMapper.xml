@@ -98,8 +98,12 @@
 				origin = #{origin },
 				last_edited = sysdate,
 				content = #{content },
+		<if test = 'faceImg != null and faceImg != "" '>
 				face_img = #{faceImg },
+		</if>
+		<if test = 'mainImg != null and mainImg != "" '>
 				main_img = #{mainImg },
+		</if>
 				isdel = 0
 		WHERE idx = #{idx }
 	</update>
@@ -133,7 +137,7 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	</select>
  	
  	<!--hwanmin 2018_05_31 detailview select  -->
- 	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
+ 	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultMap="ProductResult" resultType="cocoFarm.dto.Product">
 
  		SELECT S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
 		A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
@@ -172,6 +176,14 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 	SELECT * from (select S.IDX, S.ACC_IDX, S.TITLE, S.ORIGIN, S.HIT, S.WRITTEN_TIME, S.LAST_EDITED, S.FACE_IMG as faceImg, SO.MIN_PRICE from SALE S
 	 inner join (select SALE_IDX, min(PRICE) MIN_PRICE from SALE_OPTION where ISDEL =0 group by  SALE_IDX) SO
 	on S.IDX = SO.SALE_IDX where S.ISDEL =0  ORDER BY idx desc)where rownum between 1 and 5
+	</select>
+	
+	<select id="procPayNee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
+		SELECT M.*, SOR.*, A.NAME buyer from MAIN_RECEIPT M
+    		left join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
+   			left join SALE S on SOR.SALE_IDX = S.IDX
+   			left join ACCOUNT A on M.BUYER_IDX = A.IDX
+		WHERE S.ACC_IDX = #{accIdx }
 	</select>
 	 
 </mapper>

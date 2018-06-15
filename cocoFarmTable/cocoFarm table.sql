@@ -154,6 +154,10 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure TEMP_RECPT_CLEAR;
+
+drop procedure CANCEL_TEMP_RECPT;
+
 drop procedure REFUND_RECPT_MKR;
 
 drop procedure CHECK_TEMP_RECPT;
@@ -162,9 +166,6 @@ drop procedure TEMP_RCPT_MKR;
 
 drop type holder;
 /
-drop function r_pointer;
-
-drop function r_decoder;
 
 drop procedure CANCEL_AUCTION;
 
@@ -275,6 +276,7 @@ drop trigger SALE_OPT_RECPT_TRG;
 drop index SALE_OPT_RECPT_INDEX;
 drop table SALE_OPTION_RECEIPT cascade constraints;
 
+drop trigger SALE_RECEIPT_TRG;
 drop table SALE_RECEIPT cascade constraints;
 
 drop trigger CART_TRG;
@@ -866,7 +868,7 @@ comment on column MAIN_RECEIPT_STATE_TYPE.DESCRIPTION is '주 영수증 상태 �
 
 create table MAIN_RECEIPT (
 
-	IDX					number(30,0)	unique
+	IDX					number(18,0)	unique
 	,PAYMENT_CODE		nvarchar2(45)
 	,BUYER_IDX			number(8,0)
 	,PAYMENT_TYPE_CODE	number(2,0)		not null
@@ -878,7 +880,7 @@ create table MAIN_RECEIPT (
 
 	,STATE_CODE			number(2,0)		not null
 
-	,REFUND_OF			number(30,0)
+	,REFUND_OF			number(18,0)
 
 	,constraint MAIN_RECEIPT_PK primary key (BUYER_IDX, IDX)
 	,constraint MAIN_RECEIPT_ACC_FK foreign key (BUYER_IDX) references ACCOUNT (IDX)
@@ -887,12 +889,12 @@ create table MAIN_RECEIPT (
 	,constraint M_RECEIPT_REFUND_FK foreign key (REFUND_OF) references MAIN_RECEIPT (IDX)
 );
 
-create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1;
+create sequence MAIN_RECEIPT_SEQ start with 1 increment by 1 maxvalue 99 cycle cache 49;
 
 create function MAIN_RECPT_IDX_FUNC return number
 is
 begin
-	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100000000000000 + MAIN_RECEIPT_SEQ.nextval;
+	return to_number(to_char(SYSTIMESTAMP,'YYYYMMDDHH24MISSSS')) *100 + MAIN_RECEIPT_SEQ.nextval;
 end;
 /
 
@@ -1787,12 +1789,25 @@ comment on column CART.ADDED_TIME is '등록시간 - 트리거 있음';
 create table SALE_RECEIPT (
 
 	SALE_IDX			number(10,0)
-	,MAIN_RECPT_IDX		number(30,0)
+	,MAIN_RECPT_IDX		number(18,0)
+	,SALE_TITLE			nvarchar2(40)
 
 	,constraint SALE_RECPT_PK primary key (SALE_IDX, MAIN_RECPT_IDX)
 	,constraint SALE_RECPT_SALE_FK foreign key (SALE_IDX) references SALE (IDX)
 	,constraint SALE_RECPT_M_FK foreign key (MAIN_RECPT_IDX) references MAIN_RECEIPT (IDX)
 );
+
+create trigger SALE_RECEIPT_TRG
+	before insert on SALE_RECEIPT
+	for each row
+declare
+	buffer nvarchar2(40);
+begin
+	select TITLE into buffer from SALE where IDX = :NEW.SALE_IDX;
+	:NEW.SALE_TITLE := buffer;
+end;
+/
+--트리거 설명: 새 입력시 판매글 내용을 불러와서 판매글 제목에 기록.
 
 comment on table SALE_RECEIPT is '일반 구매 묶음 영수증 (주 영수증 서브타입 형태)';
 
@@ -1800,7 +1815,10 @@ comment on column SALE_RECEIPT.SALE_IDX is '판매글 번호 - 복합기본키. 
 
 comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합기본키. 외래키';
 
+comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '판매글 제목 -  트리거 있음 - 입력시 판매글 내용을 불러와서 입력';
 
+
+--drop trigger SALE_RECEIPT_TRG;
 --drop table SALE_RECEIPT cascade constraints;
 
 
@@ -1808,7 +1826,7 @@ comment on column SALE_RECEIPT.MAIN_RECPT_IDX is '주 영수증 번호 -  복합
 
 create table SALE_OPTION_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)
+	MAIN_RECPT_IDX			number(18,0)
 	,SALE_IDX				number(10,0)
 	,SALE_OPTION_IDX		number(11,0)
 
@@ -1898,7 +1916,7 @@ comment on column SALE_OPTION_RECEIPT.PRICE is '옵션 개별 가격 - null불�
 create table SALE_EVALUATION (
 
 	SALE_IDX				number(10,0)
-	,MAIN_RECPT_IDX			number(30,0)
+	,MAIN_RECPT_IDX			number(18,0)
 
 	,SCORE					number(3,0)		not null
 	,TITLE					nvarchar2(40)	not null
@@ -2380,14 +2398,18 @@ create table BID_STATE_TYPE (
 insert all
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (1,'경매진행중: 최고입찰','입찰중. 최고입찰.처음 들어오는 입찰은 무조건 최고입찰이어야 함.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (2,'경매진행중: 차등위 입찰','입찰중. 최고입찰이 아님.')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (10,'경매 진행중 입찰 취소: 최고 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'경매 진행중 입찰 취소: 차등위 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (12,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (13,'낙찰금 지불기한 만료. - 취소', '최고입찰로서 낙찰이 되었으나, 대금 지불 기한 안에 낙찰금을 지불하지 않음')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (14,'경매 만료 이후 입찰 취소: 최고입찰', '최고입찰로서 낙찰이 되었으나, 대금 지불 기한 안에 취소함')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (3,'경매 낙찰 중: 최고입찰','경매의 낙찰이 진행 중. 최고입찰.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (4,'경매 낙찰 중: 차등위 입찰','경매의 낙찰이 진행 중. 최고입찰이 아님.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (10,'경매 진행중 입찰 취소: 최고 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (11,'경매 진행중 입찰 취소: 차등위 입찰', '경매 진행시간이 만료되기 전 취소를 신청하여 입찰이 취소됨.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (12,'자기 상위입찰 됨. - 취소', '자기 입찰에 상위입찰을 하여 이전 입찰이 취소됨.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (13,'낙찰금 지불기한 만료. - 취소', '최고입찰로서 낙찰이 되었으나, 대금 지불 기한 안에 낙찰금을 지불하지 않음.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (14,'경매 만료 이후 입찰 취소: 최고입찰', '최고입찰로서 낙찰이 되었으나, 대금 지불 기한 안에 취소함.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (15,'경매 만료 이후 입찰 취소: 차등위 입찰', '경매 만료 후 차등위 입찰 상태에서 입찰을 취소함.')
-	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (20,'경매가 취소됨: 진행 중', '대상 경매가 만료되기 전에 일방적으로 취소됨')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (20,'경매가 취소됨: 진행 중', '대상 경매가 만료되기 전에 일방적으로 취소됨.')
 	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (21,'경매가 취소됨: 만료 후', '대상 경매가 만료된 후에 일방적으로 취소됨')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (30,'낙찰!', '경매 만료 후 최고입찰로써 입찰금을 지불.')
+	into BID_STATE_TYPE (CODE, NAME, DESCRIPTION) values (31,'낙찰 실패', '대상 경매가 완료되었으며, 낙찰에 실패함.')
 select 1 from DUAL;
 
 commit;
@@ -2421,9 +2443,9 @@ create table CONTRACT_TIME_WINDOW_TYPE (
 );
 
 insert all
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
-	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 05, 'DAY') ,'5일 낙찰금 지불기한', '5일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 02, 'DAY') ,'2일 낙찰금 지불기한', '2일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 03, 'DAY') ,'3일 낙찰금 지불기한', '3일짜리 낙찰금 지불기한')
+	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 04, 'DAY') ,'4일 낙찰금 지불기한', '4일짜리 낙찰금 지불기한')
 	into CONTRACT_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 02, 'MINUTE') ,'1분 낙찰금 지불기한', '2분짜리 낙찰금 지불기한')
 select 1 from DUAL;
 
@@ -2601,7 +2623,7 @@ comment on column BID_CONTRACT_QUE.PAYMENT_DUE is '낙찰금 지불 만료 기�
 
 create table BID_CONTRACT_RECEIPT (
 
-	MAIN_RECPT_IDX			number(30,0)
+	MAIN_RECPT_IDX			number(18,0)
 	,AUCTION_IDX			number(11,0)
 	,BID_AMOUNT				number(11,0)
 
@@ -3495,8 +3517,6 @@ is
 	
 begin
 
-	savepoint START_TRANSACTION;
-
 	select A.HIGHEST_BID , A.REG_TIME+(select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = A.TIME_WINDOW_CODE) ,WRITTER_IDX
 		into a_amount, a_timeWindow, a_writter  from AUCTION A where IDX = in_auction_idx;
 	
@@ -3523,8 +3543,7 @@ begin
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
-	
+
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
 	
@@ -3557,15 +3576,12 @@ is
 	err_message		varchar2(255);
 
 	cursor AUCT_CUR is
-		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
+		select IDX, WRITTER_IDX, TITLE, HIGHEST_BID, TIME_WINDOW_CODE from AUCTION A where IDX in(select AUCTION_IDX from AUCTION_DUE_QUE where TIME_WINDOW < SYSTIMESTAMP) for update;
 begin
 	no_bid_cnt := 0;
 	has_bid_cnt := 0;
-	
-	savepoint START_TRANSACTION;
-	
+
 	for AUCTION_ROW in AUCT_CUR loop
-		
 		select count(1) into bid_alive_cnt from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 		
 		if( bid_alive_cnt = 0 ) then
@@ -3577,10 +3593,15 @@ begin
 
 			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no ALIVE_BID found on AUCTION.IDX: '||AUCTION_ROW.IDX);
 
-		else
-------------------- 입찰금 지불 기간에 대한 기준 필요. 현재 테스트용 4번 코드 지정중.
-			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, 4);
+		else ----- 입찰금 지불 기간에 대한 기준 필요. 현재 테스트용 4번 코드 지정중.
+			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, AUCTION_ROW.TIME_WINDOW_CODE);
 			select BIDDER_IDX into bidder from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX and BID_AMOUNT = AUCTION_ROW.HIGHEST_BID;
+			update BID set STATE_CODE = case 
+											when (STATE_CODE = 1) then 3
+											when (STATE_CODE = 2) then 4
+											else STATE_CODE
+											end
+				where (AUCTION_IDX,AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = AUCTION_ROW.IDX);
 			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE)
 					values (0, bidder, '입찰하신 경매 '||AUCTION_ROW.TITLE||' 에 낙찰되셨습니다', to_char(timewindow, 'YYYY-MM-DD HH24:MI:SS') ||' 까지 '||AUCTION_ROW.HIGHEST_BID||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
@@ -3590,7 +3611,6 @@ begin
 			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 			
 			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. found ALIVE_BID on AUCTION.IDX: '||AUCTION_ROW.IDX||' is bidder: '||bidder||', AMOUNT: '||AUCTION_ROW.HIGHEST_BID);
-
 		end if;
 
 	end loop;
@@ -3601,15 +3621,13 @@ begin
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , least(min(TIME_WINDOW),(select min(TIME_WINDOW)+SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE )) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 	
 exception when OTHERS then
-
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3621,11 +3639,11 @@ exception when OTHERS then
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE;
+		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
 		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
 		if (has_next_time >0) then
-			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE;
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
@@ -3686,8 +3704,6 @@ begin
 	was_lesser_bid := 0;
 	no_lesser_bid := 0;
 
-	savepoint START_TRANSACTION;
-
 	select KARMA into karma_point from BAD_DEED_TYPE where CODE = 1;
 
 	for BID_ROW in BID_CUR loop
@@ -3703,7 +3719,7 @@ begin
 				inner join (select max(BID_AMOUNT) BIGGEST_BID from BID_ALIVE_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX) B
 					on B.BIGGEST_BID = Q.BID_AMOUNT
 				where AUCTION_IDX = BID_ROW.AUCTION_IDX;
-			update BID set STATE_CODE = 1 where AUCTION_IDX = BID_ROW.AUCTION_IDX and AMOUNT = next_bid_amount;
+			update BID set STATE_CODE = 3 where AUCTION_IDX = BID_ROW.AUCTION_IDX and AMOUNT = next_bid_amount;
 			update AUCTION set HIGHEST_BID = next_bid_amount, STATE_CODE = 6 where IDX = BID_ROW.AUCTION_IDX;
 			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (BID_ROW.AUCTION_IDX, next_bid_amount, 4);
 			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
@@ -3734,14 +3750,12 @@ begin
 
 	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
 	if (next_bid_check >0 ) then
-		select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		select SYSTIMESTAMP, least(PAYMENT_DUE, (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE group by SYSTIMESTAMP;
 	else
 		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 	end if;
 	
 exception when others then
-
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3757,7 +3771,7 @@ exception when others then
 	else
 		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
 		if (next_bid_check >0) then 
-			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE;
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
@@ -3801,7 +3815,6 @@ is
 	err_message			varchar2(255);
 
 begin
-	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
 	
@@ -3822,7 +3835,7 @@ begin
 				insert into PLOGGER (NAME, RESULTCODE, CONTENT, ERR_CODE) values ('CANCEL_BID', -7, 'Something''s wrong! This shouldn''t be here. Check ''CANCEL_BID'' procedure code. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_amount||', in_bidder_idx: '||in_bidder_idx||']', -1);
 				select -7 into isDone from DUAL;
 			else
-				if (bid_state <>1 and bid_state<>2) then
+				if (bid_state <>1 and bid_state<>2 and bid_state<>3 and bid_state<>4) then
 					insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_BID', -3, 'Bid is not alive. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_amount||', in_bidder_idx: '||in_bidder_idx||']');
 					select -3 into isDone from DUAL;
 					
@@ -3868,7 +3881,7 @@ begin
 					delete BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx and BID_AMOUNT = in_amount and BIDDER_IDX = in_bidder_idx;
 					delete BID_CONTRACT_QUE where AUCTION_IDX = in_auction_idx and BID_AMOUNT = in_amount;
 					
-					if (bid_state =1) then
+					if (bid_state =3) then
 						select count(1) into null_checker from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx;
 						
 						if (null_checker =0) then
@@ -3880,7 +3893,7 @@ begin
 								inner join (select max(BID_AMOUNT) BIGGEST_BID from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx) B
 								on B.BIGGEST_BID = Q.BID_AMOUNT
 								where AUCTION_IDX = in_auction_idx;
-							update BID set STATE_CODE = 1 where AUCTION_IDX = in_auction_idx and AMOUNT = next_amount;
+							update BID set STATE_CODE = 3 where AUCTION_IDX = in_auction_idx and AMOUNT = next_amount;
 							update AUCTION set HIGHEST_BID = next_amount, STATE_CODE = 6 where IDX = in_auction_idx;
 							insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (in_auction_idx, next_amount, 4);
 							select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = in_auction_idx;
@@ -3894,7 +3907,7 @@ begin
 						insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_bidder_idx, ''''||auction_title||''' 의 입찰을 취소하셨습니다.','만료된 경매에 대해 최고 입찰인 상태에서 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
 						select 1 into isDone from DUAL;
 						
-					elsif (bid_state =2) then
+					elsif (bid_state =4) then
 						update BID set STATE_CODE = 15, FINISHED_WHEN = SYSTIMESTAMP where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
 						insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_bidder_idx, 5);
 						select KARMA into karma_point from BAD_DEED_TYPE where CODE = 5;
@@ -3919,7 +3932,6 @@ begin
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -3959,8 +3971,6 @@ is
 	cursor BID_CUR is
 		select AUCTION_IDX, AMOUNT, BIDDER_IDX from BID where (AUCTION_IDX, AMOUNT) in (select AUCTION_IDX, BID_AMOUNT from BID_ALIVE_QUE where AUCTION_IDX = in_auction_idx) for update;
 begin
-
-	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from AUCTION where IDX = in_auction_idx;
 	
@@ -3982,7 +3992,7 @@ begin
 				update AUCTION set STATE_CODE = 2, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
 				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 6);
 				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 6;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_writter_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','진행중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
 				
 				for BID_ROW in BID_CUR loop
 					update BID set STATE_CODE = 20, FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
@@ -4007,7 +4017,7 @@ begin
 				update AUCTION set STATE_CODE = 8, FINISHED_WHEN = SYSTIMESTAMP where IDX = in_auction_idx;
 				insert into BAD_DEED_RECORD (CULPRIT_IDX, DEED_CODE) values (in_writter_idx, 7);
 				select KARMA into karma_point from BAD_DEED_TYPE where CODE = 7;
-				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_auction_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
+				insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, in_writter_idx, ''''||auction_title||''' 경매를 취소하셨습니다.','낙찰중 인 경매를 취소하셨기 때문에 벌점 '||karma_point||'점을 받으셨습니다.',1);
 				
 				insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_AUCTION', 1, 'Success. Auction canceled after due. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_writter_idx||']');
 				select 1 into isDone from DUAL;
@@ -4024,7 +4034,6 @@ begin
 	commit;
 	
 exception when others then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4043,9 +4052,8 @@ end;
 
 ----------------------------------------------- 영수증 처리용 프로시저 -----------------------------------------------
 
-/*============================================================================
 
-010110210010120220010140240
+/*========================  1.임시 영수증 생성 프로시저  =============================
 
 	직렬화해서 보낸 데이터 해석.
 	첫번째 2개 코드 읽기
@@ -4060,26 +4068,9 @@ end;
 	
 	코드 밖으로 나갈 때 까지 반복.
 	
-	
-	
+	임시 영수증 생성
 
 ============================================================================*/
-
-
-
-create function r_decoder ( i number, target nvarchar2 )
-return number is
-begin
-	return to_number(substr(target, i+2, to_number( substr(target,i,2))));
-end;
-/
-
-create function r_pointer ( i number, target nvarchar2 )
-return number is
-begin
-	return i+2+to_number(substr(target, i, 2));
-end;
-/
 
 create type holder is varray(1000) of number;
 /
@@ -4115,25 +4106,21 @@ begin
 		
 		if(checker = '01') then
 			t_option_idx.extend;
-			t_option_idx(t_option_idx.last):= r_decoder(i, in_data);
-			i := r_pointer (i , in_data);
-			dbms_output.put_line('t_option_idx add : '||t_option_idx(t_option_idx.last));
+			t_option_idx(t_option_idx.last) := to_number(substr(in_data, i+2, to_number( substr(in_data,i,2))));
+			i := i+2+to_number(substr(in_data,i,2));
 			
 			t_option_amount.extend;
-			t_option_amount(t_option_amount.last):= r_decoder(i, in_data);
-			i := r_pointer (i , in_data);
-			dbms_output.put_line('t_option_amount add : '||t_option_amount(t_option_amount.last));
+			t_option_amount(t_option_amount.last) := to_number(substr(in_data, i+2, to_number( substr(in_data,i,2))));
+			i := i+2+to_number(substr(in_data,i,2));
 			
 		elsif(checker = '02') then
 			t_bid_target.extend;
-			t_bid_target(t_bid_target.last):= r_decoder(i, in_data);
-			i := r_pointer (i , in_data);
-			dbms_output.put_line('t_bid_target add : '||t_bid_target(t_bid_target.last));
+			t_bid_target(t_bid_target.last) := to_number(substr(in_data, i+2, to_number( substr(in_data,i,2))));
+			i := i+2+to_number(substr(in_data,i,2));
 			
 			t_bid_amount.extend;
-			t_bid_amount(t_bid_amount.last):= r_decoder(i, in_data);
-			i := r_pointer (i , in_data);
-			dbms_output.put_line('t_bid_amount add : '||t_bid_amount(t_bid_amount.last));
+			t_bid_amount(t_bid_amount.last) := to_number(substr(in_data, i+2, to_number( substr(in_data,i,2))));
+			i := i+2+to_number(substr(in_data,i,2));
 		else
 			i := 0;
 			exit;
@@ -4141,16 +4128,14 @@ begin
 		
 	end loop;
 	
-	
 	if (i=0) then
 		done_code := -1;
-		--직렬화 오류 로그
+		--직렬화 오류
 	elsif (i=3) then
 		done_code := -2;
-		--데이터 없음 로그
+		--데이터 없음
 	elsif ( i <> length(in_data)+1 ) then
 		done_code := -3;
-		select -3 into isDone from DUAL;
 		--직렬화 해석 오류 혹은 직렬화 오류
 	else
 		if (t_option_idx.last>0 or t_bid_target.last>0) then
@@ -4225,8 +4210,9 @@ begin
 		rollback to START_TRANSACTION;
 	end if;
 	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('TEMP_RCPT_MKR', done_code, 'in_acc_idx: '||in_acc_idx||', in_paid_name: '||in_paid_name||', in_data: '||in_data);
+	
 exception when others then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4242,11 +4228,9 @@ end;
 --drop procedure TEMP_RCPT_MKR
 --drop type holder;
 --/
---drop function r_pointer;
---drop function r_decoder;
 
 
-/*===============================  2. 임시 영수증 확인 프로시저 ====================================
+/*===============================  2. 임시 영수증 확인 프로시저(결제상황) =================================
 
 	결과
 		2: 해당 영수증이 임시 대기 상태가 아니며 같은 결제번호로 요청이 들어옴 (누군가 의도적으로 중복값을 보냄. 환불 대상이 아님)
@@ -4259,30 +4243,42 @@ end;
 		-5: 임시 영수증에 저장된 옵션이 활성화 상태가 아님
 		-6: 구매한 옵션 중 최소 하나의 옵션이 남은 재고가 부족함
 		-7: 뭔가 매우 잘못됨
+		-8: 대상 입찰중 하나 이상의 입찰이 낙찰 대기중이 아님.
+		-9: 영수증의 대상 목록이 없음.
 
-===================================================================================================*/
+=========================================================================================================*/
 
-create procedure CHECK_TEMP_RECPT (in_pay_code MAIN_RECEIPT.PAYMENT_CODE%type, in_acc_idx ACCOUNT.IDX%type, merchant_uid MAIN_RECEIPT.IDX%type, in_price MAIN_RECEIPT.MONEY_AMOUNT%type, isDone out number)
+create procedure CHECK_TEMP_RECPT (in_acc_idx ACCOUNT.IDX%type, in_pay_code MAIN_RECEIPT.PAYMENT_CODE%type, merchant_uid MAIN_RECEIPT.IDX%type, in_price MAIN_RECEIPT.MONEY_AMOUNT%type, isDone out number)
 is
 	null_checker		number;
+	checher				number;
 	main_rcpt_idx		MAIN_RECEIPT.IDX%type;
 	money_amount		MAIN_RECEIPT.MONEY_AMOUNT%type;
 	recpt_amount		SALE_OPTION_RECEIPT.AMOUNT%type;
 	acc_idx				ACCOUNT.IDX%type;
 	sale_title			SALE.TITLE%type;
 	pay_code			MAIN_RECEIPT.PAYMENT_CODE%type;
+	rcpt_bid_money		BID_CONTRACT_RECEIPT.BID_AMOUNT%type;
+	auct_title			AUCTION.TITLE%type;
 	result_code			number;
-
+	processCnt			number;
+	auct_idx_arr		holder := holder();
+	
 	err_code			number;
 	err_message			varchar2(255);
 	
 	cursor SALE_OPTION_CUR is
-		select * from SALE_OPTION where IDX in (select SALE_OPTION_IDX from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid)for update;
+		select * from SALE_OPTION where IDX in (select SALE_OPTION_IDX from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid) for update;
+	cursor BID_CUR is
+		select * from BID where (AUCTION_IDX,AMOUNT) in (select BR.AUCTION_IDX, BQ.BID_AMOUNT from BID_CONTRACT_RECEIPT BR left join BID_ALIVE_QUE BQ on BR.AUCTION_IDX = BQ.AUCTION_IDX where BR.MAIN_RECPT_IDX = merchant_uid) and STATE_CODE in (3,4) for update;
 begin
-	savepoint START_TRANSACTION;
+	
 
 	select 0 into isDone from DUAL;
-	result_code:= 0;
+	result_code := 0;
+	processCnt := 0;
+	
+	savepoint START_TRANSACTION;
 	
 	select count(1) into null_checker from MAIN_RECEIPT where IDX = merchant_uid;
 	
@@ -4291,7 +4287,7 @@ begin
 	else
 		select BUYER_IDX, STATE_CODE, MONEY_AMOUNT, PAYMENT_CODE into acc_idx, null_checker, money_amount, pay_code from MAIN_RECEIPT where IDX = merchant_uid;
 		
-		if (null_checker <>0) then
+		if (null_checker <>0) then--대상 영수증이 임시 영수증이 아닐 때.
 			if (pay_code = in_pay_code) then
 				result_code := 2;
 			else
@@ -4301,56 +4297,102 @@ begin
 		elsif(acc_idx <> in_acc_idx) then
 			result_code := -3;
 		elsif (money_amount <> in_price) then
+			delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
+			delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
+			delete SALE_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
 			delete MAIN_RECEIPT where IDX = merchant_uid and BUYER_IDX = in_acc_idx;
 			result_code := -4;
 		else
-			select count(1) into null_checker from SALE_OPTION O inner join SALE_OPTION_RECEIPT R on O.IDX = R.SALE_OPTION_IDX where O.ISDEL <>0;
+			select count(1) into null_checker from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
 			
-			if (null_checker <>0) then 
-				result_code := -5;
-			else
-				savepoint OPT_UPDATE;
+			if(null_checker >0) then
+				select count(1) into null_checker from SALE_OPTION O inner join SALE_OPTION_RECEIPT R on O.IDX = R.SALE_OPTION_IDX where O.ISDEL <>0;
 				
-				for SALE_OPTION_ROW in SALE_OPTION_CUR loop
-					select AMOUNT into recpt_amount from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid and SALE_IDX = SALE_OPTION_ROW.SALE_IDX and SALE_OPTION_IDX = SALE_OPTION_ROW.IDX;
+				if (null_checker <>0) then 
+					result_code := -5;
+				else
+					for SALE_OPTION_ROW in SALE_OPTION_CUR loop
+						
+						processCnt := processCnt +1;
+						select AMOUNT into recpt_amount from SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = merchant_uid and SALE_IDX = SALE_OPTION_ROW.SALE_IDX and SALE_OPTION_IDX = SALE_OPTION_ROW.IDX;
+						
+						if (recpt_amount > SALE_OPTION_ROW.LEFT_AMOUNT ) then
+							rollback to START_TRANSACTION;
+							result_code := -6;
+							exit;
+						end if;
+						
+						update SALE_OPTION set LEFT_AMOUNT = LEFT_AMOUNT - recpt_amount where current of SALE_OPTION_CUR;
+						if (recpt_amount = SALE_OPTION_ROW.LEFT_AMOUNT) then
+							select ACC_IDX, TITLE into acc_idx, sale_title from SALE where IDX = SALE_OPTION_ROW.SALE_IDX;
+							insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0,acc_idx,'판매글 '''||sale_title||''' 의 옵션 '''||SALE_OPTION_ROW.NAME||''' 이 모두 소진되었습니다.','해당 옵션의 재고가 모두 소진되었음을 알려드립니다.',2);
+						end if;
+						
+					end loop;
 					
-					if (recpt_amount > SALE_OPTION_ROW.LEFT_AMOUNT ) then
-						rollback to OPT_UPDATE;
-						result_code := -6;
-						exit;
-					end if;
-					
-					update SALE_OPTION set LEFT_AMOUNT = LEFT_AMOUNT - recpt_amount where current of SALE_OPTION_CUR;
-					if (SALE_OPTION_ROW.LEFT_AMOUNT =0) then
-						select ACC_IDX, TITLE into acc_idx, sale_title from SALE where IDX = SALE_OPTION_ROW.SALE_IDX;
-						insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0,acc_idx,'판매글 '''||sale_title||''' 의 옵션 '''||SALE_OPTION_ROW.NAME||''' 이 모두 소진되었습니다.','해당 옵션의 재고가 모두 소진되었음을 알려드립니다.',2);
-					end if;
-					
-				end loop;
-				
-				if (result_code = 0) then
---					update SALE_OPTION_RECEIPT set STATE_CODE = 1 where MAIN_RECPT_IDX = merchant_uid;
-					update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
-					result_code := 1;
-				elsif(result_code is null) then
-					result_code := -7;
 				end if;
+			end if;-- 판매 옵션 처리 끝.
+			
+			if (result_code =0) then
+				select count(1) into null_checker from BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
+				
+				if (null_checker >0) then
+					select count(1) into checher from BID_CONTRACT_RECEIPT BR inner join BID_CONTRACT_QUE BQ on BR.AUCTION_IDX = BQ.AUCTION_IDX where BR.MAIN_RECPT_IDX = merchant_uid;
+					
+					if (null_checker <> checher) then
+						rollback to START_TRANSACTION;
+						result_code := -8;
+					else
+						auct_idx_arr.extend(checher);
+						select AUCTION_IDX bulk collect into auct_idx_arr from BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX = merchant_uid;
+						
+						for BID_ROW in BID_CUR loop
+							select WRITTER_IDX, TITLE into acc_idx, auct_title from AUCTION where IDX = BID_ROW.AUCTION_IDX;
+							if(BID_ROW.STATE_CODE = 3) then
+								update BID set STATE_CODE = 30 ,FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
+								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auct_title||''' 의 낙찰금을 지불하셨습니다.', ''''||auct_title||'''에 대한 낙찰금 '||BID_ROW.AMOUNT||'원 을 '||SYSTIMESTAMP||' 에 지불하셨습니다. 해당 경매에 완전히 낙찰이 되셨습니다.',1);
+								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, acc_idx, ''''||auct_title||'''의 낙찰이 완료되었습니다.',''''||auct_title||'''의 최고 입찰자가 최종 낙찰금인 '||BID_ROW.AMOUNT||'원 을 '||SYSTIMESTAMP||'에 지불하여 낙찰이 완료되었습니다.',1);
+							else
+								update BID set STATE_CODE = 31 ,FINISHED_WHEN = SYSTIMESTAMP  where current of BID_CUR;
+								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0,BID_ROW.BIDDER_IDX, ''''||auct_title||'''의 낙찰에 실패하셨습니다.',''''||auct_title||'''의 낙찰에 실패하셨습니다.',1);
+							end if;
+							processCnt := processCnt +1;
+						end loop;
+						
+						update AUCTION set STATE_CODE = 9, FINISHED_WHEN = SYSTIMESTAMP where IDX in (select COLUMN_VALUE from table (auct_idx_arr));
+						delete BID_CONTRACT_QUE where AUCTION_IDX in (select COLUMN_VALUE from table (auct_idx_arr));
+						delete BID_ALIVE_QUE where AUCTION_IDX in (select COLUMN_VALUE from table (auct_idx_arr));
+					end if;
+				else
+					if (processCnt=0) then 
+						result_code := -9;
+					end if;
+				end if;
+			end if;--경매/입찰 처리 끝.
+			
+			if (result_code = 0) then
+				update MAIN_RECEIPT set STATE_CODE = 1, PAYMENT_CODE = in_pay_code where IDX = merchant_uid;
+				result_code := 1;
+			elsif(result_code is null) then
+				result_code := -7;
+			else
+				rollback to START_TRANSACTION;
 			end if;
-			---경매 부분 추가 가능 부분.
+			
 		end if;
 	end if;
 	
 	select result_code into isDone from DUAL;
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CHECK_TEMP_RECPT',isDone,'merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx);
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CHECK_TEMP_RECPT',isDone,'merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx||', processCnt: '||processCnt);
 	
 	commit;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);	
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message)
 		values ('CHECK_TEMP_RECPT', 0, 'ERROR!  merchant_uid: '||merchant_uid||', in_price: '||in_price||', in_acc_idx: '||in_acc_idx, err_code, err_message );
 	commit;
 	
@@ -4369,7 +4411,7 @@ end;
 
 =============================================================================================*/
 
-create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, isDone out number)
+create procedure REFUND_RECPT_MKR ( in_recpt_idx MAIN_RECEIPT.IDX%type, in_pay_code MAIN_RECEIPT.PAYMENT_CODE%type, isDone out number)
 is
 	v_payment_code		MAIN_RECEIPT.PAYMENT_CODE%type;
 	v_buyer_idx			MAIN_RECEIPT.BUYER_IDX%type;
@@ -4382,7 +4424,7 @@ is
 begin
 	savepoint START_TRANSACTION;
 	
-	update MAIN_RECEIPT set STATE_CODE = 3 where IDX = in_recpt_idx;
+	update MAIN_RECEIPT set STATE_CODE = 3, PAYMENT_CODE = in_pay_code where IDX = in_recpt_idx;
 	select PAYMENT_CODE, BUYER_IDX, MONEY_AMOUNT, PAID_NAME, STATE_CODE
 		into v_payment_code, v_buyer_idx, v_money_amount, v_paid_name, v_state_code
 		from MAIN_RECEIPT where IDX = in_recpt_idx;
@@ -4393,7 +4435,6 @@ begin
 	select 1 into isDone from DUAL;
 	
 exception when OTHERS then
-	rollback to START_TRANSACTION;
 	
 	err_code := sqlcode;
 	err_message := substr(sqlerrm, 1, 255);
@@ -4406,6 +4447,101 @@ end;
 /
 
 --drop procedure REFUND_RECPT_MKR;
+
+
+/*======================== 4. 임시 영수증 삭제 =====================
+
+	별로 결과값이 필요없어서 그냥 in만 둠.
+
+==================================================================*/
+
+create procedure CANCEL_TEMP_RECPT ( in_recpt_idx MAIN_RECEIPT.IDX%type)
+is
+	null_checker		number;
+	err_code			number;
+	err_message			varchar2(255);
+begin
+
+	select STATE_CODE into null_checker from MAIN_RECEIPT where IDX = in_recpt_idx;
+	if(null_checker <> 0) then return;
+	end if;
+	delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;
+	delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;
+	delete SALE_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;
+	delete MAIN_RECEIPT where IDX = in_recpt_idx;
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CALCEL_TEMP_RECPT',1,'in_recpt_idx: '||in_recpt_idx);
+	commit;
+
+exception when OTHERS then
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('CALCEL_TEMP_RECPT',0,'Error! in_recpt_idx: '||in_recpt_idx, err_code, err_message);
+	commit;
+end;
+/
+
+--drop procedure CANCEL_TEMP_RECPT;
+
+
+/*================= 5. 임시 영수증 정리 ====================
+
+		타이머를 이용, 매 시간 마다 5분 이상 지난 임시 영수증을 정리함.
+
+===========================================================*/
+
+create procedure TEMP_RECPT_CLEAR (DBTIME out timestamp, NEXTCHECK out timestamp)
+is
+	recpt_idx_arr		holder := holder();
+	cnt					number;
+	list				nvarchar2(2000);
+
+	err_code			number;
+	err_message			varchar2(255);
+begin
+	list := '';
+	
+	select count(1) into cnt from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0;
+	recpt_idx_arr.extend(cnt +50);
+	select T.IDX bulk collect into recpt_idx_arr 
+		from (select IDX, ROWNUM R from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0) T
+	where T.R<=100;
+	
+	delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete SALE_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	delete MAIN_RECEIPT where IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+	
+	if(recpt_idx_arr.last>0) then
+		for i in 1..(recpt_idx_arr.last-1) loop
+			list := list || recpt_idx_arr(i) || ', ';
+		end loop;
+		list := list || recpt_idx_arr(recpt_idx_arr.last);
+	else
+		list := 'nothing selected';
+	end if;
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('TEMP_RECPT_CLEAR', 1, 'recpt_idx_arr: '||list);
+	commit;
+	
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(3, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+--	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(1, 'HOUR') into DBTIME, NEXTCHECK from DUAL;
+	
+exception when OTHERS then
+	
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('TEMP_RECPT_CLEAR', 0, 'ERROR', err_code, err_message);
+	commit;
+	
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(3, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+--	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(1, 'HOUR') into DBTIME, NEXTCHECK from DUAL;
+end;
+/
+
+--drop procedure TEMP_RECPT_CLEAR;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------
@@ -4550,90 +4686,6 @@ purge recyclebin;
 
 
 
-/* 작업중 프로시저
-
-
-	결과값
-		1. 성공
-		0. 오라클 에러
-		-1. 해당 입찰이 존재하지 않거나 낙찰 대금을 지불할 수 없는 상태임
-
-aaa
-
-create procedure CONFIRM_CONTRACT (in_auction_idx AUCTION.IDX%type, in_amount AUCTION.HIGHEST_BID%type, in_bidder_idx BID.BIDDER_IDX%type, isDone out number)
-is
-	null_checker	number;
-	bid_account		BID.BIDDER_IDX.type;
-	bid_state		BID.STATE_CODE%type;
-	auction_state	AUCTION.STATE_CODE%type;
-	
-	err_code		number;
-	err_message		varchar2(255);
-
-begin
-
-	savepoint START_TRANSACTION;
-	
-	select count(1) into null_checker from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
-	
-	if (null_checker =0) then
-		insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CONFIRM_CONTRACT',-1,'No such bid exists. usder Bid (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')');
-		select -1 into isDone from DUAL;
-	else
-		select BIDDER_IDX, STATE_CODE into bid_account, bid_state from BID where AUCTION_IDX = in_auction_idx and AMOUNT = in_amount;
-		
-		if(in_bidder_idx <> bid_account) then
-		
-		elsif(bid_state <> 1)
-		
-		end if;
-	
-	end if;
-	
-	
-	commit;
-
-exception when OTHERS then
-	rollback to START_TRANSACTION;
-	
-	err_code := sqlcode;
-	err_message := substr(sqlerrm, 1, 255);
-	
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('BIDDER',0,'ERROR! (auctionIdx: '||in_auction_idx||',amount: '||in_amount||',bidderIdx: '||in_bidder_idx||')', err_code, err_message );
-	commit;
-	
-	select 0 into isDone from DUAL;
-end;
-/
-
-
-
-
-
-create procedure TEST_PROC(num in number) is
-declare
-	type arr_type is varray(num) of number;
-	arr	arr_type;
-begin
-	select CODE into arr from BID_STATE_TYPE;
-end;
-/
-
-
-
-
-
-
-
-
-*/
-
-
-
-
-
-
-
 /* some reference
 
 CREATE OR REPLACE TYPE str_tab_type IS VARRAY(10) OF VARCHAR2(200);
@@ -4652,8 +4704,6 @@ BEGIN
   WHERE object_type IN (SELECT COLUMN_VALUE FROM TABLE(l_str_tab));
 END;
 /
-
-
 
 
 
@@ -4687,6 +4737,5 @@ begin
     end loop;
 end;
 /
-
 
 */

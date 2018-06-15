@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cocoFarm.dto.Product;
+import cocoFarm.service.Auction_Service;
 import cocoFarm.service.BoardService;
 import cocoFarm.service.ProductService;
 
@@ -17,6 +18,16 @@ public class MainController {
 
 	@Autowired ProductService productService;
 	@Autowired BoardService boardService;
+	@Autowired Auction_Service auctionService;
+	
+	/*
+	 *빈 URL -> 메인 
+	 */
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public String emptytUrl() {
+		return "main/cocomain";
+	}
+	
 	//2018 06월 11일 main 넣은것
 	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
 	public String main(HttpSession session,Product product, Model model){
@@ -25,14 +36,10 @@ public class MainController {
 		//판매글 최근 5개 띄우기
 		model.addAttribute("seller",productService.getProViewMainList());
 		
-		
+		/*boardService.getboardMainList();*/
 		model.addAttribute("farm",boardService.getboardMainList());
 		
-		
-		
-		
-		
-		
+		model.addAttribute("auction",auctionService.getAuctionMainList());
 		/*
 	
 		SELECT acc_idx, title, content, written_date, hit, ISDEL,
@@ -42,23 +49,10 @@ public class MainController {
 		on t.acc_idx = a.IDX;
 		    
 		*/
-		
-		
-		
-		
 		return "main/cocomain";
 	}
-
-	
 	
 	//2018 06월 12일 hwanmin 작업 
-	
-	
-	
-	
-	
-	
-	
 	
 	//판매 상세 정보
 	@RequestMapping(value="/companyinfo.do",method=RequestMethod.GET)
@@ -66,7 +60,9 @@ public class MainController {
 		
 		return "companyinfo/comintro";
 	}
-	
-	
-	
+	//민주 페이지에 띄우기
+	@RequestMapping(value="/main/faq.do",method=RequestMethod.GET)
+	public void faq() {
+		
+	}
 }

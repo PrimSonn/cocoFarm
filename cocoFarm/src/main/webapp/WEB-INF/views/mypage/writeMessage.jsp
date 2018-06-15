@@ -11,18 +11,20 @@
 </head>
 <body>
 <div id="writeMessage">
-	<form action="/mypage/writeMessage.do" method="post">
+	<h1>쪽지 보내기</h1>
+	<form action="/mypage/writeMessage.do" method="post" class="writeMessage_box">
 		<input type="hidden" id="sender_idx" name="sender_idx" value="${account.idx }" />
 		<input type="hidden" id="sender_name" name="sender" value="${account.name }" />
 
 		<input type="hidden" id="receiver_idx" name="receiver_idx" value="${msg.idx }" />
-		<label>받는사람</label><input type="text" id="receiver" name="receiver" value="${msg.name }" /><br>
+		<div class="writeMessage_content"><label>받는사람</label><input type="text" id="receiver" name="receiver" value="${msg.name }" /></div><br>
 
-		<label>제목</label><input type="text" id="title" name="title" /><br>
-		<label>내용</label><br>
-		<textarea id="content" rows="10" cols="50" name="content"></textarea><br>
+		<div class="writeMessage_content"><label>제목</label><input type="text" id="title" name="title" /></div><br>
 		
-		<button>작성</button>
+		<div class="writeMessage_content"><label class="labelTop">내용</label>
+		<textarea id="content" rows="10" cols="50" name="content"></textarea></div><br>
+		
+		<div class="btn_wrMess"><button id="btn_writeMessage">작성</button></div>
 	</form>
 </div>
 </body>

@@ -69,11 +69,18 @@ public class LicenseController {
 	}
 	
 	@RequestMapping(value="/mypage/deleteLicense.do", method=RequestMethod.POST)
-	public String deleteLicense(LicenseDto license) {
+	public String deleteLicense(LicenseDto license,HttpSession session) {
 		
 		System.out.println("라이센스 삭제 = "+license.getAcc_idx());
 		
 		licenseService.deleteLicense(license);
+		licenseService.updateAccType(license);
+		licenseService.updateSaleIsdel(license);
+		System.out.println("befoer: "+(Integer)session.getAttribute("type"));
+		session.setAttribute("type", Integer.valueOf(3));
+		System.out.println("after: "+(Integer)session.getAttribute("type"));
+		
+		
 		
 		return "redirect:/mypageIntro.do";
 	}

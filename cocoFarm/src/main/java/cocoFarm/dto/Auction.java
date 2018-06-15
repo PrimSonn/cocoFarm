@@ -24,7 +24,14 @@ public class Auction {
 	
 	private String id;		// 경매 글 쓴 계정 id
 	
+	private Integer isDone;	
 	
+	public Integer getIsDone() {
+		return isDone;
+	}
+	public void setIsDone(Integer isDone) {
+		this.isDone = isDone;
+	}
 	public String getName() {
 		return name;
 	}
@@ -141,6 +148,7 @@ public class Auction {
 				+", time_window="+time_window
 				+", id="+id
 				+", systime="+systime
+				+", isDone="+isDone
 				+", highest_bid="+highest_bid+"]";
 	}
 

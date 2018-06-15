@@ -3,5 +3,5 @@ package cocoFarm.service;
 
 public interface RestSvc {
 
-	public Integer checkPayment(String mercUid, Integer accIdx);
+	public String[] checkPayment(String mercUid, Integer accIdx);
 }

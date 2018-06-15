@@ -4,7 +4,6 @@ import java.util.List;
 
 import cocoFarm.dto.Account;
 import cocoFarm.dto.LicenseDto;
-import cocoFarm.dto.Main_receipt;
 import cocoFarm.util.Paging;
 
 public interface AdminMypageDao {
@@ -36,7 +35,10 @@ public interface AdminMypageDao {
 //	관리자가 판매자등록 거절 버튼 누르면 회원에서 거절 메세지를 보냄
 	public void licenseNoMsg(int acc_idx);
 	
-//	전체 결제 내역(주 영수증) 조회
-	public List selectPayAll();
+//	관리자가 판매자 등록 거절 버튼 누르면 등록한 판매자 정보 삭제
+	public void licenseNo(int acc_idx);
+	
+//	관리자 계정에서 전체 결제내역 조회
+	public List adminPaynee();
 
 }

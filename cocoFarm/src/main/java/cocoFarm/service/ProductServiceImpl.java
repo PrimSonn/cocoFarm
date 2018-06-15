@@ -234,4 +234,9 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.ProViewMainList();
 	}
 	
+	@Override
+	public List procPayNee(int accIdx) {
+		return productDao.procPayNee(accIdx);
+	}
+	
 }

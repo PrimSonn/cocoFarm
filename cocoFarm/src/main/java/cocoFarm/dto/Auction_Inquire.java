@@ -1,6 +1,7 @@
 package cocoFarm.dto;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Auction_Inquire {
 
@@ -92,8 +93,13 @@ public class Auction_Inquire {
 
 
 
-	public Timestamp getWritten_time() {
-		return written_time;
+	public String getWritten_time() {
+		if(written_time !=null) {
+			return new SimpleDateFormat("YYYY/MM/dd HH:mm:ss").format(written_time);
+		}else {
+			return "----/--/-- --:--:--";
+		}
+		
 	}
 
 

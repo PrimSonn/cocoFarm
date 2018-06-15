@@ -5,8 +5,8 @@
 <mapper namespace="cocoFarm.dao.LoginDao">
 	
 	<insert parameterType="cocoFarm.dto.Account" id="join">
-		INSERT INTO account(idx, id, pw, name, email, phone, postnum, addr, detailed_addr) 
-		VALUES (account_seq.nextval, #{id}, #{pw}, #{name}, #{email}, #{phone}, #{postnum}, #{addr}, #{detailed_addr})
+		INSERT INTO account(idx, id, pw, name, email, phone, postnum, addr, detailed_addr, thumb_loc) 
+		VALUES (account_seq.nextval, #{id}, #{pw}, #{name}, #{email}, #{phone}, #{postnum}, #{addr}, #{detailed_addr}, 'profile.jpg')
 	</insert>
 	
 	<select id="loginCheck" parameterType="cocoFarm.dto.Account" resultType="int">
@@ -23,7 +23,7 @@
 	
 	<select id="selectId" parameterType="cocoFarm.dto.Account" resultType="int">
 		SELECT COUNT(*) FROM account
-		WHERE id = #{id} AND isDel=0
+		WHERE id = #{id} 
 	</select>
 	
 	<select id="findId" parameterType="cocoFarm.dto.Account" resultType="String">

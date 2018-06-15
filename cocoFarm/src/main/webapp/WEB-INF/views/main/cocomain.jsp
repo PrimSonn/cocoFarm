@@ -12,16 +12,16 @@
 <link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/farmstory.css">
 
-
+<!-- 가로 화면 전환 위한 css -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
 <script type="text/javascript">
 
-
-
-
 	$(document).ready(function () {
+		$('.auction_listpart').slick();
 	/* 	
 		//내용 넣어주기
 		<c:forEach items="${farm}" var="i" varStatus="status">
@@ -50,7 +50,9 @@
 			}).show();
 		});
 		
-		$(".popupLayer_FAQ li:nth-child(1)").click(function() {
+		$(".Q").click(function() {
+			$(this).toggleClass("open");
+			
 			if( $(this).next().hasClass("close") ) {
 				$(this).next().addClass("show").removeClass("close");
 			} else {
@@ -64,11 +66,43 @@
 <style type="text/css">
 .popupLayer_FAQ {
 	display: none;
-	border: 1px solid black;
-	background-color: lightgray;
-	overflow-y: scroll;
+	margin: 20px auto;
+	width: 1000px;
+	height: 700px;
+}
+.popupLayer_FAQ h1{
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	margin: 20px;
+}
+.popupLayer_FAQ ul {
+	margin: 20px;
+	border-top: 1px solid #a4a4a4;
+	border-bottom: 1px solid #a4a4a4;
+}
+.popupLayer_FAQ li {
+	list-style: none;
+	padding: 10px;
+	border-bottom: 1px solid #cecece;
+}
+.Q::before {
+    content: ">";
+    color: green;
+    font-weight: bold;
+    display: inline;
+    vertical-align: middle;
+    padding: 5px 5px;
 }
 
+.Q.open::before {
+	content: "∨";
+	color: green;
+    font-weight: bold;
+    display: inline;
+    vertical-align: middle;
+    padding: 5px 5px;
+}
 
 .close {
 	display: none;
@@ -76,12 +110,14 @@
 
 .show {
 	display: block;
+    background-color: #efefef;
 }
 
 </style>
 
 </head>
 <body>
+
 <div class="background_img">
 	<div class="img_one"><img src="/img/backgroundimg/back01.png" ></div>
 	<div class="img_two"><img src="/img/backgroundimg/back02.png" ></div>
@@ -91,7 +127,36 @@
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 	
 	
-	
+			<div class="farm_part">
+			<div class="container">
+				
+				<div class="farm_part_magin">
+					
+					<ul class="head_title">
+						<li class="title"><div class="title_icon"></div>종료 임박 경매</li>
+						<li class="plus_btn">+ 더보기</li>
+					</ul>
+					
+					<div class="auction_listpart">
+					
+					<c:forEach items="${auction}" var="auction" varStatus="status">
+							<div class="farm_board_board farm_board_last">
+								<p class="farm_boardtitle">${auction.title}</p>
+								<div class="bar"></div>
+								<img alt="" src="/img/profile/${auction.item_img}" style="height:100px;">
+								<p class="farm_name">${auction.name}</p>
+								<p class="quo_img"></p>
+								<div class="farm_boardcontent"><a href="/board/view.do?acc_idx=${auction.idx }">${auction.idx}</a></div> 
+							</div>
+					</c:forEach>
+					</div>
+				</div>
+			</div>
+			</div>
+			
+			
+			
+			
 			<div class="farm_part">
 			<div class="container">
 				
@@ -170,7 +235,7 @@
 <!--main부분 foot ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
 		
-		
+
 
 	
 </body>

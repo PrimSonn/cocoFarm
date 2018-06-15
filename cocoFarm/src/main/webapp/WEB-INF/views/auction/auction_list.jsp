@@ -49,48 +49,9 @@ function timediff(time_window,systime,status){
 </head>
 
 <body>
-<div id="header">
+<!--main부분 header 부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 
-	<div id="header_top">
-	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
-	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
-		</div>
-		<div id="header_nav">
-			<ul class="nav">
-				<li><a href="#">농수산물</a></li>
-				<li><a href="#">경매</a></li>
-				<li><a href="#">농부 스토리</a></li>	
-				<li><a href="#">자주 묻는 질문</a></li>	
-				<li><a href="#">공지사항</a></li>
-				<li><a href="#">회사소개</a></li>
-			</ul>
-		</div>
-		
-		<div id="header_footimg">
-			<div class="scarecrow"></div>
-			<div class="calligraphy"></div>
-		</div>
-	
-	</div>
-	<div id="bottom_vimg"></div>
-</div>	
 
 <div id="view_auction">
 	<div class="container">

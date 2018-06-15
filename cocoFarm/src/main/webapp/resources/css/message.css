@@ -4,8 +4,8 @@
 /*font-family: 'Amiko', sans-serif;  */
 @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
 /*font-family: 'Jeju Gothic', serif;*/
-
-select {
+ 
+.messageForm select {
     width: 120px;
     height: 30px;
     padding-left: 10px;
@@ -15,7 +15,7 @@ select {
     box-shadow: 0 1px 3px rgba(0,0,0,.13);
     background: rgba(255,255,255,0.6);
     margin-left: 20px;
-}
+} 
 .messageForm h1 {
 	font-size: 18px;
 	margin: 20px;
@@ -44,10 +44,7 @@ select {
     letter-spacing: 0;
 	border-collapse: collapse;
 }
- 
-table tr{
-	 /* border-bottom: 2px solid #9e9e9e;	  */
-}
+/* 
 .message_th {
     padding: 15px;
     border: none;
@@ -56,14 +53,10 @@ table tr{
     text-shadow: 0 1px #FFF;
     vertical-align: middle;
 }
-
-table td {
-	padding: 15px;
-    border: none;
-    border-bottom: 1px solid #DDD;
-    text-align: center;
-    vertical-align: baseline;
-}
+ */
+ 
+ 
+ 
 #btnDelete {
     background-color: #ffffff55;
     color: #616161;
@@ -107,3 +100,110 @@ table td {
 	margin-top: 10px;
 }
 
+.color_menu{
+	width: 100%;
+	height: 30px;
+	position:absolute;
+	background-color: #cffaea;
+	top: 0px;
+	left: 0px;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px; 
+	
+}
+.ajax_message_table h1{
+	display:block;
+	text-align:center;
+	margin-top:12px;
+	
+	font-family: 'Jeju Gothic';
+	font-size: 14px;
+}
+.ajax_message_table tr th{
+	width: 100px;
+	text-align:right; 
+	
+}
+.close_btn{
+	position: absolute;
+	font-size: 20px;
+	top: 2px;
+	right: 15px;
+	color: #fff;
+}
+.table_list{
+	width:100%;
+	display: inline-block;
+	margin-top: 10px;
+}
+.table_list label{
+	display: inline;
+	float: left;
+	width: 80px;
+	margin-right:10px;
+	text-align: right; 
+}
+
+.table_list p{
+	display: inline;
+	float: left;
+}
+
+.content_mess{
+	width: 300px;
+	height: 200px;
+	border: 1px solid #efefef;
+	  box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+	border-radius:2px;
+	padding: 10px;
+	
+}
+
+#writeMessage h1 {
+	font-size: 18px;
+	text-align: center;
+}
+
+.writeMessage_box {
+	margin: 20px;
+}
+
+.writeMessage_box label {
+	width: 46px;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: right;
+}
+
+.writeMessage_box textArea {
+	border-radius: 3px;
+	width: 250px;
+	height: 250px;
+}
+
+.writeMessage_content {
+	margin-top: 10px;
+}
+
+.labelTop {
+    vertical-align: top;
+}
+
+.btn_wrMess {
+    margin: 0 auto;
+    display: block;
+}
+
+.btn_writeMessage {
+	width: 80px;
+    height: 20px;
+    border: 0px;
+    background-color: limegreen;
+    color: #fff; 
+}
+
+.message_read .message_tr{
+	height:31px ;
+	display:table-row;
+	margin: 10px 0px;
+}

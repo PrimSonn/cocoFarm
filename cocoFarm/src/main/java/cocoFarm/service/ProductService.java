@@ -158,4 +158,7 @@ public interface ProductService {
 	//2018 06월 12일 
 	public List<Product> getProViewMainList();
 	
+//	2018년 06월 14일 판매자 결제내역조회
+	public List procPayNee(int accIdx);
+	
 }

@@ -4,6 +4,7 @@ import cocoFarm.dto.TimerDto;
 import cocoFarm.util.runners.Run;
 
 public interface TimerDao {
-	@Run() public TimerDto auctionExpire(TimerDto timer);
-	@Run() public TimerDto bidContractExpire(TimerDto timer);
+	@Run() public void auctionExpire(TimerDto timer);
+	@Run() public void bidContractExpire(TimerDto timer);
+	@Run() public void tempRcptClear(TimerDto timer);
 }

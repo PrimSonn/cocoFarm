@@ -2,6 +2,7 @@ package cocoFarm.dao;
 
 import java.util.List;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
@@ -93,12 +94,6 @@ public interface Auction_Dao {
 	 */
 	public void updateAnswer(Auction_Inquire inquire);
 	
-	/**
-	 * 경매 입찰 리스트
-	 * 
-	 * @return bidDto - 경매 입찰 리스트
-	 */
-	public List<BidDto> getBidList();
 	
 	
 	/**
@@ -107,4 +102,49 @@ public interface Auction_Dao {
 	 * @param bid - 경매 입찰 정보
 	 */
 	public void putBid(BidDto bid);
+	
+	/**
+	 * 경매 상위 입찰 불러오기
+	 * 
+	 * @param viewAuction - 경매글 번호
+	 * @return List - 경매 입찰 상위 리스트
+	 */
+	public List getBidderList(Auction viewAuction);
+	
+	/**
+	 * 개인 입찰 리스트
+	 * 
+	 * @param account - 계정 번호
+	 * @return - 개인 입찰 리스트
+	 */
+	public List getMemberBid(Account account);
+	
+	/**
+	 * 경매 입찰 취소
+	 * 
+	 * @param bid - 입찰정보
+	 */
+	public void cancelBid(BidDto bid);
+	
+	/**
+	 * 등록 경매글 조회
+	 * 
+	 * @param auction - 판매자 idx
+	 * @return	- 경매글 리스트
+	 */
+	public List getauctionList(Auction auction);
+	
+	/**
+	 * 경매 글 삭제
+	 * 
+	 * @param auction - 경매글 idx, 판매자 idx
+	 */
+	public void auctionCancel(Auction auction);
+	
+	/**
+	 * 메인에 올라갈 경매글 리스트
+	 * 
+	 * @return - 종료임박 상위 5개 경매글 리스트
+	 */
+	public List getAuctionMainList();
 }
