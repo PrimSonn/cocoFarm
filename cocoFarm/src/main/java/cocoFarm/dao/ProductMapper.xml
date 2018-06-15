@@ -15,6 +15,7 @@
 		<result column="reg_time" property="reg_time" />
 		<result column="last_edited" property="last_edited" />
 		<result column="isdel" property="isdel" />
+		<result column="name" property="acc_name" />
 	</resultMap>
 
 	<resultMap id="ProductResult" type="cocoFarm.dto.Product">
@@ -114,8 +115,10 @@
 
 	<select id="selectAllComment" parameterType="int"
 					resultMap="HashMap">
-		SELECT * FROM SALE_EVALUATION
-		WHERE sale_idx = ${_parameter } AND isdel = 0
+		SELECT SE.*, A.NAME FROM SALE_EVALUATION SE 
+		LEFT JOIN MAIN_RECEIPT M ON SE.MAIN_RECPT_IDX = M.IDX
+		LEFT JOIN ACCOUNT A ON M.BUYER_IDX = A.IDX
+		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
 	</select>
 
 	<!-- ==================================================================================== -->
@@ -136,11 +139,14 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
  	<!--hwanmin 2018_05_31 detailview select  -->
  	<select id="getDetailList" parameterType="cocoFarm.dto.Product" resultType="cocoFarm.dto.Product">
  		SELECT
- 			S.idx idx,S.origin origin,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,S.MAIN_IMG mainImg, 
-			A.name name,A.THUMB_loc THUMB_IMG,A.EMAIL email,
-			B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE,B.REPRESENTATIVE REPRESENTATIVE,
-			B.business_addr business_addr,B.business_category business_category,
-			CAT.NAME AS CATEGORY_NAME FROM SALE S INNER JOIN Account A ON S.ACC_IDX = A.IDX INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
+ 			S.idx idx, S.origin origin, S.acc_idx accIdx, S.title title, S.hit hit, S.content content, S.FACE_IMG faceImg, S.MAIN_IMG mainImg 
+			,A.name name, A.THUMB_loc THUMB_IMG, A.EMAIL email
+			,B.corporation_name corporation_name, B.BUSINESS_LICENSE_CODE BUSINESS_LICENSE_CODE, B.REPRESENTATIVE REPRESENTATIVE
+			,B.business_addr business_addr, B.business_category business_category
+			,CAT.NAME AS CATEGORY_NAME 
+		FROM SALE S 
+		INNER JOIN Account A ON S.ACC_IDX = A.IDX 
+		INNER JOIN BUSINESS_INFO B ON S.ACC_IDX = B.ACC_IDX
     	LEFT JOIN (
 		        SELECT listagg(CONVERT(SC.NAME,'UTF8','AL16UTF16'), ', ')WITHIN GROUP (ORDER BY SC.NAME) AS NAME , SC.SALE_IDX
 		            FROM (SELECT DISTINCT C.NAME AS NAME, SO.SALE_IDX SALE_IDX FROM SALE_OPTION SO

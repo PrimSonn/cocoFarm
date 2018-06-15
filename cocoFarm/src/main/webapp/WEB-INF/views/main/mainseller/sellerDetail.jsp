@@ -253,7 +253,7 @@ function viewComment() {
 					console.log(idx + ": " + val);
 
 					str += '<span class="wrap_profile">'
-						+	'<span class="comm_accName">계정 아이디</span></span>'
+						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span>'
 						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'
 						+ '<div class="wrap_cont"><span class="txt_prod">${product.title }</span>'
 						+ '<p class="desc_cmt"><span><span class="comm_content">'+ result[idx].content +'</span></span></p>'

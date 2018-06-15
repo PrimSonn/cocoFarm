@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 
 import cocoFarm.dto.Account;
+import cocoFarm.dto.Cart;
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.FileDto;
 import cocoFarm.dto.Option;
@@ -41,6 +42,7 @@ public class ProductController {
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
+
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
@@ -63,10 +65,12 @@ public class ProductController {
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
 	public String detailProView(Product product, SaleOption saleoption, Model model) {
 		
+		System.out.println("Porduct: "+product);
 		Product prod = productService.getDetailList(product);
 		
-		System.out.println(prod.getMainImg());
-		System.out.println(prod.getFaceImg());
+		System.out.println("getMainImg: "+prod.getMainImg());
+		System.out.println("getFaceImg: "+prod.getFaceImg());
+		System.out.println("getAccIdx: "+prod.getAccIdx());
 		
 		model.addAttribute("product", (prod));
 		model.addAttribute("option", (productService.getOptionList(saleoption)));
@@ -158,11 +162,6 @@ public class ProductController {
 		// 대표이미지, 상세설명이미지
 //		model.addAttribute("productImg", )
 		
-		// 옵션 개수
-		// 필요 없었다... optionView.size()로 해결
-//		int num = productService.optionNumber(saleOption.getSaleIdx());
-//		model.addAttribute("optionNum", num);
-		
 		// 판매상품 옵션
 		List optionView = productService.optionView(saleOption.getSaleIdx());
 		model.addAttribute("optionView", optionView);
@@ -250,6 +249,9 @@ public class ProductController {
 		
 		int accIdx = (Integer)session.getAttribute("idx");
 		
+		List<Cart> cart = productService.selectCart(accIdx);
+		model.addAttribute("cart", cart);
+		
 		List<SaleOption> cartOptionList = null;
 		cartOptionList = productService.cartView(accIdx);
 		model.addAttribute("optionCart", cartOptionList);
@@ -257,6 +259,7 @@ public class ProductController {
 		List<Product> cartProductList = new ArrayList<>();
 		Product product = null;
 		
+		// 장바구니에 담긴 상품이 없다면 
 		int saleIdx = 0;
 		if(cartOptionList.size() != 0) {
 			saleIdx = cartOptionList.get(0).getSaleIdx();
@@ -290,6 +293,11 @@ public class ProductController {
 //		for(int i=0; i<saleList.size(); i++) {
 //			logger.info("Option" + (i+1) + ": " + saleList.get(i));
 //		}
+
+		// 옵션 개수
+		// 필요 없었다... optionView.size()로 해결
+//		int num = productService.optionNumber(saleOption.getSaleIdx());
+//		model.addAttribute("optionNum", num);
 		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
@@ -308,9 +316,33 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
+	@ResponseBody
+	public List updateCart(String cart, HttpSession session) {
+		
+		Gson gson = new Gson();
+		List list = gson.fromJson(cart, List.class);
+
+		System.out.println(list.get(0));
+		
+		Cart c = new Cart();
+		for(int i=0; i<list.size(); i++) {
+			Map<String, Integer> map = (Map) list.get(i);
+			System.out.println(map);
+//			c.setSaleOptionIdx(map.get("saleOptionIdx"));
+//			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
+//			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
+			
+			productService.updateCart(map);
+		}
+		List items = productService.selectCart((Integer)session.getAttribute("idx"));
+		
+		return items;
+	}
+	
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public List<HashMap<String, Object>> comment(Comment comment, Model model, String insertComm) {
+	public List<HashMap<String, Object>> comment(Comment comment, String insertComm) {
 		
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
@@ -339,6 +371,7 @@ public class ProductController {
 		
 //		items.add(item);
 		items = productService.getCommentList(comment.getSale_idx());
+		
 		return items;
 	}
 	
@@ -353,7 +386,6 @@ public class ProductController {
 //											@RequestBody: 요청 데이터를 그대로 받음
 //											@RequestBody List comment,
 //											Comment comment,
-		
 //		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
 //		resultMap = JsonArray.fromObject(comment);
 		
@@ -385,6 +417,4 @@ public class ProductController {
 		return "mypage/common/procPaynee";
 		
 	}
-	
-	
 }
