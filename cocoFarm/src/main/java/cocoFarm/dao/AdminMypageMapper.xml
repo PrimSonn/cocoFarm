@@ -51,6 +51,10 @@
 		VALUES (1, #{acc_idx }, '판매자 등록 승인 관련', '판매자 등록 신청이 승인 되셨습니다.')
 	</insert>
 	
+	<delete id="licenseNo" parameterType="int">
+		DELETE BUSINESS_INFO WHERE acc_idx = #{acc_idx }
+	</delete>
+	
 	<insert id="licenseNoMsg" parameterType="int">
 		INSERT INTO message (sender_idx, receiver_idx, title, content) 
 		VALUES (1, #{acc_idx }, '판매자 등록 거절 관련', '판매자 등록 신청이 거절 되셨습니다.판매자 등록 삭제 후에 사업자 등록증의 내용을 정확히 입력하여 다시 등록 하여 주시면 감사하겠습니다.')

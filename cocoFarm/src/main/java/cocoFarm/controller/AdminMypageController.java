@@ -57,7 +57,7 @@ public class AdminMypageController {
 		
 	}
 	
-	@RequestMapping(value="/mypage/licenseView.do", method=RequestMethod.POST)
+	@RequestMapping(value="/mypage/licenseView.do", method=RequestMethod.GET)
 	public void licenseView(LicenseDto license, Model model) {
 		
 		model.addAttribute("licenseView", adminMypageService.licenseView(license));
@@ -72,7 +72,7 @@ public class AdminMypageController {
 		adminMypageService.licenseOk(acc_idx);
 		adminMypageService.licenseOkMsg(acc_idx);
 		
-		return "redirect:/mypage/licenseList.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/licenseNo.do", method=RequestMethod.POST)
@@ -81,8 +81,9 @@ public class AdminMypageController {
 		//관리자가 판매자등록 거절 버튼 누르면 작동하는 메소드
 		
 		adminMypageService.licenseNoMsg(acc_idx);
+		adminMypageService.licenseNo(acc_idx);
 		
-		return "redirect:/mypage/licenseList.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	
