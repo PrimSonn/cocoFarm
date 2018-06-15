@@ -381,7 +381,7 @@ function popupOpen2(){
 			</dl>
 			
 			
-			<form class="option_form" action="" method="post">
+			<form class="option_form" method="post">
 				<div id="detail_option">
 					
 				</div>

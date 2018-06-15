@@ -38,6 +38,16 @@ $(document).ready(function() {
 	
 	calcTotalPrice();
 	
+	
+	$(".return").click(function() {
+		location.href = "/seller.do";
+	});
+	
+	$(".purchase").click(function() {
+		$(".option_form").attr("action", "/orderpay.do");
+		$(".option_form").submit(); 
+	});	
+	
 	/* 장바구니 옵션 변경 버튼 */
 	$(".td_update").click(function() {
 		var arr = [];
@@ -331,17 +341,22 @@ function cartItems() {
 							
 								<c:forEach items="${optionCart }" var="option" varStatus="status">
 								<c:if test="${option.saleIdx eq product.idx }">
-									<div class="td_optionName"><span style="margin: 4px;"></span>${option.optionName } - ${option.price }원
-									
-										<div class="option_count">
-											<button class="button_minus" value=${option.price }>-</button>
-											<input type="text" class="pronum_text" id="amount${option.idx }"
-														 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-											<button class="button_plus" value=${option.price }>+</button>
+								
+									<form class="option_form" method="post">
+										<div class="td_optionName"><span style="margin: 4px;"></span>${option.optionName } - ${option.price }원
+										
+											<div class="option_count">
+												<button class="button_minus" value=${option.price }>-</button>
+												<input type="text" name="saleOptions[${status.index}].proAmount"
+															 class="pronum_text" id="amount${option.idx }"
+															 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+												<button class="button_plus" value=${option.price }>+</button>
+												<input type="hidden" name="saleOptions[${status.index}].idx" value="${option.idx}">
+												<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
+											</div>
 											
-											<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
 										</div>
-									</div>
+									</form>
 								</c:if>
 								</c:forEach>
 								
