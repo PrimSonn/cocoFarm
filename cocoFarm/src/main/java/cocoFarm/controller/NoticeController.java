@@ -43,7 +43,7 @@ public class NoticeController {
 	@RequestMapping(value="/notice/write.do", method=RequestMethod.POST)
 	public String writeProcess(Notice notice, HttpSession session) {
 		
-		if((Integer)session.getAttribute("type")==1) {
+		if((Integer)session.getAttribute("type")<=1) {
 			notice.setWriter_idx((Integer)session.getAttribute("type"));
 			noticeService.write(notice);
 		}
@@ -80,14 +80,14 @@ public class NoticeController {
 	@RequestMapping(value="/notice/update.do", method=RequestMethod.POST)
 	public String updateProcess(Notice notice, HttpSession session) {
 		
-		if((Integer)session.getAttribute("type")==1) noticeService.update(notice);		
+		if((Integer)session.getAttribute("type")<=1) noticeService.update(notice);		
 		return "redirect:/notice/view.do?idx="+notice.getIdx();			
 	}
 	
 	@RequestMapping(value="/notice/delete.do", method=RequestMethod.GET)
 	public String deleteProcess(Notice notice, Model model, HttpSession session) {
 		
-		if((Integer)session.getAttribute("type")==1) {
+		if((Integer)session.getAttribute("type")<=1) {
 			noticeService.delete(notice);
 			model.addAttribute("msg", "공지사항 삭제 완료");
 		}
