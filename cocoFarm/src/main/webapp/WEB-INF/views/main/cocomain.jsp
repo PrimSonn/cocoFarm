@@ -12,7 +12,9 @@
 <link rel="stylesheet" type="text/css" href="/css/sellerstyle.css">
 <link rel="stylesheet" type="text/css" href="/css/farmstory.css">
 
-
+<!-- 가로 화면 전환 위한 css -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
@@ -22,6 +24,7 @@
 
 
 	$(document).ready(function () {
+		$('.auction_listpart').slick();
 	/* 	
 		//내용 넣어주기
 		<c:forEach items="${farm}" var="i" varStatus="status">
@@ -91,7 +94,36 @@
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 	
 	
-	
+			<div class="farm_part">
+			<div class="container">
+				
+				<div class="farm_part_magin">
+					
+					<ul class="head_title">
+						<li class="title"><div class="title_icon"></div>종료 임박 경매</li>
+						<li class="plus_btn">+ 더보기</li>
+					</ul>
+					
+					<div class="auction_listpart">
+					
+					<c:forEach items="${auction}" var="auction" varStatus="status">
+							<div class="farm_board_board farm_board_last">
+								<p class="farm_boardtitle">${auction.title}</p>
+								<div class="bar"></div>
+								<img alt="" src="/img/profile/${auction.item_img}" style="height:100px;">
+								<p class="farm_name">${auction.name}</p>
+								<p class="quo_img"></p>
+								<div class="farm_boardcontent"><a href="/board/view.do?acc_idx=${auction.idx }">${auction.idx}</a></div> 
+							</div>
+					</c:forEach>
+					</div>
+				</div>
+			</div>
+			</div>
+			
+			
+			
+			
 			<div class="farm_part">
 			<div class="container">
 				

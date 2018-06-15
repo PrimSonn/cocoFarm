@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cocoFarm.dto.Product;
+import cocoFarm.service.Auction_Service;
 import cocoFarm.service.BoardService;
 import cocoFarm.service.ProductService;
 
@@ -17,6 +18,7 @@ public class MainController {
 
 	@Autowired ProductService productService;
 	@Autowired BoardService boardService;
+	@Autowired Auction_Service auctionService;
 	
 	/*
 	 *빈 URL -> 메인 
@@ -37,6 +39,7 @@ public class MainController {
 		/*boardService.getboardMainList();*/
 		model.addAttribute("farm",boardService.getboardMainList());
 		
+		model.addAttribute("auction",auctionService.getAuctionMainList());
 		/*
 	
 		SELECT acc_idx, title, content, written_date, hit, ISDEL,
