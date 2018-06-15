@@ -148,6 +148,7 @@ public class Auction {
 				+", time_window="+time_window
 				+", id="+id
 				+", systime="+systime
+				+", isDone="+isDone
 				+", highest_bid="+highest_bid+"]";
 	}
 

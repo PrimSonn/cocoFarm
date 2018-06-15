@@ -137,14 +137,15 @@ $(document).ready(function() {
 			
 			<div class="mypage_page01">
 				<div class="border">
-					<h1>나의 경매 입찰 목록</h1>
+					<h1>나의 경매 입찰 현황 목록</h1>
 					<div class="border_save">
 					
 					<table style="border-collapse: collapse; border:2px solid; border-color: #9e9e9e;">
 					<thead>
 						<tr>
 						<th style="width:30px; border:1px solid; border-color: #9e9e9e;">번호</th>
-						<th style="width:300px; border:1px solid; border-color: #9e9e9e;">입찰 품목</th>
+						<th style="width:200px; border:1px solid; border-color: #9e9e9e;">입찰 품목</th>
+						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">상태</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰가</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰일자</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">경매 종료일자</th>
@@ -153,10 +154,27 @@ $(document).ready(function() {
 					</thead>
 					
 					<tbody>
+					<c:if test="${empty memberBidList}">
+						<tr><td colspan="6">유효 입찰 항목이 존재하지 않습니다.</td></tr>
+					</c:if>
 						<c:forEach items="${memberBidList}" var="memberBidList" varStatus="status">
 						<tr>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.title }</td>
+							<c:choose>
+								<c:when test="${memberBidList.state_code == 1}">
+								<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="blue">최고입찰</font></td>
+								</c:when>
+								<c:when test="${memberBidList.state_code == 2}">
+								<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="black">차등입찰</font></td>
+								</c:when>
+								<c:when test="${memberBidList.state_code == 3}">
+								<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="red">낙찰</font></td>
+								</c:when>
+								<c:when test="${memberBidList.state_code == 4}">
+								<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="yellow">차등낙찰</font></td>
+								</c:when>
+							</c:choose>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.amount } 원</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.bid_time }</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.time_window }</td>
@@ -169,15 +187,86 @@ $(document).ready(function() {
 						</c:forEach>
 					</tbody>
 					</table>
-					
-						
-
 					</div>
-			
-			
 				</div>
+				
+<!-- 				<div class="border"> -->
+<!-- 					<h1>나의 경매 차등 입찰 목록</h1> -->
+<!-- 					<div class="border_save"> -->
+					
+<!-- 					<table style="border-collapse: collapse; border:2px solid; border-color: #9e9e9e;"> -->
+<!-- 					<thead> -->
+<!-- 						<tr> -->
+<!-- 						<th style="width:30px; border:1px solid; border-color: #9e9e9e;">번호</th> -->
+<!-- 						<th style="width:300px; border:1px solid; border-color: #9e9e9e;">입찰 품목</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰가</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰일자</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">경매 종료일자</th> -->
+<!-- 						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">입찰 취소</th> -->
+<!-- 						</tr> -->
+<!-- 					</thead> -->
+					
+<!-- 					<tbody> -->
+<%-- 					<c:if test="${empty memberBidList}"> --%>
+<!-- 						<tr><td colspan="6">차등 입찰 항목이 존재하지 않습니다.</td></tr> -->
+<%-- 					</c:if> --%>
+<%-- 						<c:forEach items="${memberBidList}" var="memberBidList" varStatus="status"> --%>
+<!-- 						<tr> -->
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.title }</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.amount } 원</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.bid_time }</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.time_window }</td> --%>
+<!-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"> -->
+<%-- 							<input class="auctionidx" type="hidden" value="${memberBidList.auction_idx }"> --%>
+<%-- 							<input class="amount"  type="hidden" value="${memberBidList.amount }"> --%>
+<!-- 							<button class="btnCancel" style="cursor: pointer; margin-top: 1px;" >취소</button> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+<%-- 						</c:forEach> --%>
+<!-- 					</tbody> -->
+<!-- 					</table> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 			
-			
+<!-- 			<div class="border"> -->
+<!-- 					<h1>나의 경매 낙찰 목록</h1> -->
+<!-- 					<div class="border_save"> -->
+					
+<!-- 					<table style="border-collapse: collapse; border:2px solid; border-color: #9e9e9e;"> -->
+<!-- 					<thead> -->
+<!-- 						<tr> -->
+<!-- 						<th style="width:30px; border:1px solid; border-color: #9e9e9e;">번호</th> -->
+<!-- 						<th style="width:300px; border:1px solid; border-color: #9e9e9e;">입찰 품목</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰가</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">입찰일자</th> -->
+<!-- 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">경매 종료일자</th> -->
+<!-- 						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">입찰 취소</th> -->
+<!-- 						</tr> -->
+<!-- 					</thead> -->
+					
+<!-- 					<tbody> -->
+<%-- 					<c:if test="${empty memberBidList}"> --%>
+<!-- 						<tr><td colspan="6">낙찰 항목이 존재하지 않습니다.</td></tr> -->
+<%-- 					</c:if> --%>
+<%-- 						<c:forEach items="${memberBidList}" var="memberBidList" varStatus="status"> --%>
+<!-- 						<tr> -->
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.title }</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.amount } 원</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.bid_time }</td> --%>
+<%-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${memberBidList.time_window }</td> --%>
+<!-- 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"> -->
+<%-- 							<input class="auctionidx" type="hidden" value="${memberBidList.auction_idx }"> --%>
+<%-- 							<input class="amount"  type="hidden" value="${memberBidList.amount }"> --%>
+<!-- 							<button class="btnCancel" style="cursor: pointer; margin-top: 1px;" >취소</button> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+<%-- 						</c:forEach> --%>
+<!-- 					</tbody> -->
+<!-- 					</table> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 			
 			
 			

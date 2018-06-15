@@ -56,12 +56,13 @@ public class Auction_Controller {
 		model.addAttribute("auctionList", auctionService.getauctionList(auction));
 	}
 	
+	
 	@RequestMapping(value="/auction/auction_cancel.do", method=RequestMethod.POST)
 	public String auctionCancel(Auction auction, HttpSession session) {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
-		System.out.println(auction);
 		
 		auctionService.auctionCancel(auction);
+		System.out.println(auction);
 		
 		return "redirect:/auction/auction_auctionCheck.do";
 	}

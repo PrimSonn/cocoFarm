@@ -28,6 +28,10 @@ textarea.autosize {min-height: 80px;}
 var openWin;
         function openChild()
         {
+        	var popupX = (window.screen.width / 2) - (570 / 2);
+
+        	var popupY= (window.screen.height /2) - (500 / 2);
+        	
         	console.log(document.getElementById("price_sale").value);
             // window.name = "부모창 이름"; 
             window.name = "parentForm";
@@ -38,7 +42,7 @@ var openWin;
             +"&name="+'${view.name}'
             +"&idx="+'${view.idx}',
                     "childForm",
-                    "width=570, height=350, resizable = no, location=no, scrollbars = no");    
+                    'width=570, height=350, left='+ popupX + ', top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);    
 //             openWin.document.getElementById("cInput").value = document.getElementById("price_sale").value;
 //             openWin.document.getElementById("cInput").value;
         }
