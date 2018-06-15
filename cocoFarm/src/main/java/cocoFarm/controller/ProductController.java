@@ -314,17 +314,10 @@ public class ProductController {
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
-		logger.info("cart.do post!");
-
-		// 옵션 개수
-		// 필요 없었다... optionView.size()로 해결
-//		int num = productService.optionNumber(saleOption.getSaleIdx());
-//		model.addAttribute("optionNum", num);
+		logger.info("/product/cart.do POST !!!");
 		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
-		
-//		model.addAttribute("optionCart", option);
 		
 		return "redirect:/product/cart.do";
 	}

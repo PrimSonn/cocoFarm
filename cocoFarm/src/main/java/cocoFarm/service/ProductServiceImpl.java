@@ -127,13 +127,15 @@ public class ProductServiceImpl implements ProductService {
 		
 		
 		for(int i=0; i<option.getSaleOptions().size(); i++) {
-			System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
+			if(option.getSaleOptions().get(i).getIdx() != 0) {
+				System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
 			
-			saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
-			saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
+				saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
+				saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
 			
-			System.out.println("CART" + (i+1) + ":" + saleOption);
-			saleOptionDao.insertCart(saleOption, accIdx);
+				System.out.println("CART" + (i+1) + ":" + saleOption);
+				saleOptionDao.insertCart(saleOption, accIdx);
+			}
 		}
 	}
 	
