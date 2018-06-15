@@ -78,7 +78,7 @@ public class ProductController {
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
-		
+		//추가 해준거 
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		System.out.println(session.getAttribute("type"));
@@ -163,9 +163,19 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
 	public String update(SaleOption saleOption
-//						, HttpSession session
+						, HttpSession session
 						, Model model) {
+		
 		logger.info("update.do get!");
+		
+		//추가 해준거 
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
+
+		
+		
 		
 		// 판매상품, 대표이미지, 상세설명이미지
 		Product productView = productService.productView(saleOption.getSaleIdx());
@@ -249,7 +259,13 @@ public class ProductController {
 		}
 		productService.update(opt);
 		
+		
+		
+		
 		return "redirect:/product";
+	
+	
+	
 	}
 
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
