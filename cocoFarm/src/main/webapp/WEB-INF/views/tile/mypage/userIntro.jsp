@@ -30,7 +30,7 @@
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 					<ul>
 						<!-- <li><a href="#">경매등록하기</a></li> -->
-						<li><a href="#">경매 상품 조회하기</a></li>
+						<li><a href="/auction/auction_bidCheck.do">경매 상품 조회하기</a></li>
 					</ul>
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>

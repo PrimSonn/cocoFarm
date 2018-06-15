@@ -69,7 +69,7 @@ $(document).ready(function(){
 			</c:if>
 			
 			<c:if test="${sessionScope.idx ne null }">
-			<li><a href="/mypage/message.do" id="alarm">알림</a></li>	
+			<li><a href="/mypageIntro.do" id="alarm">알림</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx ne null }">
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	

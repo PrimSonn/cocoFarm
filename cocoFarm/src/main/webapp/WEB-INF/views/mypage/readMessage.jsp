@@ -127,9 +127,9 @@ $("#btnDelete").click(function() {
 });
 </script>
 <div>
-	<table class="message_table">
+	<table class="message_table message_read" style="text-align: center;">
 		<thead>
-			<tr>
+			<tr class="message_tr">
 				<th class="message_th"><input type="checkbox" id="checkAll" /></th>
 				<th class="message_th">제목</th>
 				<c:if test="${messageCate eq 1 }">
@@ -148,7 +148,7 @@ $("#btnDelete").click(function() {
 		</thead>
 		<tbody>
 		<c:forEach items="${messageList }" var="message">
-			<tr>
+			<tr class="message_tr">
 				<td class="message_td"><input type="checkbox" id="check${message.idx }"name="checkRow" value="${message.idx }" />${message.idx }</td>
 				<td class="message_td"><a href="#" onclick="messageView(${message.idx }, ${messageCate });">${message.title }</a></td>
 				<c:if test="${messageCate eq 1 }">
@@ -163,7 +163,7 @@ $("#btnDelete").click(function() {
 		</tbody>
 	</table>
 	<br>
-	<button id="btnDelete">삭제</button>
+	<button id="btnDelete" class="mess_btn_cancle">삭제</button>
 	<br>
 	<jsp:include page="/WEB-INF/views/util/messagePaging.jsp" />
 	

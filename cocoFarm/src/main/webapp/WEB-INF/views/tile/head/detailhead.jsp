@@ -68,7 +68,7 @@ function submit() {
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
 			<c:if test="${sessionScope.idx eq null }">
-			<li><a href="/mypage/message.do" id="alarm">알림</a></li>	
+			<li><a href="/mypageIntro.do" id="alarm">알림</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx ne null }">
 			
@@ -95,7 +95,7 @@ function submit() {
 				<li><a href="/seller.do">농수산물</a></li>
 				<li><a href="/auction/auction_list.do">경매</a></li>
 				<li><a href="/board/list.do">농부 스토리</a></li>	
-				<li><a href="#" id="FAQ">자주 묻는 질문</a></li>	
+				<li><a href="/main/faq.do" id="FAQ">자주 묻는 질문</a></li>	
 				<li><a href="/notice/list.do">공지사항</a></li>
 				<li><a href="/companyinfo.do">회사소개</a></li>
 			</ul>

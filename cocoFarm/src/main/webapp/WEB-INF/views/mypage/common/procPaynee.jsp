@@ -11,14 +11,26 @@
 <body>
 
 <div>
-	<table class="message_table">
+	<table class="message_table"style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;">
+		
+		<colgroup>
+					<col width="100px">
+					<col width="130px">
+					<col width="130px">
+					<col width="60px">
+					<col width="60px">
+					<col width="100px">
+					<col width="100px">
+					<col width="100px">		
+		</colgroup>
+		
 		<thead>
 			<tr>
 				<th class="message_th">구매자 이름</th>
 				<th class="message_th">판매글 제목</th>
 				<th class="message_th">구매한 옵션</th>
-				<th class="message_th">옵션 수량</th>
-				<th class="message_th">옵션 단위</th>
+				<th class="message_th">수량</th>
+				<th class="message_th">단위</th>
 				<th class="message_th">옵션 단가</th>
 				<th class="message_th">총결제금액</th>
 				<th class="message_th">결제 시간</th>
