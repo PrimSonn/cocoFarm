@@ -17,7 +17,7 @@
 		<input type="hidden" id="sender_name" name="sender" value="${account.name }" />
 
 		<input type="hidden" id="receiver_idx" name="receiver_idx" value="${msg.idx }" />
-		<div class="writeMessage_content"><label>받는사람</label><input type="text" id="receiver" name="receiver" value="${msg.name }" /></div><br>
+		<div class="writeMessage_content"><label>받는사람</label><input type="text" id="receiver" name="receiver" readonly="readonly" value="${msg.name }" /></div><br>
 
 		<div class="writeMessage_content"><label>제목</label><input type="text" id="title" name="title" /></div><br>
 		

@@ -140,4 +140,11 @@ public interface Auction_Dao {
 	 * @param auction - 경매글 idx, 판매자 idx
 	 */
 	public void auctionCancel(Auction auction);
+	
+	/**
+	 * 메인에 올라갈 경매글 리스트
+	 * 
+	 * @return - 종료임박 상위 5개 경매글 리스트
+	 */
+	public List getAuctionMainList();
 }

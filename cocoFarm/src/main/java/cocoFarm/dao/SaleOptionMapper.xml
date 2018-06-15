@@ -157,4 +157,10 @@
 		WHERE sale_opt_idx = ${_parameter }
 	</delete>
 	
+	<update id="updateCart" parameterType="java.util.Map">
+		UPDATE CART
+		SET count = #{count }
+		WHERE sale_opt_idx = #{saleOptionIdx }
+	</update>
+	
 </mapper>

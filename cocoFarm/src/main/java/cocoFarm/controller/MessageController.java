@@ -77,12 +77,14 @@ public class MessageController {
 	
 	@RequestMapping(value="/mypage/writeMessage.do", method=RequestMethod.GET)
 	public void writeMessage(int msgTo, HttpSession session, Model model){
+		System.out.println("msgTo: "+msgTo);
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		
+		System.out.println("account: "+account);
 		model.addAttribute("account", account);
 		
 		Account account2 = loginService.selectAll(msgTo);
+		System.out.println("account2: "+account2);
 		model.addAttribute("msg", account2);
 	}
 	
