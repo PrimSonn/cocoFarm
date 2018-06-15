@@ -203,12 +203,12 @@ $('.open_icon').on('click', function(){
 								<dt>경매 시작가</dt>
 								
 								<dd>
-									<p class="price_tem">${view.start_price }</p>
+									<p class="price_tem"><fmt:formatNumber type="number" value="${view.start_price }"/></p>
 									원
 								</dd>
 								<dt>현재 입찰가</dt>
 								<dd>
-									<p class="price_sale"><input type="hidden" id="price_sale" value="${view.highest_bid }"/> ${view.highest_bid }</p>
+									<p class="price_sale"><input type="hidden" id="price_sale" value="${view.highest_bid }"/><fmt:formatNumber type="number" value="${view.highest_bid }"/></p>
 									원
 								</dd>
 
@@ -269,7 +269,7 @@ $('.open_icon').on('click', function(){
 				<c:forEach items="${bidderList }" var="bidderList">
 				<tr>
 				<td style="border: 1px solid #e7e7e7">${bidderList.name }</td>
-				<td style="border: 1px solid #e7e7e7">${bidderList.amount }</td>
+				<td style="border: 1px solid #e7e7e7"><fmt:formatNumber type="number" value="${bidderList.amount }"/>원</td>
 				<td style="border: 1px solid #e7e7e7">${bidderList.bid_time }</td>
 				</tr>
 				</c:forEach>
