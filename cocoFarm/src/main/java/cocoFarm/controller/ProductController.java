@@ -11,8 +11,8 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +38,7 @@ import cocoFarm.util.Paging;
 @Controller
 public class ProductController {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
@@ -80,15 +80,8 @@ public class ProductController {
 	
 	// 판매 상품 옵션 조회
 	@RequestMapping(value="/product", method=RequestMethod.GET)
-<<<<<<< HEAD
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
-
-=======
-	public String productList(@RequestParam(defaultValue="0") int curPage, Model model,HttpSession session) {
-		
-		//추가 해준거 
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
@@ -187,34 +180,6 @@ public class ProductController {
 	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
 	public String updateProduct(Product product, Option opt, FileDto f) {
 		
-<<<<<<< HEAD
-		if (f != null) {
-			// 이미지를 새로 등록
-			List<MultipartFile> list = f.getUpload();
-			
-			logger.info("faceImg: " + list.get(0).getOriginalFilename());
-			logger.info("mainImg: " + list.get(1).getOriginalFilename());
-			logger.info("size: " + list.size());
-			
-			// 고유 식별자
-			logger.info(UUID.randomUUID().toString());
-			String uID = UUID.randomUUID().toString().split("-")[0];
-			
-			// 파일이 저장될 경로
-			String realpath = context.getRealPath("resources/proimg");
-			logger.info(realpath);
-			
-			// 파일이 저장될 이름
-			String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
-			String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
-			
-			File dest1 = new File(realpath, stored1);
-			File dest2 = new File(realpath, stored2);
-			System.out.println(dest1);
-			System.out.println(dest2);
-			
-			// 실제 파일 업로드
-=======
 		// 고유 식별자
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		// 파일이 저장될 경로
@@ -226,7 +191,6 @@ public class ProductController {
 			++j;
 			System.out.println("j: "+j);
 			if(m.isEmpty())continue;
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 			try {
 				destAr[j] = new StringBuilder()
 							.append(String.valueOf(j))
@@ -239,12 +203,6 @@ public class ProductController {
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-<<<<<<< HEAD
-			
-			product.setFaceImg(stored1);
-			product.setMainImg(stored2);
-=======
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		}
 		product.setFaceImg(destAr[0]);
 		product.setMainImg(destAr[1]);
@@ -293,19 +251,8 @@ public class ProductController {
 	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
-<<<<<<< HEAD
-		logger.info("/product/cart.do GET !!!!");
-		logger.info("-----------controller-----------");
-		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-
-		System.out.println(session.getAttribute("type"));
-=======
-		
-		int idx = (int)session.getAttribute("idx");
-		Account account = loginService.selectAll(idx);
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		model.addAttribute("account", account);
 		
 		int accIdx = (Integer)session.getAttribute("idx");
@@ -335,14 +282,8 @@ public class ProductController {
 				cartProductList.add(product);
 			} else { continue; }
 		}
-<<<<<<< HEAD
-		model.addAttribute("productCart", cartProductList);
-		
-=======
-		
 		model.addAttribute("productCart", cartProductList);
 
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		if((Integer)session.getAttribute("type")<=1){
 			return "mypage/admin/adminCart";
 		}else if((Integer)session.getAttribute("type")==2) {
@@ -354,25 +295,10 @@ public class ProductController {
 	
 	// 장바구니 담기
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
-<<<<<<< HEAD
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
 		logger.info("/product/cart.do POST !!!");
-=======
-	public String insertBasket(Option option, HttpSession session, Model model) {
-		
-		List<SaleOption> saleList = option.getSaleOptions();
-//		for(int i=0; i<saleList.size(); i++) {
-//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
-//		}
-
-		// 옵션 개수
-		// 필요 없었다... optionView.size()로 해결
-//		int num = productService.optionNumber(saleOption.getSaleIdx());
-//		model.addAttribute("optionNum", num);
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
-		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
 		
@@ -453,8 +379,6 @@ public class ProductController {
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
 	public void comm() {
 	}
-<<<<<<< HEAD
-=======
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
@@ -483,7 +407,6 @@ public class ProductController {
 		
 		return map;
 	}
->>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 	
 	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
 	public String procPaynee(HttpSession session, Model model) {
