@@ -149,6 +149,7 @@ public class Auction {
 				+", id="+id
 				+", systime="+systime
 				+", isDone="+isDone
+				+", name="+name
 				+", highest_bid="+highest_bid+"]";
 	}
 

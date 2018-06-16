@@ -164,7 +164,7 @@
 		SELECT ac.*, adq.time_window 
 		FROM auction ac 
 		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
-		WHERE writter_idx = #{writter_idx}
+		WHERE writter_idx = #{writter_idx} ORDER BY time_window;
 	</select>
 	
 	<select id="auctionCancel" parameterType="cocoFarm.dto.Auction" statementType="CALLABLE">
@@ -176,9 +176,10 @@
 	</select>
 	
 	<select id="getAuctionMainList" resultType="cocoFarm.dto.Auction">
-		<![CDATA[SELECT ac.*,adq.time_window 
+		<![CDATA[SELECT ac.*,adq.time_window ,acnt.name
 		FROM auction ac 
-		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx)
+		INNER JOIN account acnt ON (ac.writter_idx = acnt.idx) 
 		WHERE ac.state_code=1 
 		AND rownum<=5 
 		ORDER BY time_window ASC]]>
