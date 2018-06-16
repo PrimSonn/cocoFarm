@@ -45,6 +45,12 @@ public class PayController {
 		
 		String query ="(";
 		List<Integer> listA = new ArrayList<Integer>();
+
+		System.out.println("결제 옵션 개수: " + option.getSaleOptions().size());
+		System.out.println("옵션1: " + option.getSaleOptions().get(0).getIdx());
+		System.out.println("옵션2: " + option.getSaleOptions().get(1).getIdx());
+		System.out.println("옵션3: " + option.getSaleOptions().get(2).getIdx());
+//		System.out.println(option.getSaleOptions().get(0).getIdx());
 		
 		/*06월 04일 추가*/
 		try{
@@ -64,8 +70,8 @@ public class PayController {
 				if(saleList.get(i)==null||saleList.get(i).equals("")) {
 					continue;
 				}else {
-						query += saleList.get(i).getIdx()+",";
-						listA.add(saleList.get(i).getProAmount());
+					query += saleList.get(i).getIdx()+",";
+					listA.add(saleList.get(i).getProAmount());
 				}
 			}
 			

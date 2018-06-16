@@ -121,15 +121,12 @@ public interface ProductService {
 	public void updateCart(Map cart);
 	
 	/**
-	 * 
-	 * 
 	 * Desc : 상품평 등록
 	 * @method : insertComment
 	 * @param comment - 상품평 정보
 	 * @return : void
 	 * @since  : 2018. 6. 13.
 	 * @author : jieun
-	 *
 	 */
 	public void insertComment(Comment comment);
 	

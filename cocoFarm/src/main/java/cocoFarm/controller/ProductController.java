@@ -76,16 +76,14 @@ public class ProductController {
 		return "main/mainseller/sellerDetail";
 	}
 	
+	// 판매 상품 옵션 조회
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
-		//추가 해준거 
+
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
-		
-		
 		
 		int totalCount = productService.getListCount();
 		
@@ -106,6 +104,7 @@ public class ProductController {
 		return "mypage/seller/productInsert";
 	}
 	
+	// 판매 상품 등록
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product
 								, Option opt
@@ -162,6 +161,7 @@ public class ProductController {
 		return "redirect:/product";
 	}
 	
+	// 판매 상품 정보 불러오기
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
 	public String update(SaleOption saleOption
 						, HttpSession session
@@ -169,14 +169,9 @@ public class ProductController {
 		
 		logger.info("update.do get!");
 		
-		//추가 해준거 
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
-
-		
-		
 		
 		// 판매상품, 대표이미지, 상세설명이미지
 		Product productView = productService.productView(saleOption.getSaleIdx());
@@ -194,6 +189,7 @@ public class ProductController {
 		return "mypage/seller/productUpdate";
 	}
 	
+	// 판매 상품 수정
 	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
 	public String updateProduct(Product product
 								, Option opt
@@ -201,7 +197,6 @@ public class ProductController {
 		logger.info("update.do post!");
 		
 		System.out.println(product.getIdx());
-		
 		
 		if (f != null) {
 			// 이미지를 새로 등록
@@ -240,7 +235,6 @@ public class ProductController {
 			
 			product.setFaceImg(stored1);
 			product.setMainImg(stored2);
-			
 		}
 		
 		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
@@ -262,6 +256,7 @@ public class ProductController {
 		return "redirect:/product";
 	}
 
+	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
 		logger.info("/product/cart.do GET !!!!");
@@ -310,6 +305,7 @@ public class ProductController {
 		}
 	}
 	
+	// 장바구니 담기
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
 							, HttpSession session
@@ -322,6 +318,7 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	// 장바구니 삭제
 	@RequestMapping(value="/product/deleteCart.do", method=RequestMethod.POST)
 	public String deleteBasket(String productIdx) {
 		if( !"".equals(productIdx) && productIdx != null) {
@@ -331,6 +328,7 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	// 장바구니 옵션 수정
 	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List updateCart(String cart, HttpSession session) {
@@ -358,6 +356,7 @@ public class ProductController {
 		return items;
 	}
 	
+	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment

@@ -330,6 +330,10 @@ function cartItems() {
 							<th class="th_delivery">배송비</th>
 						</tr>
 						
+						
+							
+						<form class="option_form" method="post">
+						
 						<c:forEach items="${productCart }" var="product" varStatus="st">
 						<tr class="tr_back" id="tr_cartItem${st.index }"	align="center">
 							<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
@@ -339,24 +343,24 @@ function cartItems() {
 									<div class="td_productName">${product.title }</div>
 								</div><br>
 							
+							
 								<c:forEach items="${optionCart }" var="option" varStatus="status">
 								<c:if test="${option.saleIdx eq product.idx }">
 								
-									<form class="option_form" method="post">
+									
 										<div class="td_optionName"><span style="margin: 4px;"></span>${option.optionName } - ${option.price }원
 										
 											<div class="option_count">
 												<button class="button_minus" value=${option.price }>-</button>
-												<input type="text" name="saleOptions[${status.index}].proAmount"
+												<input type="text" name="saleOptions[${status.index }].proAmount"
 															 class="pronum_text" id="amount${option.idx }"
 															 value="${option.proAmount }" onkeyup="onlyNumber(this)">
 												<button class="button_plus" value=${option.price }>+</button>
-												<input type="hidden" name="saleOptions[${status.index}].idx" value="${option.idx}">
+												<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
 												<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
 											</div>
 											
 										</div>
-									</form>
 								</c:if>
 								</c:forEach>
 								
@@ -368,6 +372,8 @@ function cartItems() {
 							<td class="delivery_price">무료</td>
 						</tr>
 						</c:forEach>
+						
+						</form>
 						
 						<tr class="tr_back"	align="center">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
