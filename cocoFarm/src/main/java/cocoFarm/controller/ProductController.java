@@ -11,8 +11,8 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +38,7 @@ import cocoFarm.util.Paging;
 @Controller
 public class ProductController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
@@ -46,9 +46,8 @@ public class ProductController {
 	//판매 상세 정보 옴김
 	@RequestMapping(value="/seller.do",method=RequestMethod.GET)
 	public String viewList(Model model) {
-		System.out.println(productService.getProMainList());
-		model.addAttribute("seller",(productService.getProMainList()));
 		
+		model.addAttribute("seller",(productService.getProMainList()));
 		return "main/mainseller/sellermain";
 	}
 	
@@ -56,7 +55,7 @@ public class ProductController {
 	//판매 상세 정보
 	@RequestMapping(value="/seller.do",method=RequestMethod.POST)
 	public String searchviewList(Product product, Model model) {
-		System.out.println(product.getSearch_name());
+		
 		model.addAttribute("seller",(productService.getSerchList(product)));
 		return "main/mainseller/sellermain";
 	}
@@ -64,13 +63,16 @@ public class ProductController {
 	
 	//판매 디테일 뷰
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
-	public String detailProView(Product product
-								, SaleOption saleoption
-								, Model model) {
+	public String detailProView(Product product, SaleOption saleoption, Model model) {
 		
-		logger.info("sellerDetail.do GET!!!");
-
-		model.addAttribute("product", (productService.getDetailList(product)));
+		System.out.println("Porduct: "+product);
+		Product prod = productService.getDetailList(product);
+		
+		System.out.println("getMainImg: "+prod.getMainImg());
+		System.out.println("getFaceImg: "+prod.getFaceImg());
+		System.out.println("getAccIdx: "+prod.getAccIdx());
+		
+		model.addAttribute("product", (prod));
 		model.addAttribute("option", (productService.getOptionList(saleoption)));
 		
 		return "main/mainseller/sellerDetail";
@@ -78,9 +80,15 @@ public class ProductController {
 	
 	// 판매 상품 옵션 조회
 	@RequestMapping(value="/product", method=RequestMethod.GET)
+<<<<<<< HEAD
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
 
+=======
+	public String productList(@RequestParam(defaultValue="0") int curPage, Model model,HttpSession session) {
+		
+		//추가 해준거 
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
@@ -93,39 +101,33 @@ public class ProductController {
 		
 		List optionList = productService.getPagingList(paging);
 		model.addAttribute("optionList", optionList);
-//		System.out.println(optionList.get(0));  // 가장 최근 SaleOption 정보 출력
 		
 		return "mypage/seller/productList";
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
-	public String insert(HttpSession session) {
-		logger.info("insert.do get!");
+	public String insert(HttpSession session, Model model) {
+		//추가 해준거 
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		model.addAttribute("account", account);
+				
+		
+		
 		return "mypage/seller/productInsert";
 	}
 	
 	// 판매 상품 등록
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
-	public String insertProduct(Product product
-								, Option opt
-								, FileDto f
-								, HttpSession session) {
-		
-		logger.info("insert.do post!");
+	public String insertProduct(Product product, Option opt, FileDto f, HttpSession session) {
+
 		List<MultipartFile> list = f.getUpload();
 		
-		logger.info("faceImg: \"" + list.get(0).getOriginalFilename() + "\"");
-		logger.info("mainImg: " + list.get(1).getOriginalFilename());
-		logger.info("size: " + list.size());
-		logger.info("length: " + list.get(0).getOriginalFilename().length());
-		
 		// 고유 식별자
-		logger.info(UUID.randomUUID().toString());
 		String uID = UUID.randomUUID().toString().split("-")[0];
 		
 		// 파일이 저장될 경로
 		String realpath = context.getRealPath("resources/proimg");
-		logger.info(realpath);
 		
 		// 파일이 저장될 이름
 		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
@@ -133,8 +135,6 @@ public class ProductController {
 		
 		File dest1 = new File(realpath, stored1);
 		File dest2 = new File(realpath, stored2);
-		System.out.println(dest1);
-		System.out.println(dest2);
 		
 		// 실제 파일 업로드
 		try {
@@ -163,11 +163,7 @@ public class ProductController {
 	
 	// 판매 상품 정보 불러오기
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
-	public String update(SaleOption saleOption
-						, HttpSession session
-						, Model model) {
-		
-		logger.info("update.do get!");
+	public String update(SaleOption saleOption, HttpSession session, Model model) {
 		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
@@ -184,20 +180,14 @@ public class ProductController {
 		List optionView = productService.optionView(saleOption.getSaleIdx());
 		model.addAttribute("optionView", optionView);
 		
-//		session.setAttribute("saleIdx", productView.getIdx());
-		
 		return "mypage/seller/productUpdate";
 	}
 	
 	// 판매 상품 수정
 	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
-	public String updateProduct(Product product
-								, Option opt
-								, FileDto f) {
-		logger.info("update.do post!");
+	public String updateProduct(Product product, Option opt, FileDto f) {
 		
-		System.out.println(product.getIdx());
-		
+<<<<<<< HEAD
 		if (f != null) {
 			// 이미지를 새로 등록
 			List<MultipartFile> list = f.getUpload();
@@ -224,18 +214,65 @@ public class ProductController {
 			System.out.println(dest2);
 			
 			// 실제 파일 업로드
+=======
+		// 고유 식별자
+		String uID = UUID.randomUUID().toString().split("-")[0];
+		// 파일이 저장될 경로
+		String realpath = context.getRealPath("resources/proimg");
+		
+		String[] destAr = new String[2];
+		int j=-1;
+		for(MultipartFile m: f.getUpload()) {
+			++j;
+			System.out.println("j: "+j);
+			if(m.isEmpty())continue;
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 			try {
-				list.get(0).transferTo(dest1);
-				list.get(1).transferTo(dest2);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				destAr[j] = new StringBuilder()
+							.append(String.valueOf(j))
+							.append(m.getOriginalFilename())
+							.append("_")
+							.append(uID)
+							.toString();
+				m.transferTo( new File(realpath,destAr[j]) );
+				
+			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
+<<<<<<< HEAD
 			
 			product.setFaceImg(stored1);
 			product.setMainImg(stored2);
+=======
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		}
+		product.setFaceImg(destAr[0]);
+		product.setMainImg(destAr[1]);
+		
+		/*
+		// 이미지를 새로 등록
+		List<MultipartFile> list = f.getUpload();
+		
+		// 파일이 저장될 이름
+		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
+		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
+		
+		File dest1 = new File(realpath, stored1);
+		File dest2 = new File(realpath, stored2);
+		
+		// 실제 파일 업로드
+		try {
+			list.get(0).transferTo(dest1);
+			list.get(1).transferTo(dest2);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		product.setFaceImg(stored1);
+		product.setMainImg(stored2);
+		*/
 		
 		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
 //		if(list.get(0).getOriginalFilename().length()!=0
@@ -243,9 +280,6 @@ public class ProductController {
 //		}
 		
 		productService.update(product);
-		
-//		System.out.println(opt.getSaleOptions().get(0).getIdx()); //0
-//		System.out.println(opt.getSaleOptions().get(1).getIdx()); //0
 		
 		// 쿼리스트링을 통해 받은 idx (Product) ( = saleIdx (SaleOption) )
 		for(int i=0; i<opt.getSaleOptions().size(); i++) {
@@ -259,6 +293,7 @@ public class ProductController {
 	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
+<<<<<<< HEAD
 		logger.info("/product/cart.do GET !!!!");
 		logger.info("-----------controller-----------");
 		
@@ -266,6 +301,11 @@ public class ProductController {
 		Account account = loginService.selectAll(idx);
 
 		System.out.println(session.getAttribute("type"));
+=======
+		
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		model.addAttribute("account", account);
 		
 		int accIdx = (Integer)session.getAttribute("idx");
@@ -287,6 +327,7 @@ public class ProductController {
 			product = productService.productView(saleIdx);
 			cartProductList.add(product);
 		}
+		
 		for(int i=0; i<cartOptionList.size(); i++) {
 			if(saleIdx != cartOptionList.get(i).getSaleIdx()) {
 				saleIdx = cartOptionList.get(i).getSaleIdx();
@@ -294,8 +335,14 @@ public class ProductController {
 				cartProductList.add(product);
 			} else { continue; }
 		}
+<<<<<<< HEAD
 		model.addAttribute("productCart", cartProductList);
 		
+=======
+		
+		model.addAttribute("productCart", cartProductList);
+
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		if((Integer)session.getAttribute("type")<=1){
 			return "mypage/admin/adminCart";
 		}else if((Integer)session.getAttribute("type")==2) {
@@ -307,10 +354,24 @@ public class ProductController {
 	
 	// 장바구니 담기
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+<<<<<<< HEAD
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
 		logger.info("/product/cart.do POST !!!");
+=======
+	public String insertBasket(Option option, HttpSession session, Model model) {
+		
+		List<SaleOption> saleList = option.getSaleOptions();
+//		for(int i=0; i<saleList.size(); i++) {
+//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
+//		}
+
+		// 옵션 개수
+		// 필요 없었다... optionView.size()로 해결
+//		int num = productService.optionNumber(saleOption.getSaleIdx());
+//		model.addAttribute("optionNum", num);
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
@@ -332,12 +393,9 @@ public class ProductController {
 	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List updateCart(String cart, HttpSession session) {
-		logger.info("updateCart.do POST !!!!");
 		
 		Gson gson = new Gson();
 		List list = gson.fromJson(cart, List.class);
-		
-		logger.info("cart: " + list);
 
 		System.out.println(list.get(0));
 		
@@ -359,18 +417,11 @@ public class ProductController {
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public List<HashMap<String, Object>> comment(Comment comment
-											, String insertComm) {
-		logger.info("viewComment.do POST !!!!");
-		
-//		logger.info("sale_idx: " + comment.getSale_idx());
+	public List<HashMap<String, Object>> comment(Comment comment, String insertComm) {
 		
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		logger.info("-------------------Constroller comment-----------------");
-		logger.info("list: " + list);
-		logger.info("viewComment: " + comment);
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
 				Map<String, Object> map = (Map) list.get(i);
@@ -383,6 +434,7 @@ public class ProductController {
 				productService.insertComment(comm);
 			}
 		}
+		
 		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
 		Map<String, Object> item = new HashMap<>();
 //		item = productService.getCommentList(comment.getSale_idx());
@@ -394,15 +446,44 @@ public class ProductController {
 		
 //		items.add(item);
 		items = productService.getCommentList(comment.getSale_idx());
-		logger.info("####### Response commentList: " + items);
 		
 		return items;
 	}
 	
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
 	public void comm() {
-		logger.info("viewComment.do GET !!!!");
 	}
+<<<<<<< HEAD
+=======
+	
+	// 상품후기 등록
+	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertComment(String comment, HttpSession session) {
+//											@RequestBody: 요청 데이터를 그대로 받음
+//											@RequestBody List comment,
+//											Comment comment,
+//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
+//		resultMap = JsonArray.fromObject(comment);
+		
+		Gson gson = new Gson();
+		List list = gson.fromJson(comment, List.class);
+		
+		Map<String, Object> map = (Map<String, Object>) list.get(0);
+		Comment comm = new Comment();
+		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
+		comm.setScore(5);
+		comm.setTitle( (String) map.get("title") );
+		comm.setContent( (String) map.get("content") );
+		
+		productService.insertComment(comm);
+
+		map.put("score", comm.getScore());
+		map.put("content", comm.getContent());
+		
+		return map;
+	}
+>>>>>>> 57e4c64305f08a4df52fedbc4834cd3f6ac18aac
 	
 	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
 	public String procPaynee(HttpSession session, Model model) {

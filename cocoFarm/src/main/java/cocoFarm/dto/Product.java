@@ -3,17 +3,17 @@ package cocoFarm.dto;
 import java.util.Date;
 
 public class Product {
-	private int idx;
-	private int accIdx;
+	private Integer idx;
+	private Integer accIdx;
 	private String title;
 	private String origin;
-	private int hit;
+	private Integer hit;
 	private Date writtenTime;
 	private Date lastEdited;
 	private String content;
 	private String faceImg;
 	private String mainImg;
-	private int isdel;
+	private Integer isdel;
 	
 	//2018 05 31 hwanmin update
 	//user table
@@ -24,24 +24,24 @@ public class Product {
 	
 	//business table
 	private String corporation_name;		//법인 명
-	private int business_license_code;		//사업자번호
+	private Integer business_license_code;		//사업자번호
 	private String representative;			//대표자 이름
 	private String business_addr;			//판매자 주소
 	private String business_category;		//업태 종류 		
 
 	//category, ltc table
-	private int category;					//카테고리 번호
+	private Integer category;					//카테고리 번호
 	private String category_name;			//카테고리 이름
 	private String min_price; 				//옵션 최소 가격 받아오기
 	private String search_name; 			//검색할 이름
 	
-	public int getIdx() {
+	public Integer getIdx() {
 		return idx;
 	}
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
-	public int getAccIdx() {
+	public Integer getAccIdx() {
 		return accIdx;
 	}
 	public void setAccIdx(int accIdx) {
@@ -59,7 +59,7 @@ public class Product {
 	public void setOrigin(String origin) {
 		this.origin = origin;
 	}
-	public int getHit() {
+	public Integer getHit() {
 		return hit;
 	}
 	public void setHit(int hit) {
@@ -95,7 +95,7 @@ public class Product {
 	public void setMainImg(String mainImg) {
 		this.mainImg = mainImg;
 	}
-	public int getIsdel() {
+	public Integer getIsdel() {
 		return isdel;
 	}
 	public void setIsdel(int isdel) {
@@ -125,7 +125,7 @@ public class Product {
 	public void setCorporation_name(String corporation_name) {
 		this.corporation_name = corporation_name;
 	}
-	public int getBusiness_license_code() {
+	public Integer getBusiness_license_code() {
 		return business_license_code;
 	}
 	public void setBusiness_license_code(int business_license_code) {
@@ -149,7 +149,7 @@ public class Product {
 	public void setBusiness_category(String business_category) {
 		this.business_category = business_category;
 	}
-	public int getCategory() {
+	public Integer getCategory() {
 		return category;
 	}
 	public void setCategory(int category) {

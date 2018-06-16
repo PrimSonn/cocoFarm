@@ -40,6 +40,8 @@ public class MainController {
 		model.addAttribute("farm",boardService.getboardMainList());
 		
 		model.addAttribute("auction",auctionService.getAuctionMainList());
+		
+		System.out.println(auctionService.getAuctionMainList());
 		/*
 	
 		SELECT acc_idx, title, content, written_date, hit, ISDEL,

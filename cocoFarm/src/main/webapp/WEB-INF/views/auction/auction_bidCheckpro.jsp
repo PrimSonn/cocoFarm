@@ -378,7 +378,7 @@ function submitContents(elClickedObj) {
 	
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
-			<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
+			<jsp:include page="/WEB-INF/views/tile/mypage/sellerIntro.jsp" flush="false"/>
 				
 			
 			<div class="mypage_page01">

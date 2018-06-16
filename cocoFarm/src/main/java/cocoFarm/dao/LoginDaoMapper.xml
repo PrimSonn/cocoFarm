@@ -28,17 +28,17 @@
 	
 	<select id="findId" parameterType="cocoFarm.dto.Account" resultType="String">
 		SELECT id FROM account
-		WHERE name=#{name} AND phone=#{phone} AND isDel=0
+		WHERE name=#{name} AND phone=#{phone} AND isDel!=1
 	</select>
 	
 	<select id="findPw" parameterType="cocoFarm.dto.Account" resultType="String">
 		SELECT pw FROM account
-		WHERE id=#{id} AND phone=#{phone} AND isDel=0
+		WHERE id=#{id} AND phone=#{phone} AND isDel!=1
 	</select>
 	
 	<select id="selectAll" parameterType="int" resultType="cocoFarm.dto.Account">
 		SELECT * FROM account
-		WHERE idx=#{idx} AND isDel=0
+		WHERE idx=#{idx} AND isDel!=1
 	</select>
 	
 	<update id="updateAccount" parameterType="cocoFarm.dto.Account">
@@ -65,7 +65,7 @@
 		<if test="detailed_addr != null and detailed_addr != ''">
 			,detailed_addr = #{detailed_addr }
 		</if>
-		WHERE idx = #{idx } AND isDel=0
+		WHERE idx = #{idx } AND isDel!=1
 	</update>
 	
 	<update id="updateProfile" parameterType="cocoFarm.dto.Account">

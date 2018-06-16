@@ -9,7 +9,6 @@
 		<li>
 			<a href="/mypage/delWholeAcc.do?curPage=1">
 				<span aria-hidden="true">&larr;</span>
-				처음
 			</a>
 		</c:if>
 		
