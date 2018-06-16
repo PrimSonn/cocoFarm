@@ -61,10 +61,11 @@
 	</insert>
 	
 	<!--결제 내역 조회  -->
+	<!-- 06.17 손승용 수정사항: 판매쪽 결제내역만 조회되게 바꿈. -->
 	<select id="adminPaynee" resultType="cocoFarm.dto.ReceiptDto">
       SELECT M.* , SOR.*, S.ACC_IDX, A.NAME buyer, B.NAME seller, S.TITLE sale_title FROM MAIN_RECEIPT M
 			left join ACCOUNT A on M.BUYER_IDX = A.IDX
-   			left join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
+   			inner join SALE_OPTION_RECEIPT SOR on M.IDX = SOR.MAIN_RECPT_IDX
     		left join SALE S on SOR.SALE_IDX = S.IDX 
     		left join ACCOUNT B on S.ACC_IDX = B.IDX
     		order by M.IDX desc

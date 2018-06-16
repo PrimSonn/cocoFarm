@@ -13,7 +13,6 @@ public class ContextCloseListener implements ApplicationListener<ContextClosedEv
 	@Override
 	public void onApplicationEvent(ContextClosedEvent event) {
 		if(!hasDone) {
-			System.out.println("\r\n\r\n===================== application close listener fired =====================\r\n");
 			RunnerManager.finish();
 			hasDone = true;
 		}

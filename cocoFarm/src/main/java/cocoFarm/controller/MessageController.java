@@ -39,34 +39,25 @@ public class MessageController {
 	@RequestMapping(value="/mypage/readMessage.do", method=RequestMethod.POST)
 	public void readMessage(@RequestParam(defaultValue="0") int curPage, int messageCate, HttpSession session, Model model){
 	    
-		//�α����� ȸ�� idx
 		int idx = (Integer) session.getAttribute("idx");
 	    
 //		System.out.println(idx);
-		
-		// ����¡ ó�� - totalCount, curPage
-		// totalCount - DB��ȸ
-		// ȸ�� idx�� messageCate ��ȣ�� ������ ���ù� ī��Ʈ ��ȸ
 		HashMap<String, Object> totalMap = new HashMap<String, Object>();
 		totalMap.put("idx", idx);
 		totalMap.put("messageCate", messageCate);
 		int totoalCount = messageService.getTotal(totalMap);
-//		System.out.println("��Ż����Ʈ"+totoalCount);
-		
-		// curPage - list.do���� ��û
 		Paging paging = new Paging(totoalCount, curPage);
 		paging.setMessageCate(messageCate);
 		model.addAttribute("paging", paging);
-//		System.out.println(paging);
 		
 		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
 		pagingMap.put("idx", idx);
 		pagingMap.put("paging", paging);
 		
 		List<Message> messageList = null;
-		if(messageCate == 1) { //����������  
+		if(messageCate == 1) {
 		messageList = messageService.getReceiveMessage(pagingMap);
-		} else { //����������
+		} else {
 		messageList = messageService.getSendMessage(pagingMap);
 		}
 		
@@ -77,14 +68,11 @@ public class MessageController {
 	
 	@RequestMapping(value="/mypage/writeMessage.do", method=RequestMethod.GET)
 	public void writeMessage(int msgTo, HttpSession session, Model model){
-		System.out.println("msgTo: "+msgTo);
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println("account: "+account);
 		model.addAttribute("account", account);
 		
 		Account account2 = loginService.selectAll(msgTo);
-		System.out.println("account2: "+account2);
 		model.addAttribute("msg", account2);
 	}
 	
@@ -108,7 +96,6 @@ public class MessageController {
 	
 	@RequestMapping(value="/mypage/writeInquiry.do", method=RequestMethod.POST)
 	public ModelAndView inquiryProc(Message message) {
-		System.out.println(message);
 		message.setReceiver_idx(1);
 		messageService.writeMessage(message);
 		
@@ -122,12 +109,8 @@ public class MessageController {
 	//2018년 06월 14일 민주 작업
 	@RequestMapping(value="/mypage/messageView.do", method=RequestMethod.POST)
 	public void messageView(int messageCate, Message message, Model model) {
-		System.out.println("메시지 보기!");
 		message = messageService.getOneMessage(message);
 		messageService.isRead(message);
-		System.out.println(messageCate);
-		
-		System.out.println(message.toString());
 		
 		if( messageCate == 1 ) {
 			int senderIdx = message.getSender_idx();
@@ -147,40 +130,28 @@ public class MessageController {
 		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
 		
-		
-		
-		System.out.println("names = " + names);
-		System.out.println("messageCate = " + messageCate);
-		
 		List isdel = messageService.getIsdel(names);
-		System.out.println("isdel = " + isdel);
 		
 		if( !"".equals(names) && names != null) {
 			
 			for ( int i=0; i<isdel.size(); i++) {
 				int isdelVal = (Integer) isdel.get(i);
-//				System.out.println(isdelVal);
+				
 				if( messageCate == 1 &&  isdelVal == 3) {
-					System.out.println("1 = " + isdelVal);
 					messageService.deleteMessageList(names);
 					
 				} else if( messageCate == 2 && isdelVal == 2 ) {
-					System.out.println("2 = " + isdelVal);
 					messageService.deleteMessageList(names);
 					
 				} else if( messageCate == 1 && isdelVal == 0 ) {
-					System.out.println("3 = " + isdelVal);
 					messageService.deleteReceiveMessage(names);
 					
 				} else if( messageCate == 2 && isdelVal == 0 ) {
-					System.out.println("4 = " + isdelVal);
 					messageService.deleteSendMessageList(names);
 					
 				}
-				
 			}
 		}
 		

@@ -1,8 +1,6 @@
 package cocoFarm.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,18 +21,16 @@ import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
 import cocoFarm.dto.RecptCallParamHolder;
-import cocoFarm.dto.SaleOption;
 import cocoFarm.service.Auction_Service;
 import cocoFarm.service.ReceiptService;
 import cocoFarm.service.RestSvc;
 import cocoFarm.service.LoginService;
 import cocoFarm.util.Auction_Paging;
-import cocoFarm.util.recptMaker.SaleOptSerializer;
 
 @Controller
 public class Auction_Controller {
 	
-	private static final Logger logger = LoggerFactory.getLogger(Auction_Controller.class);
+//	private static final Logger logger = LoggerFactory.getLogger(Auction_Controller.class);
 	
 	@Autowired Auction_Service auctionService;
 	@Autowired ReceiptService receiptSvc;
@@ -71,7 +67,6 @@ public class Auction_Controller {
 	}
 	
 //	==================================판매자 경매 등록 리스트=============================================
-	
 	@RequestMapping(value="/auction/auction_auctionCheck.do", method=RequestMethod.GET)
 	public void auctionCheck(Auction auction, HttpSession session, Model model) {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));

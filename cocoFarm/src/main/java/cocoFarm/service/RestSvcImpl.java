@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import cocoFarm.dto.RecptCallParamHolder;
 interface TriFunc<T,U,V,R> {
 	R apply(T arg,U arg2,V arg3);
 }
-
 
 @Service
 public class RestSvcImpl implements RestSvc{
@@ -118,6 +116,7 @@ public class RestSvcImpl implements RestSvc{
 			final String tokenReq = String.format("imp_key=%s&imp_secret=%s"
 										, URLEncoder.encode(IMP_KEY, CHARSET)
 										,URLEncoder.encode(IMP_SECRET, CHARSET));
+			
 			String accToken = tokenParser(post.apply(tokenReq, GET_TOKEN, null), "access_token");
 			if(accToken ==null || accToken == "") {
 				resultArr[0]="-105";
@@ -130,6 +129,7 @@ public class RestSvcImpl implements RestSvc{
 			conn.setRequestProperty("Authorization", accToken);
 			conn.setRequestProperty("Accept-Charset", CHARSET);
 			Integer respCode = conn.getResponseCode();
+			
 			if (respCode!=200) {
 				resultArr[0]="-106";
 				resultArr[1]="거래 정보 조회 중 접속 이상. 관리자에게 문의하세요.";
@@ -146,6 +146,7 @@ public class RestSvcImpl implements RestSvc{
 			String merchant_uid;
 			merchant_uid = tokenParser(body,"merchant_uid");
 			Integer moneyAmount;
+			
 			try {
 				moneyAmount = Integer.parseInt(tokenParser(body, "amount"));
 				
@@ -162,7 +163,6 @@ public class RestSvcImpl implements RestSvc{
 			}
 			
 			//--------- 받아온 결제 정보를 DB의 정보와 비교
-			System.out.println("imp_uid: "+imp_uid+", accIdx: "+accIdx+", merchant_uid: "+merchant_uid+", moneyAmount: "+moneyAmount);
 			Integer resultCode = recptSvc.recptCheck(new RecptCallParamHolder(accIdx, imp_uid, merchant_uid, moneyAmount, 0));
 			
 			if(resultCode==null) {
@@ -207,7 +207,7 @@ public class RestSvcImpl implements RestSvc{
 						break;
 				}
 				
-				accToken = tokenParser(post.apply(tokenReq, GET_TOKEN,null), "access_token");
+				accToken = tokenParser( post.apply(tokenReq, GET_TOKEN, null), "access_token");
 				if(accToken ==null || accToken == "") {
 					resultArr[0] = "-110";
 					resultArr[1] = reason + " ,환불 요청 중 접속 문제 발생. 관리자에게 문의하세요.";
@@ -223,6 +223,7 @@ public class RestSvcImpl implements RestSvc{
 					resultArr[1] = reason + "환불 요청 중 접속 문제 발생. 관리자에게 문의하세요." ;
 					return resultArr;
 				}
+				
 				/*=======================================================================
 				 * 
 				 *	환불 요청 결과 코드값
@@ -324,15 +325,12 @@ public class RestSvcImpl implements RestSvc{
 		    	StringBuilder sb = new StringBuilder(respLine);
 		        for (String line; (line = reader.readLine()) != null;) {
 		        	sb.append(line);
-//		        	respLine.concat(line); //---- Dosn't work!!
-//		            respLine += line;
 		        }
 		        respLine = sb.toString();
 		    }
 		} else {return null;}
 		
 		resp.close();
-//		respLine = respLine.trim();
 		return respLine;
 	}
 	

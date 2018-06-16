@@ -64,15 +64,8 @@ public class ProductController {
 	//판매 디테일 뷰
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
 	public String detailProView(Product product, SaleOption saleoption, Model model) {
-		
-		System.out.println("Porduct: "+product);
-		Product prod = productService.getDetailList(product);
-		
-		System.out.println("getMainImg: "+prod.getMainImg());
-		System.out.println("getFaceImg: "+prod.getFaceImg());
-		System.out.println("getAccIdx: "+prod.getAccIdx());
-		
-		model.addAttribute("product", (prod));
+
+		model.addAttribute("product", (productService.getDetailList(product)));
 		model.addAttribute("option", (productService.getOptionList(saleoption)));
 		
 		return "main/mainseller/sellerDetail";
@@ -328,11 +321,9 @@ public class ProductController {
 		Cart c = new Cart();
 		for(int i=0; i<list.size(); i++) {
 			Map<String, Integer> map = (Map) list.get(i);
-			System.out.println(map);
 //			c.setSaleOptionIdx(map.get("saleOptionIdx"));
 //			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
 //			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
-			
 			productService.updateCart(map);
 		}
 		List items = productService.selectCart((Integer)session.getAttribute("idx"));
