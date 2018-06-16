@@ -92,8 +92,14 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
-	public String insert(HttpSession session) {
-
+	public String insert(HttpSession session, Model model) {
+		//추가 해준거 
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		model.addAttribute("account", account);
+				
+		
+		
 		return "mypage/seller/productInsert";
 	}
 	

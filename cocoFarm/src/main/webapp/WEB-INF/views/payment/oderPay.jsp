@@ -69,7 +69,6 @@ $(document).ready(function() {
 	
 	//합산 금액 배열로 만든거 
 	<c:set var="sumcon" value="sumcon"/> 
-	<c:set var="sumcon" value="sumcon"/> 
 	console.log(${pro.size()});
 	
 	/*총 수량 갯수  */

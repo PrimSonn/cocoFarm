@@ -25,13 +25,13 @@
 			<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
 			
 			<ul>
-				<li class="nav-link"><a href="/product/insert.do">판매등록하기</a></li>
+				<li><a href="/product/insert.do">판매등록하기</a></li>
 				<li><a href="/product">판매상품 조회/수정</a></li>
 				<li class="nav-link"><a href="/product/payNee.do">판매 결제 내역 조회 </a></li>
 			</ul>
 			<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 			<ul>
-				<li><a href="/auction/auction_bidCheck.do">경매등록하기</a></li>
+				<li><a href="/auction/auction_register.do">경매등록하기</a></li>
 				<li><a href="/auction/auction_bidCheck.do">경매 상품 조회하기</a></li>
 			</ul>
 			

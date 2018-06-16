@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,6 +14,10 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
+<!-- Naver SmartEditor -->
+<script type="text/javascript"
+ src="/resources/smarteditor/js/service/HuskyEZCreator.js"></script>
+
 
 <script type="text/javascript">
 /* 숫자만 입력 시키게 하는것 */
@@ -25,6 +28,28 @@ function onlyNumber(obj){
 }
 
 $(document).ready(function() {
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	$(".mail_box").on("click", ".nav-link", function() {
+		var page = $(this).attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	
+	
+	
+	
 	
 
 	$("#messageCate").change(function() {
@@ -60,23 +85,6 @@ $(document).ready(function() {
 	
 	
 	
-	$(".mypage_navbody").on("click", ".nav-link", function() {
-		var page = $(this).children().attr("href");
-		console.log(page);
-		
-		$(".mypage_page01").load(page);
-		
-		return false;
-	});
-	
-	$(".mail_box").on("click", ".nav-link", function() {
-		var page = $(this).attr("href");
-		console.log(page);
-		
-		$(".mypage_page01").load(page);
-		
-		return false;
-	});
 	
 	
 	/* 글자수 제한  */
@@ -115,16 +123,6 @@ $(document).ready(function() {
       alert("판매가격을 입력해주세요.");
       return false;
 		}
-		
-		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
-// 		var option = {
-// 			optionName: $("textarea[name=optionName]").val(),
-// 			startAmount: $("textarea[name=startAmount]").val(),
-// 			unit: $("textarea[name=unit]").val(),
-// 			price: $("textarea[name=price]").val()
-// 		};
-// 		alert(option.optionName);
-		
 		submitContents($(this));
 	});
 	
@@ -141,17 +139,6 @@ function optionSelect(sVal) {
 			+'</ul>';
 	}
 	document.getElementById("option_boby").innerHTML = str;
-	
-	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
-// 	$("#option_body1").show();
-// 	$("#option_body3").hide();
-// 	$("#option_body3").hide();
-	
-// 	if (sVal == "2") {
-// 		$("#option_body2").show();
-// 	} else if (sVal == "3") {
-// 		$("#option_body3").show();
-// 	}
 }
 
 // 네이버 스마트에디터를 사용하는 방법
