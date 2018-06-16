@@ -171,8 +171,14 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 	s.price price from SALE_option S WHERE idx IN ${value} </select>
 
 	<select parameterType="String" id="getSale_Option" resultType="cocoFarm.dto.Product"> 
-	SELECT S.idx idx,S.acc_idx acc_idx,S.title title,S.hit hit,S.content content,S.FACE_IMG faceImg,
-	S.MAIN_IMG mainImg FROM SALE S WHERE idx in ${value} 
+	select
+	s.IDX IDX, S.ACC_IDX ACCIDX, S.TITLE TITLE, S.HIT HIT, S.CONTENT CONTENT, S.FACE_IMG FACEIMG, S.MAIN_IMG MAINIMG
+	, A.NAME NAME
+	, BI.CORPORATION_NAME CORPORATION_NAME, BI.REPRESENTATIVE REPRESENTATIVE
+	from SALE S
+	inner join ACCOUNT A on S.ACC_IDX = A.IDX
+	inner join BUSINESS_INFO BI on A.IDX = BI.ACC_IDX
+	where S.IDX in ${value} 
 	</select>
 
 	<select id="ProViewMainList" resultType="cocoFarm.dto.Product">

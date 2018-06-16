@@ -125,16 +125,21 @@ public class ProductServiceImpl implements ProductService {
 		
 		// 장바구니에 이미 등록되어 있는 경우
 		
-		
-		for(int i=0; i<option.getSaleOptions().size(); i++) {
-			System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
+		try {
+			for(int i=0; i<option.getSaleOptions().size(); i++) {
+				System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
+				
+				saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
+				saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
+				
+				System.out.println("CART" + (i+1) + ":" + saleOption);
+				saleOptionDao.insertCart(saleOption, accIdx);
+			}
+		} catch (NullPointerException e) {
+			System.out.println("NULL값이 뜨네요!");
 			
-			saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
-			saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
-			
-			System.out.println("CART" + (i+1) + ":" + saleOption);
-			saleOptionDao.insertCart(saleOption, accIdx);
 		}
+		
 	}
 	
 	@Override
