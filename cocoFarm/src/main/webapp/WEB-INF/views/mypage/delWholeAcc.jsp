@@ -12,14 +12,26 @@
 
 
 <div>
-	<table style="border: 1px solid;">
+	<table  style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;">
+		  <colgroup>
+					<col width="80px"><!--이름  -->
+					<col width="90px"><!--ID  -->
+					<col width="100px"><!--이메일  -->
+					<col width="80px"><!--폰번호  -->
+					<col width="150px"><!--주소  -->
+					<col width="100px"><!--상세주소  -->
+					<col width="60px"><!--계정타입 -->
+					<col width="130px">	<!--계정등록일 -->
+		</colgroup>
+      <thead>
+	
 		<thead>
 			<tr>
 				<th>이름</th>
 				<th>ID</th>
 				<th>Email</th>
 				<th>Phone</th>
-				<th>우편번호</th>
+				<!-- <th>우편번호</th> -->
 				<th>주소</th>
 				<th>상세주소</th>
 				<th>계정타입</th>
@@ -33,7 +45,7 @@
 					<td>${delAccList.id }</td>
 					<td>${delAccList.email }</td>
 					<td>${delAccList.phone }</td>
-					<td>${delAccList.postnum }</td>
+					<%-- <td>${delAccList.postnum }</td> --%>
 					<td>${delAccList.addr }</td>
 					<td>${delAccList.detailed_addr }</td>
 					<td>${delAccList.account_type }</td>

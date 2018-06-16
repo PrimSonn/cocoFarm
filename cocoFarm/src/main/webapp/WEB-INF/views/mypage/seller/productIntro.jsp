@@ -118,15 +118,6 @@ $(document).ready(function() {
       return false;
 		}
 		
-		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
-// 		var option = {
-// 			optionName: $("textarea[name=optionName]").val(),
-// 			startAmount: $("textarea[name=startAmount]").val(),
-// 			unit: $("textarea[name=unit]").val(),
-// 			price: $("textarea[name=price]").val()
-// 		};
-// 		alert(option.optionName);
-		
 		submitContents($(this));
 	});
 	

@@ -44,7 +44,16 @@ public class Auction_Controller {
 //	==================================경매등록=============================================
 	/*임시로 로그인 세션 처리 idx=1*/
 	@RequestMapping(value="/auction/auction_register.do", method=RequestMethod.GET)
-	public void register() {}
+	public void register(HttpSession session,Model model) {
+		
+		
+		//2018년 06월 16일 작업 환민
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
+		
+		
+	}
 		
 	@RequestMapping(value="/auction/auction_register.do", method=RequestMethod.POST)
 	public String registerProcess(Auction auction, HttpSession session) {
@@ -193,7 +202,7 @@ public class Auction_Controller {
 //	==================================개인 입찰 목록 확인==============================================
 	
 	@RequestMapping(value="/auction/auction_bidCheck.do", method=RequestMethod.GET)
-	public void bidCheck(HttpSession session, Account account, BidDto bid, Model model) {
+	public String bidCheck(HttpSession session, Account account, BidDto bid, Model model) {
 		session.getAttribute("idx");
 		account.setIdx((Integer)session.getAttribute("idx"));
 //		System.out.println(account);
@@ -203,6 +212,17 @@ public class Auction_Controller {
 		int idx = (int)session.getAttribute("idx");
 		Account accountone = loginService.selectAll(idx);
 		model.addAttribute("account",accountone);
+		
+		
+		
+		if((Integer)session.getAttribute("type")<=1){
+			return "mypage/admin/adminIntro";
+		}else if((Integer)session.getAttribute("type")==2) {
+			return "auction/auction_bidCheckpro";
+		}else {
+			return "auction/auction_bidCheck";
+		}
+		
 	}
 	
 	
