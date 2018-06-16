@@ -184,6 +184,17 @@
 		AND rownum<=5 
 		ORDER BY time_window ASC]]>
 	</select>
+	
+	
+	<select id="getMainAuctionList" resultType="cocoFarm.dto.AuctionMain">
+		select AU.*, A.idx acc_idx, A.NAME acc_name,A.THUMB_LOC thumb_loc, BI.BUSINESS_LICENSE_CODE, BI.CORPORATION_NAME,BI.REPRESENTATIVE,BI.BUSINESS_ADDR,BI.BUSINESS_CATEGORY, AQ.TIME_WINDOW
+		from AUCTION AU
+		inner join (select AUCTION_IDX, TIME_WINDOW, ROWNUM R from AUCTION_DUE_QUE order by TIME_WINDOW asc) AQ on AU.IDX = AQ.AUCTION_IDX
+		inner join ACCOUNT A on AU.WRITTER_IDX = A.IDX
+		inner join BUSINESS_INFO BI on A.IDX = BI.ACC_IDX
+		where AQ.R between 1 and 5 order by AQ.TIME_WINDOW asc
+	</select>
+	 
 <!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
 <!-- 		DELETE board -->
 <!-- 		WHERE boardno = #{boardno } -->

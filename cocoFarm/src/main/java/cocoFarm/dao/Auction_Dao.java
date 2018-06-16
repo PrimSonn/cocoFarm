@@ -147,4 +147,7 @@ public interface Auction_Dao {
 	 * @return - 종료임박 상위 5개 경매글 리스트
 	 */
 	public List getAuctionMainList();
+	
+	
+	public List getMainAuctionList();
 }
