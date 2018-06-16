@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class Auction {
+public class AuctionMain {
 
 	
 	private Integer idx;	//	경매번호 - 유일성. 복합기본키, 인조식별자. 트리거 있음
@@ -17,15 +17,79 @@ public class Auction {
 	private Integer state_code;	//	경매 상태 비즈니스 코드 - 외래키. 트리거 있음
 	private String item_img;	//	경매물품 사진 경로(이름)- null 불가
 	private Integer highest_bid;	//	최고 입찰액 - 일종의 중복값, 병행 처리를 쉽게 하기 위해 넣은 속성: 경매 행을 lock 한 상태에서 입찰이 이루어짐
-	
 	private MultipartFile img_file;	//	경매 물품 사진
-	
 	private Timestamp time_window;	// 경매 만료일자
 	
 	private String id;		// 경매 글 쓴 계정 id
 	
 	private Integer isDone;	
 	
+	
+	//hwanmin 추가 
+	private long business_license_code;
+	private String corporation_name;
+	private String representative;
+	private String  business_addr;
+	private String business_category; 
+	private Integer acc_idx;
+	private String acc_name;
+	private String thumb_loc;
+	
+	
+	
+	
+	
+	
+	
+	
+	public long getBusiness_license_code() {
+		return business_license_code;
+	}
+	public void setBusiness_license_code(long business_license_code) {
+		this.business_license_code = business_license_code;
+	}
+	public String getCorporation_name() {
+		return corporation_name;
+	}
+	public void setCorporation_name(String corporation_name) {
+		this.corporation_name = corporation_name;
+	}
+	public String getRepresentative() {
+		return representative;
+	}
+	public void setRepresentative(String representative) {
+		this.representative = representative;
+	}
+	public String getBusiness_addr() {
+		return business_addr;
+	}
+	public void setBusiness_addr(String business_addr) {
+		this.business_addr = business_addr;
+	}
+	public String getBusiness_category() {
+		return business_category;
+	}
+	public void setBusiness_category(String business_category) {
+		this.business_category = business_category;
+	}
+	public Integer getAcc_idx() {
+		return acc_idx;
+	}
+	public void setAcc_idx(Integer acc_idx) {
+		this.acc_idx = acc_idx;
+	}
+	public String getAcc_name() {
+		return acc_name;
+	}
+	public void setAcc_name(String acc_name) {
+		this.acc_name = acc_name;
+	}
+	public String getThumb_loc() {
+		return thumb_loc;
+	}
+	public void setThumb_loc(String thumb_loc) {
+		this.thumb_loc = thumb_loc;
+	}
 	public Integer getIsDone() {
 		return isDone;
 	}

@@ -138,6 +138,10 @@ public class Auction_ServiceImpl implements Auction_Service {
 		return auctionDao.getAuctionMainList();
 	}
 	
-	
+	@Override
+	public List getMainAuctionList() {
+		
+		return auctionDao.getMainAuctionList();
+	}
 
 }

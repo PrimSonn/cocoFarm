@@ -13,16 +13,19 @@
 <link rel="stylesheet" type="text/css" href="/css/farmstory.css">
 
 <!-- 가로 화면 전환 위한 css -->
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/css/swiper.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/css/swiper.min.css"> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.min.js"></script>
+<!-- 가로 화면 전환 위한 css end-->
+
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
 <script type="text/javascript">
 
 	$(document).ready(function () {
-		$('.auction_listpart').slick();
-	/* 	
+		/* 	
 		//내용 넣어주기
 		<c:forEach items="${farm}" var="i" varStatus="status">
 		var oriText = '${i.content}';
@@ -113,6 +116,32 @@
     background-color: #efefef;
 }
 
+/* 가로슬라이드 style start*/
+.swiper-container {
+
+      width: 100%;
+      height: 300px;
+}
+.swiper-slide {
+      
+      /* Center slide text vertically */
+   /*   
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+       */
+}
+
+/* 가로슬라이드 style end*/
 </style>
 
 </head>
@@ -127,30 +156,54 @@
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 	
 	
-			<div class="farm_part">
 			<div class="container">
-				
-				<div class="farm_part_magin">
-					
+			<div class="auction_part">
 					<ul class="head_title">
 						<li class="title"><div class="title_icon"></div>종료 임박 경매</li>
-						<li class="plus_btn">+ 더보기</li>
+						<li class="plus_btn"><a href="/auction/auction_list.do">+ 더보기</a></li>
 					</ul>
 					
-					<div class="auction_listpart">
-					
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+								
 					<c:forEach items="${auction}" var="auction" varStatus="status">
-							<div class="farm_board_board farm_board_last">
-								<p class="farm_boardtitle">${auction.title}</p>
-								<div class="bar"></div>
-								<img alt="" src="/img/profile/${auction.item_img}" style="height:100px;">
-								<p class="farm_name">${auction.name}</p>
-								<p class="quo_img"></p>
-								<div class="farm_boardcontent"><a href="/board/view.do?acc_idx=${auction.idx }">${auction.idx}</a></div> 
+							<div class="swiper-slide">
+							<div class="auction_img">
+							<div class="time"><div class="time_icon"></div><p>마감 임박<p></div>
+							<a href="/auction/auction_view.do?idx=${auction.idx }">
+							<img alt="" src="/img/auction_img/${auction.item_img}" style="width:280px;">
+							</a>
+							</div>
+							<a href="/auction/auction_view.do?idx=${auction.idx }">
+							<div class="aution_info">
+									
+									<p class="auction_timer"><fmt:formatDate value="${auction.time_window }" pattern="yyyy년 MM월 dd일 " />
+									<fmt:formatDate value="${auction.time_window}" pattern="aa HH:mm 종료" /></p>
+		
+									<p class="auction_protitle">[경매 상품명]&nbsp&nbsp${auction.title}</p>
+									<p><span>경매 시작가</span>${auction.start_price}원</p>
+									<p class="auction_maxprice"><span>최고 입찰가</span><label class="maxprice_red">${auction.highest_bid}</label>원</p>
+									
+							</div>
+							</a>
+							<div class="account_info">
+								<p class="account_title">경매 판매자 정보</p>
+								<p class="account_img"><img alt="" src="/img/profile/${auction.thumb_loc}" style="height:100px;"></p>
+								<div class="account_body">
+								<p><span>사업자 등록 번호 </span>${auction.business_license_code}</p>
+								<p><span>대표자 이름 </span>${auction.corporation_name}</p>
+								<p><span>사업 주소</span>${auction.business_addr}</p>
+								<p><span>업태 종류</span>${auction.business_category}</p>
+								<p><span>판매자 이름</span>${auction.acc_name}</p>
+								</div>
+							</div>
+							
 							</div>
 					</c:forEach>
 					</div>
-				</div>
+					<div class="swiper-button-next btnmove"></div>
+    				<div class="swiper-button-prev"></div>
+					</div>
 			</div>
 			</div>
 			
@@ -235,7 +288,14 @@
 <!--main부분 foot ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
 		
-
+<script>
+    var swiper = new Swiper('.swiper-container', {
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+ </script>
 
 	
 </body>

@@ -264,8 +264,8 @@ function viewComment() {
 	});
 }
 
+/* 장바구니 버튼 눌렀을 때 */
 function insertCart() {
-	/* 장바구니 버튼 눌렀을 때 */
 	$(".addcart_button").click(function() {
 		$(".option_form").attr("action", "/product/cart.do");
 		$(".option_form").submit();
@@ -381,7 +381,7 @@ function popupOpen2(){
 			</dl>
 			
 			
-			<form class="option_form" action="" method="post">
+			<form class="option_form" method="post">
 				<div id="detail_option">
 					
 				</div>

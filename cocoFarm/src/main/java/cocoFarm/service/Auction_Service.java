@@ -136,4 +136,8 @@ public interface Auction_Service {
 	 * @return - 종료임박 경매글 5개
 	 */
 	public List getAuctionMainList();
+	
+	
+	//hwanmin 추가 
+	public List getMainAuctionList();
 }
