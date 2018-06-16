@@ -144,29 +144,6 @@ $(document).ready(function() {
 	
 });
 
-function optionSelect(sVal) {
-	var str = ""
-	for(var i=0; i<sVal; i++) {
-		str += '<ul>'
-			+'<li><p>옵션제목 </p><textarea name="saleOptions[' + i + '].optionName" placeholder="15자 이내에 글자" style="resize:none" rows="1" cols="30"></textarea></li>'
-			+'<li><p>총판매수량 </p><textarea name="saleOptions[' + i + '].startAmount" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="15"></textarea>개</li>'	
-			+'<li><p>단위 </p><textarea name="saleOptions[' + i + '].unit" style="resize:none" placeholder="ex) kg" rows="1" cols="5"></textarea></li>'	
-			+'<li><p>단위당가격 </p><textarea name="saleOptions[' + i + '].price" style="resize:none" onkeyup="onlyNumber(this)" placeholder="숫자만 입력가능" rows="1" cols="14"></textarea>원</li>'
-			+'</ul>';
-	}
-	document.getElementById("option_boby").innerHTML = str;
-	
-	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
-// 	$("#option_body1").show();
-// 	$("#option_body3").hide();
-// 	$("#option_body3").hide();
-	
-// 	if (sVal == "2") {
-// 		$("#option_body2").show();
-// 	} else if (sVal == "3") {
-// 		$("#option_body3").show();
-// 	}
-}
 
 // 네이버 스마트에디터를 사용하는 방법
 function submitContents(elClickedObj) {

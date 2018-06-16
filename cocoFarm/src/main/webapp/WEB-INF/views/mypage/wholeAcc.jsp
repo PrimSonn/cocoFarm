@@ -17,7 +17,24 @@
 <!-- 공지사항 글 등록 -->
 <!-- 오늘의 농부 글 등록 -->
 <div>
-	<table style="border: 1px solid; font-size:11px;">
+	<table style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd; font-size:12px;">
+		<colgroup>
+					<col width="70px"><!--이름  -->
+					<col width="70px"><!--ID  -->
+					<col width="80px"><!--이메일  -->
+					<col width="80px"><!--폰번호  -->
+					<col width="140px"><!--주소  -->
+					<col width="90px"><!--상세주소  -->
+					<col width="50px"><!--계정타입 -->
+					<col width="110px">	<!--계정등록일 -->
+		</colgroup>
+		
+		
+		
+		
+		
+		
+		
 		<thead>
 			<tr>
 				<th>이름</th>

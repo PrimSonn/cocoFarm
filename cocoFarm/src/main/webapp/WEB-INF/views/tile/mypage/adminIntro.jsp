@@ -35,9 +35,9 @@
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">사이트관리</p>
 					<ul>
-						<li class="nav-link"><a href="/banner/write.do">배너 광고 관리</a></li>
+						<!-- <li class="nav-link"><a href="/banner/write.do">배너 광고 관리</a></li> -->
 						<li class="nav-link"><a href="/notice/write.do">공지사항 글 등록</a></li>
-						<li class="nav-link"><a href="/board/write.do">농부스토리 글등록</a></li>
+						<!-- <li class="nav-link"><a href="/board/write.do">농부스토리 글등록</a></li> -->
 					</ul>
 				</div>
 			</div>

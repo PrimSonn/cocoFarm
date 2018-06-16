@@ -49,7 +49,7 @@ function submit() {
 				<c:when test="${sessionScope.type==1}">
 					<li>고 객</li>
 					<li>판매자</li>
-					<li class="choose_color3">관리자</li>
+					<li class="choose_color1">관리자</li>
 				</c:when>
 				<c:otherwise>
 					<li>고 객</li>

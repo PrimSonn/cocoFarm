@@ -39,7 +39,17 @@ function licenseView(idx) {
 <body>
 
 <div>
-	<table style="border: 1px solid;">
+	<table style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;">
+		<colgroup>
+					<col width="120px">
+					<col width="200px">
+					<col width="200px">
+					<col width="130px">
+					<col width="130px">
+	
+		</colgroup>
+		
+	
 		<thead>
 			<tr>
 				<th>이름</th>

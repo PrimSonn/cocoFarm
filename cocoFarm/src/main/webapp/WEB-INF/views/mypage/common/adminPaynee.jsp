@@ -11,7 +11,7 @@
 <body>
 
 <div>
-	<table class="message_table">
+	<table class="message_table" style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;">
 		<thead>
 			<tr>
 				<th class="message_th">판매자 이름</th>

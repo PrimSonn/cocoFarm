@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css"> 
+
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
@@ -18,8 +20,30 @@
 <script type="text/javascript">
 
 
-/* 글자수 제한  */
+
 $(document).ready(function() {
+	/*페이지 로드  */
+	$(".mypage_navbody").on("click", ".nav-link", function() {
+		var page = $(this).children().attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	$(".mail_box").on("click", ".nav-link", function() {
+		var page = $(this).attr("href");
+		console.log(page);
+		
+		$(".mypage_page01").load(page);
+		
+		return false;
+	});
+	
+	
+
+	/* 글자수 제한  */
 	var textCountLimit = 15;
 	var textCountLimit2=40;
     $('textarea[name=editor]').keyup(function() {
@@ -37,14 +61,6 @@ $(document).ready(function() {
 });
 
 
-function submitContents(elClickedObj) {
-    // 에디터의 내용이 textarea에 적용된다.
-    oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-
-    try {
-        elClickedObj.form.submit();
-    } catch(e) {}
-}
 
 $(document).ready(function() {
 	//페이지 첫 진입 시 제목란에 포커스
@@ -116,77 +132,41 @@ $(document).ready(function() {
             document.getElementById('start_price_han').innerText ="("+han_value+")";
       }
 
+//네이버 스마트에디터를 사용하는 방법
+ function submitContents(elClickedObj) {
+     // 에디터의 내용이 textarea에 적용된다.
+     oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+
+     try {
+         elClickedObj.form.submit();
+     } catch(e) {}
+ }
+
+
+
+
+
 </script>
 
 
 </head>
 <body>
 <div id="mypageheader">
-
-	<div id="header_top">
+	<!--Mypage부분 header ver3부분  -->
+	<jsp:include page="/WEB-INF/views/tile/head/mypagehead.jsp" flush="false"/>
+	
+	
 	<div class="container">
-		<ul class="rigth_list">
-			<li><a href="#">고객</a></li>
-			<li><a href="#">사업자</a></li>
-			<li><a href="#">관리자</a></li>
-		</ul>
-		
-		<ul class="left_list">
-			<li><a href="#">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
-			<li><a href="#">알림</a></li>	
-			<li><a href="#">마이페이지</a></li>	
-		</ul>
-	</div>
-	</div>
-	<div class="container">
-		<div id="header_boby">
-				<div class="logo"><img src="/img/main/logo_color.png" alt="코코팜 로고"></div>
-				<div class="search"><input type="text" placeholder="농산물 검색하기"><button class="search_icon"></button> </div>
-		</div>
+		<!--Mypage부분  검색 로고부분 -->
+		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
+	
 		<div class="mypage_box">
-			<div class="mypage_nav">
-				<div class="mypage_topbusiness">
-					<div class="mypagetitle"><h2>판매자 회원</h2> <h1>마이페이지</h1></div>
-					<div class="mypageimg"><img src="/img/mypage/1344.png" ></div>
-					<div class="mypagewho"><span><strong>김환민</strong>님&nbsp</span>hwanmin0121</div>
-					<div class="mail_box"><a href="#"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
 		
-				</div>
-			
-				<div class="mypage_navbody">
-					
-					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
-					
-					<ul>
-						<li><a href="#">개인정보 수정</a></li>
-						<li><a href="#">결제 내역 조회</a></li>
-						<li><a href="#">장바구니 조회</a></li>
-						<li><a href="#">회원 탈퇴</a></li>
-					</ul>
-					
-					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">판매관리</p>
-					
-					<ul>
-						<li><a href="#">판매등록하기</a></li>
-						<li><a href="#">판매상품 조회/수정</a></li>
-						<li><a href="#">판매 결제 내역 조회 </a></li>
-						<li><a href="#">판매 결제 배송 승인</a></li>
-					</ul>
-					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
-					<ul>
-						<li><a href="#">경매등록하기</a></li>
-						<li><a href="#">경매 상품 조회하기</a></li>
-					</ul>
-					
-					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
-					<ul>
-						<li><a href="#">관리자에게 문의하기</a></li>
-					</ul>
-				</div>
-			</div>
-			
+			<!--Mypage부분  판매자 인트로부분 -->
+			<jsp:include page="/WEB-INF/views/tile/mypage/sellerIntro.jsp" flush="false"/>
+				
 			<div class="mypage_page01">
+			<div class="mypage_insert">
 				<div class="border">
 					<h1>농산물 경매 상품 등록 </h1>
 					<div class="border_save">
@@ -198,7 +178,7 @@ $(document).ready(function() {
 						</tr>
 						<tr>
 							<th class="td_back4">상품 부가 설명</th>
-							<td><textarea rows="10" cols="80" id="content" name="content" ></textarea></td>
+							<td><textarea rows="10" cols="80" id="content02" name="content" ></textarea></td>
 							<!-- <td><textarea style="resize:none;" placeholder="ex)제철과입니다." name="title" cols="50" rows="5"></textarea></td> -->
 						</tr>
 						<tr>
@@ -258,24 +238,13 @@ $(document).ready(function() {
 							</div>
 							</form>
 						
-						</div>
-			
-			
+					</div>
 				</div>
-			
-			
-			
-			
-			
+				
 			</div>
-			
-			
-			
-			
 		</div>
-	
 	</div>
-	
+	</div>
 	
 </div>	
 
