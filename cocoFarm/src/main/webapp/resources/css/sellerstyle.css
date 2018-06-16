@@ -410,8 +410,134 @@
 .pro_part{
 	height:370px;
 	margin-top: 24px;
+}
+
+.auction_part{
+	height:370px;
+	margin-top: 24px;
 	
 }
 
+.auction_img{
 
+	width: 280px;
+	height: 280px;
+	float: left;
+}
+.time{
+	width: 110px;
+	height: 30px;
+	background-color: #fc8227;
+	color:#fff;
+	position: absolute;
+	top:0px;
+	left: 10px;
+	line-height: 30px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	font-family: 'Jeju Gothic', serif;
+	box-shadow: 0 1px 3px rgba(0,0,0,.6); 
+}
 
+.time_icon{
+	width:19px;
+	height:19px;
+	background:url(/img/auction_img/time.png) no-repeat;
+	background-size: 19px 19px;
+	
+	position: absolute;
+	top:4px;
+	left: 12px;
+}
+
+.time p{
+	width: 100%;
+	padding-left: 41px;
+	
+}
+
+.swiper-slide{
+	width: 100%;
+	height: 200px;
+}
+.aution_info{
+	width: 500px;
+	height: 100%;
+	float: left;
+	position:relative; 
+	
+}
+.account_info{
+	border:1px solid #efefef;
+	border-radius:3px;
+	width: 296px;
+	height: 98%;
+	float: left;
+	position:relative; 
+	font-family: 'Nanum Gothic', sans-serif;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13); 
+}
+.aution_info p{
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+.aution_info span{
+	margin-right: 10px;
+	
+}
+.account_img img{
+	border-radius: 100px;
+	margin: 0 auto 20 auto;
+	display:block; 
+}
+
+.auction_maxprice {
+	font-weight: bold;
+	
+}
+.maxprice_red{
+	color:  #fc5a4e;
+	
+}
+.auction_protitle{
+	font-family: 'Jeju Gothic', serif;
+	font-size: 16px;
+	
+	
+}
+
+.account_title{
+		font-family: 'Jeju Gothic', serif;
+	font-size: 14px;
+	color: #1e1e1e;
+	text-align: center;
+	margin: 15px 0px 20px 0px;
+	
+}
+.auction_timer {
+	font-family: 'Jeju Gothic', serif;
+	font-size: 16px;
+	color: #fc5a4e;
+	
+}
+.account_body{
+	margin-top: 10px;
+	
+}
+.account_body{
+	line-height: 18px;
+	
+}
+.account_body span{
+	display:inline-block;	
+	width:100px;
+	text-align:left;
+	margin:0 10px 0px 40px; 
+	
+}
+
+.btnmove{
+	position:absolute;
+	left: -100px;
+	
+}

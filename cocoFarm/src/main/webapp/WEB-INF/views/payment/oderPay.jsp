@@ -377,10 +377,10 @@ $(function() {
 				 
 						<td class="product_info">
 							<a href="" >
-							<img src="/proimg/${pro_data.faceImg}" style="height: 92px">
+							<img src="/proimg/${pro_data.faceImg}" style="width: 92px">
 							</a>
 							<div class="product_dsc">
-								<strong class="product_bn">[농수산물 판매자] 법인명</strong>
+								<strong class="product_bn">[법인명]${pro_data.corporation_name}</strong>
 								<a href="#" class="product_name">
 									<strong>[${today}]${pro_data.title}</strong>
 								</a>
@@ -404,7 +404,7 @@ $(function() {
 						
 						
 						<td>
-						<a class="who_parmer" href="">판매자판매자</a>
+						<a class="who_parmer" href="">${pro_data.name}</a>
 						</td>
 						<td>
 						<span class="img_deliver_icon"></span>

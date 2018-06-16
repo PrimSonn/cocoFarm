@@ -1,4 +1,4 @@
-package cocoFarm.service;
+﻿package cocoFarm.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,6 +123,7 @@ public class ProductServiceImpl implements ProductService {
 		SaleOption saleOption = null;
 //		System.out.println("option size: " + option.getSaleOptions().size());
 		
+
 		List<Cart> cart = saleOptionDao.selectCart(accIdx);
 		
 		for(int i=0; i<cart.size(); i++) {
@@ -145,6 +146,7 @@ public class ProductServiceImpl implements ProductService {
 				saleOptionDao.insertCart(saleOption, accIdx);
 			}
 		}
+		
 	}
 	
 	@Override
