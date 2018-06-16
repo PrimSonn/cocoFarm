@@ -123,17 +123,27 @@ public class ProductServiceImpl implements ProductService {
 		SaleOption saleOption = null;
 //		System.out.println("option size: " + option.getSaleOptions().size());
 		
-		// 장바구니에 이미 등록되어 있는 경우
+		List<Cart> cart = saleOptionDao.selectCart(accIdx);
 		
-		
+		for(int i=0; i<cart.size(); i++) {
+			for(int j=0; j<option.getSaleOptions().size(); j++) {
+				if(cart.get(i).getSaleOptionIdx() == option.getSaleOptions().get(j).getIdx()) {
+					System.out.println("이미 등록된 장바구니");
+					return;
+				}
+			}
+		}
+		// 장바구니에 등록되어 있지 않은 경우
 		for(int i=0; i<option.getSaleOptions().size(); i++) {
-			System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
+			if(option.getSaleOptions().get(i).getIdx() != 0) {
+				System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
 			
-			saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
-			saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
+				saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
+				saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
 			
-			System.out.println("CART" + (i+1) + ":" + saleOption);
-			saleOptionDao.insertCart(saleOption, accIdx);
+				System.out.println("CART" + (i+1) + ":" + saleOption);
+				saleOptionDao.insertCart(saleOption, accIdx);
+			}
 		}
 	}
 	

@@ -11,8 +11,8 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +38,7 @@ import cocoFarm.util.Paging;
 @Controller
 public class ProductController {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired ProductService productService;
 	@Autowired ServletContext context;
 	@Autowired LoginService loginService;
@@ -78,10 +78,10 @@ public class ProductController {
 		return "main/mainseller/sellerDetail";
 	}
 	
+	// 판매 상품 옵션 조회
 	@RequestMapping(value="/product", method=RequestMethod.GET)
-	public String productList(@RequestParam(defaultValue="0") int curPage, Model model,HttpSession session) {
-		
-		//추가 해준거 
+	public String productList(@RequestParam(defaultValue="0") int curPage
+							, Model model,HttpSession session) {
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
@@ -110,6 +110,7 @@ public class ProductController {
 		return "mypage/seller/productInsert";
 	}
 	
+	// 판매 상품 등록
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product, Option opt, FileDto f, HttpSession session) {
 
@@ -153,10 +154,10 @@ public class ProductController {
 		return "redirect:/product";
 	}
 	
+	// 판매 상품 정보 불러오기
 	@RequestMapping(value="/product/update.do", method=RequestMethod.GET)
 	public String update(SaleOption saleOption, HttpSession session, Model model) {
 		
-		//추가 해준거 
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
@@ -175,6 +176,7 @@ public class ProductController {
 		return "mypage/seller/productUpdate";
 	}
 	
+	// 판매 상품 수정
 	@RequestMapping(value="/product/update.do", method=RequestMethod.POST)
 	public String updateProduct(Product product, Option opt, FileDto f) {
 		
@@ -246,9 +248,9 @@ public class ProductController {
 		return "redirect:/product";
 	}
 
+	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
 	public String basketList(Model model, HttpSession session) {
-		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
@@ -261,7 +263,7 @@ public class ProductController {
 		List<SaleOption> cartOptionList = null;
 		cartOptionList = productService.cartView(accIdx);
 		model.addAttribute("optionCart", cartOptionList);
-
+		
 		List<Product> cartProductList = new ArrayList<>();
 		Product product = null;
 		
@@ -280,7 +282,6 @@ public class ProductController {
 				cartProductList.add(product);
 			} else { continue; }
 		}
-		
 		model.addAttribute("productCart", cartProductList);
 
 		if((Integer)session.getAttribute("type")<=1){
@@ -292,27 +293,19 @@ public class ProductController {
 		}
 	}
 	
+	// 장바구니 담기
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
-	public String insertBasket(Option option, HttpSession session, Model model) {
-		
-		List<SaleOption> saleList = option.getSaleOptions();
-//		for(int i=0; i<saleList.size(); i++) {
-//			logger.info("Option" + (i+1) + ": " + saleList.get(i));
-//		}
-
-		// 옵션 개수
-		// 필요 없었다... optionView.size()로 해결
-//		int num = productService.optionNumber(saleOption.getSaleIdx());
-//		model.addAttribute("optionNum", num);
-		
+	public String insertBasket(Option option
+							, HttpSession session
+							, Model model) {
+		logger.info("/product/cart.do POST !!!");
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
-		
-//		model.addAttribute("optionCart", option);
 		
 		return "redirect:/product/cart.do";
 	}
 	
+	// 장바구니 삭제
 	@RequestMapping(value="/product/deleteCart.do", method=RequestMethod.POST)
 	public String deleteBasket(String productIdx) {
 		if( !"".equals(productIdx) && productIdx != null) {
@@ -322,6 +315,7 @@ public class ProductController {
 		return "redirect:/product/cart.do";
 	}
 	
+	// 장바구니 옵션 수정
 	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List updateCart(String cart, HttpSession session) {
@@ -346,6 +340,7 @@ public class ProductController {
 		return items;
 	}
 	
+	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment, String insertComm) {
