@@ -60,7 +60,7 @@ function timediff(time_window,systime,status){
 	<div class="aution_group">
 	<div class="aution01_img">
 		
-		<a href="/auction/auction_view.do?idx=${auction.idx }">
+		<a href="/auction/auction_view.do?idx=${i.idx }">
 		<img alt="" src="/auction_img/${i.item_img}" style="width:280px;">
 		</a>
 		<div class="num">경매상품</div>

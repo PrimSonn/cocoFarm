@@ -30,7 +30,8 @@
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매 상품 관리</p>
 					<ul>
 						<!-- <li><a href="#">경매등록하기</a></li> -->
-						<li><a href="#">회원 결제내역 조회</a></li>
+						<li><a href="/mypage/admin/admin_auctionCheck.do">전체 상품 조회</a></li>
+						<li><a href="/mypage/admin/admin_auctionReceiptCheck.do">결제 내역 조회</a></li>
 					</ul>
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">사이트관리</p>

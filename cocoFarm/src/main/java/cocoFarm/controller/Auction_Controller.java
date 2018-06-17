@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +20,10 @@ import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
 import cocoFarm.dto.RecptCallParamHolder;
 import cocoFarm.service.Auction_Service;
+import cocoFarm.service.LoginService;
 import cocoFarm.service.ReceiptService;
 import cocoFarm.service.RestSvc;
-import cocoFarm.service.LoginService;
+import cocoFarm.util.Admin_Auction_Paging;
 import cocoFarm.util.Auction_Paging;
 
 @Controller
@@ -84,6 +83,44 @@ public class Auction_Controller {
 		
 		return "redirect:/auction/auction_auctionCheck.do";
 	}
+	
+//	==================================관리자 경매 리스트=============================================
+	@RequestMapping(value="/mypage/admin/admin_auctionCheck.do", method=RequestMethod.GET)
+	public String adminauctionList(@RequestParam(defaultValue="0") int curPage
+			, Model model) {
+		
+		int totalCount = auctionService.getauctionTotal();	//전체 게시글 수
+
+		// 페이징 생성
+		Admin_Auction_Paging paging = new Admin_Auction_Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+
+		List list = auctionService.getauctionPagingList(paging); // 전체 게시글 조회
+
+		model.addAttribute("list", list);
+		
+		return "mypage/admin/admin_auctionCheck";
+	}
+	
+//	==================================관리자 경매 결제 리스트=============================================
+	@RequestMapping(value="/mypage/admin/admin_auctionReceiptCheck.do", method=RequestMethod.GET)
+	public String auctionReceiptList(@RequestParam(defaultValue="0") int curPage
+			, Model model) {
+		
+		int totalCount = auctionService.getReceiptTotal();	//전체 게시글 수
+		
+		// 페이징 생성
+		Admin_Auction_Paging paging = new Admin_Auction_Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+		
+		List list = auctionService.getReceiptPagingList(paging); // 전체 게시글 조회
+		
+		model.addAttribute("list", list);
+		
+		return "mypage/admin/admin_auctionReceiptCheck";
+	}
+	
+	
 	
 //	==================================경매리스트=============================================
 	@RequestMapping(value="/auction/auction_list.do"
