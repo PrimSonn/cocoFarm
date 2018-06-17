@@ -76,13 +76,15 @@ $(document).ready(function() {
 						<th style="width:120px; border:1px solid; border-color: #9e9e9e;">현재 입찰가</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">등록 일자</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">종료 일자</th>
-						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">경매 삭제</th>
+						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">경매 취소</th>
 						</tr>
 					</thead>
 					
 					
 					<tbody>
-					
+						<c:if test="${empty auctionList}">
+								<tr><td colspan="7" style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e; text-align: center;">등록하신 경매상품이 존재하지 않습니다.</td></tr>
+						</c:if>
 						<c:forEach items="${auctionList}" var="auctionList" varStatus="status">
 						<tr>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
@@ -95,6 +97,7 @@ $(document).ready(function() {
 							<input class="auctionidx" type="hidden" value="${auctionList.idx }">
 							<button class="btnCancel" style="cursor: pointer; margin-top: 1px;" >삭제</button>
 							</td>
+							
 						</tr>
 						</c:forEach>
 					</tbody>

@@ -206,6 +206,16 @@ public class Auction_Controller {
 //		System.out.println(auction);
 		auctionService.putBid(bid);
 		
+		if(bid.getAmount()==null) {
+			model.addAttribute("msg", "입찰금을 입력하세요");			
+			model.addAttribute("check",0);
+			model.addAttribute("url", "/auction/bidPopup.do?highest_bid="+auction.getHighest_bid()
+				+"&start_price="+auction.getStart_price() 
+				+"&title="+auction.getTitle()
+				+"&name="+auction.getName() 
+				+"&idx="+bid.getAuction_idx());
+			return "util/auctionAlert";
+		}
 		if(bid.getIsDone()==-1) {
 			model.addAttribute("msg", "최소 입찰가 보다 낮은 입찰을 하셨습니다.");			
 			model.addAttribute("check",0);

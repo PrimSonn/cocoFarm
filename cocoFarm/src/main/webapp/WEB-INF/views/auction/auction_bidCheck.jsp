@@ -402,7 +402,7 @@ function submitContents(elClickedObj) {
 					
 					<tbody>
 					<c:if test="${empty memberBidList}">
-						<tr><td colspan="8">유효 입찰 항목이 존재하지 않습니다.</td></tr>
+						<tr><td colspan="8" style="text-align: center;">유효 입찰 항목이 존재하지 않습니다.</td></tr>
 					</c:if>
 						<c:forEach items="${memberBidList}" var="memberBidList" varStatus="status">
 						

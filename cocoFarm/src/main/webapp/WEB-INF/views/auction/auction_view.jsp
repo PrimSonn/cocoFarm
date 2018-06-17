@@ -28,6 +28,9 @@ textarea.autosize {min-height: 80px;}
 var openWin;
         function openChild()
         {
+        	if(${view.writter_idx} == ${sessionScope.idx}){
+        		alert("자신의 경매글에는 입찰하실수 없습니다.")
+        	} else{
         	var popupX = (window.screen.width / 2) - (570 / 2);
 
         	var popupY= (window.screen.height /2) - (500 / 2);
@@ -45,6 +48,7 @@ var openWin;
                     'width=570, height=350, left='+ popupX + ', top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);    
 //             openWin.document.getElementById("cInput").value = document.getElementById("price_sale").value;
 //             openWin.document.getElementById("cInput").value;
+        	}
         }
         
 
@@ -151,7 +155,7 @@ $('.open_icon').on('click', function(){
 			<span><strong><a href="">메인</a></strong></span><span>></span><span><a
 				href="">농산물</a></span><span>></span><span>채소/과일</span><span>></span><span>현재상품</span>
 		</div>
-		<div class="detail_body">
+		<div class="detail_body" style="height: 570px;">
 			<div class="pto">
 				<img src="/auction_img/${view.item_img }" width="100%">
 			</div>
