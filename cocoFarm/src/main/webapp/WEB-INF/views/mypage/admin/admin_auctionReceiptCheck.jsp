@@ -63,7 +63,7 @@
 						<tr>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionReceiptList.title }</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionReceiptList.paid_name }"</td>
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionReceiptList.paid_name }</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionReceiptList.money_amount }"/> 원</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionReceiptList.contract_time }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionReceiptList.contract_time }" pattern="aa HH:mm"/></td>							
 							<c:if test="${auctionReceiptList.state_code == 0}">

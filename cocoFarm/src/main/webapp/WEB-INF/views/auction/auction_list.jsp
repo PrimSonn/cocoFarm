@@ -64,7 +64,7 @@ function timediff(time_window,systime,status){
 		<img alt="" src="/auction_img/${i.item_img}" style="width:280px;">
 		</a>
 		<div class="num">경매상품</div>
-		<div class="num_01">${i.idx}</div>
+<%-- 		<div class="num_01">${i.idx}</div> --%>
 		<div class="semo"></div>
 	</div>
 	
@@ -77,15 +77,15 @@ function timediff(time_window,systime,status){
 	
 	<p class="title_aution01"><span>${i.title}</span></p>
 	<div class="auction_body">
-	<p><span>[경매 등록자]${i.id}</span></p>
-	<p><span>최고 입찰가 </span>${i.highest_bid }원</p>
+	<p><span>[경매 등록자]${i.name}</span></p>
+	<p><font color="red" style="font-weight: bold;"><span>현재 입찰가 </span>${i.highest_bid }원</font></p>
 	<p><span>경매 시작가 </span>${i.start_price }원</p>
 	<p class=""><span><fmt:formatDate value="${i.time_window }" pattern="yyyy년 MM월 dd일 " /><fmt:formatDate value="${i.time_window }" pattern="aa HH:mm 종료" /></span></p>
 	</div>
 	</div>
 	
 	
-	<div class="btn_auctionbuy">입찰 참여</div>
+	<a href="/auction/auction_view.do?idx=${i.idx }"><div class="btn_auctionbuy">입찰 참여</div></a>
 	</div>
 	<script type="text/javascript">timediff('${i.time_window}','${i.systime}','${status.count}');</script>
 	</c:forEach>

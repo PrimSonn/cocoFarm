@@ -164,7 +164,7 @@
 		SELECT ac.*, adq.time_window 
 		FROM auction ac 
 		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
-		WHERE writter_idx = #{writter_idx} ORDER BY time_window;
+		WHERE writter_idx = #{writter_idx} ORDER BY time_window
 	</select>
 	
 	<select id="auctionCancel" parameterType="cocoFarm.dto.Auction" statementType="CALLABLE">

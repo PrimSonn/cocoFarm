@@ -71,11 +71,11 @@ $(document).ready(function() {
 					<thead>
 						<tr>
 						<th style="width:30px; border:1px solid; border-color: #9e9e9e;">번호</th>
-						<th style="width:300px; border:1px solid; border-color: #9e9e9e;">등록 품목</th>
+						<th style="width:260px; border:1px solid; border-color: #9e9e9e;">등록 품목</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">경매 시작가</th>
-						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">현재 입찰가</th>
+						<th style="width:120px; border:1px solid; border-color: #9e9e9e;">현재 입찰가</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">등록 일자</th>
-						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">종료 일자</th>
+						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">종료 일자</th>
 						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">경매 삭제</th>
 						</tr>
 					</thead>
@@ -88,7 +88,7 @@ $(document).ready(function() {
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionList.title }</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionList.start_price }"/> 원</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionList.highest_bid }"/> 원</td>
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="red" style="font-weight: bold;"><fmt:formatNumber type="number" value="${auctionList.highest_bid }"/> 원</font><br>(+<fmt:formatNumber type="number" value="${auctionList.highest_bid - auctionList.start_price}"/>원)</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionList.reg_time }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionList.reg_time }" pattern="aa HH:mm"/></td>							
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionList.time_window }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionList.time_window }" pattern="aa HH:mm"/></td>							
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">

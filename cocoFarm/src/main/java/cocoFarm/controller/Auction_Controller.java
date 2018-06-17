@@ -58,9 +58,11 @@ public class Auction_Controller {
 //		auction.setWritter_idx(session.getAttribute("idx"));
 //		auction.setWritter_idx(Integer.parseInt((String) session.getAttribute("idx")));
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
+		if(auction.getTitle()==""||auction.getContent()==""||auction.getImg_file()==null||auction.getStart_price()==null) {
+			return "auction/auction_register";
+		}
 		auctionService.write(auction);
 		System.out.println(auction);
-		
 		
 		return "redirect:/auction/auction_list.do";
 	}
