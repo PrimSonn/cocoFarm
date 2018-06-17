@@ -1,0 +1,105 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D8392879-922B-5C0E-2414-26C3D89504EA" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_OPT_CATEGORY">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_CATEGORY</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>판매옵션 카테고리 매핑 - 복수 카테고리 허용</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SALE_OPT_IDX" id="68E7DEF6-F2A7-9323-9E9E-DCC8F7763CF2">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_OPT_CATEGORY</sourceObjSchema>
+<sourceObjName>SALE_OPT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>대상 옵션 번호 - 복합 기본키 + 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B34589E7-0B57-DAF4-47A0-6758F18D45B2" referredColumn="373DD1E6-C53B-127B-DEA1-D1C15B401B99"/>
+</associations>
+</Column>
+<Column name="CATEGORY_IDX" id="EF3A7823-AA50-131A-2A05-4E88CBAFABC1">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_OPT_CATEGORY</sourceObjSchema>
+<sourceObjName>CATEGORY_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>카테고리 노드 번호 - 복합 기본키 + 외래키. 기본값:0</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,3,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3BF9A631-DC66-DA15-031C-9B8E1D8AD61F" referredColumn="64FDFB15-3E16-3492-43A1-72A9C4E46595"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="44AA6C02-D934-8E0B-26C5-2FF83DB64A08" name="SALE_OPT_CAT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_CAT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="68E7DEF6-F2A7-9323-9E9E-DCC8F7763CF2"/>
+<colUsage columnID="EF3A7823-AA50-131A-2A05-4E88CBAFABC1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DD4CFD76-6B57-B0D0-358C-C4E27F389CFC" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_OPT_CAT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_CAT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="68E7DEF6-F2A7-9323-9E9E-DCC8F7763CF2"/>
+<colUsage columnID="EF3A7823-AA50-131A-2A05-4E88CBAFABC1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="47BC092A-C26A-91B3-D405-F80A30D0ED54" name="FK_OPT_CATMAP_CATNODE">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EF3A7823-AA50-131A-2A05-4E88CBAFABC1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B3FE8AB0-92F8-2BFC-F84B-E51FB1761608" name="FK_OPT_CATMAP_SALEOPT">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="68E7DEF6-F2A7-9323-9E9E-DCC8F7763CF2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

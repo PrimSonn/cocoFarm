@@ -1,0 +1,270 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="03DAF0A7-4DBD-7DEF-91E0-B2EFF271BE62" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="MAIN_RECEIPT">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MAIN_RECEIPT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>주 영수증 (한 건의 결제에 해당)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="40042EFD-ECA1-72F7-9395-9496C55D332B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>주 영수증 번호 - 후보키. 복합기본키, 인조식별자, 트리거있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>18</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,18,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PAYMENT_CODE" id="9D51E3EE-25B6-0129-02A2-F8BE0DEBE13D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>PAYMENT_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>결제번호 - 결제 대행사의 결제번호</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>45</dataTypeSize>
+<ownDataTypeParameters>45,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BUYER_IDX" id="D7F64B83-48A3-CBDE-C0F0-C738CCB27B2B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>BUYER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>영수증 결제 계정 번호 - 복합기본키. 외래키. null불가 : 구매 영수증이 있는 계정은 정보 완전 삭제 불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="998EEC57-7C28-2958-658E-C02F4BB564E9" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="PAYMENT_TYPE_CODE" id="82BDD58C-C34C-C88C-83A8-FFEB04888D93">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>PAYMENT_TYPE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>결제타입 - 외래키. null불가. 트리거있음 (기본값 : 0) 안 써도 문제없이 작동하게 해둠</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B86D3893-0A6B-2E30-2320-3D7441F21CBE" referredColumn="5969296E-84A6-160F-63C3-15E6B0D2D7CA"/>
+</associations>
+</Column>
+<Column name="MONEY_AMOUNT" id="FE65867A-8EB0-3BAA-CCB2-3268B04379F7">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>MONEY_AMOUNT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>돈돈돈 - null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>13</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,13,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PAID_NAME" id="240E891B-3E83-D5A7-5227-24DD894C5D37">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>PAID_NAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>결제자 이름 - null불가. 결제정보에서 가져올 수 있다면 가져오고 없으면 적당히 넣기</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PAID_DESC" id="1DE9E95A-A643-07F4-840F-54E14CD3F4F4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>PAID_DESC</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>결제 정보 - null 가능. 뭔가 결제정보에 추가적인 정보를 저장해야 한다면 여기에 넣기</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CONTRACT_TIME" id="E780E5C3-3501-55A7-F6E5-AC304C37E638">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>CONTRACT_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>결제시간 - null불가. 트리거있음 (강제로 insert 당시 시스템 시간을 넣음) 입찰과 관련되서 밀리초 까지 넣음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STATE_CODE" id="ADD3B58E-BF16-1E09-8D6C-783572D473C8">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>STATE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>주 영수증 상태 코드 - null불가. 트리거있음(기본값 0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="769C30E2-580B-410C-F2FC-BE1C666975F1" referredColumn="DF1AF0C4-F9D7-C3E0-51EE-F648E6C8B6BD"/>
+</associations>
+</Column>
+<Column name="REFUND_OF" id="C9705563-DE45-FBCA-7F74-0C2E991348D1">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>MAIN_RECEIPT</sourceObjSchema>
+<sourceObjName>REFUND_OF</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>환불 대상 영수증 번호 - 복합 외래키 null가능. 환불 영수증 통합용 속성</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>18</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,18,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A8F332D4-ECC2-9E74-73E2-6F1B475A0573" referredColumn="40042EFD-ECA1-72F7-9395-9496C55D332B"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="593F89ED-F45E-0469-A29A-EC659D007B62" name="MAIN_RECEIPT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MAIN_RECEIPT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D7F64B83-48A3-CBDE-C0F0-C738CCB27B2B"/>
+<colUsage columnID="40042EFD-ECA1-72F7-9395-9496C55D332B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E78CBABE-6B17-2ABF-C404-FEB803BDA4EE" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="MAIN_RECEIPT_IDX_UN">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SYS_C0036141</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="40042EFD-ECA1-72F7-9395-9496C55D332B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="359D4373-9401-8365-D2DF-A5ECF71F4F1C" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="MAIN_RECEIPT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MAIN_RECEIPT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D7F64B83-48A3-CBDE-C0F0-C738CCB27B2B"/>
+<colUsage columnID="40042EFD-ECA1-72F7-9395-9496C55D332B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D978C3C0-A143-2172-30D6-24F1970213E6" name="MAIN_RECEIPT_ACC_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D7F64B83-48A3-CBDE-C0F0-C738CCB27B2B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8A0B42AE-EC05-1386-C796-B4583FC40C05" name="M_RECEIPT_PAY_TYPE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="82BDD58C-C34C-C88C-83A8-FFEB04888D93"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="522E67C1-26A0-3949-630E-F5336B7AB010" name="M_RECEIPT_REFUND_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C9705563-DE45-FBCA-7F74-0C2E991348D1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="75EEB3A3-2943-398C-A54C-4C1786E88AB2" name="M_RECEIPT_STATE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="ADD3B58E-BF16-1E09-8D6C-783572D473C8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

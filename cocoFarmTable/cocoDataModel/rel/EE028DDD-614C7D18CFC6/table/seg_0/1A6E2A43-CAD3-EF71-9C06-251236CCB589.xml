@@ -1,0 +1,194 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1A6E2A43-CAD3-EF71-9C06-251236CCB589" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_EVALUATION">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_EVALUATION</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>판매글 평가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SALE_IDX" id="E5B08092-0356-796D-1D91-E801F308A271">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>SALE_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>판매글 번호 - 복합 외래키(판매 영수증)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5068091E-6429-EAD8-A501-BCD2956F0690" referredColumn="1DA4C712-54AC-2251-2CFF-0D28CBEF16FE"/>
+</associations>
+</Column>
+<Column name="MAIN_RECPT_IDX" id="0BFFBF61-2755-4EF5-A17B-FE034FBA76E5">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>MAIN_RECPT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>주 영수증 번호 - 복합 외래키(판매 영수증)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>18</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,18,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5068091E-6429-EAD8-A501-BCD2956F0690" referredColumn="FFDC6522-DF15-2B71-3F4A-1AA324125ED4"/>
+</associations>
+</Column>
+<Column name="SCORE" id="95DC6586-CC56-B1D9-8F96-8B2A81AD0D3D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>SCORE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>점수 - 0이상 100이하 정수. null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<constraintName>SALE_EVAL_CHECK</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="SCORE &lt;=100 and SCORE &gt;= 0"/>
+<implementationDef dbType="Oracle Database 11g" definition="SCORE &lt;=100 and SCORE &gt;= 0"/>
+</checkConstraint>
+<ownDataTypeParameters>,3,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TITLE" id="7BC1E2D6-39C9-4B91-B729-382A506D754A">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>TITLE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>제목 - null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CONTENT" id="0810A102-7B90-0225-3F58-8FFAA8F712F4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>CONTENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>내용 - null가능</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>400</dataTypeSize>
+<ownDataTypeParameters>400,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="REG_TIME" id="854DD963-863C-144E-099B-54BBB8651E9A">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>REG_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>등록시각 - 트리거있음(시스템시간) null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LAST_EDITED" id="1668BAFF-F00B-CB22-8ED1-38222612668C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>LAST_EDITED</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>최종 수정 시각 - 트리거있음(시스템시간) null가능</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ISDEL" id="854F77CC-78D8-A9A4-1AFA-C0498A18130D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_EVALUATION</sourceObjSchema>
+<sourceObjName>ISDEL</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>삭제상태 코드 - 외래키. null불가. 트리거있음 (기본값0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1EF0B0D6-4A4A-98A2-65E6-2EEEAC4E76D6" name="SALE_EVAL_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_EVAL_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E5B08092-0356-796D-1D91-E801F308A271"/>
+<colUsage columnID="0BFFBF61-2755-4EF5-A17B-FE034FBA76E5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="49D630CB-F0CA-D883-3D4A-6AF3EEFF3708" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_EVAL_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_EVAL_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E5B08092-0356-796D-1D91-E801F308A271"/>
+<colUsage columnID="0BFFBF61-2755-4EF5-A17B-FE034FBA76E5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D42AB74D-1E33-76D0-558D-1E5571DB30DA" name="SALE_EVAL_RECPT_IDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E5B08092-0356-796D-1D91-E801F308A271"/>
+<colUsage columnID="0BFFBF61-2755-4EF5-A17B-FE034FBA76E5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

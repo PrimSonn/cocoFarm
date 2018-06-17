@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_RECEIPT_TRG" directorySegmentName="seg_0" id="C2F7ECF5-11C1-3D36-CF4F-4CD791F8E064">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_RECEIPT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>declare&lt;br/&gt;	buffer nvarchar2(40);&lt;br/&gt;begin&lt;br/&gt;	select TITLE into buffer from SALE where IDX = :NEW.SALE_IDX;&lt;br/&gt;	:NEW.SALE_TITLE := buffer;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>11110132-6551-BBF7-D017-DCCD662E3765</table>
+</TriggerOraclev10g>

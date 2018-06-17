@@ -1,0 +1,315 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="3A852239-D848-30CE-BD0F-78285478ED5F" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BUSINESS_INFO">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BUSINESS_INFO</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>사업자 등록 정보 - 전체가 null안됨 (사업자 등록증 등록일 제외)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="9EB153B5-F888-AF1B-3F57-DADCB69A9315">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>인덱스 - not null unique : 후보키 - 자동인덱스 생성</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ACC_IDX" id="42BAF24D-00C4-507A-13AF-C5B3C91A7DBC">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>ACC_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>계정번호 참조 외래키 + 복합 기본키 = 계정마다 서로 다른 여러 개의 사업자 정보를 등록 가능.</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="98CB3F78-09FB-6C9F-0023-DB77C6E0B8FB" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="BUSINESS_LICENSE_CODE" id="DF3FDE5A-9DA2-0ACD-2CCE-58000BC6593F">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>BUSINESS_LICENSE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업자 번호 - 복합 기본키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CORPORATION_NAME" id="6CA72AF7-61B3-5526-FADE-8B9483083FE0">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>CORPORATION_NAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>법인명/단체명</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="REPRESENTATIVE" id="FC5CE957-FB24-4B16-4190-153141D74B9A">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>REPRESENTATIVE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>대표자</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TYPE_CODE" id="7B936046-766F-8D56-9F1F-91B5B72013DD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>TYPE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업자 등록증 타입 - 기본값 처리해둠</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="1BABDA9F-D7F6-4551-CE77-A3EED3B1DE8F" referredColumn="5B5A6657-560D-EE4A-7332-9E71977EF444"/>
+</associations>
+</Column>
+<Column name="BUSINESS_ADDR" id="1D3BE828-FE15-E6B2-E63B-488B62FD5316">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>BUSINESS_ADDR</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업장 세부주소 앞 까지</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BUSINESS_DETAILED_ADDR" id="94F7C5F9-1A09-0FA7-B911-6CCD92221826">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>BUSINESS_DETAILED_ADDR</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업장 소재지 - 세부주소</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HEADHQUARTER_ADDR" id="8D06F496-0A0A-93DC-2497-F65CB012D02E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>HEADHQUARTER_ADDR</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>본점주소 - 도 시 동 까지</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HEADHQUARTER_DETAILED_ADDR" id="9848AEB1-6BFC-BC4F-5164-92019922E8F2">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>HEADHQUARTER_DETAILED_ADDR</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>본점주소 - 세부주소</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BUSINESS_CATEGORY" id="1796ABE4-D832-3245-290A-B601356C5D96">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>BUSINESS_CATEGORY</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업의 업태</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>25</dataTypeSize>
+<ownDataTypeParameters>25,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BUSINESS_TYPE" id="A1408753-D816-8E60-17C0-EFBD6CF0CB5F">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>BUSINESS_TYPE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업의 종류</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>25</dataTypeSize>
+<ownDataTypeParameters>25,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="REG_DATE" id="A4E881AD-6CFB-C560-46E4-278EF2E60685">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>REG_DATE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업자 등록증 등록일 - null 허용!</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LICENSE_IMG" id="76493F0C-0450-541C-25C3-79CA2D575208">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>LICENSE_IMG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>사업자 등록증 이미지. 받은 이미지가 없을 때 기본값 이미지를 넣어두고 null처리를 해서 넣을수도 있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="INFO_REG_DATE" id="10DF3DAA-730E-F501-44D8-1B629F5278BF">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BUSINESS_INFO</sourceObjSchema>
+<sourceObjName>INFO_REG_DATE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>(사이트 내) 등록일 - 트리거있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A21C9195-0006-4EE6-519B-155B283811E6" name="BUSINESS_INFO_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BUSINESS_INFO_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="42BAF24D-00C4-507A-13AF-C5B3C91A7DBC"/>
+<colUsage columnID="DF3FDE5A-9DA2-0ACD-2CCE-58000BC6593F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="FCB72595-A1B4-B9C5-1825-119EFA5B8F02" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BUSINESS_INFO_IDX_UN">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SYS_C0036128</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9EB153B5-F888-AF1B-3F57-DADCB69A9315"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B7BE8ABC-0DE6-238A-8A78-1DEE152E6CA7" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BUSINESS_INFO_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BUSINESS_INFO_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="42BAF24D-00C4-507A-13AF-C5B3C91A7DBC"/>
+<colUsage columnID="DF3FDE5A-9DA2-0ACD-2CCE-58000BC6593F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C3431780-D8B0-1736-C2B8-6DFC5672A2EC" name="FK_BUSINESS_INFO_ACCOUNT_IDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="42BAF24D-00C4-507A-13AF-C5B3C91A7DBC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2E3FFCCC-4291-3C21-0618-0006D78512C2" name="FK_BUSINESS_INFO_TYPE">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7B936046-766F-8D56-9F1F-91B5B72013DD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

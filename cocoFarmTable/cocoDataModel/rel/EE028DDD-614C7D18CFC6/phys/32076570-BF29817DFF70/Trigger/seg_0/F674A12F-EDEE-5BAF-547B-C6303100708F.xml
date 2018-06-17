@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="MESSAGE_TRG" directorySegmentName="seg_0" id="F674A12F-EDEE-5BAF-547B-C6303100708F">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>MESSAGE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := MESSAGE_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.WRITTEN_TIME is null) then&lt;br/&gt;		:NEW.WRITTEN_TIME := SYSTIMESTAMP;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.IS_READ is null) then&lt;br/&gt;		:NEW.IS_READ := 0;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.TYPE_CODE is null) then&lt;br/&gt;		:NEW.TYPE_CODE := 0;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.ISDEL is null) then&lt;br/&gt;		:NEW.ISDEL := 0;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>CACEB870-1FEF-DF6E-6783-AECA93AF8C61</table>
+</TriggerOraclev10g>

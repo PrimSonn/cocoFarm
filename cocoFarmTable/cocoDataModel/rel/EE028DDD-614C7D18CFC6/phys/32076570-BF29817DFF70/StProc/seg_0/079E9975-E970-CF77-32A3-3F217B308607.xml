@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<StoredProcedureOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.StoredProcedureOraclev10g" name="CANCEL_TEMP_RECPT" directorySegmentName="seg_0" id="079E9975-E970-CF77-32A3-3F217B308607">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CANCEL_TEMP_RECPT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:31 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<source>CREATE OR REPLACE procedure COCOFARM.CANCEL_TEMP_RECPT ( in_recpt_idx MAIN_RECEIPT.IDX%type)&lt;br/&gt;is&lt;br/&gt;	null_checker		number;&lt;br/&gt;	err_code			number;&lt;br/&gt;	err_message			varchar2(255);&lt;br/&gt;begin&lt;br/&gt;&lt;br/&gt;	select STATE_CODE into null_checker from MAIN_RECEIPT where IDX = in_recpt_idx;&lt;br/&gt;	if(null_checker &lt;&gt; 0) then return;&lt;br/&gt;	end if;&lt;br/&gt;	delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;&lt;br/&gt;	delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;&lt;br/&gt;	delete SALE_RECEIPT where MAIN_RECPT_IDX = in_recpt_idx;&lt;br/&gt;	delete MAIN_RECEIPT where IDX = in_recpt_idx;&lt;br/&gt;	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values (&apos;CALCEL_TEMP_RECPT&apos;,1,&apos;in_recpt_idx: &apos;||in_recpt_idx);&lt;br/&gt;	commit;&lt;br/&gt;&lt;br/&gt;exception when OTHERS then&lt;br/&gt;&lt;br/&gt;	err_code := sqlcode;&lt;br/&gt;	err_message := substr(sqlerrm, 1, 255);&lt;br/&gt;&lt;br/&gt;	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values (&apos;CALCEL_TEMP_RECPT&apos;,0,&apos;Error! in_recpt_idx: &apos;||in_recpt_idx, err_code, err_message);&lt;br/&gt;	commit;&lt;br/&gt;end;</source>
+</StoredProcedureOraclev10g>

@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_INQUIRE_ANSWER_TRG" directorySegmentName="seg_0" id="F949CA8E-68CC-7947-7D5F-F4AADC2D02E6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_INQUIRE_ANSWER_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>UPDATE</actions>
+<body>begin&lt;br/&gt;	:NEW.ANSWER_TIME := SYSTIMESTAMP;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<columns>B2FCE051-3138-2BB1-FE09-68A3DB304021</columns>
+<condition>NEW.ANSWER_TIME is null</condition>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>41186E5F-6D40-EC75-B3FB-F11BC15111A2</table>
+</TriggerOraclev10g>

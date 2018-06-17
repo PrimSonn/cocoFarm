@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="C6F19DBD-DE44-860E-1435-6B7C8D38BD80" containerWithKeyObject="2706F701-0106-04B9-9885-7CAF81500233" localFKIndex="62B023D7-A472-53CD-9434-C924D8CD3229" name="BID_CONTRACT_Q_BID_FK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_Q_BID_FK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<referredTableLongName>COCOFARM.BID</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>346002C3-4FF0-D183-B590-C02FC9C7F50D</referredTableID>
+<keyObject>55E7FB89-159A-E427-DE98-1AD9BB68274F</keyObject>
+<referredKeyID>55E7FB89-159A-E427-DE98-1AD9BB68274F</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>AUCTION_IDX,AMOUNT</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
