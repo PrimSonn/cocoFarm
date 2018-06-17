@@ -1,0 +1,97 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="TODAYS_FARMER" directorySegmentName="seg_0" id="09B407AA-FEFB-50F1-1D60-A3D1BF71BE99">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>C7995CB2-7513-D59B-D40D-6D6BE371B6AA</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="LAST_EDITED" id="12F7157E-C571-5A4E-3668-6B43A1A2498C">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ACC_IDX" id="3EC1D797-20E7-5150-C4C5-0F679C8D0F21">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="WRITTEN_DATE" id="4630F30D-4640-649C-3633-D42C7BEE3874">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="CONTENT" id="67A733A0-B2B8-9B24-4540-937B7167C1DC">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ISDEL" id="9CED7B37-1A3D-F4B7-A371-EB176D3982E9">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="HIT" id="C9DAFD2D-C0B6-5815-1E4A-7E3EB6CFF017">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="TITLE" id="CF99C282-38DA-143E-38D3-6B434B2C9BE6">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TODAYS_FARMER_PK" id="014A4B2E-73D1-49C2-04E4-A396D829783D">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TODAYS_FARMER_IDX" id="AE1DF5D3-75A2-B457-8AE1-BF42460BD7C9">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_TODAYS_FARMER_ACC" id="5C7FF14B-8D85-D707-1013-F5AB6C2C05F3">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_TODAYS_FARMER_ISDEL" id="924D80B0-7BD6-D731-DF43-4292F301C900">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TODAYS_FARMER_PK" id="CEF73223-80C0-D95E-E4E9-90280F7AA505">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<existingIndex>014A4B2E-73D1-49C2-04E4-A396D829783D</existingIndex>
+<indexSegment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

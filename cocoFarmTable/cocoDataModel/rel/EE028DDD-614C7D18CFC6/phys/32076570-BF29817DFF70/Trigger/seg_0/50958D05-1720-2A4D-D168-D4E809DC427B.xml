@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="DELIVERY_B_INSRT_TRG" directorySegmentName="seg_0" id="50958D05-1720-2A4D-D168-D4E809DC427B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>DELIVERY_B_INSRT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := DELIVERY_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.REG_TIME is null) then&lt;br/&gt;		:NEW.REG_TIME := SYSTIMESTAMP;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.STATE_CODE is null) then&lt;br/&gt;		:NEW.STATE_CODE := 0;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.START_TIME_WIN_CODE is null) then&lt;br/&gt;		:NEW.START_TIME_WIN_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.RECEIVE_TIME_WIN_CODE is null) then&lt;br/&gt;		:NEW.RECEIVE_TIME_WIN_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>E1F17AF4-6EAE-D142-4AB7-539EACE4900F</table>
+</TriggerOraclev10g>

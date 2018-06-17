@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="cocoDataModel" id="A20AF99D-0A37-4858-09EA-0E903568BE9E" version="3.5">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:47:14 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>A20AF99D-0A37-4858-09EA-0E903568BE9E</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="D32921CE-DD17-DA6B-3B30-C2521D90ECD4">
+<designStoragePath>F:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

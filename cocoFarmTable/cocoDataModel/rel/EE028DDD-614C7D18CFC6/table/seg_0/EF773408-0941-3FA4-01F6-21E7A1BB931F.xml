@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EF773408-0941-3FA4-01F6-21E7A1BB931F" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_HIT">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_HIT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>판매글 조회수 중복처리 테이블</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SALE_IDX" id="6D940E67-0983-898A-E764-2B8999E98681">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_HIT</sourceObjSchema>
+<sourceObjName>SALE_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>판매글번호 - 복합기본키 + 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="03EB7B20-51BE-E631-ED13-F9A47AFDF682" referredColumn="CA2E0ECC-6635-896D-E537-308B67E27857"/>
+</associations>
+</Column>
+<Column name="ACCOUNT_IDX" id="7200FB43-FD4B-491F-88A9-216EF46FF95C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_HIT</sourceObjSchema>
+<sourceObjName>ACCOUNT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>계정번호 - 복합기본키 + 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="03E3E18B-CF4F-45FD-5C45-AE351AB4B48F" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="9D6B2DAD-CAC8-9B9F-E0B9-9783540DBC46" name="SALE_HIT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_HIT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6D940E67-0983-898A-E764-2B8999E98681"/>
+<colUsage columnID="7200FB43-FD4B-491F-88A9-216EF46FF95C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2AE03624-614B-FD68-53DA-7C5775A3A696" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_HIT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_HIT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6D940E67-0983-898A-E764-2B8999E98681"/>
+<colUsage columnID="7200FB43-FD4B-491F-88A9-216EF46FF95C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="88C37993-82F0-94B8-733D-E222F80103D9" name="SALE_HIT_ACC_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7200FB43-FD4B-491F-88A9-216EF46FF95C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1CB45FFD-CC20-D60F-3A95-C967F90290C1" name="SALE_HIT_SALE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6D940E67-0983-898A-E764-2B8999E98681"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

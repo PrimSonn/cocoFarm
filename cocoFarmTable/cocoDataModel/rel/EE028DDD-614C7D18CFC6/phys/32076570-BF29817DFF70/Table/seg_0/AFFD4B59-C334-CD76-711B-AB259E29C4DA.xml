@@ -1,0 +1,96 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="AUCTION_INQUIRE" directorySegmentName="seg_0" id="AFFD4B59-C334-CD76-711B-AB259E29C4DA">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>C7995CB2-7513-D59B-D40D-6D6BE371B6AA</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="ISDEL" id="026285E0-5943-5F02-7DC3-5420903BADAF">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CONTENT" id="3BB924B5-7EAE-F5E4-F5E2-8B94F3E928A6">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ANSWER_TIME" id="5C24B8FF-ABE9-19B2-9750-5BA4A162946C">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ANSWER" id="75AF18A1-6DBC-AC85-182D-5CF9AEEE2524">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="WRITTEN_TIME" id="B339815D-066F-A32A-2BAA-536FB1F61CF4">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="IDX" id="C3DCD615-ECBC-FCBF-9F0A-F16BE5181F61">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AUCTION_IDX" id="CCA68DE9-8273-3164-0E39-DDA67ED71AF3">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="WRITER_IDX" id="DF963C30-5911-A528-C054-073CDF963107">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="AUCTION_INQUIRE_PK" id="1EDBB865-B16E-1401-5361-BF4ACEC26FE6">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_AUCT_INQUIRE_AUCT_IDX" id="8683005D-3708-A6B2-4E6F-2BC2A371540F">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_AUCT_INQUIRE_ISDEL" id="B372147C-11CF-57CA-F6E7-96E6EB2FBBEA">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_AUCT_INQUIRE_ACC_IDX" id="CC29D299-C9FD-FA2E-76A5-AE161382F36A">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="AUCTION_INQUIRE_PK" id="0FAB9328-9B31-F9CE-65F7-B73BC5498C3A">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<existingIndex>1EDBB865-B16E-1401-5361-BF4ACEC26FE6</existingIndex>
+<indexSegment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

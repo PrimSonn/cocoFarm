@@ -1,0 +1,59 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="DELIVERY_TIME_WINDOW_TYPE" directorySegmentName="seg_0" id="85E21E71-EEF8-1113-9487-418144F69CD3">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>C7995CB2-7513-D59B-D40D-6D6BE371B6AA</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="TIME_WINDOW" id="0467CB40-EB3E-E6B9-E2BE-3185042AACF4">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="27EA2DA0-29ED-6428-6C98-A1A5038DA4B4">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DESCRIPTION" id="CE7A83FE-8040-1236-A0D3-7CB28AA131E7">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CODE" id="EE5DDD15-7281-96AA-2C76-F6F4A9DE9E5B">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="DELIVERY_T_W_TYPE_PK" id="3B586DFF-C728-E05A-02CA-CBCE293EA001">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<schemaObject>5A21A038-32FF-1874-9C45-02C5B0C81981</schemaObject>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="DELIVERY_T_W_TYPE_PK" id="1DB4C752-13CD-01AB-FD03-822DDCA1A10A">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<segment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</segment>
+<tableSpace>7011894D-733B-2770-8B36-6B11DFBE2F2D</tableSpace>
+<existingIndex>3B586DFF-C728-E05A-02CA-CBCE293EA001</existingIndex>
+<indexSegment>43A0F9AB-B9BC-4AED-51C5-AF0C57974A56</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

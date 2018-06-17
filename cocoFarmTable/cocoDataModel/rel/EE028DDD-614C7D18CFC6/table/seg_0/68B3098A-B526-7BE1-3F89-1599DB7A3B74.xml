@@ -1,0 +1,73 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="68B3098A-B526-7BE1-3F89-1599DB7A3B74" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_PICK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_PICK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 선택</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="FARM_ACC_IDX" id="04610D58-756A-855A-FAA7-50D82B99E993">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_PICK</sourceObjSchema>
+<sourceObjName>FARM_ACC_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>선택된 오늘의 농부 - 기본키 + 외래키 (오늘의 농부 기본키)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="401F2AB0-864B-A89B-BAA3-8DA0F426AF35" referredColumn="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A36D1198-58C3-D62A-FC7F-CF4EEB414920" name="PK_TODAY_FARM_PICK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_TODAY_FARM_PICK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04610D58-756A-855A-FAA7-50D82B99E993"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DEB419F8-ED29-CE0F-C1E0-B2A94F77750B" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="PK_TODAY_FARM_PICK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_TODAY_FARM_PICK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04610D58-756A-855A-FAA7-50D82B99E993"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D1FC1C52-9560-A90F-30C1-D4AFB914D1E2" name="FK_TODAY_FARM_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04610D58-756A-855A-FAA7-50D82B99E993"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

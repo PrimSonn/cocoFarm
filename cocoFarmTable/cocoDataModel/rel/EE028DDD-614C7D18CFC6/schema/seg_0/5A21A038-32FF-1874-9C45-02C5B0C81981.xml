@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<SchemaObject class="oracle.dbtools.crest.model.design.relational.SchemaObject" name="COCOFARM" directorySegmentName="seg_0" id="5A21A038-32FF-1874-9C45-02C5B0C81981">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<importedID>DD8DDFFD-9497-0EDA-2303-6E192C380F91</importedID>
+</SchemaObject>

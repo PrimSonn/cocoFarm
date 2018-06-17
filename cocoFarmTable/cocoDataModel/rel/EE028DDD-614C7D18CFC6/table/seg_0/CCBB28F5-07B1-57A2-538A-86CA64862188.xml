@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CCBB28F5-07B1-57A2-538A-86CA64862188" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_RECOMMEND">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_RECOMMEND</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 추천</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="RECOMMEND_ACC" id="4020BBC6-2793-BC5E-D5C0-61A2E69DFF87">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_RECOMMEND</sourceObjSchema>
+<sourceObjName>RECOMMEND_ACC</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>추천인 계정번호 - 외래키, 복합기본키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E86FD427-CE57-E6C4-CC32-32EA4BD6885B" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="TODAYS_FARMER_IDX" id="C8EFFED9-F105-023D-D5D9-4888A6459BC3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_RECOMMEND</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 글번호 - 외래키, 복합기본키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="1CB54B52-5826-8F76-5BA6-04F50AEC9FB1" referredColumn="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2D7BF8D5-2D0F-2B08-BE42-8951B64BFB31" name="TODAYS_FARM_RECOMM_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARM_RECOMM_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4020BBC6-2793-BC5E-D5C0-61A2E69DFF87"/>
+<colUsage columnID="C8EFFED9-F105-023D-D5D9-4888A6459BC3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="70B7D1DB-2988-6AD2-3E3C-6C3FF34CF623" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARM_RECOMM_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARM_RECOMM_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4020BBC6-2793-BC5E-D5C0-61A2E69DFF87"/>
+<colUsage columnID="C8EFFED9-F105-023D-D5D9-4888A6459BC3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8BA5BA60-B879-D6D4-A55C-021E80ECEB8D" name="FK_TODAYS_FARM_RECOMM">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C8EFFED9-F105-023D-D5D9-4888A6459BC3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7798CCAE-8511-5C75-E50B-DF72E5BA5481" name="FK_TODAYS_FARM_REC_ACC">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4020BBC6-2793-BC5E-D5C0-61A2E69DFF87"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

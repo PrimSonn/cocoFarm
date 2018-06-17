@@ -1,0 +1,117 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4EA699F4-334A-BF25-7FDB-92ABABFA841D" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_FILE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_FILE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ACC_IDX" id="BB8FF4C8-180D-B08B-2E2B-3AC793AD7392">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_FILE</sourceObjSchema>
+<sourceObjName>ACC_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="69193053-08E6-7337-48DF-BC11F115B8B8" referredColumn="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</associations>
+</Column>
+<Column name="ORIGINAL_FILENAME" id="26AC71A6-B356-FC4D-DDC8-E04FBDFEE968">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_FILE</sourceObjSchema>
+<sourceObjName>ORIGINAL_FILENAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>600 BYTE</dataTypeSize>
+<ownDataTypeParameters>600 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STORED_FILENAME" id="2F15DF27-E653-0679-0321-B90ED235A1FA">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_FILE</sourceObjSchema>
+<sourceObjName>STORED_FILENAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>800 BYTE</dataTypeSize>
+<ownDataTypeParameters>800 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UPLOAD_DATE" id="1A241ED1-07C0-EDB5-13FC-54EE467BDB88">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_FILE</sourceObjSchema>
+<sourceObjName>UPLOAD_DATE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="DD75C2D3-1577-D747-EF74-53E5BF3A9D81" name="TODAYS_FARMER_FILE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_FILE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BB8FF4C8-180D-B08B-2E2B-3AC793AD7392"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="944C637D-9A88-F1CF-06F9-F47CAE23ADC2" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_FILE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_FILE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BB8FF4C8-180D-B08B-2E2B-3AC793AD7392"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="18B467C9-A8BF-3450-497B-20829FE50DA8" name="TODAYS_FARMER_FILE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BB8FF4C8-180D-B08B-2E2B-3AC793AD7392"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

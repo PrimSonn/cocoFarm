@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="BID_INSERT_TRG" directorySegmentName="seg_0" id="458585DD-5000-09EC-AC67-CDCA368FF861">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_INSERT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;--	if(:NEW.IDX is null) then&lt;br/&gt;--		:NEW.IDX := BID_SEQ.nextval;&lt;br/&gt;--	end if;&lt;br/&gt;--	if(:NEW.DEPOSIT_RATIO_CODE is null) then&lt;br/&gt;--		:NEW.DEPOSIT_RATIO_CODE :=1;&lt;br/&gt;--	end if;&lt;br/&gt;	if(:NEW.STATE_CODE is null) then&lt;br/&gt;		:NEW.STATE_CODE := 1;&lt;br/&gt;	end if;&lt;br/&gt;	:NEW.BID_TIME := SYSTIMESTAMP;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>346002C3-4FF0-D183-B590-C02FC9C7F50D</table>
+</TriggerOraclev10g>

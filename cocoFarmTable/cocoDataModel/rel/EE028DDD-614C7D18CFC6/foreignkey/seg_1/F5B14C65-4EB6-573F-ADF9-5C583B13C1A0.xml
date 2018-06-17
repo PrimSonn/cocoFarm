@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_1" id="F5B14C65-4EB6-573F-ADF9-5C583B13C1A0" containerWithKeyObject="99438E05-9808-F884-7356-CC5E4D14BA90" localFKIndex="72A680E9-C720-F650-D5AF-2E1C2AE07BC0" name="SUBCAT_MAP_FK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SUBCAT_MAP_FK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<referredTableLongName>COCOFARM.CATEGORY</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>6595DE08-8BB9-3261-3ED1-4302B357311D</referredTableID>
+<keyObject>03C280A9-66F9-EE2E-7082-3F107B1FE418</keyObject>
+<referredKeyID>03C280A9-66F9-EE2E-7082-3F107B1FE418</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>IDX</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

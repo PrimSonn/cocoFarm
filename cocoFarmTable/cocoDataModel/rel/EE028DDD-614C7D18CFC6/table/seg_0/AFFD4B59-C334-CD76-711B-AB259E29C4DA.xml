@@ -1,0 +1,209 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="AFFD4B59-C334-CD76-711B-AB259E29C4DA" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="AUCTION_INQUIRE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_INQUIRE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>경매 문의사항</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="C3DCD615-ECBC-FCBF-9F0A-F16BE5181F61">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>경매 문의글 번호 - 기본키, 인조식별자 트리거있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="AUCTION_IDX" id="CCA68DE9-8273-3164-0E39-DDA67ED71AF3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>경매글 번호 - null불가. 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A3F81BF8-3B52-C152-EA23-D98C2C62FBF2" referredColumn="803D79B1-B898-0F12-3629-806E126A5435"/>
+</associations>
+</Column>
+<Column name="WRITER_IDX" id="DF963C30-5911-A528-C054-073CDF963107">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>WRITER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>문의 계정 번호 - null불가. 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="BD6DDB73-0D94-6A4B-7310-DD8932BE2F2D" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="CONTENT" id="3BB924B5-7EAE-F5E4-F5E2-8B94F3E928A6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>CONTENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>문의내용 - null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>2000</dataTypeSize>
+<ownDataTypeParameters>2000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="WRITTEN_TIME" id="B339815D-066F-A32A-2BAA-536FB1F61CF4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>WRITTEN_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>문의글 작성시각 - null불가, 트리거있음(기본값 시스템시간처리)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ANSWER" id="75AF18A1-6DBC-AC85-182D-5CF9AEEE2524">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>ANSWER</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>문의글에 대한 답변 - null가능.</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>2000</dataTypeSize>
+<ownDataTypeParameters>2000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ANSWER_TIME" id="5C24B8FF-ABE9-19B2-9750-5BA4A162946C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>ANSWER_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>문의글 답변 시각 - null가능, 트리거있음 (답변 작성시 자동으로 시간 기입)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ISDEL" id="026285E0-5943-5F02-7DC3-5420903BADAF">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_INQUIRE</sourceObjSchema>
+<sourceObjName>ISDEL</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>삭제 혹은 이외의(블라인드 따위) 글 상태 - 외래키 null불가 트리거있음 (기본값 0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3B113B68-3A6B-25BD-2214-E25F54BBBF94" referredColumn="6F4A99DA-CCBE-1BA7-E7AA-8979A7CF3D12"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="0FAB9328-9B31-F9CE-65F7-B73BC5498C3A" name="AUCTION_INQUIRE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_INQUIRE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C3DCD615-ECBC-FCBF-9F0A-F16BE5181F61"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1EDBB865-B16E-1401-5361-BF4ACEC26FE6" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="AUCTION_INQUIRE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_INQUIRE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C3DCD615-ECBC-FCBF-9F0A-F16BE5181F61"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CC29D299-C9FD-FA2E-76A5-AE161382F36A" name="FK_AUCT_INQUIRE_ACC_IDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DF963C30-5911-A528-C054-073CDF963107"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8683005D-3708-A6B2-4E6F-2BC2A371540F" name="FK_AUCT_INQUIRE_AUCT_IDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CCA68DE9-8273-3164-0E39-DDA67ED71AF3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B372147C-11CF-57CA-F6E7-96E6EB2FBBEA" name="FK_AUCT_INQUIRE_ISDEL">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="026285E0-5943-5F02-7DC3-5420903BADAF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

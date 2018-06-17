@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="BID_CONTRACT_RECPT_TRG" directorySegmentName="seg_0" id="61955378-C58E-04E4-B1B2-428CB666E4F2">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_RECPT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>declare&lt;br/&gt;	v_title		nvarchar2(40);&lt;br/&gt;begin&lt;br/&gt;	if(:NEW.TITLE is null) then&lt;br/&gt;		select TITLE into v_title from AUCTION where IDX = :NEW.AUCTION_IDX;&lt;br/&gt;		:NEW.TITLE := v_title;&lt;br/&gt;	end if;&lt;br/&gt;--	if (:NEW.CONTRACT_AMOUNT is null) then&lt;br/&gt;--		null;&lt;br/&gt;--	end if;&lt;br/&gt;--		if (:NEW.STATE_CODE is null) then&lt;br/&gt;--		:NEW.STATE_CODE := 0;&lt;br/&gt;--	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>4C3FD6B6-DCE5-8A2A-B59A-BC6645A06255</table>
+</TriggerOraclev10g>

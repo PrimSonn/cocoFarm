@@ -1,0 +1,201 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="09B407AA-FEFB-50F1-1D60-A3D1BF71BE99" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>오늘의 농부</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ACC_IDX" id="3EC1D797-20E7-5150-C4C5-0F679C8D0F21">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>ACC_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>계정 번호- 기본키 + 외래키 (계정.계정번호) = 1:1. 계정타입에 대한 규칙은 application에서 관리하기</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="527AEDA2-1644-8564-7693-D121AA8E84FC" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="TITLE" id="CF99C282-38DA-143E-38D3-6B434B2C9BE6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>TITLE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>제목 - null 안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CONTENT" id="67A733A0-B2B8-9B24-4540-937B7167C1DC">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>CONTENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>내용 - 각종html 을 넣다보면 매우 길어질 거라 생각해서 nclob. 대신 문자열로 바꾸기 위해서 to_nclob 함수 이용. 불편하고 쓸데없다 싶으면 nvarchar2 로 변경</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>2000</dataTypeSize>
+<ownDataTypeParameters>2000,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="WRITTEN_DATE" id="4630F30D-4640-649C-3633-D42C7BEE3874">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>WRITTEN_DATE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>작성 시각 - null 안됨, 기본값: 시스템 시각</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HIT" id="C9DAFD2D-C0B6-5815-1E4A-7E3EB6CFF017">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>HIT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>조회수</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<constraintName>TODAYS_FARM_VCOUNT_CHECK</constraintName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>9</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="HIT &gt;=0"/>
+<implementationDef dbType="Oracle Database 11g" definition="HIT &gt;=0"/>
+</checkConstraint>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,9,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LAST_EDITED" id="12F7157E-C571-5A4E-3668-6B43A1A2498C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>LAST_EDITED</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>마지막 수정시각 - 트리거 없음. 글내용의 data type 이 clob 라서 update 관련 트리거가 안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ISDEL" id="9CED7B37-1A3D-F4B7-A371-EB176D3982E9">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER</sourceObjSchema>
+<sourceObjName>ISDEL</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>삭제 확인 코드(블라인드) - 외래키, 기본값:0, null안됨. 삭제요청시 삭제코드만 바꾸면 나중에 다시 글을 쓸 수 없음!!(기본키 유일) 관리자가 블라인드 처리 하는 용으로만 사용!</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="829F77C4-F1AA-BBC3-B5FD-47C7FC630721" referredColumn="6F4A99DA-CCBE-1BA7-E7AA-8979A7CF3D12"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="CEF73223-80C0-D95E-E4E9-90280F7AA505" name="TODAYS_FARMER_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AE1DF5D3-75A2-B457-8AE1-BF42460BD7C9" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_IDX">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4630F30D-4640-649C-3633-D42C7BEE3874" sortOrder="DESC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="014A4B2E-73D1-49C2-04E4-A396D829783D" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5C7FF14B-8D85-D707-1013-F5AB6C2C05F3" name="FK_TODAYS_FARMER_ACC">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="924D80B0-7BD6-D731-DF43-4292F301C900" name="FK_TODAYS_FARMER_ISDEL">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9CED7B37-1A3D-F4B7-A371-EB176D3982E9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

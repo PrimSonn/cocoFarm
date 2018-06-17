@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="0E261ECF-02F6-E48F-6407-0C4623EC606F" containerWithKeyObject="FC21B31B-B84F-98EA-8770-EACF4F8B9377" localFKIndex="1ACF9AB6-3C28-B5BB-6CFD-9320EA00953D" name="BAD_RECORD_CODE_FK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BAD_RECORD_CODE_FK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<referredTableLongName>COCOFARM.BAD_DEED_TYPE</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>57B91BD8-EBA3-993E-493B-56086A6FCDD0</referredTableID>
+<keyObject>A2EAEBB3-DC47-503A-92E3-164D0A192A1E</keyObject>
+<referredKeyID>A2EAEBB3-DC47-503A-92E3-164D0A192A1E</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>CODE</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

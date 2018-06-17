@@ -1,0 +1,125 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0363572A-0AF4-D1B7-CCD7-16BBF546BABD" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="DEED_RECORD_STATE_TYPE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>DEED_RECORD_STATE_TYPE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CODE" id="151D37B9-F60C-18EA-1181-0BA7C741674E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DEED_RECORD_STATE_TYPE</sourceObjSchema>
+<sourceObjName>CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 코드 - 기본키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="THRESHOLD" id="46C29510-7682-9864-FFDE-F9635F361E05">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DEED_RECORD_STATE_TYPE</sourceObjSchema>
+<sourceObjName>THRESHOLD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 기준치</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>15</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,15,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="187B766D-37D7-319A-E80F-AF4E1726FCD3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DEED_RECORD_STATE_TYPE</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 코드 이름 - null 불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="B6711379-85B1-F8D6-D99B-C8CA7C1B698E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DEED_RECORD_STATE_TYPE</sourceObjSchema>
+<sourceObjName>DESCRIPTION</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 코드 설명</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>400</dataTypeSize>
+<ownDataTypeParameters>400,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ADJUSTMENT" id="2AD5F527-AB55-92BF-AB1B-041BF53C826D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DEED_RECORD_STATE_TYPE</sourceObjSchema>
+<sourceObjName>ADJUSTMENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 조정치</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>15</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,15,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="236740C2-816B-82BA-336D-AD177FBDF7E6" name="PK_DEED_RECORD_S_CD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_DEED_RECORD_S_CD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="151D37B9-F60C-18EA-1181-0BA7C741674E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A3AF6BC8-6158-5D3A-4ED9-EE70E3051925" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="PK_DEED_RECORD_S_CD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_DEED_RECORD_S_CD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="151D37B9-F60C-18EA-1181-0BA7C741674E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

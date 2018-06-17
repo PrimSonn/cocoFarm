@@ -1,6 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<SchemaObject class="oracle.dbtools.crest.model.design.relational.SchemaObject" name="COCOFARM" directorySegmentName="seg_0" id="205BAECF-F84A-02FF-1EB0-473741A5BD77">
-<createdBy>Sonn</createdBy>
-<createdTime>2018-05-31 13:28:49 UTC</createdTime>
-<ownerDesignName>cocoFarm physical model design</ownerDesignName>
-</SchemaObject>

@@ -1,0 +1,10 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<CollectionTypeProxyOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.CollectionTypeProxyOraclev10g" name="HOLDER" directorySegmentName="seg_0" id="8E9F7F8C-7B27-A70B-CABF-E50D40E183AF">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>HOLDER</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:30 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+</CollectionTypeProxyOraclev10g>

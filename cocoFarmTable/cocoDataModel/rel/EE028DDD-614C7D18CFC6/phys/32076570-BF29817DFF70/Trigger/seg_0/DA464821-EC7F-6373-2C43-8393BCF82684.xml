@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="AUCT_INQUIRE_TRG" directorySegmentName="seg_0" id="DA464821-EC7F-6373-2C43-8393BCF82684">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCT_INQUIRE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := AUCT_INQUIRE_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.WRITTEN_TIME is null) then&lt;br/&gt;		:NEW.WRITTEN_TIME := SYSTIMESTAMP;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.ISDEL is null) then&lt;br/&gt;		:NEW.ISDEL := 0;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>AFFD4B59-C334-CD76-711B-AB259E29C4DA</table>
+</TriggerOraclev10g>

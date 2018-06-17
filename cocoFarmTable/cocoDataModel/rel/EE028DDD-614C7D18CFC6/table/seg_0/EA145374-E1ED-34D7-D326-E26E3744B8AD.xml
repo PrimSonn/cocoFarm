@@ -1,0 +1,107 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EA145374-E1ED-34D7-D326-E26E3744B8AD" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="DELIV_RECV_T_WIN_TYPE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>DELIV_RECV_T_WIN_TYPE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>수령 확인 만료시간 제어용 테이블(일종의 서브타입 묶음)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CODE" id="11BAEAAB-9191-8D1A-E34E-0E6A7F7F8F38">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DELIV_RECV_T_WIN_TYPE</sourceObjSchema>
+<sourceObjName>CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>수령 확인 만료시간 비즈니스 코드 - 기본키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TIME_WINDOW" id="9CB13C57-0966-1FC0-4918-83C86620B3C3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DELIV_RECV_T_WIN_TYPE</sourceObjSchema>
+<sourceObjName>TIME_WINDOW</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>시간(길이) - null 안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT049</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>3</dataTypeScale>
+<ownDataTypeParameters>,3,3</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="35D938DB-73C7-C58C-FE39-A8FFFD02ABC1">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DELIV_RECV_T_WIN_TYPE</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>코드 이름 - null 안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DESCRIPTION" id="07640175-848C-4880-F0EA-19F12B0FD4F3">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>DELIV_RECV_T_WIN_TYPE</sourceObjSchema>
+<sourceObjName>DESCRIPTION</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>코드 설명</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>400</dataTypeSize>
+<ownDataTypeParameters>400,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D5D7C5EB-1B37-9BBC-A86F-80528D08B8AF" name="DELIV_R_T_W_TYPE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>DELIV_R_T_W_TYPE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="11BAEAAB-9191-8D1A-E34E-0E6A7F7F8F38"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AEFCABB3-5C27-7222-79CD-A6F6EC039E86" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="DELIV_R_T_W_TYPE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>DELIV_R_T_W_TYPE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="11BAEAAB-9191-8D1A-E34E-0E6A7F7F8F38"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
