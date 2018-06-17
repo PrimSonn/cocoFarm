@@ -163,5 +163,23 @@ public class Auction_ServiceImpl implements Auction_Service {
 	public List getauctionPagingList(Admin_Auction_Paging paging) {
 		return auctionDao.admingetauctionPagingList(paging);
 	}
+	
+	
+	//================================================
+	
+		@Override
+		public List getReceiptList() {
+			return auctionDao.admingetReceiptList();
+		}
+
+		@Override
+		public int getReceiptTotal() {
+			return auctionDao.admingetReceiptTotal();
+		}
+
+		@Override
+		public List getReceiptPagingList(Admin_Auction_Paging paging) {
+			return auctionDao.admingetReceiptPagingList(paging);
+		}
 
 }

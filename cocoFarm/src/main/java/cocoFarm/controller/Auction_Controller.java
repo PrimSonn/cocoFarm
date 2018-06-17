@@ -102,6 +102,24 @@ public class Auction_Controller {
 		return "mypage/admin/admin_auctionCheck";
 	}
 	
+//	==================================관리자 경매 결제 리스트=============================================
+	@RequestMapping(value="/mypage/admin/admin_auctionReceiptCheck.do", method=RequestMethod.GET)
+	public String auctionReceiptList(@RequestParam(defaultValue="0") int curPage
+			, Model model) {
+		
+		int totalCount = auctionService.getReceiptTotal();	//전체 게시글 수
+		
+		// 페이징 생성
+		Admin_Auction_Paging paging = new Admin_Auction_Paging(totalCount, curPage);
+		model.addAttribute("paging", paging);
+		
+		List list = auctionService.getReceiptPagingList(paging); // 전체 게시글 조회
+		
+		model.addAttribute("list", list);
+		
+		return "mypage/admin/admin_auctionReceiptCheck";
+	}
+	
 	
 	
 //	==================================경매리스트=============================================

@@ -166,6 +166,32 @@ public interface Auction_Service {
 	 * @return List - 페이징 처리된 경매글 리스트
 	 */
 	public List getauctionPagingList(Admin_Auction_Paging paging);
+	
+	
+	//=======================================관리자 경매 결제항목 페이징
+	
+		/**
+		 * 관리자 영수증 전체 조회
+		 *  
+		 * @return List - 경매글 전제 조회 결과
+		 */
+		public List getReceiptList();
+		
+		/**
+		 * 관리자 영수증 전체 수 조회
+		 * 
+		 * @return int - 영수증 총 갯수
+		 */
+		public int getReceiptTotal();
+		
+
+		/**
+		 * 관리자 선택된 페이지에 알맞는 영수증 리스트 조회
+		 *  
+		 * @param paging - 페이징 정보
+		 * @return List - 페이징 처리된 영수증 리스트
+		 */
+		public List getReceiptPagingList(Admin_Auction_Paging paging);
 
 	
 }

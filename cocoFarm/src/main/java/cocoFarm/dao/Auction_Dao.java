@@ -176,4 +176,29 @@ public interface Auction_Dao {
 	 */
 	public List admingetauctionPagingList(Admin_Auction_Paging paging);
 	
+	
+	//=========================관리자 영수증 리스트
+	
+		/**
+		 * 관리자 영수증 전체 리스트 조회
+		 * 
+		 * @return - 전체 영수증 리스트
+		 */
+		public List admingetReceiptList();
+		
+		/**
+		 * 전체 영수증 수
+		 * 
+		 * @return - 전체 영수증 수
+		 */
+		public int admingetReceiptTotal();
+		
+		/**
+		 * 관리자 페이지별 영수증 조회
+		 * 
+		 * @param paging - 페이지 정보
+		 * @return - 페이지별 게시물
+		 */
+		public List admingetReceiptPagingList(Admin_Auction_Paging paging);
+	
 }

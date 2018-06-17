@@ -221,48 +221,37 @@
 		) R
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
 	 </select>
-<!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
-<!-- 		DELETE board -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</delete> -->
-
-<!-- 	<delete id="deleteFile" parameterType="mvc.dto.Board"> -->
-<!-- 		DELETE board_file -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</delete> -->
-
-<!-- 	<delete id="deleteBoardList" parameterType="String"> -->
-<!-- 		DELETE FROM board -->
-<!-- 		WHERE boardno IN ( ${_parameter } ) -->
-<!-- 	</delete> -->
-	
-<!-- 	<delete id="deleteBoardFileList" parameterType="String"> -->
-<!-- 		DELETE FROM board_file -->
-<!-- 		WHERE boardno IN ( ${_parameter } ) -->
-<!-- 	</delete> -->
-	
-<!-- 	<select id="getFile" -->
-<!-- 	 parameterType="mvc.dto.Board" -->
-<!-- 	 resultType="mvc.dto.BoardFile"> -->
-<!-- 		SELECT -->
-<!-- 			boardno -->
-<!-- 			, fileno -->
-<!-- 			, original_filename -->
-<!-- 			, stored_filename -->
-<!-- 			, file_size -->
-<!-- 			, upload_date -->
-<!-- 		FROM board_file -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</select> -->
-	
-<!-- 	<select id="getStoredFilename" -->
-<!-- 	 parameterType="mvc.dto.BoardFile" -->
-<!-- 	 resultType="String"> -->
 	 
-<!-- 		SELECT stored_filename FROM board_file -->
-<!-- 		WHERE fileno = #{fileno } -->
-		
-<!-- 	</select> -->
+	 
+	 
+	 
+	 <sql id="receiptList">
+	 	SELECT mr.*,bcr.title 
+	 	FROM main_receipt mr 
+	 	INNER JOIN bid_contract_receipt bcr 
+	 	ON (mr.idx = bcr.main_recpt_idx)
+	 </sql>
+	 
+	 <select id="admingetReceiptList" resultType="cocoFarm.dto.AuctionReceipt" >
+	 	<include refid="receiptList"></include>
+	 	ORDER BY contract_time desc
+	 </select>
+	 
+	 <select id="admingetReceiptTotal" resultType="int">
+	 	SELECT COUNT(*) FROM bid_contract_receipt
+	 </select>
+	 
+	 <select id="admingetReceiptPagingList" parameterType="cocoFarm.util.Admin_Auction_Paging" resultType="cocoFarm.dto.AuctionReceipt">
+	 	SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="receiptList" />
+				ORDER BY contract_time DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	 </select>
+
 </mapper>
 
 	
