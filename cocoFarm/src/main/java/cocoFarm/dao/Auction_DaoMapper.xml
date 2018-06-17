@@ -195,6 +195,32 @@
 		where AQ.R between 1 and 5 order by AQ.TIME_WINDOW asc
 	</select>
 	 
+	 
+	 <sql id="auctionList">
+	 	SELECT ac.*,adq.time_window 
+	 	FROM auction ac 
+	 	LEFT JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+	 </sql>
+	 
+	 <select id="admingetauctionList" resultType="cocoFarm.dto.Auction" >
+	 	<include refid="auctionList"></include>
+	 	ORDER BY reg_time desc
+	 </select>
+	 
+	 <select id="admingetauctionTotal" resultType="int">
+	 	SELECT COUNT(*) FROM auction
+	 </select>
+	 
+	 <select id="admingetauctionPagingList" parameterType="cocoFarm.util.Admin_Auction_Paging" resultType="cocoFarm.dto.Auction">
+	 	SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="auctionList" />
+				ORDER BY reg_time DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	 </select>
 <!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
 <!-- 		DELETE board -->
 <!-- 		WHERE boardno = #{boardno } -->

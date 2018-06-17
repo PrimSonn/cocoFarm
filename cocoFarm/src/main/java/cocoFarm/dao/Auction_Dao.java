@@ -6,6 +6,7 @@ import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
+import cocoFarm.util.Admin_Auction_Paging;
 import cocoFarm.util.Auction_Paging;
 
 public interface Auction_Dao {
@@ -150,4 +151,29 @@ public interface Auction_Dao {
 	
 	
 	public List getMainAuctionList();
+	
+	//=========================관리자 경매글 리스트
+	
+	/**
+	 * 관리자 경매글 전체 리스트 조회
+	 * 
+	 * @return - 전체 경매글 리스트
+	 */
+	public List admingetauctionList();
+	
+	/**
+	 * 전체 경매글 수
+	 * 
+	 * @return - 전체 경매글 수
+	 */
+	public int admingetauctionTotal();
+	
+	/**
+	 * 관리자 페이지별 경매글 조회
+	 * 
+	 * @param paging - 페이지 정보
+	 * @return - 페이지별 게시물
+	 */
+	public List admingetauctionPagingList(Admin_Auction_Paging paging);
+	
 }

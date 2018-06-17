@@ -16,6 +16,7 @@ import cocoFarm.dto.Account;
 import cocoFarm.dto.Auction;
 import cocoFarm.dto.Auction_Inquire;
 import cocoFarm.dto.BidDto;
+import cocoFarm.util.Admin_Auction_Paging;
 import cocoFarm.util.Auction_Paging;
 
 @Service
@@ -142,6 +143,25 @@ public class Auction_ServiceImpl implements Auction_Service {
 	public List getMainAuctionList() {
 		
 		return auctionDao.getMainAuctionList();
+	}
+
+	
+
+	//================================================
+	
+	@Override
+	public List getauctionList() {
+		return auctionDao.admingetauctionList();
+	}
+
+	@Override
+	public int getauctionTotal() {
+		return auctionDao.admingetauctionTotal();
+	}
+
+	@Override
+	public List getauctionPagingList(Admin_Auction_Paging paging) {
+		return auctionDao.admingetauctionPagingList(paging);
 	}
 
 }
