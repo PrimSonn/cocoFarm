@@ -67,7 +67,11 @@ $(document).ready(function() {
 	$("#title").focus();
 	
 	$("#btnWrite").click(function() {
+		if($('#title').val()==""||$('#content').val()==""||$('#Img_file').val()==""||$('#start_price').val()==""){
+			alert("필수 항목을 입력해주세요")
+		}else{
 		submitContents($(this));
+		}
 	});
 });
 
@@ -232,9 +236,9 @@ $(document).ready(function() {
 							});
 						</script>
 						
-							<div class="save_group">
-								<div class="save_button"><button id="btnWrite" style="border: hidden; background: transparent;">상품 등록하기</button></div>
-								<div class="re_button"><a href="#">다시 작성하기</a></div>
+							<div class="save_group" style="text-align: center;">
+								<div class="save_button" style="padding: 3px;"><button id="btnWrite" style="border: hidden;background: transparent;width: 90px;font-weight: bold;font-size: 15px;font-family: 'Jeju Gothic'; cursor: pointer;">상품 등록하기</button></div>
+								<div class="re_button" style="padding: 2px;"><a href="/auction/auction_register.do">다시 작성하기</a></div>
 							</div>
 							</form>
 						
