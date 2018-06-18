@@ -74,7 +74,7 @@ public class ProductController {
 	// 판매 상품 옵션 조회
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
-							, Model model,HttpSession session) {
+							, Model model, HttpSession session) {
 		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);

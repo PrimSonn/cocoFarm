@@ -11,9 +11,6 @@
 		<result column="start_amount" property="startAmount" />
 		<result column="left_amount" property="leftAmount" />
 		<result column="last_edited" property="lastEdited" />
-		<!-- Cart에서 조회할 때 SaleOption에 idx, count를 직접 넣으려고 했음 -->
-<!-- 		<result column="count" property="proAmount" /> -->
-<!-- 		<result column="sale_opt_idx" property="idx" /> -->
 	</resultMap>
 
 	<sql id="selectSaleOption">
@@ -30,9 +27,9 @@
 	<select id="countAll" parameterType="int" resultType="int">
 <!-- 		SELECT COUNT(*) FROM sale_option -->
 <!-- 		WHERE isdel = 0 AND acc_idx = ${_parameter } -->
-	select count(1) s from SALE_OPTION SO
-	left join SALE S on S.IDX = SO.SALE_IDX
-	where S.ACC_IDX = 3 and S.ISDEL = 0
+		select count(1) s from SALE_OPTION SO
+			left join SALE S on S.IDX = SO.SALE_IDX
+		where S.ACC_IDX = ${_parameter } and S.ISDEL = 0
 	</select>
 	
 	<select id="selectPage"
