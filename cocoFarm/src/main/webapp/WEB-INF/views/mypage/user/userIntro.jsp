@@ -20,6 +20,8 @@
  src="/resources/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 
 <script type="text/javascript">
+
+
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
 	val=obj.value;

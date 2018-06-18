@@ -26,7 +26,7 @@ public interface ProductDao {
 	
 	public List<HashMap<String, Object>> selectAllComment(int sale_idx);
 	
-	public Product selectProductByReceipt(int acc_idx, String title);
+	public Product selectProductByReceipt(String title);
 	
 	/* ==================================================================================== */
 	

@@ -110,7 +110,7 @@
 
 	<insert id="insertComment" parameterType="cocoFarm.dto.Comment">
 		INSERT INTO SALE_EVALUATION (sale_idx,main_recpt_idx,score,title,content,last_edited,isdel)
-		VALUES (#{sale_idx }, 2, #{score }, #{title }, #{content }, sysdate, 0)
+		VALUES (#{sale_idx }, #{main_recpt_idx }, #{score }, #{title }, #{content }, sysdate, 0)
 	</insert>
 
 	<select id="selectAllComment" parameterType="int"
@@ -121,9 +121,11 @@
 		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
 	</select>
 	
-	<select id="selectProductByReceipt" parameterType="java.util.HashMap" resultMap="ProductResult">
-		<include refid="selectProduct" />
-		WHERE acc_idx = #{param1 } AND title = #{param2 }
+	<select id="selectProductByReceipt" parameterType="String"
+					resultMap="ProductResult">
+		select S.* from sale_option so
+			left join sale S on S.idx = so.sale_idx
+		where so.name = #{value }
 	</select>
 
 	<!-- ==================================================================================== -->

@@ -8,12 +8,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/paynee.css">
-<link rel="stylesheet" type="text/css" href="/css/board.css">
 
 <script type="text/javascript">
 /* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
-function viewComment() {
-	var productIdx = ${product.idx };
+function insertComment() {
+	var productTitle = "${paynee[1].name }";
+	console.log(productTitle);
 	
 	var arr = new Array();
 	var obj = new Object();
@@ -22,32 +22,22 @@ function viewComment() {
 	if(cont === "") {
 		arr.push(null);
 	} else {
-// 		obj.saleIdx = ${product.idx };
-// 		obj.title = "${product.title }";
+		obj.main_recpt_idx = ${paynee[1].main_recpt_idx };
 		obj.content = cont;
 		arr.push(obj);
 	}
 	
 	$.ajax({
 		type: "POST"
-			, url: "/product/viewComment.do"
+			, url: "/product/insertComment.do"
 			, dataType: "json"
 			, data: {
-				sale_idx: productIdx
+				title: productTitle
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
-				var result = data;
-				var str = "";
-				$.each(result, function(idx, val) {
-					str += '<span class="wrap_profile">'
-						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span>'
-						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'
-						+ '<div class="wrap_cont"><span class="txt_prod">${product.title }</span>'
-						+ '<p class="desc_cmt"><span><span class="comm_content">'+ result[idx].content +'</span></span></p>'
-						+ '</div>';
-				});
-				document.getElementById("comment_items").innerHTML = str;
+				alert("상품평이 등록되었습니다.");
+				$("#commentContent").val("");
 			}
 	});
 }
@@ -55,21 +45,9 @@ function viewComment() {
 </head>
 <body>
 
-<div>
-   <table class="message_table01" style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;" >
-      <colgroup>
-					<col width="100px">
-					<col width="100px">
-					<col width="120px">
-					<col width="50px">
-					<%-- <col width="50"> --%>
-					<col width="120px">
-					<col width="110">
-					<col width="110">	
-		</colgroup>
-      <thead>
-      	
-      		<div class="comment_cmt">
+<div class="comment_insert">
+	<div class="comment_cmt">
+		<div>상품 후기 작성</div><br>
 		<!-- 상품 후기 등록 -->
 		<div class="form-inline text-cefnter" id="commentList">
 		
@@ -80,10 +58,25 @@ function viewComment() {
 				class="form-control" id="commentContent"></textarea>
 			
 		</div>
-		
-		<div class="cmt_cont" id="comment_items">
-		</div>
-     
+	</div>
+</div>
+
+<div>
+   <table class="message_table01" style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;" >
+      <colgroup>
+					<col width="100px">
+					<col width="100px">
+					<col width="120px">
+					<col width="50px">
+					<col width="200px">
+					<col width="90px">
+					<col width="100px">
+					<col width="110px">
+					<col width="70px">
+		</colgroup>
+      <thead>
+      
+      
          <tr style="border-bottom:1px solid #ddd;">
             <th class="message_num">주문번호</th> <!--주문번호  -->
             <th class="message_th">판매자 이름</th>
@@ -92,7 +85,6 @@ function viewComment() {
             <th class="message_th">판매글 제목</th>
             <th class="message_th">옵션 단가</th>
             <!-- <th class="message_th">옵션 단위</th> -->
-            
             <th class="message_th">총결제금액</th>
             <th class="message_th" style="width: 100px;">결제 시간</th>
             <th class="message_th">상품평</th>
@@ -113,8 +105,7 @@ function viewComment() {
             <td class="message_td">${paynee.money_amount }</td>
             <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
          		<td class="message_td">
-         			<button class="insertComm_button"	onclick="viewComment();">등록</button></td>
-         			
+         			<button class="insertComm_button"	onclick="insertComment();">등록</button></td>
          </tr>
       </c:forEach>
       </tbody>

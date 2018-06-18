@@ -484,6 +484,12 @@ input[id="checkAll"], input[id="checkRow"] {
 }
 
 /* 상품 후기 */
+.comment_insert .comment_cmt {
+	padding-left: 180px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
 .insertComm_button {
 	background-color: #43e44f;
 	border: none;

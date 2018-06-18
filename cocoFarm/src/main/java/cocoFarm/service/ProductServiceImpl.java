@@ -113,15 +113,15 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertCart(Option option, int accIdx) {
 		SaleOption saleOption = null;
-//		System.out.println("option size: " + option.getSaleOptions().size());
-		
 
 		List<Cart> cart = saleOptionDao.selectCart(accIdx);
 		
 		for(int i=0; i<cart.size(); i++) {
-			for(int j=0; j<option.getSaleOptions().size(); j++) {
-				if(cart.get(i).getSaleOptionIdx() == option.getSaleOptions().get(j).getIdx()) {
-					return;
+			if(!option.equals(null)) {
+				for(int j=0; j<option.getSaleOptions().size(); j++) {
+					if(cart.get(i).getSaleOptionIdx() == option.getSaleOptions().get(j).getIdx()) {
+						return;
+					}
 				}
 			}
 		}
@@ -187,8 +187,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public Product selectProductByReceipt(int acc_idx, String title) {
-		return productDao.selectProductByReceipt(acc_idx, title);
+	public Product selectProductByReceipt(String title) {
+		return productDao.selectProductByReceipt(title);
 	}
 	
 	/* ==================================================================================== */

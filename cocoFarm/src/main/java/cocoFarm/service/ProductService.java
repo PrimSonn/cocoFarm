@@ -132,7 +132,7 @@ public interface ProductService {
 	
 	public List<HashMap<String, Object>> getCommentList(int saleIdx);
 	
-	public Product selectProductByReceipt(int acc_idx, String title);
+	public Product selectProductByReceipt(String title);
 	
 	/* ==================================================================================== */
 	
