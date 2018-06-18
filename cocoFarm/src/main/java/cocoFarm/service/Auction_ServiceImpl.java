@@ -182,4 +182,9 @@ public class Auction_ServiceImpl implements Auction_Service {
 			return auctionDao.admingetReceiptPagingList(paging);
 		}
 
+		@Override
+		public List getauctionReceipt(Account account) {
+			return auctionDao.getauctionReceipt(account);
+		}
+
 }

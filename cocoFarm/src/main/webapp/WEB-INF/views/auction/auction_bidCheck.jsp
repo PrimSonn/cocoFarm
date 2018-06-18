@@ -21,6 +21,8 @@
 
 
 <script type="text/javascript">
+
+
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
 	val=obj.value;
@@ -198,17 +200,7 @@ $(document).ready(function() {
 	
 	
 	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
-			
-		}
-	})
+	
 
 	$("#messageCate").change(function() {
 

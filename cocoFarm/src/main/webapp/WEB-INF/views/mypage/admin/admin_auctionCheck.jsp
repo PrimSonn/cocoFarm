@@ -16,6 +16,7 @@
 
 
 <script type="text/javascript">
+$(document).ready(function() {	
 $(".mypage_navbody").on("click", ".nav-link", function() {
 	var page = $(this).children().attr("href");
 	console.log(page);
@@ -32,6 +33,7 @@ $(".mail_box").on("click", ".nav-link", function() {
 	$(".mypage_page01").load(page);
 	
 	return false;
+});
 });
 </script>
 
