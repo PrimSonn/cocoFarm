@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import cocoFarm.dto.Account;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.RecptCallParamHolder;
 import cocoFarm.dto.SaleOption;
+import cocoFarm.service.LoginService;
 import cocoFarm.service.ProductService;
 import cocoFarm.service.ReceiptService;
 import cocoFarm.service.RestSvc;
@@ -31,10 +33,11 @@ public class PayController {
 	@Autowired ProductService productService;
 	@Autowired ReceiptService receiptSvc;
 	@Autowired RestSvc restSvc;
+	@Autowired LoginService loginService;
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.GET)
 	public String payVieworder(SaleOption saleoption) {
-
+		
 		return "redirect:seller.do";
 	}
 	
@@ -42,7 +45,10 @@ public class PayController {
 	public String payorder(Option option, Model model, HttpSession session) {
 		System.out.println(session.getAttribute("idx"));
 		if(session.getAttribute("idx")==null||session.getAttribute("idx").equals("")) return "error/needLogIn";
-		
+		int idx = (int)session.getAttribute("idx");
+		Account account = loginService.selectAll(idx);
+		System.out.println(session.getAttribute("type"));
+		model.addAttribute("account", account);
 		
 /*
 		System.out.println("결제 옵션 개수: " + option.getSaleOptions().size());
