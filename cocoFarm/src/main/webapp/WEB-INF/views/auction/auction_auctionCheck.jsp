@@ -58,25 +58,6 @@ $(document).ready(function() {
 			}else if(checkok==false){
 				alert("경매 삭제 진행이 중단되었습니다.");
 			}
-		}else if($(this).parent().find(".auctionstate").val()==5){
-			var checkok=confirm("낙찰자가 존재합니다. 삭제 하시겠습니까?");
-			if(checkok==true){
-			$form = $("<form>").attr({
-				action: "/auction/auction_cancel.do",
-				method: "POST"
-			}).append(
-				$("<input>").attr({
-					type:"hidden",
-					name:"idx",
-					value:$(this).parent().find(".auctionidx").val()
-				})
-			);
-			$(document.body).append($form);
-			$form.submit();
-			alert("경매가 삭제되었습니다.");
-			}else if(checkok==false){
-				alert("경매 삭제 진행이 중단되었습니다.")
-			}
 		}else if($(this).parent().find(".auctionstate").val()==6){
 			var checkok=confirm("낙찰자가 존재합니다. 글을  삭제 하시겠습니까?");
 			if(checkok==true){
@@ -176,7 +157,7 @@ $(document).ready(function() {
 							<input class="auctionidx" type="hidden" value="${auctionList.idx }">
 							<input class="auctionstate" type="hidden" value="${auctionList.state_code }">
 							<c:choose>
-							<c:when test="${auctionList.state_code==1 || auctionList.state_code==5 || auctionList.state_code==6}">
+							<c:when test="${auctionList.state_code==1 || auctionList.state_code==6}">
 							<button class="btnCancel" style="cursor: pointer; margin-top: 1px;" >삭제</button>
 							</c:when>
 							<c:otherwise>
