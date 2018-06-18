@@ -40,7 +40,6 @@ public class PayController {
 	
 	@RequestMapping(value="/orderpay.do",method=RequestMethod.POST)
 	public String payorder(Option option, Model model, HttpSession session) {
-		System.out.println(session.getAttribute("idx"));
 		if(session.getAttribute("idx")==null||session.getAttribute("idx").equals("")) return "error/needLogIn";
 		
 		
@@ -66,8 +65,7 @@ public class PayController {
 			}
 
 			saleList=buffer;
-			/*saleList.stream().filter((s)->s.getIdx()!=0).;*/
-			System.out.println(saleList);
+
 			for(int i=0; i<saleList.size()-1; i++) {
 				if(saleList.get(i)==null||saleList.get(i).equals("")) {
 					continue;
@@ -84,7 +82,6 @@ public class PayController {
 			//System.out.println(listA);
 			
 			model.addAttribute("opt",(productService.getPayOption(query)));
-			System.out.println((productService.getPayOption(query)));
 			model.addAttribute("amount",listA);
 		
 			//옵션 판매글 불러오는것 
@@ -96,7 +93,6 @@ public class PayController {
 			/*System.out.println(salequery);*/
 			
 			productService.getSale_Option(salequery);
-			System.out.println(productService.getSale_Option(salequery));
 			//System.out.println(productService.getPayOption(query).get(0).getSaleIdx());
 			
 			model.addAttribute("pro",(productService.getSale_Option(salequery)));
@@ -110,14 +106,10 @@ public class PayController {
 	@RequestMapping(value="/paycomple.do",method=RequestMethod.POST)
 	@ResponseBody
 	public String paycomplepots(HttpSession session,String optionlist, String memdeliver,String buyer_name,String memname,String text) {
-		
-//		model.addAttribute("memname", memname);
-//		System.out.println(memname);
-		System.out.println("확인 리스트"+optionlist);
-		System.out.println("확인 결제 확인"+text);
+
+
 		Gson gson=new Gson();
 		List list = gson.fromJson(optionlist, List.class);
-//		System.out.println("---optionlist---");
 		
 		List<SaleOptSerializer> saleOptionList = new ArrayList<>();
 		for(int i=0; i<list.size(); i++) {
@@ -126,14 +118,8 @@ public class PayController {
 			so.setIdx(( (Double)map.get("idx") ).intValue());
 			so.setProAmount( ((Double)map.get("proAmount")).intValue());
 			saleOptionList.add(so);
-//			System.out.println( map.get("idx"));
-//			System.out.println( map.get("proAmount"));
 		}
-		
-//		for(SaleOptSerializer s : saleOptionList) {
-//			System.out.println(s);
-//		}
-		
+
 		/*==================================================================
 		 * 
 		 * result.getIsDone() = 결과가 1이면 성공 0이면 실패
@@ -147,34 +133,10 @@ public class PayController {
 		}else {
 			//return to errpage
 		}
-		if(result!=null) {
-			System.out.println("======== got Result =========");
-			System.out.println("isDone: "+result.getIsDone());
-			System.out.println("MainRcpt: "+result.getArg3());
-		}else {
-			System.out.println("failed!!!!");
-		}
+		
 		
 		return "{\"MainRcpt\":\""+result.getArg3()+"\",\"isDone\":\""+result.getIsDone()+"\"}";
 		
-//		try {
-//			writer.write("{\"result\":"+ memname +"}");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		/*Gson gson = new Gson();
-		JsonObject jsonObject = new JsonObject();*/		
-//		try {
-//		
-//			writer.write("{\"result\":"+ memname +"}");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		List<SaleOption> payList = option.getSaleOptions();
-//		System.out.println(payList.get(0).getIdx());
-		//return "payment/oderPay";
 	}
 	
 	
@@ -227,7 +189,7 @@ public class PayController {
 	@RequestMapping(value="/payfail.do",method=RequestMethod.POST)
 	@ResponseBody
 	public String payfail(String target, HttpSession session) {
-		System.out.println("payFail. target: "+target);
+
 		receiptSvc.cancelPayment(target);
 		return "{\"returnCode\":\""+111+"\"}";
 	}

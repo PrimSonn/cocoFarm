@@ -370,7 +370,7 @@ $(function() {
 				</thead>
 				<tbody>
 					
-				<c:forEach items="${pro}" var="pro_dasta" varStatus="status1">					
+				<c:forEach items="${pro}" var="pro_data" varStatus="status1">					
 					<tr>
 				
 				 

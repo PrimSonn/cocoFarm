@@ -31,8 +31,7 @@ public class MainController {
 	//2018 06월 11일 main 넣은것
 	@RequestMapping(value="/main/cocomain.do", method=RequestMethod.GET)
 	public String main(HttpSession session,Product product, Model model){
-		System.out.println(session.getAttribute("idx"));
-		System.out.println(session.getAttribute("type")); 
+		
 		//판매글 최근 5개 띄우기
 		model.addAttribute("seller",productService.getProViewMainList());
 		
@@ -42,18 +41,6 @@ public class MainController {
 		//model.addAttribute("auction",auctionService.getAuctionMainList());
 		model.addAttribute("auction",auctionService.getMainAuctionList());
 		
-		
-		
-		System.out.println(auctionService.getAuctionMainList());
-		/*
-	
-		SELECT acc_idx, title, content, written_date, hit, ISDEL,
-		(SELECT stored_filename FROM TODAYS_FARMER_file WHERE acc_idx = t.acc_idx) AS stored_filename	
-		FROM TODAYS_FARMER t 
-		inner join (select IDX, THUMB_LOC main_img from account) a
-		on t.acc_idx = a.IDX;
-		    
-		*/
 		return "main/cocomain";
 	}
 	

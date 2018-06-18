@@ -59,8 +59,6 @@ public class Auction_Controller {
 //		auction.setWritter_idx(Integer.parseInt((String) session.getAttribute("idx")));
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
 		auctionService.write(auction);
-		System.out.println(auction);
-		
 		
 		return "redirect:/auction/auction_list.do";
 	}
@@ -69,7 +67,6 @@ public class Auction_Controller {
 	@RequestMapping(value="/auction/auction_auctionCheck.do", method=RequestMethod.GET)
 	public void auctionCheck(Auction auction, HttpSession session, Model model) {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
-		System.out.println(auctionService.getauctionList(auction));
 		model.addAttribute("auctionList", auctionService.getauctionList(auction));
 	}
 	
@@ -79,7 +76,6 @@ public class Auction_Controller {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
 		
 		auctionService.auctionCancel(auction);
-		System.out.println(auction);
 		
 		return "redirect:/auction/auction_auctionCheck.do";
 	}
@@ -276,20 +272,12 @@ public class Auction_Controller {
 		
 		Gson gson=new Gson();
 		List list = gson.fromJson(auctionData, List.class);
-		System.out.println(bid);
 		
 		RecptCallParamHolder result=null;
 		if(session.getAttribute("idx")!=null) {
 			result = receiptSvc.makeTempReceipt((Integer)session.getAttribute("idx"), null, bid);
 		}else {
 			//return to errpage
-		}
-		if(result!=null) {
-			System.out.println("======== got Result =========");
-			System.out.println("isDone: "+result.getIsDone());
-			System.out.println("MainRcpt: "+result.getArg3());
-		}else {
-			System.out.println("failed!!!!");
 		}
 		
 		return "{\"MainRcpt\":\""+result.getArg3()+"\",\"isDone\":\""+result.getIsDone()+"\"}";

@@ -42,8 +42,6 @@ public class BoardServiceImpl implements BoardService {
 		
 		boardDao.write(board);
 		
-		System.out.println("boardService:"+board);
-		
 		MultipartFile file = board.getFileup();
 		
 		if (file != null && !file.isEmpty()) {
@@ -52,7 +50,6 @@ public class BoardServiceImpl implements BoardService {
 			String path = context.getRealPath("/resources/img/todays_farmer_upload");
 			String filename = file.getOriginalFilename()+"_"+UUID.randomUUID().toString().split("-")[0];
 			File dest = new File(path, filename);
-			System.out.println(dest);
 			try {
 				file.transferTo(dest);
 			} catch (IllegalStateException e) {
