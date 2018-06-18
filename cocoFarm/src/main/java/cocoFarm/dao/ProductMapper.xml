@@ -128,7 +128,10 @@
 			left join sale S on S.idx = so.sale_idx
 		where so.name = #{value }
 	</select>
-
+	
+<!-- 	<insert> -->
+<!-- 		insert into SALE_EVALUATION -->
+<!-- 	</insert> -->
 	<!-- ==================================================================================== -->
 
 	<!--hwanmin 2018_05_26 work-->

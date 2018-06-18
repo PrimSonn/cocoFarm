@@ -134,7 +134,7 @@ public interface ProductService {
 	
 	public Product selectProductByReceipt(String title);
 	
-	public Product selectProductByReceipt2(String title);
+	public boolean insertEval(String main_receipt_idx, String sale_idx, String insertComm);
 	
 	/* ==================================================================================== */
 	

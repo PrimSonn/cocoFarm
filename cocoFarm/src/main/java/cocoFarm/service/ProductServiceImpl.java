@@ -14,6 +14,7 @@ import cocoFarm.dto.Cart;
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.Option;
 import cocoFarm.dto.Product;
+import cocoFarm.dto.ReceiptDto;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
@@ -191,10 +192,6 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.selectProductByReceipt(title);
 	}
 	
-	@Override
-	public Product selectProductByReceipt2(String title) {
-		return productDao.selectProductByReceipt2(title);
-	}
 	
 	/* ==================================================================================== */
 	
@@ -244,6 +241,18 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List procPayNee(int accIdx) {
 		return productDao.procPayNee(accIdx);
+	}
+
+	@Override
+	public boolean insertEval(String main_receipt_idx, String sale_idx, String insertComm) {
+		
+		ReceiptDto recpt = new ReceiptDto();
+		recpt.setMain_recpt_idx(main_receipt_idx);
+		recpt.setSale_idx(Integer.parseInt(sale_idx));
+		recpt.setInsertComm(insertComm);
+		
+		return productDao.evaluation(recpt);
+		
 	}
 	
 }

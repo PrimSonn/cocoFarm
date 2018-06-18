@@ -5,6 +5,7 @@ import java.util.List;
 
 import cocoFarm.dto.Comment;
 import cocoFarm.dto.Product;
+import cocoFarm.dto.ReceiptDto;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.util.Paging;
 
@@ -27,6 +28,8 @@ public interface ProductDao {
 	public List<HashMap<String, Object>> selectAllComment(int sale_idx);
 	
 	public Product selectProductByReceipt(String title);
+	
+	public boolean evaluation(ReceiptDto recpt);
 	
 	/* ==================================================================================== */
 	

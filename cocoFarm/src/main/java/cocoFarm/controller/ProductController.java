@@ -320,15 +320,16 @@ public class ProductController {
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public boolean insertComment(Comment comment
-								, String title
+								, String sale_idx
+								, String main_receipt_idx
 								, String insertComm
 								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		Product product = productService.selectProductByReceipt2(title);
-		
+		/*
+		Product product = productService.selectProductByReceipt(title);
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
 				Map<String, String> map = (Map) list.get(i);
@@ -345,7 +346,9 @@ public class ProductController {
 				productService.insertComment(comm);
 			}
 		}
+		*/
 		
+//		return productService.insertEval(main_receipt_idx, sale_idx, insertComm);
 		return true;
 	}
 }
