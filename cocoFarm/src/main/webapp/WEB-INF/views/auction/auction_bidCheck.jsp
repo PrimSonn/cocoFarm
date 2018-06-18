@@ -10,17 +10,13 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 
-
 <!-- 아임포트 -->
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
 
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
-
-
-
 <script type="text/javascript">
+
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
 	val=obj.value;
@@ -192,24 +188,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-	
-	
-	
-	
 	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
-			
-		}
-	})
-
 	$("#messageCate").change(function() {
 
 		var messageCate = $(this).val();
@@ -241,8 +220,6 @@ $(document).ready(function() {
 		window.open(url,"",popupOption);
 	}
 	
-	
-	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 		console.log(page);
@@ -260,7 +237,6 @@ $(document).ready(function() {
 		
 		return false;
 	});
-	
 	
 	/* 글자수 제한  */
 	var textCountLimit = 15;
@@ -298,7 +274,6 @@ $(document).ready(function() {
       alert("판매가격을 입력해주세요.");
       return false;
 		}
-		
 		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
 // 		var option = {
 // 			optionName: $("textarea[name=optionName]").val(),
@@ -307,7 +282,6 @@ $(document).ready(function() {
 // 			price: $("textarea[name=price]").val()
 // 		};
 // 		alert(option.optionName);
-		
 		submitContents($(this));
 	});
 	
@@ -452,20 +426,9 @@ function submitContents(elClickedObj) {
 					</table>
 					</div>
 				</div>
-				
-			
 			</div>
-			
-			
-			
-			
 		</div>
-	
 	</div>
-	
-	
 </div>	
-
-
 </body>
 </html>

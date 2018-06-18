@@ -9,9 +9,8 @@
 		<%-- 첫 페이지가 아니면 버튼 노출 --%>
 		<c:if test="${paging.curPage ne 1 }">
 		<li>
-			<a href="/board/list.do?curPage=1">
-				<span aria-hidden="true">&larr;</span>
-				처음
+			<a href="/board/list.do?curPage=1" style="width: 40px !important;">
+				<span aria-hidden="true">&larr;처음</span>	
 			</a>
 		</c:if>
 		

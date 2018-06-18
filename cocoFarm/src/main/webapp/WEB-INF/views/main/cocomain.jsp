@@ -19,9 +19,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.min.js"></script>
 <!-- 가로 화면 전환 위한 css end-->
 
-
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
 <script type="text/javascript">
 
 	$(document).ready(function () {
@@ -33,8 +31,7 @@
 		console.log(newText);
 		$("#farm${status.count}").text(newText);
 		</c:forEach>
-		
- */
+ 		*/
 		$(".popupLayer_FAQ li:nth-child(2)").addClass("close");
 
 		$("#FAQ").click(function(e) {
@@ -207,8 +204,6 @@
 			</div>
 			</div>
 			
-			
-			
 			<div class="farm_part">
 			<div class="container">
 				
@@ -216,7 +211,7 @@
 					
 					<ul class="head_title">
 						<li class="title"><div class="title_icon"></div>오늘의 농부 스토리</li>
-						<li class="plus_btn">+ 더보기</li>
+						<li class="plus_btn"><a href="/board/list.do">+ 더보기</a></li>
 					</ul>
 					
 					<div class="farm_listpart">
@@ -255,7 +250,7 @@
 			<div class="pro_part">
 			<ul class="head_title">
 						<li class="title"><div class="title_icon"></div>최근 입고된 농수산물</li>
-						<li class="plus_btn">+ 더보기</li>
+						<li class="plus_btn"><a href="/seller.do">+ 더보기</a></li>
 					</ul>
 			
 			<c:forEach items="${seller}" var="data" varStatus="status">
@@ -286,8 +281,6 @@
 		</div>
 <!--main부분 foot ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
-		
-
 <script>
     var swiper = new Swiper('.swiper-container', {
       navigation: {
@@ -296,7 +289,5 @@
       },
     });
  </script>
-
-	
 </body>
 </html>

@@ -193,5 +193,13 @@ public interface Auction_Service {
 		 */
 		public List getReceiptPagingList(Admin_Auction_Paging paging);
 
-	
+		
+		/**
+		 * 개인 경매 결제 목록
+		 * 
+		 * @param account - 로그인 idx
+		 * @return - 개인 경매 결제 목록
+		 */
+		public List getauctionReceipt(Account account);
+		
 }

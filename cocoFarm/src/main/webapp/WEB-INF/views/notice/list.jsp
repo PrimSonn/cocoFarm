@@ -21,7 +21,7 @@ $(document).ready(function() {
 	});
 	
 	$("#btnMain").click(function() {
-		location.href="/notice/list.do"
+		location.href="/main/cocomain.do"
 	});
 	
 });
@@ -84,7 +84,7 @@ table, th {
 </tbody>		
 </table>
 <div class="btn_page">
-<button id="btnMain" class="btn pull-left">메인으로</button>
+<button id="btnMain" class="btn pull-left" style="cursor: pointer;">메인으로</button>
 
 <c:if test="${sessionScope.type eq 1 }">		
 	<button id="btnWrite" class="btn pull-right">글쓰기</button>

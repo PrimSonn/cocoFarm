@@ -11,10 +11,6 @@
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
-
-
-
 <script type="text/javascript">
 $(document).ready(function() {	
 $(".mypage_navbody").on("click", ".nav-link", function() {
@@ -36,10 +32,6 @@ $(".mail_box").on("click", ".nav-link", function() {
 });
 });
 </script>
-
-
-
-
 </head>
 <body>
 <div id="mypageheader">
@@ -53,9 +45,7 @@ $(".mail_box").on("click", ".nav-link", function() {
 	
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
-			<jsp:include page="/WEB-INF/views/tile/mypage/adminIntro.jsp" flush="false"/>
-			
-			
+			<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
 			
 			<div class="mypage_page01">
 				<div class="border">
@@ -67,71 +57,47 @@ $(".mail_box").on("click", ".nav-link", function() {
 						<tr>
 						<th style="width:30px; border:1px solid; border-color: #9e9e9e;">번호</th>
 						<th style="width:200px; border:1px solid; border-color: #9e9e9e;">거래 품목</th>
-						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">구매자</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">결제 금액</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">결제 일자</th>
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">결제 상태</th>
 						</tr>
 					</thead>
 					
-					
 					<tbody>
-						<c:if test="${empty list }">
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"> 거래 품목이 존재하지 않습니다. </td>
+						<c:if test="${empty receipt }">
+							<td colspan="5" style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"> 거래 품목이 존재하지 않습니다. </td>
 						</c:if>
-						<c:forEach items="${list}" var="auctionReceiptList" varStatus="status">
+					
+						<c:forEach items="${receipt}" var="receipt" varStatus="status">
 						<tr>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionReceiptList.title }</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${auctionReceiptList.paid_name }</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionReceiptList.money_amount }"/> 원</td>
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionReceiptList.contract_time }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionReceiptList.contract_time }" pattern="aa HH:mm"/></td>							
-							<c:if test="${auctionReceiptList.state_code == 0}">
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${receipt.title }</td>
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${receipt.money_amount }"/> 원</td>
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${receipt.contract_time }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionReceiptList.contract_time }" pattern="aa HH:mm"/></td>							
+							<c:if test="${receipt.state_code == 0}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="red" style="font-weight: bold;">미입금</font></td>
 							</c:if>
-							<c:if test="${auctionReceiptList.state_code == 1}">
+							<c:if test="${receipt.state_code == 1}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="blue" style="font-weight: bold;">결제 완료</font></td>
 							</c:if>
-							<c:if test="${auctionReceiptList.state_code == 2}">
+							<c:if test="${receipt.state_code == 2}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="orange" style="font-weight: bold;">임시 대기중(취소)</font></td>
 							</c:if>
-							<c:if test="${auctionReceiptList.state_code == 3}">
+							<c:if test="${receipt.state_code == 3}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="orange" style="font-weight: bold;">환불(환불 대기)</font></td>
 							</c:if>
-							<c:if test="${auctionReceiptList.state_code == 4}">
+							<c:if test="${receipt.state_code == 4}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="green" style="font-weight: bold;">환불 </font></td>
 							</c:if>
 						</tr>
 						</c:forEach>
 					</tbody>
 					</table>
-					
-						<div class="pageing_num">
-						<jsp:include page="/WEB-INF/views/auction/admin_Receiptpaging.jsp" />
-						<%-- <jsp:include page="../util/paging.jsp" /> --%>
-						</div>
-
 					</div>
-			
-			
 				</div>
-			
-			
-			
-			
-			
 			</div>
-			
-			
-			
-			
 		</div>
-	
 	</div>
-	
-	
-</div>	
-
-
+</div>
 </body>
 </html>

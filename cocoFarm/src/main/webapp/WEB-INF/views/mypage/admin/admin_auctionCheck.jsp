@@ -16,7 +16,25 @@
 
 
 <script type="text/javascript">
+$(document).ready(function() {	
+$(".mypage_navbody").on("click", ".nav-link", function() {
+	var page = $(this).children().attr("href");
+	console.log(page);
+	
+	$(".mypage_page01").load(page);
+	
+	return false;
+});
 
+$(".mail_box").on("click", ".nav-link", function() {
+	var page = $(this).attr("href");
+	console.log(page);
+	
+	$(".mypage_page01").load(page);
+	
+	return false;
+});
+});
 </script>
 
 

@@ -38,12 +38,12 @@ $(document).ready(function() {
 	<div class="farmstory_head">
 		<ul class="head_title">
 			<li class="title"><div class="title_icon"></div>오늘의 농부 스토리</li>
-			<li class="plus_btn"><button id="btnWrite" class="btn pull-right">글쓰기</button></li>	
-			<c:choose>
-			<c:when test="${sessionScope.type==2}">
-			<li class="plus_btn"><button id="btnWrite" class="btn pull-right">글쓰기</button></li>		
-			</c:when>
-			</c:choose>
+			
+			
+			<c:if test="${sessionScope.type==2}">
+			<li class="plus_btn"><button id="btnWrite" class="btn pull-right" style="cursor: pointer;">글쓰기</button></li>		
+			</c:if>
+			
 		</ul>
 						
 		

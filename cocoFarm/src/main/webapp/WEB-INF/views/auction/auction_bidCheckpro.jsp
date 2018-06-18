@@ -9,18 +9,12 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
-
-
 <!-- 아임포트 -->
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
-
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
-
-
-
 <script type="text/javascript">
+
 /* 숫자만 입력 시키게 하는것 */
 function onlyNumber(obj){
 	val=obj.value;
@@ -192,24 +186,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-	
-	
-	
-	
 	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
-			
-		}
-	})
-
 	$("#messageCate").change(function() {
 
 		var messageCate = $(this).val();
@@ -240,9 +217,7 @@ $(document).ready(function() {
 	    var popupOption= "width="+winWidth+", height="+winHeight;    //팝업창 옵션(optoin)
 		window.open(url,"",popupOption);
 	}
-	
-	
-	
+
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
 		console.log(page);
@@ -260,8 +235,7 @@ $(document).ready(function() {
 		
 		return false;
 	});
-	
-	
+
 	/* 글자수 제한  */
 	var textCountLimit = 15;
 	var textCountLimit2 = 40;
@@ -324,17 +298,6 @@ function optionSelect(sVal) {
 			+'</ul>';
 	}
 	document.getElementById("option_boby").innerHTML = str;
-	
-	// 옵션 개수 선택 할 때 다른 방법이 있을까 하다가 생각해본 것. 되진 않음!
-// 	$("#option_body1").show();
-// 	$("#option_body3").hide();
-// 	$("#option_body3").hide();
-	
-// 	if (sVal == "2") {
-// 		$("#option_body2").show();
-// 	} else if (sVal == "3") {
-// 		$("#option_body3").show();
-// 	}
 }
 
 // 네이버 스마트에디터를 사용하는 방법
@@ -360,11 +323,8 @@ function submitContents(elClickedObj) {
 		tableEl.innerHTML =
 	    'Not Found';
 	}
-
 })
-
 </script>
-
 </head>
 <body>
 <div id="mypageheader">
@@ -379,8 +339,7 @@ function submitContents(elClickedObj) {
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
 			<jsp:include page="/WEB-INF/views/tile/mypage/sellerIntro.jsp" flush="false"/>
-				
-			
+		
 			<div class="mypage_page01">
 				<div class="border">
 					<h1>나의 경매 입찰 현황 목록</h1>
@@ -402,7 +361,7 @@ function submitContents(elClickedObj) {
 					
 					<tbody>
 					<c:if test="${empty memberBidList}">
-						<tr><td colspan="8">유효 입찰 항목이 존재하지 않습니다.</td></tr>
+						<tr><td colspan="8" style="text-align: center;">유효 입찰 항목이 존재하지 않습니다.</td></tr>
 					</c:if>
 						<c:forEach items="${memberBidList}" var="memberBidList" varStatus="status">
 						
@@ -452,20 +411,9 @@ function submitContents(elClickedObj) {
 					</table>
 					</div>
 				</div>
-				
-			
 			</div>
-			
-			
-			
-			
 		</div>
-	
 	</div>
-	
-	
-</div>	
-
-
+</div>
 </body>
 </html>
