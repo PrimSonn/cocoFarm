@@ -70,6 +70,12 @@ public class Auction_Controller {
 //	==================================판매자 경매 등록 리스트=============================================
 	@RequestMapping(value="/auction/auction_auctionCheck.do", method=RequestMethod.GET)
 	public void auctionCheck(Auction auction, HttpSession session, Model model) {
+		
+		//2018년 06월 16일 작업 환민
+			int idx = (int)session.getAttribute("idx");
+			Account accountone = loginService.selectAll(idx);
+			model.addAttribute("account",accountone);
+				
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
 		System.out.println(auctionService.getauctionList(auction));
 		model.addAttribute("auctionList", auctionService.getauctionList(auction));
@@ -89,7 +95,11 @@ public class Auction_Controller {
 //	==================================관리자 경매 리스트=============================================
 	@RequestMapping(value="/mypage/admin/admin_auctionCheck.do", method=RequestMethod.GET)
 	public String adminauctionList(@RequestParam(defaultValue="0") int curPage
-			, Model model) {
+			, Model model, HttpSession session) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
 		
 		int totalCount = auctionService.getauctionTotal();	//전체 게시글 수
 
@@ -107,7 +117,11 @@ public class Auction_Controller {
 //	==================================관리자 경매 결제 리스트=============================================
 	@RequestMapping(value="/mypage/admin/admin_auctionReceiptCheck.do", method=RequestMethod.GET)
 	public String auctionReceiptList(@RequestParam(defaultValue="0") int curPage
-			, Model model) {
+			, Model model, HttpSession session) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
 		
 		int totalCount = auctionService.getReceiptTotal();	//전체 게시글 수
 		
@@ -309,4 +323,8 @@ public class Auction_Controller {
 //	}
 	}
 	
+	
+//	==================================type intercept==============================================
+	@RequestMapping(value="/util/typeIntercept.do",method=RequestMethod.GET)
+	public void typeIntercept() {}
 }
