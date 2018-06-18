@@ -115,9 +115,9 @@
 
 	<select id="selectAllComment" parameterType="int"
 					resultMap="HashMap">
-		SELECT SE.*, A.NAME FROM SALE_EVALUATION SE 
-		LEFT JOIN MAIN_RECEIPT M ON SE.MAIN_RECPT_IDX = M.IDX
-		LEFT JOIN ACCOUNT A ON M.BUYER_IDX = A.IDX
+		SELECT SE.*, A.name FROM SALE_EVALUATION SE 
+			LEFT JOIN MAIN_RECEIPT M ON SE.main_recpt_idx = M.idx
+			LEFT JOIN ACCOUNT A ON M.buyer_idx = A.idx
 		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
 		ORDER BY last_edited DESC
 	</select>
