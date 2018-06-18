@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_EVAL_TRG" directorySegmentName="seg_0" id="06842DB7-68DE-F946-E1C0-97108362295E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_EVAL_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT, UPDATE</actions>
+<body>begin&lt;br/&gt;	if inserting then&lt;br/&gt;		:NEW.REG_TIME := SYSDATE;&lt;br/&gt;		if (:NEW.ISDEL is null) then&lt;br/&gt;			:NEW.ISDEL := 0;&lt;br/&gt;		end if;&lt;br/&gt;	end if;&lt;br/&gt;	if updating then&lt;br/&gt;		:NEW.LAST_EDITED := SYSDATE;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<columns>0810A102-7B90-0225-3F58-8FFAA8F712F4, 95DC6586-CC56-B1D9-8F96-8B2A81AD0D3D, 7BC1E2D6-39C9-4B91-B729-382A506D754A</columns>
+<condition>NEW.REG_TIME is null</condition>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>1A6E2A43-CAD3-EF71-9C06-251236CCB589</table>
+</TriggerOraclev10g>

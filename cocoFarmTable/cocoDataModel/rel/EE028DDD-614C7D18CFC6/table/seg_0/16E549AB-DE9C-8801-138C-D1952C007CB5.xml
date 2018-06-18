@@ -1,0 +1,133 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="16E549AB-DE9C-8801-138C-D1952C007CB5" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="PENALTY_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PENALTY_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>&apos;벌&apos; 의 기록</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="EC6734D3-0746-C5CB-A7D8-731ADA0C0524">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>PENALTY_RECORD</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>벌 기록 번호 - 기본키, 인조식별자, 트리거있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>13</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,13,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CONVICT_IDX" id="D64055DE-8892-51A3-4EEA-E7444E4DCA54">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>PENALTY_RECORD</sourceObjSchema>
+<sourceObjName>CONVICT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>벒을 준 계정 번호 - 외래키, null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="524E3473-6AB7-A44D-ECB4-AE3CBD14146C" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="RECORDED_WHEN" id="2F791A5A-E92C-E048-7352-63467417E5BA">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>PENALTY_RECORD</sourceObjSchema>
+<sourceObjName>RECORDED_WHEN</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>벌을 준 시각 - null불가, 트리거있음 (강제로 시각 주입)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PENALTY_CODE" id="DE635713-0977-F82D-3D28-D8F8BCB7FCF4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>PENALTY_RECORD</sourceObjSchema>
+<sourceObjName>PENALTY_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>&apos;벌&apos; 번호 - 외래키, null불가, 트리거있음 (기본값 0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="060777BC-9E58-80CA-F2D6-559C208F58A0" referredColumn="4E2A9F87-A5EC-1D47-5970-9657A5DDB149"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1011B4E6-5B63-8819-114B-CC750E125CF9" name="PK_PENALTY_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_PENALTY_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EC6734D3-0746-C5CB-A7D8-731ADA0C0524"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8EC1EF8E-A6CD-6A35-A060-E54B31646167" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="PK_PENALTY_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_PENALTY_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EC6734D3-0746-C5CB-A7D8-731ADA0C0524"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B4DD2B94-C183-2D18-1F52-DF3BB1A9AADA" name="PENALTY_RECORD_ACC_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D64055DE-8892-51A3-4EEA-E7444E4DCA54"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="842945D3-6802-23A0-6CD2-D67F322018D9" name="PENALTY_RECORD_CODE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DE635713-0977-F82D-3D28-D8F8BCB7FCF4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

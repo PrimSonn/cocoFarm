@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Relational_1" id="EE028DDD-8F1F-B059-1868-614C7D18CFC6" mainViewID="35F87E91-00AD-B845-6E5F-4E1057ECFFF7">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:47:24 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>32076570-2523-435C-2E92-BF29817DFF70</selectedRDBMSSite>
+<importConnectionStamps>
+<importConnectionStamp class="oracle.dbtools.crest.imports.DBConnectionStamp">
+<connName>cocoFarm</connName>
+<connUser>cocoFarm</connUser>
+<connType>1</connType>
+</importConnectionStamp>
+</importConnectionStamps>
+</relationalModel>

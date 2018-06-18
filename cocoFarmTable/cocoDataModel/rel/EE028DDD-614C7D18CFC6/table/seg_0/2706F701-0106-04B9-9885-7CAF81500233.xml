@@ -1,0 +1,148 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="2706F701-0106-04B9-9885-7CAF81500233" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BID_CONTRACT_QUE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_QUE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>경매 낙찰 대기열. 모든 속성이 null 불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AUCTION_IDX" id="EEC65112-7378-05C4-81EC-55D20160224A">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT_QUE</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>경매 번호. 기본키 + 경매 외래키 + 입찰 외래키. null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E95C1596-41D6-A792-60FD-E1DD1B0292B8" referredColumn="803D79B1-B898-0F12-3629-806E126A5435"/>
+<colAssociation fkAssociation="C6F19DBD-DE44-860E-1435-6B7C8D38BD80" referredColumn="145A4AF2-839D-C9F4-F50B-3E330DD8124E"/>
+</associations>
+</Column>
+<Column name="BID_AMOUNT" id="4EC5EE7D-DEE1-56A1-5092-2C95CF342740">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT_QUE</sourceObjSchema>
+<sourceObjName>BID_AMOUNT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>입찰액. 입찰 외래키 + null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C6F19DBD-DE44-860E-1435-6B7C8D38BD80" referredColumn="8DE17866-98E9-3560-37EA-3326EBF18027"/>
+</associations>
+</Column>
+<Column name="CONTRACT_T_WIN_CODE" id="C5F77EC7-3045-BAEB-024E-47838770EB72">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT_QUE</sourceObjSchema>
+<sourceObjName>CONTRACT_T_WIN_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>낙찰금 지불 기한 타입 코드 - 외래키. null불가 트리거 있음(기본값:1, 3일짜리)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="4520241A-610C-1728-421F-2FBC48465129" referredColumn="56B403D2-84B6-2AEF-12B8-318682C7AAD2"/>
+</associations>
+</Column>
+<Column name="PAYMENT_DUE" id="ABE656D1-81CB-FDF5-1316-61688A904139">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BID_CONTRACT_QUE</sourceObjSchema>
+<sourceObjName>PAYMENT_DUE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>낙찰금 지불 만료 기한 - 트리거 있음. null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="301845B7-F140-625A-32C3-70D0BBF55BBC" name="BID_CONTRACT_QUE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_QUE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EEC65112-7378-05C4-81EC-55D20160224A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8633E3AC-E070-ACA1-E795-42A91046A820" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BID_CONTRACT_QUE_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BID_CONTRACT_QUE_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EEC65112-7378-05C4-81EC-55D20160224A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AC14F3AA-49F3-B47D-9D83-A753B1FB2E40" name="BID_CONTRACT_AUCT_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EEC65112-7378-05C4-81EC-55D20160224A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="62B023D7-A472-53CD-9434-C924D8CD3229" name="BID_CONTRACT_Q_BID_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EEC65112-7378-05C4-81EC-55D20160224A"/>
+<colUsage columnID="4EC5EE7D-DEE1-56A1-5092-2C95CF342740"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C77889D6-586D-0076-7E62-19EAF27C3CAD" name="BID_CONTRACT_T_WIN">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C5F77EC7-3045-BAEB-024E-47838770EB72"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

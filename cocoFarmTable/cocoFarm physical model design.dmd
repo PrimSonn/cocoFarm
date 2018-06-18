@@ -1,8 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="cocoFarm physical model design" id="280D97CC-50F1-26E3-4393-8933AD9A37C0" version="3.5">
-<createdBy>Sonn</createdBy>
-<createdTime>2018-05-31 13:27:32 UTC</createdTime>
-<ownerDesignName>cocoFarm physical model design</ownerDesignName>
-<capitalNames>false</capitalNames>
-<designId>280D97CC-50F1-26E3-4393-8933AD9A37C0</designId>
-</OSDM_Design>

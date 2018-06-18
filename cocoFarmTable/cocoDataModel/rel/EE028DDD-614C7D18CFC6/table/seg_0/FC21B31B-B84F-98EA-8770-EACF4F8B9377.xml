@@ -1,0 +1,162 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FC21B31B-B84F-98EA-8770-EACF4F8B9377" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="BAD_DEED_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>BAD_DEED_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="232BA5EF-4233-B566-5ED1-61BA5E46B507">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BAD_DEED_RECORD</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 번호 - 기본키, 인조식별자, 트리거 있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>13</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,13,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CULPRIT_IDX" id="A8E97086-3426-E322-C260-334E6E095743">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BAD_DEED_RECORD</sourceObjSchema>
+<sourceObjName>CULPRIT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓을 한 계정 번호- 외래키 null불가</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="98B2E9ED-2CF7-0524-69A2-DACB9EC042E8" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="RECORDED_WHEN" id="B8EB830D-8C03-71A1-2CD4-9CE710D35B89">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BAD_DEED_RECORD</sourceObjSchema>
+<sourceObjName>RECORDED_WHEN</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓을 한 시각 - null불가, 트리거있음(강제로 시스템시간 입력)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DEED_CODE" id="CA5AEF44-44D8-AAEF-B624-C80859E270DA">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BAD_DEED_RECORD</sourceObjSchema>
+<sourceObjName>DEED_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 번호 - 외래키 null불가, 트리거있음 (기본값0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0E261ECF-02F6-E48F-6407-0C4623EC606F" referredColumn="3FCC5EF0-B793-40A0-48C6-333D0C0FE609"/>
+</associations>
+</Column>
+<Column name="STATE_CODE" id="6822F1F8-ED79-7F88-807C-CE3B03AAED47">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>BAD_DEED_RECORD</sourceObjSchema>
+<sourceObjName>STATE_CODE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>나쁜짓 기록 상태 코드 - 외래키 null불가, 트리거있음 (기본값0)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,2,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="51A8FA94-7099-2124-34DF-D311DF7902B1" referredColumn="151D37B9-F60C-18EA-1181-0BA7C741674E"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="512F71B7-2467-E34E-F406-0B8047152C59" name="PK_BAD_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_BAD_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="232BA5EF-4233-B566-5ED1-61BA5E46B507"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="270BF717-6682-FA77-620E-223E2CA1D221" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="PK_BAD_RECORD">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PK_BAD_RECORD</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="232BA5EF-4233-B566-5ED1-61BA5E46B507"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="759F9132-5501-81AB-520D-61B661C02938" name="BAD_RECORD_ACC_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A8E97086-3426-E322-C260-334E6E095743"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1ACF9AB6-3C28-B5BB-6CFD-9320EA00953D" name="BAD_RECORD_CODE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CA5AEF44-44D8-AAEF-B624-C80859E270DA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CAE1B9EE-B5B3-A84E-675C-F8E2AFAFDA04" name="BAD_RECORD_STATE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6822F1F8-ED79-7F88-807C-CE3B03AAED47"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

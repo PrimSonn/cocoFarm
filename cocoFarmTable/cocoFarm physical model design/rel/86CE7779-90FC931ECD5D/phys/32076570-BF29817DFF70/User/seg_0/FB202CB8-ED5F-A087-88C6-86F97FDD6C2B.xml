@@ -1,9 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<UserOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UserOraclev10g" name="COCOFARM" directorySegmentName="seg_0" id="FB202CB8-ED5F-A087-88C6-86F97FDD6C2B">
-<sourceConnName>cocoFarm</sourceConnName>
-<sourceObjName>COCOFARM</sourceObjName>
-<createdBy>Sonn</createdBy>
-<createdTime>2018-05-31 13:28:49 UTC</createdTime>
-<ownerDesignName>cocoFarm physical model design</ownerDesignName>
-<schemaObject>205BAECF-F84A-02FF-1EB0-473741A5BD77</schemaObject>
-</UserOraclev10g>

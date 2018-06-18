@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPT_UPDATE_TRG" directorySegmentName="seg_0" id="005EBE2F-1688-A83C-9B82-38BEB313A086">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_UPDATE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>UPDATE</actions>
+<body>begin&lt;br/&gt;	:NEW.LAST_EDITED := SYSDATE;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<columns>4B28FD5A-7DB6-13AC-5A84-3F37F851C978, 9F4422B9-D029-EF3B-08B6-531317CCE4BD, D421F7EA-E4CF-F2FB-050C-D42D636D25F7, 1677AC99-A404-0A58-819D-EA1FD3C57C4F, F7BF54CF-DC85-402E-0352-A65CEB8F8559</columns>
+<condition>NEW.LAST_EDITED is null</condition>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>DE204472-13EE-69A9-EBC4-A3108A8F988C</table>
+</TriggerOraclev10g>

@@ -64,15 +64,8 @@ public class ProductController {
 	//판매 디테일 뷰
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
 	public String detailProView(Product product, SaleOption saleoption, Model model) {
-		
-		System.out.println("Porduct: "+product);
-		Product prod = productService.getDetailList(product);
-		
-		System.out.println("getMainImg: "+prod.getMainImg());
-		System.out.println("getFaceImg: "+prod.getFaceImg());
-		System.out.println("getAccIdx: "+prod.getAccIdx());
-		
-		model.addAttribute("product", (prod));
+
+		model.addAttribute("product", (productService.getDetailList(product)));
 		model.addAttribute("option", (productService.getOptionList(saleoption)));
 		
 		return "main/mainseller/sellerDetail";
@@ -82,17 +75,18 @@ public class ProductController {
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
+		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
 		
-		int totalCount = productService.getListCount();
+		int totalCount = productService.getListCount(idx);
 		
 		// 페이징 생성
 		Paging paging  = new Paging(totalCount, curPage);
 		model.addAttribute("paging", paging);
 		
-		List optionList = productService.getPagingList(paging);
+		List optionList = productService.getPagingList(paging, idx);
 		model.addAttribute("optionList", optionList);
 		
 		return "mypage/seller/productList";
@@ -100,12 +94,10 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert(HttpSession session, Model model) {
-		//추가 해준거 
+
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
-				
-		
 		
 		return "mypage/seller/productInsert";
 	}
@@ -207,36 +199,6 @@ public class ProductController {
 		product.setFaceImg(destAr[0]);
 		product.setMainImg(destAr[1]);
 		
-		/*
-		// 이미지를 새로 등록
-		List<MultipartFile> list = f.getUpload();
-		
-		// 파일이 저장될 이름
-		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
-		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
-		
-		File dest1 = new File(realpath, stored1);
-		File dest2 = new File(realpath, stored2);
-		
-		// 실제 파일 업로드
-		try {
-			list.get(0).transferTo(dest1);
-			list.get(1).transferTo(dest2);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		product.setFaceImg(stored1);
-		product.setMainImg(stored2);
-		*/
-		
-		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
-//		if(list.get(0).getOriginalFilename().length()!=0
-//				|| list.get(1).getOriginalFilename().length()!=0) {
-//		}
-		
 		productService.update(product);
 		
 		// 쿼리스트링을 통해 받은 idx (Product) ( = saleIdx (SaleOption) )
@@ -298,7 +260,6 @@ public class ProductController {
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
-		logger.info("/product/cart.do POST !!!");
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
 		
@@ -323,16 +284,12 @@ public class ProductController {
 		Gson gson = new Gson();
 		List list = gson.fromJson(cart, List.class);
 
-		System.out.println(list.get(0));
-		
 		Cart c = new Cart();
 		for(int i=0; i<list.size(); i++) {
 			Map<String, Integer> map = (Map) list.get(i);
-			System.out.println(map);
 //			c.setSaleOptionIdx(map.get("saleOptionIdx"));
 //			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
 //			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
-			
 			productService.updateCart(map);
 		}
 		List items = productService.selectCart((Integer)session.getAttribute("idx"));

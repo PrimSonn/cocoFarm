@@ -193,6 +193,17 @@ function requestPayment() {
 	/*수령장소  */
 	var mem_deliver=$(".mem_deliver").val();
 	
+	/*주소  */
+	var postcodify_address=$(".postcodify_address").val();
+	
+	var postcodify_details=$(".postcodify_details").val();
+	/*우편주소  */
+	var area=$(".postcodify_postcode5").val();
+
+	var phone_a=$(".phone_a").val();
+	var phone_b=$(".phone_b").val();
+	var phone_c=$(".phone_c").val();
+	
 	console.log(optionlist);
 	JSON.stringify(optionlist);
 	var dff=JSON.stringify(optionlist);
@@ -231,10 +242,10 @@ function requestPayment() {
 				name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 				amount : ${allsum}, //결제금액 - 필수항목
 				buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-				buyer_name : '${sessionScope.name}', //주문자명 - 선택항목
-				buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
-				buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
-				buyer_postcode : '123-456', //주문자우편번호 - 선택항목
+				buyer_name : ${account.name}, //주문자명 - 선택항목
+				buyer_tel : phone_a+phone_b+phone_c, //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
+				buyer_addr :postcodify_address+postcodify_details, //주문자주소 - 선택항목
+				buyer_postcode :area, //주문자우편번호 - 선택항목
 				m_redirect_url : 'https://www.yourdomain.com/payments/complete' //모바일결제후 이동페이지 - 선택항목, 모바일에서만 동작
 			}, function(rsp) { // callback - 결제 이후 호출됨, 이곳에서 DB에 저장하는 로직을 작성한다
 					if ( rsp.success ) { // 결제 성공 로직
@@ -377,10 +388,10 @@ $(function() {
 				 
 						<td class="product_info">
 							<a href="" >
-							<img src="/proimg/${pro_data.faceImg}" style="height: 92px">
+							<img src="/proimg/${pro_data.faceImg}" style="width: 92px">
 							</a>
 							<div class="product_dsc">
-								<strong class="product_bn">[농수산물 판매자] 법인명</strong>
+								<strong class="product_bn">[법인명]${pro_data.corporation_name}</strong>
 								<a href="#" class="product_name">
 									<strong>[${today}]${pro_data.title}</strong>
 								</a>
@@ -404,7 +415,7 @@ $(function() {
 						
 						
 						<td>
-						<a class="who_parmer" href="">판매자판매자</a>
+						<a class="who_parmer" href="">${pro_data.name}</a>
 						</td>
 						<td>
 						<span class="img_deliver_icon"></span>
@@ -432,8 +443,8 @@ $(function() {
 					<span class="reap">
 					배송지선택
 					</span>
-					<input type="radio"  class="radio_r1" name="deliver_radio" value="1"/><label for="r1">신규배송지</label>
-					<input type="radio"  class="radio_r1" name="deliver_radio" value="2" checked="checked"/><label for="r2">김환민</label>
+					<input type="radio"  class="radio_r1" name="deliver_radio" value="1"/><label for="r1">신규 배송지</label>
+					<input type="radio"  class="radio_r1" name="deliver_radio" value="2" checked="checked"/><label for="r2">${account.name}</label>
 				</div>
 				<div class="delive_reci new_reci">
 					<span class="reap ">

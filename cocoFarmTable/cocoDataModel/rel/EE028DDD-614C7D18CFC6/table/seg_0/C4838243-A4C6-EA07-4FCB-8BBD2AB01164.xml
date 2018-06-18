@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="C4838243-A4C6-EA07-4FCB-8BBD2AB01164" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="AUCTION_CATEGORY_MAP">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_CATEGORY_MAP</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>경매 카테고리 맵</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="AUCTION_IDX" id="BBCF59BF-9880-4E22-D737-61FA7036ACB6">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_CATEGORY_MAP</sourceObjSchema>
+<sourceObjName>AUCTION_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>경매글 번호 - 복합기본키 + 외래키 (경매.경매글 번호)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C8D63C39-FD45-5434-49C2-BB1133C0CF3D" referredColumn="803D79B1-B898-0F12-3629-806E126A5435"/>
+</associations>
+</Column>
+<Column name="CATEGORY_IDX" id="93BABF15-85CA-3A09-6F6F-B1B8964F9C30">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>AUCTION_CATEGORY_MAP</sourceObjSchema>
+<sourceObjName>CATEGORY_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>카테고리 노드 번호 - 복합기본키 + 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,3,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="19B7F71F-2FFF-4712-7DFC-31CA47660FA7" referredColumn="64FDFB15-3E16-3492-43A1-72A9C4E46595"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="0363D8DD-D531-F53D-6474-007531809213" name="AUCTION_CATEGORY_MAP_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_CATEGORY_MAP_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BBCF59BF-9880-4E22-D737-61FA7036ACB6"/>
+<colUsage columnID="93BABF15-85CA-3A09-6F6F-B1B8964F9C30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0DE6DBC4-7E4B-4A45-67CE-91112A72CB3E" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="AUCTION_CATEGORY_MAP_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_CATEGORY_MAP_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BBCF59BF-9880-4E22-D737-61FA7036ACB6"/>
+<colUsage columnID="93BABF15-85CA-3A09-6F6F-B1B8964F9C30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AA04D33F-C302-2210-C7E7-090FDF28B0A4" name="AUCTION_CAT_MAP_AUCT_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BBCF59BF-9880-4E22-D737-61FA7036ACB6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4623C46F-17B8-2F1D-3495-70F8E5BC476E" name="AUCTION_CAT_MAP_CAT_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="93BABF15-85CA-3A09-6F6F-B1B8964F9C30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

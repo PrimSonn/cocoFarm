@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPTION_WRITTENTIME_TRG" directorySegmentName="seg_0" id="FA540D56-A88B-22E5-6059-B20D62341E64">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPTION_WRITTENTIME_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := SALE_OPTION_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.LEFT_AMOUNT is null) then&lt;br/&gt;		:NEW.LEFT_AMOUNT := :NEW.START_AMOUNT;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.WRITTEN_TIME is null) then&lt;br/&gt;		:NEW.WRITTEN_TIME := SYSDATE;&lt;br/&gt;	end if;&lt;br/&gt;		if (:NEW.LAST_EDITED is null) then&lt;br/&gt;		:NEW.LAST_EDITED := SYSDATE;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.UNIT is null) then&lt;br/&gt;		:NEW.UNIT := &apos;개&apos;;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.ISDEL is null) then&lt;br/&gt;		:NEW.ISDEL := 0;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>DE204472-13EE-69A9-EBC4-A3108A8F988C</table>
+</TriggerOraclev10g>

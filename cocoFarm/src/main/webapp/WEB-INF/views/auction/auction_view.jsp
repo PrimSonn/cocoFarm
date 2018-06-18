@@ -28,6 +28,9 @@ textarea.autosize {min-height: 80px;}
 var openWin;
         function openChild()
         {
+        	if(${view.writter_idx} == ${sessionScope.idx}){
+        		alert("자신의 경매글에는 입찰하실수 없습니다.")
+        	} else{
         	var popupX = (window.screen.width / 2) - (570 / 2);
 
         	var popupY= (window.screen.height /2) - (500 / 2);
@@ -45,6 +48,7 @@ var openWin;
                     'width=570, height=350, left='+ popupX + ', top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);    
 //             openWin.document.getElementById("cInput").value = document.getElementById("price_sale").value;
 //             openWin.document.getElementById("cInput").value;
+        	}
         }
         
 
@@ -140,56 +144,18 @@ $('.open_icon').on('click', function(){
 
 </head>
 <body>
-	<div id="header_detail">
 
-		<div id="header_top">
-			<div class="container">
-				<ul class="rigth_list">
-					<li><a href="#">고객</a></li>
-					<li><a href="#">사업자</a></li>
-					<li><a href="#">관리자</a></li>
-				</ul>
+<!--detail부분 header ver2부분  -->
+<jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
 
-				<ul class="left_list">
-					<li><a href="#">로그인</a></li>
-					<li><a href="#">회원가입</a></li>
-					<li><a href="#">알림</a></li>
-					<li><a href="#">마이페이지</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="container">
-			<div id="header_boby">
-				<div class="logo">
-					<img src="/img/main/logo_color.png" alt="코코팜 로고">
-				</div>
-				<!--2018년 5월 25일 hwanmin 추가   -->
-				<div class="search">
-					<form action="/seller.do" method="post">
-						<input type="text" name="search_name" placeholder="농산물 검색하기">
-						<button class="search_icon" style="cursor: pointer"></button>
-					</form>
-				</div>
 
-			</div>
-			<div id="header_nav">
-				<ul class="nav">
-					<li><a href="#">농수산물</a></li>
-					<li><a href="#">경매</a></li>
-					<li><a href="#">농부 스토리</a></li>
-					<li><a href="#">자주 묻는 질문</a></li>
-					<li><a href="#">공지사항</a></li>
-					<li><a href="#">회사소개</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+
 	<div class="container">
 		<div class="nav_map">
 			<span><strong><a href="">메인</a></strong></span><span>></span><span><a
 				href="">농산물</a></span><span>></span><span>채소/과일</span><span>></span><span>현재상품</span>
 		</div>
-		<div class="detail_body">
+		<div class="detail_body" style="height: 570px;">
 			<div class="pto">
 				<img src="/auction_img/${view.item_img }" width="100%">
 			</div>

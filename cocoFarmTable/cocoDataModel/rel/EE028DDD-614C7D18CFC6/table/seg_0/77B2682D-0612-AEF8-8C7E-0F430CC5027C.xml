@@ -1,0 +1,239 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="77B2682D-0612-AEF8-8C7E-0F430CC5027C" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_COMMENT">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_COMMENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 댓글</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="5232023F-6A84-C0A5-6FAF-643C0E14A28D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 댓글번호 - 유일성. 후보키. 복합기본키, 인조식별자</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TODAYS_FARMER_IDX" id="B3E813FC-BA6F-B76B-DB9E-645A412FCBFB">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>TODAYS_FARMER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>오늘의 농부 글번호 - 복합기본키. 외래키.</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6305B580-DFC6-9736-1AE5-152380AFFF49" referredColumn="3EC1D797-20E7-5150-C4C5-0F679C8D0F21"/>
+</associations>
+</Column>
+<Column name="WRITER_IDX" id="224DC432-7204-23EA-AB3E-FD13D163B29E">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>WRITER_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>글쓴이 - 외래키 null안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="51F2EB5D-49F0-DE90-02F4-67CA0EF20B65" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="CONTENT" id="3B2B3B27-1DC6-7B5F-2CD0-EC176AF6E4B7">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>CONTENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>글내용</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>400</dataTypeSize>
+<ownDataTypeParameters>400,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="WRITTEN_TIME" id="5100BED7-2F62-687F-D7D5-A7F1B32E2582">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>WRITTEN_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>작성시각 - null안됨, 트리거있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LAST_EDITED" id="FBC68D10-59FF-E4A9-E8AA-CA324EAD7F3A">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>LAST_EDITED</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>마지막 수정 시각 - 트리거 있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SUPER_COMMENT" id="C7EDDE1B-3647-094D-715D-046D92B25271">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>SUPER_COMMENT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>상위 댓글 - 대댓글용, 안써도 작동에 문제 없음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="70A84B41-2175-4E1A-0AAB-B6ADB6C085B8" referredColumn="5232023F-6A84-C0A5-6FAF-643C0E14A28D"/>
+</associations>
+</Column>
+<Column name="ISDEL" id="C8BBFF64-3286-003B-A24E-F27C21B83D9D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>TODAYS_FARMER_COMMENT</sourceObjSchema>
+<sourceObjName>ISDEL</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>삭제 확인 코드 - 외래키, 기본값:0, null안됨</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,1,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FB2B19A0-CEBA-35BF-0DA9-FBCBBF5C60F0" referredColumn="6F4A99DA-CCBE-1BA7-E7AA-8979A7CF3D12"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1EB09896-60A0-5357-66A2-4EC75FCB55F1" name="TODAYS_FARM_COMM_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARM_COMM_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3E813FC-BA6F-B76B-DB9E-645A412FCBFB"/>
+<colUsage columnID="5232023F-6A84-C0A5-6FAF-643C0E14A28D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D4ACAEAE-CEFA-F4DE-C920-49F4B5F495E6" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARMER_COMMENT_IDX_UN">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SYS_C0036336</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5232023F-6A84-C0A5-6FAF-643C0E14A28D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F80AD9EB-DE6F-6AB1-A84B-E906FFB6D620" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="TODAYS_FARM_COMM_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>TODAYS_FARM_COMM_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3E813FC-BA6F-B76B-DB9E-645A412FCBFB"/>
+<colUsage columnID="5232023F-6A84-C0A5-6FAF-643C0E14A28D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6D06CFC1-13DB-5F94-2271-EFAC80EAAE6A" name="FK_FARM_COMM_WRITER">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="224DC432-7204-23EA-AB3E-FD13D163B29E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D0593F6F-54E4-18C3-9F61-E9853E8386C6" name="FK_FARM_IDX_IDX">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C7EDDE1B-3647-094D-715D-046D92B25271"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="84B6F0D3-2746-4693-58B5-CA6E11C7A1A5" name="FK_TODAYS_FARM_COMM">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3E813FC-BA6F-B76B-DB9E-645A412FCBFB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5B9966AF-6DAD-FA70-AD81-5CF2889448B3" name="FK_TODAYS_FARM_ISDEL">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C8BBFF64-3286-003B-A24E-F27C21B83D9D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

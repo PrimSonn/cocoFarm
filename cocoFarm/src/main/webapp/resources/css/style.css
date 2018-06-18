@@ -16,7 +16,7 @@
 
 /* layout */
 #header {width: 100%; height:550px; 
-background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+/* background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat; */
 background-size: 1920px 1200px;
 background-position:center -350px;}
 
@@ -24,12 +24,11 @@ background-position:center -350px;}
 #header_detail{
 width: 100%; 
 height:180px; 
-background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat;
+/* background: url(/img/backgroundimg/mainbackground_01.jpg) no-repeat; */
 background-size: 1920px 1200px;
 background-position:center -350px;
 box-shadow:0 0 8px 0 #828282;
 }
-
 
 #header_top{
 width: 100%; 
@@ -39,7 +38,7 @@ font-size: 13px;
 font-family:'Jeju Gothic';
 font-weight: 500; 
 font-color:#666;
-
+position: relative;
 }
 
 #header_top .left_list {

@@ -26,52 +26,25 @@ public class MypageController {
 							, Model model) {
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
 		
-		/*
-		if((Integer)session.getAttribute("type")==1) {
-		
-		}else {
-		
-		*/
 		if((Integer)session.getAttribute("type")<=1){
 			return "mypage/admin/adminIntro";
 		}else if((Integer)session.getAttribute("type")==2) {
 			return "mypage/seller/productIntro";
 		}else {
 			return "mypage/user/userIntro";
-			//return "mypage/common/productCart";
 		}
 		
 	}
-	
-	/*@RequestMapping(value="/mypage/user/updateAccount.do", method=RequestMethod.GET)
-	public void updateAccount(HttpSession session, Model model){
-		int idx = (int)session.getAttribute("idx");
-//		System.out.println(idx);
-		Account account = loginService.selectAll(idx);
-		
-		model.addAttribute("account", account);
-	}
-}*/
-
-
 @RequestMapping(value="/testIntro.do", method=RequestMethod.GET)
 public String testIntro(Option option
 						, HttpSession session
 						, Model model) {
 	int idx = (int)session.getAttribute("idx");
 	Account account = loginService.selectAll(idx);
-	System.out.println(session.getAttribute("type"));
 	model.addAttribute("account", account);
 	
-	/*
-	if((Integer)session.getAttribute("type")==1) {
-	
-	}else {
-	
-	*/
 	if((Integer)session.getAttribute("type")<=1){
 		return "mypage/admin/adminIntro";
 	}else if((Integer)session.getAttribute("type")==2) {

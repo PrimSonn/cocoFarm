@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="1CB54B52-5826-8F76-5BA6-04F50AEC9FB1" containerWithKeyObject="CCBB28F5-07B1-57A2-538A-86CA64862188" localFKIndex="8BA5BA60-B879-D6D4-A55C-021E80ECEB8D" name="FK_TODAYS_FARM_RECOMM">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>FK_TODAYS_FARM_RECOMM</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<referredTableLongName>COCOFARM.TODAYS_FARMER</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>09B407AA-FEFB-50F1-1D60-A3D1BF71BE99</referredTableID>
+<keyObject>CEF73223-80C0-D95E-E4E9-90280F7AA505</keyObject>
+<referredKeyID>CEF73223-80C0-D95E-E4E9-90280F7AA505</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ACC_IDX</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

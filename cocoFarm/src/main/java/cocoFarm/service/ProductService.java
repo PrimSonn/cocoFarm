@@ -36,7 +36,7 @@ public interface ProductService {
 	 * 
 	 * @return int - 판매상품/옵션 총 갯수
 	 */
-	public int getListCount();
+	public int getListCount(int acc_idx);
 	
 	/**
 	 * 선택된 페이지에 알맞는 옵션 리스트 조회
@@ -44,7 +44,7 @@ public interface ProductService {
 	 * @param paging - 페이징 정보
 	 * @return List - 페이징 처리된 옵션 리스트
 	 */
-	public List getPagingList(Paging paging);
+	public List getPagingList(Paging paging, int acc_idx);
 	
 	/**
 	 * 판매상품 등록

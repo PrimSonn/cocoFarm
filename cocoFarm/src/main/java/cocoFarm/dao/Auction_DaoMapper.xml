@@ -164,7 +164,7 @@
 		SELECT ac.*, adq.time_window 
 		FROM auction ac 
 		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
-		WHERE writter_idx = #{writter_idx} ORDER BY time_window;
+		WHERE writter_idx = #{writter_idx} ORDER BY time_window
 	</select>
 	
 	<select id="auctionCancel" parameterType="cocoFarm.dto.Auction" statementType="CALLABLE">
@@ -184,48 +184,74 @@
 		AND rownum<=5 
 		ORDER BY time_window ASC]]>
 	</select>
-<!-- 	<delete id="delete" parameterType="mvc.dto.Board"> -->
-<!-- 		DELETE board -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</delete> -->
-
-<!-- 	<delete id="deleteFile" parameterType="mvc.dto.Board"> -->
-<!-- 		DELETE board_file -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</delete> -->
-
-<!-- 	<delete id="deleteBoardList" parameterType="String"> -->
-<!-- 		DELETE FROM board -->
-<!-- 		WHERE boardno IN ( ${_parameter } ) -->
-<!-- 	</delete> -->
 	
-<!-- 	<delete id="deleteBoardFileList" parameterType="String"> -->
-<!-- 		DELETE FROM board_file -->
-<!-- 		WHERE boardno IN ( ${_parameter } ) -->
-<!-- 	</delete> -->
 	
-<!-- 	<select id="getFile" -->
-<!-- 	 parameterType="mvc.dto.Board" -->
-<!-- 	 resultType="mvc.dto.BoardFile"> -->
-<!-- 		SELECT -->
-<!-- 			boardno -->
-<!-- 			, fileno -->
-<!-- 			, original_filename -->
-<!-- 			, stored_filename -->
-<!-- 			, file_size -->
-<!-- 			, upload_date -->
-<!-- 		FROM board_file -->
-<!-- 		WHERE boardno = #{boardno } -->
-<!-- 	</select> -->
-	
-<!-- 	<select id="getStoredFilename" -->
-<!-- 	 parameterType="mvc.dto.BoardFile" -->
-<!-- 	 resultType="String"> -->
+	<select id="getMainAuctionList" resultType="cocoFarm.dto.AuctionMain">
+		select AU.*, A.idx acc_idx, A.NAME acc_name,A.THUMB_LOC thumb_loc, BI.BUSINESS_LICENSE_CODE, BI.CORPORATION_NAME,BI.REPRESENTATIVE,BI.BUSINESS_ADDR,BI.BUSINESS_CATEGORY, AQ.TIME_WINDOW
+		from AUCTION AU
+		inner join (select AUCTION_IDX, TIME_WINDOW, ROWNUM R from AUCTION_DUE_QUE order by TIME_WINDOW asc) AQ on AU.IDX = AQ.AUCTION_IDX
+		inner join ACCOUNT A on AU.WRITTER_IDX = A.IDX
+		inner join BUSINESS_INFO BI on A.IDX = BI.ACC_IDX
+		where AQ.R between 1 and 5 order by AQ.TIME_WINDOW asc
+	</select>
 	 
-<!-- 		SELECT stored_filename FROM board_file -->
-<!-- 		WHERE fileno = #{fileno } -->
-		
-<!-- 	</select> -->
+	 
+	 <sql id="auctionList">
+	 	SELECT ac.*,adq.time_window 
+	 	FROM auction ac 
+	 	LEFT JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+	 </sql>
+	 
+	 <select id="admingetauctionList" resultType="cocoFarm.dto.Auction" >
+	 	<include refid="auctionList"></include>
+	 	ORDER BY reg_time desc
+	 </select>
+	 
+	 <select id="admingetauctionTotal" resultType="int">
+	 	SELECT COUNT(*) FROM auction
+	 </select>
+	 
+	 <select id="admingetauctionPagingList" parameterType="cocoFarm.util.Admin_Auction_Paging" resultType="cocoFarm.dto.Auction">
+	 	SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="auctionList" />
+				ORDER BY reg_time DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	 </select>
+	 
+	 
+	 
+	 
+	 <sql id="receiptList">
+	 	SELECT mr.*,bcr.title 
+	 	FROM main_receipt mr 
+	 	INNER JOIN bid_contract_receipt bcr 
+	 	ON (mr.idx = bcr.main_recpt_idx)
+	 </sql>
+	 
+	 <select id="admingetReceiptList" resultType="cocoFarm.dto.AuctionReceipt" >
+	 	<include refid="receiptList"></include>
+	 	ORDER BY contract_time desc
+	 </select>
+	 
+	 <select id="admingetReceiptTotal" resultType="int">
+	 	SELECT COUNT(*) FROM bid_contract_receipt
+	 </select>
+	 
+	 <select id="admingetReceiptPagingList" parameterType="cocoFarm.util.Admin_Auction_Paging" resultType="cocoFarm.dto.AuctionReceipt">
+	 	SELECT * FROM (
+			SELECT rownum rnum, B.* FROM (
+				<include refid="receiptList" />
+				ORDER BY contract_time DESC
+			) B
+			ORDER BY rnum
+		) R
+		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	 </select>
+
 </mapper>
 
 	

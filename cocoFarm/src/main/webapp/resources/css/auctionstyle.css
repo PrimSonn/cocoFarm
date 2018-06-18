@@ -360,5 +360,126 @@
 	padding-right: 30px;
 
 }	
+.aution_group{
+	width: 540px;
+	height: 280px;
+	margin-left:8px;
+	margin-bottom: 14px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	border-radius:3px;
+	position:relative;
+	overflow: hidden;
+	border: 1px solid #efefef;
+	float: left;
+}
+.aution_group .num{
+	position: absolute;
+	top:3px;
+	left:3px; 
+	z-index: 999;
+	color: #f6f6f6;
+	font-family: 'Jeju Gothic', serif;
+}
 
 
+
+#view_auction{
+	margin-top: 30px;
+	min-height: 400px;
+	display: inline-block;
+}
+.aution_group  .num01{
+	position: absolute;
+	top:7px;
+	left:3px; 
+	z-index: 999;
+	color: #f6f6f6;
+	font-family: 'Jeju Gothic', serif;
+	
+}
+
+
+
+.semo{
+	width: 0;
+	height: 0;
+	border-top: 70px solid #ff7e28;
+	border-right: 70px solid transparent;
+	position: absolute;
+	top:0px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	opacity:0.8;
+}
+
+
+
+
+.aution01_img{
+	width: 280px;
+	height: 280px; 
+	overflow: hidden;
+	display: inline;
+	float: left;
+	
+}
+.title_aution01{
+	font-weight: bold;
+	
+}
+
+.auction_body{
+	margin-top: 42px;
+	text-align: right;
+}
+
+.auction_body p{
+	
+	
+}
+.aution01_listinfo{
+	width: 237px;
+	height: 210px;
+	padding:10px;
+	
+	float: left;
+	position: relative;
+	display: inline-block;
+	
+}
+.aution01_listinfo p{
+	margin-bottom: 10px;
+	font-size: 13px;
+}
+.aution01_red{
+	font-family: 'Amiko', sans-serif;
+	font-weight:bold;
+	font-size: 14px;
+	color: #f34816;
+	
+}
+.left_info{
+	width: 285px;
+	height: 100%;
+	display: inline;
+	border: 1px solid black;
+	float: left;
+}
+
+.btn_auctionbuy{
+	
+	display:table;
+	text-align:center;
+	position:relative;
+	top:0px;
+	margin:10px auto;
+	width: 120px;
+	height: 30px;
+	color:#b55302;
+	font-weight:bold;
+	border:1px solid #b55302;
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(0,0,0,.13);
+	line-height: 30px;
+	border-radius: 3px;
+	
+}

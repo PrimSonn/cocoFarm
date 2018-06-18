@@ -1,0 +1,170 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0B5DB544-451D-2071-ABE6-D691DC4D719E" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="CART">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CART</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>장바구니</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="IDX" id="3C244F00-954F-D968-381C-20E6F6DCCC80">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CART</sourceObjSchema>
+<sourceObjName>IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>식별번호 - 후보키(null안됨+유일) 인조식별자. 순전히 쿼리를 쉽게 하기 위해 넣음.</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>9</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,9,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ACC_IDX" id="333925DC-FB87-A32D-FDF6-A215C5DD74AB">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CART</sourceObjSchema>
+<sourceObjName>ACC_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>계정번호 - 복합기본키 + 외래키 (계정.계정번호)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,8,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2FA187ED-CDBD-0F30-7F36-45D0278FB230" referredColumn="B32B92DD-C885-6DA5-3B68-E5AB960851BA"/>
+</associations>
+</Column>
+<Column name="SALE_OPT_IDX" id="A2C75194-63C5-2276-8634-8F1408322403">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CART</sourceObjSchema>
+<sourceObjName>SALE_OPT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>옵션번호 - 복합기본키 + 외래키 (판매옵션.번호)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>11</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,11,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D8C00941-1B92-E94D-5536-622F0634426A" referredColumn="373DD1E6-C53B-127B-DEA1-D1C15B401B99"/>
+</associations>
+</Column>
+<Column name="COUNT" id="DFFFDA2B-E095-4C91-9B21-598CFEB61AB4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CART</sourceObjSchema>
+<sourceObjName>COUNT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>갯수, 실제 남은 숫자는 비교를 안하니 조심!. - application에서 무결성을 확인 해야 하는 부분 (예외처리 사항)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<constraintName>CART_COUNT_CHECK</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>7</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="COUNT &gt;=0"/>
+<implementationDef dbType="Oracle Database 11g" definition="COUNT &gt;=0"/>
+</checkConstraint>
+<ownDataTypeParameters>,7,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ADDED_TIME" id="318B430B-AE33-E8AD-E310-EB8168AE6AAF">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CART</sourceObjSchema>
+<sourceObjName>ADDED_TIME</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>등록시간 - 트리거 있음</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F98188FF-8035-C1AC-BA2E-8D4A19D51FBB" name="CART_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CART_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="333925DC-FB87-A32D-FDF6-A215C5DD74AB"/>
+<colUsage columnID="A2C75194-63C5-2276-8634-8F1408322403"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0583718E-BE49-46C8-EE99-1E9A6CC7C776" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="CART_IDX_UN">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SYS_C0036218</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3C244F00-954F-D968-381C-20E6F6DCCC80"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8BFF081B-B5D3-0824-7EFC-310BF31F24F8" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="CART_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CART_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="333925DC-FB87-A32D-FDF6-A215C5DD74AB"/>
+<colUsage columnID="A2C75194-63C5-2276-8634-8F1408322403"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5A50B6B7-65F9-A738-E988-4932DFE79973" name="FK_CART_ACCOUNT">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="333925DC-FB87-A32D-FDF6-A215C5DD74AB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C941F6BA-21F9-12DC-136F-66D199ED71CD" name="FK_CART_SALE_OPT">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A2C75194-63C5-2276-8634-8F1408322403"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

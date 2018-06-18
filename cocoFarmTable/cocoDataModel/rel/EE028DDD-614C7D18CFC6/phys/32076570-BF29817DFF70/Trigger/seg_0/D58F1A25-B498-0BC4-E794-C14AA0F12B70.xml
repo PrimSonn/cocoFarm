@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="PENALTY_RECORD_TRG" directorySegmentName="seg_0" id="D58F1A25-B498-0BC4-E794-C14AA0F12B70">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>PENALTY_RECORD_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	if (:NEW.IDX is null) then&lt;br/&gt;		:NEW.IDX := PENALTY_RECORD_SEQ.nextval;&lt;br/&gt;	end if;&lt;br/&gt;	if (:NEW.PENALTY_CODE is null) then&lt;br/&gt;		:NEW.PENALTY_CODE := 0;&lt;br/&gt;	end if;&lt;br/&gt;	:NEW.RECORDED_WHEN := SYSDATE;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>16E549AB-DE9C-8801-138C-D1952C007CB5</table>
+</TriggerOraclev10g>

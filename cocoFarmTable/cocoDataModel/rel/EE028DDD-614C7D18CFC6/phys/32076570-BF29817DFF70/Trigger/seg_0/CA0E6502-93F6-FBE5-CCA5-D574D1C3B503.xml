@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPT_INSERT_TRG" directorySegmentName="seg_0" id="CA0E6502-93F6-FBE5-CCA5-D574D1C3B503">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_INSERT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>declare&lt;br/&gt;    COUNTER number;&lt;br/&gt;begin&lt;br/&gt;    select count(1) into COUNTER from SALE_OPTION where SALE_IDX = :NEW.SALE_IDX ;&lt;br/&gt;	if (COUNTER &gt; 0) then&lt;br/&gt;		update SALE set LAST_EDITED = SYSDATE where IDX = :NEW.SALE_IDX;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>DE204472-13EE-69A9-EBC4-A3108A8F988C</table>
+</TriggerOraclev10g>

@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="E9A84772-331F-354F-587E-0388CA3FF7A9">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:47:15 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

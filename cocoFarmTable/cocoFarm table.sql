@@ -1993,7 +1993,7 @@ insert all
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (1, numtodsinterval( 03, 'DAY') ,'3일 경매', '3일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (2, numtodsinterval( 07, 'DAY') ,'7일 경매', '7일짜리 경매 기한')
 	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (3, numtodsinterval( 28, 'DAY') ,'28일 경매', '28일짜리 경매 기한')
-	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 2,'MINUTE'), '2분 경매','테스트용 2분 경매')
+	into AUCTION_TIME_WINDOW_TYPE (CODE, TIME_WINDOW, NAME, DESCRIPTION) values (4, numtodsinterval( 3,'MINUTE'), '3분 경매','테스트용 3분 경매')
 select 1 from DUAL;
 commit;
 
@@ -3723,8 +3723,8 @@ begin
 			update AUCTION set HIGHEST_BID = next_bid_amount, STATE_CODE = 6 where IDX = BID_ROW.AUCTION_IDX;
 			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (BID_ROW.AUCTION_IDX, next_bid_amount, 4);
 			select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = BID_ROW.AUCTION_IDX;
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, next_bid_bidder, '입찰하신 경매 '''||auct_title||''' 에 낙찰되셨습니다.','상위 입찰이 만료되어 해당 경매 '''||auct_title||''' 에 낙찰되셨습니다. '||timewindow||' 까지 '||next_bid_amount||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.',1);
-			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, auct_writter, '신청하신 경매 '''||auct_title||''' 의 대금 납부를 입찰인이 거부하였습니다.','해당 경매의 최고 입찰자가 낙찰 대금을 지불기한 내 지불을 하지 않아, 차등위 입찰로 낙찰 권한이 이양되었습니다. 차등위 입찰의 입찰금: '||next_bid_amount||'월', 1);
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, next_bid_bidder, '입찰하신 경매 '''||auct_title||''' 에 낙찰되셨습니다.','상위 입찰이 만료되어 해당 경매 '''||auct_title||''' 에 낙찰되셨습니다. '||to_char(timewindow,'YYYY-MM-DD HH24:MI:SS')||' 까지 '||next_bid_amount||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.',1);
+			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, auct_writter, '신청하신 경매 '''||auct_title||''' 의 대금 납부를 입찰인이 거부하였습니다.','해당 경매의 최고 입찰자가 낙찰 대금을 지불기한 내 지불을 하지 않아, 차등위 입찰로 낙찰 권한이 이양되었습니다. 차등위 입찰의 입찰금: '||next_bid_amount||'원', 1);
 			was_lesser_bid := was_lesser_bid +1;
 
 			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK',1, 'successful. found NEXT_BID on AUCTION.IDX: '||BID_ROW.AUCTION_IDX||', next_bid_amount: '||next_bid_amount||', next_bid_bidder: '||next_bid_bidder);
@@ -3897,7 +3897,8 @@ begin
 							update AUCTION set HIGHEST_BID = next_amount, STATE_CODE = 6 where IDX = in_auction_idx;
 							insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (in_auction_idx, next_amount, 4);
 							select PAYMENT_DUE into timewindow from BID_CONTRACT_QUE where AUCTION_IDX = in_auction_idx;
-							insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, next_bidder, '입찰하신 경매 '''||auction_title||''' 에 낙찰되셨습니다.', '상위 입찰이 취소되어 해당 경매 '''||auction_title||''' 에 낙찰되셨습니다. '||timewindow||' 까지 '||next_amount||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
+							insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, next_bidder, '입찰하신 경매 '''||auction_title||''' 에 낙찰되셨습니다.', '상위 입찰이 취소되어 해당 경매 '''||auction_title||''' 에 낙찰되셨습니다. '||to_char(timewindow,'YYYY-MM-DD HH24:MI:SS')||' 까지 '||next_amount||'원 을 지불하셔야 낙찰이 완료됩니다. 그렇지 않을 시, 낙찰 권한이 차등위 입찰로 넘어가고 계약 위반에 대해 제재를 받을 수 있음을 알려드립니다.', 1);
+							insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, auction_writter, '신청하신 경매 '''||auction_title||''' 의 대금 납부를 최고 입찰자가 거부하였습니다.','해당 경매의 최고 입찰자가 낙찰 대금을 지불기한 내 지불을 하지 않아, 차등위 입찰로 낙찰 권한이 이양되었습니다. 차등위 입찰의 입찰금: '||next_amount||'원',1);
 							insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('CANCEL_BID',1,'Successfully canceled a bid. It was the Highest Bid. lesser Alive_Bid found. [in_auction_idx: '||in_auction_idx||', in_amount: '||in_amount||', in_bidder_idx: '||in_bidder_idx||']');
 						end if;
 						
@@ -4350,8 +4351,8 @@ begin
 							select WRITTER_IDX, TITLE into acc_idx, auct_title from AUCTION where IDX = BID_ROW.AUCTION_IDX;
 							if(BID_ROW.STATE_CODE = 3) then
 								update BID set STATE_CODE = 30 ,FINISHED_WHEN = SYSTIMESTAMP where current of BID_CUR;
-								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auct_title||''' 의 낙찰금을 지불하셨습니다.', ''''||auct_title||'''에 대한 낙찰금 '||BID_ROW.AMOUNT||'원 을 '||SYSTIMESTAMP||' 에 지불하셨습니다. 해당 경매에 완전히 낙찰이 되셨습니다.',1);
-								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, acc_idx, ''''||auct_title||'''의 낙찰이 완료되었습니다.',''''||auct_title||'''의 최고 입찰자가 최종 낙찰금인 '||BID_ROW.AMOUNT||'원 을 '||SYSTIMESTAMP||'에 지불하여 낙찰이 완료되었습니다.',1);
+								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, BID_ROW.BIDDER_IDX, ''''||auct_title||''' 의 낙찰금을 지불하셨습니다.', ''''||auct_title||'''에 대한 낙찰금 '||BID_ROW.AMOUNT||'원 을 '||to_char(SYSTIMESTAMP,'YYYY-MM-DD HH24:MI:SS')||' 에 지불하셨습니다. 해당 경매에 완전히 낙찰이 되셨습니다.',1);
+								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, acc_idx, ''''||auct_title||'''의 낙찰이 완료되었습니다.',''''||auct_title||'''의 최고 입찰자가 최종 낙찰금인 '||BID_ROW.AMOUNT||'원 을 '||to_char(SYSTIMESTAMP,'YYYY-MM-DD HH24:MI:SS')||'에 지불하여 낙찰이 완료되었습니다.',1);
 							else
 								update BID set STATE_CODE = 31 ,FINISHED_WHEN = SYSTIMESTAMP  where current of BID_CUR;
 								insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0,BID_ROW.BIDDER_IDX, ''''||auct_title||'''의 낙찰에 실패하셨습니다.',''''||auct_title||'''의 낙찰에 실패하셨습니다.',1);

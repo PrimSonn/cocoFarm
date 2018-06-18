@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="BA150C4C-B5B4-7793-07F4-E2B3E70B77B9" mainViewID="46A98AF9-275D-B52B-4057-30A8004436F3">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:47:14 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

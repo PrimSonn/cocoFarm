@@ -1,4 +1,4 @@
-package cocoFarm.service;
+﻿package cocoFarm.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,17 +29,17 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public int getListCount() {
+	public int getListCount(int acc_idx) {
 		// Product 또는 SaleOption 어떤 list를 불러올 것인지
 //		return productDao.countAll();
-		return saleOptionDao.countAll();
+		return saleOptionDao.countAll(acc_idx);
 	}
 	
 	@Override
-	public List getPagingList(Paging paging) {
+	public List getPagingList(Paging paging, int acc_idx) {
 		// Product 또는 SaleOption 어떤 list를 불러올 것인지
 //		return productDao.selectPage(paging);
-		return saleOptionDao.selectPage(paging);
+		return saleOptionDao.selectPage(paging, acc_idx);
 	}
 	
 	@Override
@@ -82,15 +82,7 @@ public class ProductServiceImpl implements ProductService {
 		// saleIdx를 통해 옵션 idx를 얻어 setting
 		List<SaleOption> optionIdx = saleOptionDao.selectOptionBySaleIdx(option.getSaleOptions().get(0).getSaleIdx());
 
-		System.out.println("Before optionSize: " + optionIdx.size());
-//		System.out.println("Before option [idx1: " + optionIdx.get(0).getIdx() + "]");
-//		System.out.println("Before option [idx2: " + optionIdx.get(1).getIdx() + "]");
-		System.out.println("--------------");
-
 		int optionSize = option.getSaleOptions().size();
-		System.out.println("After optionSize: " + optionSize);
-//		System.out.println(option.getSaleOptions().get(0));
-//		System.out.println(option.getSaleOptions().get(1));
 		
 		int i=0;
 		// 옵션 제거
@@ -123,12 +115,12 @@ public class ProductServiceImpl implements ProductService {
 		SaleOption saleOption = null;
 //		System.out.println("option size: " + option.getSaleOptions().size());
 		
+
 		List<Cart> cart = saleOptionDao.selectCart(accIdx);
 		
 		for(int i=0; i<cart.size(); i++) {
 			for(int j=0; j<option.getSaleOptions().size(); j++) {
 				if(cart.get(i).getSaleOptionIdx() == option.getSaleOptions().get(j).getIdx()) {
-					System.out.println("이미 등록된 장바구니");
 					return;
 				}
 			}
@@ -136,15 +128,14 @@ public class ProductServiceImpl implements ProductService {
 		// 장바구니에 등록되어 있지 않은 경우
 		for(int i=0; i<option.getSaleOptions().size(); i++) {
 			if(option.getSaleOptions().get(i).getIdx() != 0) {
-				System.out.println("SaleOption" + (i+1) + " [idx: " + option.getSaleOptions().get(i).getIdx() + "]");
 			
 				saleOption = saleOptionDao.selectOptionByIdx(option.getSaleOptions().get(i).getIdx());
 				saleOption.setProAmount(option.getSaleOptions().get(i).getProAmount());
 			
-				System.out.println("CART" + (i+1) + ":" + saleOption);
 				saleOptionDao.insertCart(saleOption, accIdx);
 			}
 		}
+		
 	}
 	
 	@Override
@@ -155,7 +146,6 @@ public class ProductServiceImpl implements ProductService {
 		SaleOption saleOption;
 		
 		for(int i=0; i<cartList.size(); i++) {
-			System.out.println(cartList.get(i));
 			saleOption = saleOptionDao.selectOptionByIdx(cartList.get(i).getSaleOptionIdx());
 			saleOption.setProAmount(cartList.get(i).getCount());
 			optionCart.add(i, saleOption);
@@ -188,14 +178,11 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public void insertComment(Comment comment) {
-		System.out.println("------------------Insert Service-----------------");
 		productDao.insertComment(comment);
 	}
 	
 	@Override
 	public List<HashMap<String, Object>> getCommentList(int saleIdx) {
-		System.out.println("------------------Select Service-----------------");
-		System.out.println(productDao.selectAllComment(saleIdx));
 		return productDao.selectAllComment(saleIdx);
 	}
 	

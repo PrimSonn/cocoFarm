@@ -70,7 +70,7 @@ public class NoticeController {
 
 	@RequestMapping(value="/notice/update.do", method=RequestMethod.GET)
 	public String update(Notice notice, HttpSession session, Model model) {
-		System.out.println(notice);
+
 		notice = noticeService.noticeView(notice);
 		model.addAttribute("view", notice);		
 		

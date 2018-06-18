@@ -1,0 +1,119 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="11110132-6551-BBF7-D017-DCCD662E3765" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_RECEIPT">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_RECEIPT</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>일반 구매 묶음 영수증 (주 영수증 서브타입 형태)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SALE_IDX" id="1DA4C712-54AC-2251-2CFF-0D28CBEF16FE">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_RECEIPT</sourceObjSchema>
+<sourceObjName>SALE_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>판매글 번호 - 복합기본키. 외래키</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C42A17C5-F2F4-72D3-1838-0B2F77DF950E" referredColumn="CA2E0ECC-6635-896D-E537-308B67E27857"/>
+</associations>
+</Column>
+<Column name="MAIN_RECPT_IDX" id="FFDC6522-DF15-2B71-3F4A-1AA324125ED4">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_RECEIPT</sourceObjSchema>
+<sourceObjName>MAIN_RECPT_IDX</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>판매글 제목 -  트리거 있음 - 입력시 판매글 내용을 불러와서 입력</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>18</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,18,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5311F0F0-DC28-9DFA-A4CE-F1B703449D98" referredColumn="40042EFD-ECA1-72F7-9395-9496C55D332B"/>
+</associations>
+</Column>
+<Column name="SALE_TITLE" id="9B65E09D-978D-91DD-6DBC-6AECA8BD6F2D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>SALE_RECEIPT</sourceObjSchema>
+<sourceObjName>SALE_TITLE</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="DC3C8D7D-72BB-BAB6-CC69-8E760CDF1810" name="SALE_RECPT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_RECPT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1DA4C712-54AC-2251-2CFF-0D28CBEF16FE"/>
+<colUsage columnID="FFDC6522-DF15-2B71-3F4A-1AA324125ED4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E0A38469-6106-3149-2478-57E01F83F550" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="SALE_RECPT_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_RECPT_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1DA4C712-54AC-2251-2CFF-0D28CBEF16FE"/>
+<colUsage columnID="FFDC6522-DF15-2B71-3F4A-1AA324125ED4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="76519EA9-3C57-C6C7-0BA8-18F0C9AF6472" name="SALE_RECPT_M_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FFDC6522-DF15-2B71-3F4A-1AA324125ED4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F4A00FCB-B74C-3D1E-02C8-CF82BDE11483" name="SALE_RECPT_SALE_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1DA4C712-54AC-2251-2CFF-0D28CBEF16FE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,131 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="99438E05-9808-F884-7356-CC5E4D14BA90" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="CATEGORY_MAP">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CATEGORY_MAP</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:03 UTC</createdTime>
+<commentInRDBMS>카테고리 맵 (카테고리간 관계 설정)</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SUPER_CATEGORY" id="4486DC06-8D87-5576-C9D2-DC17AF3D834D">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CATEGORY_MAP</sourceObjSchema>
+<sourceObjName>SUPER_CATEGORY</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>상위 분류 - 기본키 + 외래키 (카테고리 IDX) 식별관계</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,3,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F806B1D5-3966-AB8C-8009-C540D8ACB356" referredColumn="64FDFB15-3E16-3492-43A1-72A9C4E46595"/>
+</associations>
+</Column>
+<Column name="SUB_CATEGORY" id="3B0F0B9C-82D5-6E0D-D112-2B3EDF91796C">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CATEGORY_MAP</sourceObjSchema>
+<sourceObjName>SUB_CATEGORY</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>하위 분류 - 기본키 + 외래키 (카테고리 IDX) 식별관계</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,3,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F5B14C65-4EB6-573F-ADF9-5C583B13C1A0" referredColumn="64FDFB15-3E16-3492-43A1-72A9C4E46595"/>
+</associations>
+</Column>
+<Column name="DESCRIPTION" id="37C0B9EE-E8F4-6CEF-0A75-0DEB177A0548">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>CATEGORY_MAP</sourceObjSchema>
+<sourceObjName>DESCRIPTION</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<commentInRDBMS>관계 설명</commentInRDBMS>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT037</logicalDatatype>
+<dataTypeSize>300</dataTypeSize>
+<ownDataTypeParameters>300,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="116EEB5B-9E6D-1516-AC79-213247A065B6" name="CAT_MAP_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CAT_MAP_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4486DC06-8D87-5576-C9D2-DC17AF3D834D"/>
+<colUsage columnID="3B0F0B9C-82D5-6E0D-D112-2B3EDF91796C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="121ED8D1-7EED-2041-D146-B810505CBDC3" schemaObject="5A21A038-32FF-1874-9C45-02C5B0C81981" name="CAT_MAP_PK">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CAT_MAP_PK</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4486DC06-8D87-5576-C9D2-DC17AF3D834D"/>
+<colUsage columnID="3B0F0B9C-82D5-6E0D-D112-2B3EDF91796C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="72A680E9-C720-F650-D5AF-2E1C2AE07BC0" name="SUBCAT_MAP_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3B0F0B9C-82D5-6E0D-D112-2B3EDF91796C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="ABFF01C4-AA71-4C50-6CF4-9BF6C6CCE10B" name="SUPERCAT_MAP_FK">
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4486DC06-8D87-5576-C9D2-DC17AF3D834D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="CAT_MAP_CHECKER" directorySegmentName="seg_0" id="053420C8-20BD-127E-74A2-DE4F0DEA33FB">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>CAT_MAP_CHECKER</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<rule>SUPER_CATEGORY &lt;&gt; SUB_CATEGORY</rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

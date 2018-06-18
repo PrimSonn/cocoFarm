@@ -13,9 +13,9 @@ public interface SaleOptionDao {
 	public List selectAll();
 	
 	// 모든 옵션 개수 조회
-	public int countAll();
+	public int countAll(int acc_idx);
 	
-	public List selectPage(Paging paging);
+	public List selectPage(Paging paging, int acc_idx);
 	
 	public void insert(SaleOption saleOption);
 

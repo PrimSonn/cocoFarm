@@ -1,6 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<StorageDesignOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.StorageDesignOraclev11g" name="Oracle Database 11g" id="6B7F042C-BA28-51E4-87C9-7FADF75218C8" siteID="32076570-2523-435C-2E92-BF29817DFF70" siteName="Oracle Database 11g" siteType="9">
-<createdBy>Sonn</createdBy>
-<createdTime>2018-05-31 13:28:14 UTC</createdTime>
-<ownerDesignName>cocoFarm physical model design</ownerDesignName>
-</StorageDesignOraclev11g>

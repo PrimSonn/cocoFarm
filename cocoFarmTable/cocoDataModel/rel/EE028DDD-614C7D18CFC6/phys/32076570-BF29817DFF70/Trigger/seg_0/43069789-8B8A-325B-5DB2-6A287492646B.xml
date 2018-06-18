@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="NOTICE_EDITED_TRG" directorySegmentName="seg_0" id="43069789-8B8A-325B-5DB2-6A287492646B">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>NOTICE_EDITED_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>UPDATE</actions>
+<body>begin&lt;br/&gt;	if(:NEW.LAST_EDITED is null) then&lt;br/&gt;		:NEW.LAST_EDITED := SYSDATE;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<columns>784D742A-480B-629F-C077-6F1F7BDA17BC, 584092B1-DA46-2FD5-7517-DC688ED23F00</columns>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>C654D6EE-BF7D-2000-642D-4814AE0F3622</table>
+</TriggerOraclev10g>

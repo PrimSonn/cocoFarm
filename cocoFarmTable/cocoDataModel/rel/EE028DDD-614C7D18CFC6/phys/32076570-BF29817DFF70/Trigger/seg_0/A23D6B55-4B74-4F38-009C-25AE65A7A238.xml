@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="SALE_OPT_RECPT_TRG" directorySegmentName="seg_0" id="A23D6B55-4B74-4F38-009C-25AE65A7A238">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>SALE_OPT_RECPT_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>declare&lt;br/&gt;	opt_saleIdx		SALE.IDX%type;&lt;br/&gt;	opt_name		SALE_OPTION.NAME%type;&lt;br/&gt;	opt_unit		SALE_OPTION.UNIT%type;&lt;br/&gt;	opt_price		SALE_OPTION.PRICE%type;&lt;br/&gt;begin&lt;br/&gt;	if(:NEW.SALE_IDX is null or :NEW.NAME is null or :NEW.UNIT is null or :NEW.PRICE is null) then&lt;br/&gt;&lt;br/&gt;		select SALE_IDX, NAME, UNIT, PRICE into opt_saleIdx, opt_name, opt_unit, opt_price from SALE_OPTION where IDX = :NEW.SALE_OPTION_IDX;&lt;br/&gt;&lt;br/&gt;		if (:NEW.SALE_IDX is null) then&lt;br/&gt;			:NEW.SALE_IDX := opt_saleIdx;&lt;br/&gt;		end if;&lt;br/&gt;		if (:NEW.NAME is null) then&lt;br/&gt;			:NEW.NAME := opt_name;&lt;br/&gt;		end if;&lt;br/&gt;		if (:NEW.UNIT is null) then&lt;br/&gt;			:NEW.UNIT := opt_unit;&lt;br/&gt;		end if;&lt;br/&gt;		if (:NEW.PRICE is null) then&lt;br/&gt;			:NEW.PRICE := opt_price;&lt;br/&gt;		end if;&lt;br/&gt;	--	if (:NEW.STATE_CODE is null) then&lt;br/&gt;	--		:NEW.STATE_CODE := 0;&lt;br/&gt;	--	end if;&lt;br/&gt;	end if;&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>01DC89F5-8F37-3B04-FC11-FAE37E3A5B66</table>
+</TriggerOraclev10g>

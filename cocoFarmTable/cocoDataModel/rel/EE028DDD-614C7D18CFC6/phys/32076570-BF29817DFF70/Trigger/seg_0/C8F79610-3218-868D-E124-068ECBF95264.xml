@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="AUCTION_DUE_QUE_TRG" directorySegmentName="seg_0" id="C8F79610-3218-868D-E124-068ECBF95264">
+<sourceConnName>cocoFarm</sourceConnName>
+<sourceObjSchema>COCOFARM</sourceObjSchema>
+<sourceObjName>AUCTION_DUE_QUE_TRG</sourceObjName>
+<createdBy>Sonn</createdBy>
+<createdTime>2018-06-17 09:48:04 UTC</createdTime>
+<ownerDesignName>cocoDataModel</ownerDesignName>
+<actions>INSERT</actions>
+<body>begin&lt;br/&gt;	insert into AUCTION_DUE_QUE (AUCTION_IDX, TIME_WINDOW) values ( :NEW.IDX, :NEW.REG_TIME + (select TIME_WINDOW from AUCTION_TIME_WINDOW_TYPE where CODE = :NEW.TIME_WINDOW_CODE) );&lt;br/&gt;end;&lt;br/&gt;</body>
+<triggerTime>AFTER</triggerTime>
+<owner>9B2CBDD9-D4EA-AD8B-3936-1238B79FFDD3</owner>
+<table>6913E29D-EFAA-1B13-558F-8A13AA123E47</table>
+</TriggerOraclev10g>
