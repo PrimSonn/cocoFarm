@@ -11,10 +11,6 @@
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
-
-
-
-
 <script type="text/javascript">
 $(document).ready(function() {	
 $(".mypage_navbody").on("click", ".nav-link", function() {
@@ -36,10 +32,6 @@ $(".mail_box").on("click", ".nav-link", function() {
 });
 });
 </script>
-
-
-
-
 </head>
 <body>
 <div id="mypageheader">
@@ -54,8 +46,6 @@ $(".mail_box").on("click", ".nav-link", function() {
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
 			<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
-			
-			
 			
 			<div class="mypage_page01">
 				<div class="border">
@@ -72,7 +62,6 @@ $(".mail_box").on("click", ".nav-link", function() {
 						<th style="width:100px; border:1px solid; border-color: #9e9e9e;">결제 상태</th>
 						</tr>
 					</thead>
-					
 					
 					<tbody>
 						<c:if test="${empty receipt }">
@@ -104,30 +93,11 @@ $(".mail_box").on("click", ".nav-link", function() {
 						</c:forEach>
 					</tbody>
 					</table>
-					
-	
-
 					</div>
-			
-			
 				</div>
-			
-			
-			
-			
-			
 			</div>
-			
-			
-			
-			
 		</div>
-	
 	</div>
-	
-	
-</div>	
-
-
+</div>
 </body>
 </html>

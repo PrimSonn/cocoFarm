@@ -12,9 +12,6 @@
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-
-
-
 <script type="text/javascript">
 $(document).ready(function() {
 
@@ -35,8 +32,6 @@ $(document).ready(function() {
 		
 		return false;
 	});
-	
-	
 	
 	$(".btnCancel").click(function() {
 // 		auction idx확인까진 끝
@@ -103,13 +98,9 @@ $(document).ready(function() {
 			}
 		}
 		});
-		
 	
 });
 </script>
-
-
-
 
 </head>
 <body>
@@ -125,8 +116,6 @@ $(document).ready(function() {
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
 			<jsp:include page="/WEB-INF/views/tile/mypage/sellerIntro.jsp" flush="false"/>
-			
-			
 			
 			<div class="mypage_page01">
 				<div class="border">
@@ -146,7 +135,6 @@ $(document).ready(function() {
 						<th style="width:80px; border:1px solid; border-color: #9e9e9e;">경매 취소</th>
 						</tr>
 					</thead>
-					
 					
 					<tbody>
 						<c:if test="${empty auctionList}">
@@ -196,35 +184,22 @@ $(document).ready(function() {
 							</c:otherwise>
 							</c:choose>
 							</td>
-							
 						</tr>
 						</c:forEach>
 					</tbody>
+					
 					</table>
 					
-						
-
 					</div>
-			
-			
 				</div>
-			
-			
-			
-			
-			
+				
 			</div>
 			
-			
-			
-			
 		</div>
-	
+		
 	</div>
 	
-	
-</div>	
-
+</div>
 
 </body>
 </html>

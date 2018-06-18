@@ -52,8 +52,6 @@ function timediff(time_window,systime,status){
 <!--main부분 header 부분  -->
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
 
-
-
 	<div class="container">
 	<div id="view_auction">
 	<c:forEach items="${list }" var="i" varStatus="status">
@@ -91,14 +89,9 @@ function timediff(time_window,systime,status){
 	</c:forEach>
 	</div>
 	
-	
 <%-- 	<c:set var="path" value="<%= request.getSession().getServletContext().getRealPath("upload") %>"></c:set> --%>
-	
-	
 	<table style="margin: 0 auto; position: relative;">
 	<tbody>
-	
-	
 	
 	<%-- 
 	

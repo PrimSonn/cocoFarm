@@ -380,12 +380,9 @@ $(function() {
 					</tr>
 				</thead>
 				<tbody>
-					
+				
 				<c:forEach items="${pro}" var="pro_data" varStatus="status1">					
 					<tr>
-				
-				 
-				 
 						<td class="product_info">
 							<a href="" >
 							<img src="/proimg/${pro_data.faceImg}" style="width: 92px">
@@ -412,8 +409,6 @@ $(function() {
 								</div>
 							</div>
 						</td>
-						
-						
 						<td>
 						<a class="who_parmer" href="">${pro_data.name}</a>
 						</td>
@@ -451,16 +446,13 @@ $(function() {
 					수령인
 					</span>
 					<input type="text" class="mem_name" value="" placeholder="수령인을 입력해주세요."> 
-				
 				</div>
 				<div class="delive_reci">
 					<span class="reap">
 					배송지명
 					</span>
 					<input type="text" class="mem_deliver" value="" placeholder="배송지명을 입력해주세요"> 
-				
 				</div>
-				
 				<div class="delive_reci">
 					<div class="cellphone_group">
 					<span class="reap">
@@ -488,25 +480,18 @@ $(function() {
 					배송 메모
 					</span>
 					<input type="text" class="deliver_memo" value="" placeholder="필요한 배송 사항 메모" > 
-				
 				</div>	
 				<p class="extra_info">
 				<span class="ico_ext"></span><strong>2016년 8월 1일부터는 5자리 우편번호 사용이 의무화</strong>됩니다.
 				<br>도로명주소+5자리 우편번호로 등록하셔서 코코팜 이용에 불편함이 없도록 하시길 바랍니다.</p>
             	<p class="extra_info">
 				<span class="ico_ext"></span>도서산간 지역의 경우 추후 수령 시 추가 배송비가 과금될 수 있습니다.</p>
-				
-			
 			</div>
-			
-			
 			<div class="price_sum">
-			
 				<h1>결제 금액</h1>
 				<div class="price_group">
 				<span class="price_sum_num"></span><p class="unit">원</p>
 				</div>
-				
 				<ul class="price_list">
 					<li><strong>총 상품금액</strong><p>(+)<em class="sum_total"></em>원</p></li>
 					<li><strong>배송비</strong><p>(+) <em>0</em>원</p></li>
@@ -515,9 +500,7 @@ $(function() {
 			<!-- <button id="pay11" name="pay11">통신하기</button> -->
 			</div>
 		</div>
-	
 	</div>
-	
 </div>
 </body>
 </html>

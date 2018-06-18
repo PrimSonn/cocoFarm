@@ -19,7 +19,6 @@
   	</li>
   	</c:if>
   	
-  	
   	<%-- 이전 페이지 버튼 --%>
   	<%-- 첫 페이지면 금지 표시 --%>
   	<c:if test="${paging.curPage ne 1 }">
@@ -47,7 +46,6 @@
     	<li><a href="/mypage/admin/admin_auctionReceiptCheck.do?curPage=${page }&search=${paging.search}">${page }</a></li>
     </c:if>
     </c:forEach>
-    
     
     <%-- 다음 페이지 버튼 --%>
     <%-- 마지막 페이지면 동작 안함 --%>
