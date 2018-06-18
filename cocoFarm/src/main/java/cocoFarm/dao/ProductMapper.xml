@@ -120,6 +120,11 @@
 		LEFT JOIN ACCOUNT A ON M.BUYER_IDX = A.IDX
 		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
 	</select>
+	
+	<select id="selectProductByReceipt" parameterType="java.util.HashMap" resultMap="ProductResult">
+		<include refid="selectProduct" />
+		WHERE acc_idx = #{param1 } AND title = #{param2 }
+	</select>
 
 	<!-- ==================================================================================== -->
 

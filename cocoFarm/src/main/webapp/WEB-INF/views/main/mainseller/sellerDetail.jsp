@@ -225,7 +225,6 @@ function viewComment() {
 	var obj = new Object();
 	
 	var cont = $("#commentContent").val();
-	
 	if(cont === "") {
 		arr.push(null);
 	} else {
@@ -234,8 +233,6 @@ function viewComment() {
 		obj.content = cont;
 		arr.push(obj);
 	}
-	// JSON.stringify(__) - 문자열로 바꾸는 것! string화!
-	console.log("request: " + JSON.stringify(arr));
 	
 	$.ajax({
 		type: "POST"
@@ -246,12 +243,9 @@ function viewComment() {
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
-				console.log(data);
 				var result = data;
 				var str = "";
 				$.each(result, function(idx, val) {
-					console.log(idx + ": " + val);
-
 					str += '<span class="wrap_profile">'
 						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span>'
 						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'

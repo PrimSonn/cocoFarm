@@ -132,6 +132,8 @@ public interface ProductService {
 	
 	public List<HashMap<String, Object>> getCommentList(int saleIdx);
 	
+	public Product selectProductByReceipt(int acc_idx, String title);
+	
 	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work

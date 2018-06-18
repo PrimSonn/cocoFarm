@@ -484,13 +484,13 @@ input[id="checkAll"], input[id="checkRow"] {
 }
 
 /* 상품 후기 */
-.item_info .insertComm_button {
+.insertComm_button {
 	background-color: #43e44f;
 	border: none;
 	color: white;
 	border-radius: 3px;
 	margin: 10px 0px;
-	width: 100px;
+	width: 50px;
 	height: 35px;
 	text-align: center;
 	line-height: 31px;
@@ -569,4 +569,10 @@ input[id="checkAll"], input[id="checkRow"] {
 	text-align: center;
 	padding-right: 30px;
 	cursor: pointer;
+}
+
+/* 결제 내역 */
+.message_num {
+	width: 10px;
+	overflow: hidden;
 }

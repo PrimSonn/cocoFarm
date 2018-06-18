@@ -345,6 +345,8 @@ public class ProductController {
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment, String insertComm) {
 		
+		logger.info("viewComment.do POST!!");
+		
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
@@ -381,6 +383,7 @@ public class ProductController {
 	}
 	
 	// 상품후기 등록
+	// 현재 쓰이지 않음.
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> insertComment(String comment, HttpSession session) {
@@ -414,6 +417,8 @@ public class ProductController {
 		int accIdx = (int) session.getAttribute("idx");
 		
 		model.addAttribute("procPaynee", productService.procPayNee(accIdx));
+		
+		model.addAttribute("product", productService.productView(accIdx));
 		
 		return "mypage/common/procPaynee";
 		

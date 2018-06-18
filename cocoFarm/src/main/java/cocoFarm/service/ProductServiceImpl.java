@@ -199,6 +199,11 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.selectAllComment(saleIdx);
 	}
 	
+	@Override
+	public Product selectProductByReceipt(int acc_idx, String title) {
+		return productDao.selectProductByReceipt(acc_idx, title);
+	}
+	
 	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work

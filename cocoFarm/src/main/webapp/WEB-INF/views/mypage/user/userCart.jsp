@@ -396,7 +396,7 @@ function cartItems() {
 						<tr class="tr_payment">
 							<td id="border_payment" style="width: 440px;"></td>
 							<td class="name_price" id="border_payment">배송비</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment">무료</td>
 						</tr>
 					</table>
 					
