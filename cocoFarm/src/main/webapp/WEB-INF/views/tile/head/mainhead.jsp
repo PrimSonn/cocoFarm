@@ -3,9 +3,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <script type="text/javascript"
-	src="https://code.jquery.com/jquery-2.2.4.js"></script>
+	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  	
 <script type="text/javascript">
 $(document).ready(function(){
+	$(".slide_img").hide();
+	$(".slide_img").first().show();
+
+	setInterval(function(){
+		console.log('test');
+		$(".slide_img").eq(1).show();
+		$("#slider").append($(".slide_img").first());
+	   $(".slide_img").last().hide("slide", { direction: "left" }, 1000);
+	}, 3000);
 	
 	<c:if test="${sessionScope.idx ne null}">
 	$.ajax({
@@ -17,7 +29,6 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-
 		   //alert("실패"); 
 	   }
 	});
@@ -29,9 +40,48 @@ $(document).ready(function(){
 		alert("로그인이 필요합니다.");
 	}
 
+	$(function() {
+	    $(window).scroll(function() {
+	        if ($(this).scrollTop() > 500) {
+	            $('#MOVE_TOP_BTN').fadeIn();
+	        } else {
+	            $('#MOVE_TOP_BTN').fadeOut();
+	        }
+	    });
+	    
+	    $("#MOVE_TOP_BTN").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	    });
+	});
 </script>
-<div id="header">
 
+<style type="text/css">
+a#MOVE_TOP_BTN {
+    position: fixed;
+    right: 5%;
+    bottom: 500px;
+    display: none;
+    z-index: 999;
+}
+.slide_img {
+ 	width: 100%; 
+	height: 560px;
+	position: absolute;
+}
+</style>
+
+<div id="TOP_BTN_BOX"><a id="MOVE_TOP_BTN" href="#">TOP</a></div>
+
+<div id="header">
+<div id="slider" style="overflow: hidden; margin: 0 auto;">
+<img alt="배경" src="/img/backgroundimg/mainbackground_01.jpg" class="slide_img" >
+<img alt="배경" src="/img/backgroundimg/bono1.jpg" class="slide_img" >
+<img alt="배경" src="/img/backgroundimg/bono2.jpg" class="slide_img" >
+<img alt="배경" src="/img/backgroundimg/images.jpg" class="slide_img" >
+</div>
 	<div id="header_top">
 	<div class="container">
 		<ul class="rigth_list">
@@ -75,7 +125,7 @@ $(document).ready(function(){
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx eq null }">
-			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;"">마이페이지</a></li>	
+			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;">마이페이지</a></li>	
 			</c:if>
 		</ul>
 	</div>

@@ -147,6 +147,7 @@
 </head>
 <body>
 
+
 <div class="background_img">
 	<div class="img_one"><img src="/img/backgroundimg/back01.png" ></div>
 	<div class="img_two"><img src="/img/backgroundimg/back02.png" ></div>
@@ -154,7 +155,6 @@
 	</div>
 <!--main부분 header ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/head/mainhead.jsp" flush="false"/>
-	
 	
 			<div class="container">
 			<div class="auction_part">
@@ -206,7 +206,6 @@
 					</div>
 			</div>
 			</div>
-			
 			
 			
 			
@@ -288,6 +287,7 @@
 <!--main부분 foot ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
 		
+
 <script>
     var swiper = new Swiper('.swiper-container', {
       navigation: {
