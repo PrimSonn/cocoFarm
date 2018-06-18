@@ -29,17 +29,17 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public int getListCount() {
+	public int getListCount(int acc_idx) {
 		// Product 또는 SaleOption 어떤 list를 불러올 것인지
 //		return productDao.countAll();
-		return saleOptionDao.countAll();
+		return saleOptionDao.countAll(acc_idx);
 	}
 	
 	@Override
-	public List getPagingList(Paging paging) {
+	public List getPagingList(Paging paging, int acc_idx) {
 		// Product 또는 SaleOption 어떤 list를 불러올 것인지
 //		return productDao.selectPage(paging);
-		return saleOptionDao.selectPage(paging);
+		return saleOptionDao.selectPage(paging, acc_idx);
 	}
 	
 	@Override

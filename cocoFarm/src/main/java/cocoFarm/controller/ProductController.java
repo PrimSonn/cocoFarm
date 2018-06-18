@@ -75,17 +75,18 @@ public class ProductController {
 	@RequestMapping(value="/product", method=RequestMethod.GET)
 	public String productList(@RequestParam(defaultValue="0") int curPage
 							, Model model,HttpSession session) {
+		
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
 		
-		int totalCount = productService.getListCount();
+		int totalCount = productService.getListCount(idx);
 		
 		// 페이징 생성
 		Paging paging  = new Paging(totalCount, curPage);
 		model.addAttribute("paging", paging);
 		
-		List optionList = productService.getPagingList(paging);
+		List optionList = productService.getPagingList(paging, idx);
 		model.addAttribute("optionList", optionList);
 		
 		return "mypage/seller/productList";
@@ -93,7 +94,7 @@ public class ProductController {
 	
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.GET)
 	public String insert(HttpSession session, Model model) {
-		//추가 해준거 
+
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
