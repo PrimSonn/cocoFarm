@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import cocoFarm.dto.Account;
 import cocoFarm.dto.Option;
+import cocoFarm.dto.ReceiptDto;
 import cocoFarm.dto.RecptCallParamHolder;
 import cocoFarm.dto.SaleOption;
 import cocoFarm.service.LoginService;
@@ -46,7 +47,6 @@ public class PayController {
 		if(session.getAttribute("idx")==null||session.getAttribute("idx").equals("")) return "error/needLogIn";
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
-		System.out.println(session.getAttribute("type"));
 		model.addAttribute("account", account);
 		
 /*
@@ -91,15 +91,13 @@ public class PayController {
 			model.addAttribute("amount",listA);
 		
 			//옵션 판매글 불러오는것 
+			saleList = productService.getPayOption(query);
 			String salequery ="(";
-			for(int i=0; i<productService.getPayOption(query).size()-1; i++) {
-				salequery += productService.getPayOption(query).get(i).getSaleIdx()+",";
+			for(int i=0; i<saleList.size()-1; i++) {
+				salequery += saleList.get(i).getSaleIdx()+",";
 			}
-			salequery += productService.getPayOption(query).get(productService.getPayOption(query).size()-1).getSaleIdx()+")";
+			salequery += saleList.get(saleList.size()-1).getSaleIdx()+")";
 			/*System.out.println(salequery);*/
-			
-			productService.getSale_Option(salequery);
-			//System.out.println(productService.getPayOption(query).get(0).getSaleIdx());
 			
 			model.addAttribute("pro",(productService.getSale_Option(salequery)));
 			
@@ -206,6 +204,9 @@ public class PayController {
 	public String paynee(HttpSession session, Model model) {
 		
 		int accIdx = (int) session.getAttribute("idx");
+		
+		List<ReceiptDto> list = receiptSvc.paynee(accIdx);
+		list.stream().forEach((s)->System.out.println(s.getIdx()));
 		
 		model.addAttribute("paynee", receiptSvc.paynee(accIdx));
 		

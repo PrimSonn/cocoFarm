@@ -5,6 +5,24 @@
   
 <mapper namespace="cocoFarm.dao.MessageDao">
 	  <select id="getReceiveMessage" parameterType="map" resultType="cocoFarm.dto.Message">
+	 select B.* 
+			from (
+				select T.*, ROWNUM RNUM from (
+					select M.IDX, M.TITLE, M.RECEIVER_IDX, M.SENDER_IDX, M.WRITTEN_TIME, AR.NAME SENDER
+						from MESSAGE M
+						<if test="type &lt;= 1" >
+						inner join (select IDX from ACCOUNT where ACCOUNT_TYPE = 1) A on M.RECEIVER_IDX = A.IDX
+						</if>
+						inner join ACCOUNT AR on M.SENDER_IDX = AR.IDX
+						where
+							<if test="type &gt; 1" >
+							M.RECEIVER_IDX = #{idx} and
+							</if>
+							(M.isDel = 0 OR M.isDel = 2)
+						order by IDX desc) T
+				order by RNUM
+				) B where B.RNUM between #{paging.startNo } and #{paging.endNo }
+	 <!--
       SELECT * FROM (SELECT rownum rnum, b.* FROM (
 	      SELECT
 	         idx,
@@ -15,12 +33,31 @@
 	         written_time
 	      FROM message M
 	      WHERE receiver_idx = #{idx }
-	         AND (isDel = 0 OR isDel = 2 AND is_Read = 0)
+	         AND (isDel = 0 OR isDel = 2)
       ORDER BY idx DESC) b ORDER BY rnum) WHERE rnum BETWEEN #{paging.startNo } AND #{paging.endNo }
+      -->
+      
    </select>
 
    <select id="getSendMessage" parameterType="map" resultType="cocoFarm.dto.Message">
-      
+		select B.* 
+			from (
+				select T.*, ROWNUM RNUM from (
+					select M.IDX, M.TITLE, M.SENDER_IDX, M.RECEIVER_IDX, M.WRITTEN_TIME, AR.NAME RECEIVER
+						from MESSAGE M
+						<if test="type &lt;= 1" >
+						inner join (select IDX from ACCOUNT where ACCOUNT_TYPE = 1) A on M.SENDER_IDX = A.IDX
+						</if>
+						inner join ACCOUNT AR on M.RECEIVER_IDX = AR.IDX
+						where
+							<if test="type &gt; 1" >
+							M.SENDER_IDX = #{idx} and
+							</if>
+							(M.isDel = 0 OR M.isDel = 3)
+						order by IDX desc) T
+				order by RNUM
+				) B where B.RNUM between #{paging.startNo } and #{paging.endNo }
+<!--	
       SELECT * FROM (SELECT rownum rnum, b.* FROM (
 	      SELECT
 	         idx,
@@ -31,8 +68,9 @@
 	         written_time
 	      FROM message M
 	      WHERE sender_idx = #{idx }
-	         AND (isDel = 0 OR isDel = 3 AND is_Read = 0)
+	         AND (isDel = 0 OR isDel = 3)
       ORDER BY idx DESC) b ORDER BY rnum) WHERE rnum BETWEEN #{paging.startNo } AND #{paging.endNo }
+    -->	
    </select>
    
 	<select id="getOneMessage" parameterType="cocoFarm.dto.Message" resultType="cocoFarm.dto.Message">
@@ -72,19 +110,37 @@
 	</update>
 	
 	<update id="deleteReceiveMessage" parameterType="String">
-		UPDATE message SET isdel = 3 WHERE idx IN ( ${_parameter} )
+		UPDATE message SET isdel =
+			case when ISDEL=2 then 3 else 1 end
+		WHERE idx IN ( ${_parameter} )
 	</update>
 	
 	<update id="deleteSendMessageList" parameterType="String">
-		UPDATE message SET isdel = 2 WHERE idx IN ( ${_parameter} )
+		UPDATE message SET ISDEL = 
+			case when ISDEL = 3 then 1 else 2 end 
+		WHERE idx IN ( ${_parameter} )
 	</update>
    
 	<select id="totalCount" parameterType="map" resultType="int">
 		<if test=" messageCate == 1">
-			SELECT count(*) FROM message WHERE receiver_idx = #{idx }
+			<if test="type &lt;= 1" >
+				select count(1) from MESSAGE M
+				inner join ACCOUNT A on M.RECEIVER_IDX = A.IDX
+				where A.ACCOUNT_TYPE &lt;=1 and M.ISDEL in (0,2)
+			</if>
+			<if test="type &gt; 1" >
+				SELECT count(*) FROM message WHERE receiver_idx = #{idx } and ISDEL in (0,2)
+			</if>
 		</if>
 		<if test=" messageCate == 2">
-			SELECT count(*) FROM message WHERE sender_idx = #{idx }
+			<if test="type &lt;= 1">
+				select count(1) from MESSAGE M
+				inner join ACCOUNT A on M.SENDER_IDX = A.IDX
+				where A.ACCOUNT_TYPE &lt;=1 and M.ISDEL in (0,3)
+			</if>
+			<if test="type &gt; 1">
+				SELECT count(*) FROM message WHERE sender_idx = #{idx } and ISDEL in (0,3)
+			</if>
 		</if>
 	</select>
 	

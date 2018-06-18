@@ -51,5 +51,6 @@ public interface ProductDao {
 //	2018년 06월 14일 판매자 결제내역조회
 	public List procPayNee(int accIdx);
 	
+	public Product selectProductByReceipt2(String title);
 	
 }

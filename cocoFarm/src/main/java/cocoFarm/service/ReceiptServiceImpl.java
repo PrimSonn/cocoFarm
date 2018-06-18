@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cocoFarm.dao.ReceiptDao;
+import cocoFarm.dto.ReceiptDto;
 //import cocoFarm.dto.OptReceiptMkr;
 import cocoFarm.dto.RecptCallParamHolder;
 import cocoFarm.util.recptMaker.DataResolver;
@@ -81,7 +82,7 @@ public class ReceiptServiceImpl implements ReceiptService{
 	
 	//2018년 6월 14일 상원이형 작업
 	@Override
-	public List paynee(int accIdx) {
+	public List<ReceiptDto> paynee(int accIdx) {
 		
 		return recptDao.paynee(accIdx);
 	}

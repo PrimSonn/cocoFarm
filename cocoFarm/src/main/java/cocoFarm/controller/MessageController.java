@@ -40,11 +40,13 @@ public class MessageController {
 	public void readMessage(@RequestParam(defaultValue="0") int curPage, int messageCate, HttpSession session, Model model){
 	    
 		int idx = (Integer) session.getAttribute("idx");
-	    
-//		System.out.println(idx);
+	    Integer type = (Integer)session.getAttribute("type");
+		
 		HashMap<String, Object> totalMap = new HashMap<String, Object>();
+		
 		totalMap.put("idx", idx);
 		totalMap.put("messageCate", messageCate);
+		totalMap.put("type",type);
 		int totoalCount = messageService.getTotal(totalMap);
 		Paging paging = new Paging(totoalCount, curPage);
 		paging.setMessageCate(messageCate);
@@ -53,15 +55,14 @@ public class MessageController {
 		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
 		pagingMap.put("idx", idx);
 		pagingMap.put("paging", paging);
+		pagingMap.put("type",type);
 		
 		List<Message> messageList = null;
 		if(messageCate == 1) {
-		messageList = messageService.getReceiveMessage(pagingMap);
+			messageList = messageService.getReceiveMessage(pagingMap);
 		} else {
-		messageList = messageService.getSendMessage(pagingMap);
+			messageList = messageService.getSendMessage(pagingMap);
 		}
-		
-		
 		model.addAttribute("messageList", messageList);
 		model.addAttribute("messageCate", messageCate);
 	}
@@ -101,7 +102,7 @@ public class MessageController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("msg", "전송완료");
-		mav.addObject("url", "/mypage/message.do");	//보낸쪽지함으로 보내야함,, 쪽지함선택된상태로!!
+		mav.addObject("url", "/mypageIntro.do");	//보낸쪽지함으로 보내야함,, 쪽지함선택된상태로!!
 		mav.setViewName("util/alert");
 		return mav;
 	}

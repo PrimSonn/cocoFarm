@@ -134,6 +134,8 @@ public interface ProductService {
 	
 	public Product selectProductByReceipt(String title);
 	
+	public Product selectProductByReceipt2(String title);
+	
 	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work

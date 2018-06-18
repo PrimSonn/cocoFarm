@@ -191,6 +191,11 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.selectProductByReceipt(title);
 	}
 	
+	@Override
+	public Product selectProductByReceipt2(String title) {
+		return productDao.selectProductByReceipt2(title);
+	}
+	
 	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work

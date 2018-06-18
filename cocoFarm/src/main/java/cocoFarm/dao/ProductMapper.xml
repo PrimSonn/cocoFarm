@@ -203,4 +203,9 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
 		WHERE S.ACC_IDX = #{accIdx }
 	</select>
 	 
+	<select id="selectProductByReceipt2" parameterType="String" resultMap="ProductResult">
+		select S.* from sale_option so
+			inner join sale S on S.idx = so.sale_idx
+		where so.name = #{value }
+	</select>
 </mapper>

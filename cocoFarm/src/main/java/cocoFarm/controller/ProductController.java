@@ -327,8 +327,7 @@ public class ProductController {
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		System.out.println(title);
-		Product product = productService.selectProductByReceipt(title);
+		Product product = productService.selectProductByReceipt2(title);
 		
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {

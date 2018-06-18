@@ -125,7 +125,7 @@
 
 	<!-- 06.17 손승용 수정사항: 판매쪽 결제내역만 조회되게 바꿈. -->
 	<select id="paynee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
-		select M.*,A.NAME seller,SOR.* from MAIN_RECEIPT M
+		select M.*,A.NAME seller, SOR.* from MAIN_RECEIPT M
 			inner join SALE_RECEIPT SR on M.IDX = SR.MAIN_RECPT_IDX
 			left join SALE S on SR.SALE_IDX = S.IDX
 			left join ACCOUNT A on S.ACC_IDX = A.IDX
