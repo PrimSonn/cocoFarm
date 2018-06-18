@@ -216,7 +216,7 @@
 					
 					<ul class="head_title">
 						<li class="title"><div class="title_icon"></div>오늘의 농부 스토리</li>
-						<li class="plus_btn">+ 더보기</li>
+						<li class="plus_btn"><a href="/board/list.do">+ 더보기</a></li>
 					</ul>
 					
 					<div class="farm_listpart">
@@ -255,7 +255,7 @@
 			<div class="pro_part">
 			<ul class="head_title">
 						<li class="title"><div class="title_icon"></div>최근 입고된 농수산물</li>
-						<li class="plus_btn">+ 더보기</li>
+						<li class="plus_btn"><a href="/seller.do">+ 더보기</a></li>
 					</ul>
 			
 			<c:forEach items="${seller}" var="data" varStatus="status">
