@@ -27,23 +27,24 @@
 		ORDER BY idx
 	</select>
 	
-	<select id="countAll" resultType="int">
-		SELECT COUNT(*) FROM sale_option
-		WHERE isdel = 0
+	<select id="countAll" parameterType="int" resultType="int">
+<!-- 		SELECT COUNT(*) FROM sale_option -->
+<!-- 		WHERE isdel = 0 AND acc_idx = ${_parameter } -->
+	select count(1) s from SALE_OPTION SO
+	left join SALE S on S.IDX = SO.SALE_IDX
+	where S.ACC_IDX = 3 and S.ISDEL = 0
 	</select>
 	
 	<select id="selectPage"
-					parameterType="cocoFarm.util.Paging"
+					parameterType="java.util.HashMap"
 					resultMap="SaleOptionResult">
-		SELECT * FROM (
-			SELECT rownum rnum, B.* FROM (
-				<include refid="selectSaleOption" />
-				WHERE isdel = 0
-				ORDER BY idx DESC
-			) B
-			ORDER BY rnum
-		) R
-		WHERE rnum BETWEEN #{startNo } AND #{endNo } AND isdel = 0
+		SELECT R.* FROM (
+        select SO.*, ROWNUM R from SALE_OPTION SO
+        left join SALE S on S.IDX = SO.SALE_IDX
+        where S.ACC_IDX = #{param2 } and S.ISDEL = 0
+        ORDER BY so.idx DESC
+      ) R
+      WHERE R.R BETWEEN #{param1.startNo } AND #{param1.endNo }
 	</select>
 	
 	<insert id="insert" parameterType="cocoFarm.dto.SaleOption">

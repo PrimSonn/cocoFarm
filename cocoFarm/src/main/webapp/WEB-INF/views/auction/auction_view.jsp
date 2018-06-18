@@ -50,10 +50,6 @@ var openWin;
 //             openWin.document.getElementById("cInput").value;
         	}
         }
-        
-
-
-
 // <!-- textarea 자동 크기 조절 -->
 function resize(obj){
 	obj.style.height = "1px";
@@ -135,21 +131,12 @@ $('.open_icon').on('click', function(){
 });
 
 });
-
-	
-	
-	
 </script>
-
-
 </head>
 <body>
 
 <!--detail부분 header ver2부분  -->
 <jsp:include page="/WEB-INF/views/tile/head/detailhead.jsp" flush="false"/>
-
-
-
 	<div class="container">
 		<div class="nav_map">
 			<span><strong><a href="">메인</a></strong></span><span>></span><span><a
@@ -167,7 +154,6 @@ $('.open_icon').on('click', function(){
 						<div class="price_info">
 							<dl>
 								<dt>경매 시작가</dt>
-								
 								<dd>
 									<p class="price_tem"><fmt:formatNumber type="number" value="${view.start_price }"/></p>
 									원
@@ -203,25 +189,17 @@ $('.open_icon').on('click', function(){
 									</dd>
 								</dl>
 							</div>
-							
-
 						</div>
 					</dd>
 				</dl>
-
-
 				<button class="buy_button" id="bid_btn" style="cursor: pointer; margin-left: 100px;" onclick="openChild()">
 					<span>입찰하기</span>
 				</button>
 			</div>
-			
 		</div>
 			<div class="bidderList" style="margin:auto; ">
-			
-			
 			<h1 style="font-size: 15px; font-weight: bold; margin-left: 50px;">상위 입찰 목록</h1>
 			<h1 style="margin-left: 50px;">(상위 입찰은 5명까지 표시됩니다.)</h1><br>
-			
 			<table style="line-height:1.8; 2px solid #e7e7e7; width:1000px; margin:auto; text-align: center; margin-bottom: 40px; border-collapse: collapse;">
 			<thead style="background: #e7e7e7;">
 				<tr>
@@ -248,10 +226,8 @@ $('.open_icon').on('click', function(){
 			</tbody>
 			</table>
 			</div>
-		
 		<div class="item_info">
 		<a>상품 문의
-		
 		<span class='open_icon' style="cursor: pointer;">열기</span></a>
 		<!-- 		문의하기 -->
 		<div >
@@ -289,7 +265,6 @@ $('.open_icon').on('click', function(){
 <td></td>
 <td><img alt="화살표" src="/auction_img/arrow.png" style="width: 30px; height: 30px; vertical-align: middle; padding-left: 30px;"></td>
 <td colspan="2" align="left" style="line-height: 1.8; height: 55px;">
-
 <c:choose>
 	<c:when test="${empty inquireList.answer }">
 <!-- 답글이 비어있을 때 보임 -->
@@ -314,17 +289,13 @@ $('.open_icon').on('click', function(){
 	<c:otherwise> <span class="notanswer" style="padding-left: 20px;"> 아직 답변이 등록되지 않았습니다.</span></c:otherwise>
 			</c:choose>
 			</c:when>
-
-			
-	<c:when test="${!empty inquireList.answer }">
-	<span class="answer" style="padding-left: 20px;">
-	<!-- 답글이 있으면 답글보이는곳 -->
-	${inquireList.answer }
-	</span>
-	</c:when>
-			
-		</c:choose>
-
+		<c:when test="${!empty inquireList.answer }">
+		<span class="answer" style="padding-left: 20px;">
+		<!-- 답글이 있으면 답글보이는곳 -->
+		${inquireList.answer }
+		</span>
+		</c:when>
+	</c:choose>
 	
 </td>
 </tr>
@@ -332,57 +303,52 @@ $('.open_icon').on('click', function(){
 </tbody>
 </table>	<!-- 댓글 리스트 end -->
 </c:if>
-			</div>
-		</div>
-		
-		
-		</div>
-
-		<div class="item_info">
-		<a>판매자 정보
-		
-		<span class='open_icon' style="cursor: pointer;">열기</span>
+</div>
+</div>
+</div>
+<div class="item_info">
+	<a>판매자 정보
 	
+	<span class='open_icon' style="cursor: pointer;">열기</span>
+
+	</a>
+	<table class='tbl_spec'>
+	<tbody>
+		<tr>
+			<th>사업자 법인명</th>
+			<td></td>
+		</tr>
+		<tr>
+			<th>대표자 이름</th>
+			<td></td>
+		</tr>
+		<tr>
+			<th>사업자 주소</th>
+			<td></td>
+		</tr>
+		<tr>
+			<th>사업자 전화번호</th>
+			<td>070-0000-0000</td>
+		</tr>
+		<tr>
+			<th>이메일 주소</th>
+			<td>dlfj@naver.com</td>
+		</tr>
+	</tbody>
+	</table>
+</div>
+
+<div class="item_info">
+		<a>상품 상세설명 <span class='open_icon' style="cursor: pointer;">열기</span>
+
 		</a>
-		<table class='tbl_spec'>
-		<tbody>
-			<tr>
-				<th>사업자 법인명</th>
-				<td></td>
-			</tr>
-			<tr>
-				<th>대표자 이름</th>
-				<td></td>
-			</tr>
-			<tr>
-				<th>사업자 주소</th>
-				<td></td>
-			</tr>
-			<tr>
-				<th>사업자 전화번호</th>
-				<td>070-0000-0000</td>
-			</tr>
-			<tr>
-				<th>이메일 주소</th>
-				<td>dlfj@naver.com</td>
-			</tr>
-		</tbody>
-		</table>
-	</div>
-
-	<div class="item_info">
-			<a>상품 상세설명 <span class='open_icon' style="cursor: pointer;">열기</span>
-
-			</a>
-		<div style="padding-left: 20px;">
-			<span > 
-			
-				${view.content } </span>
-		</div>
-	</div>
-		<br>
+	<div style="padding-left: 20px;">
+		<span > 
 		
-
+			${view.content } </span>
 	</div>
+</div>
+<br>
+</div>
 </body>
 </html>

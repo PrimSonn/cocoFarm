@@ -343,65 +343,53 @@ function popupOpen2(){
 					<img src="/img/main/detail_banner01.jpg" width="100%">
 					<div class="price_info">
 						<div class="border_tbbox">
-							<dl>
-									
-									<dt>배송방법</dt>
-									<dd><p>택배</p></dd>
-									<dt>배송비결제</dt>
-									<dd><p>주문시 결제</p></dd>
-									<dt>배송비</dt>
-									<dd><p>0원</p>(50,000원 이상 구매 시 무료 / 제주,도서지역 추가 4,000원)</dd>
+							<dl>	
+								<dt>배송방법</dt>
+								<dd><p>택배</p></dd>
+								<dt>배송비결제</dt>
+								<dd><p>주문시 결제</p></dd>
+								<dt>배송비</dt>
+								<dd><p>0원</p>(50,000원 이상 구매 시 무료 / 제주,도서지역 추가 4,000원)</dd>
 							</dl>
 						</div>
 						<div class="border_tbbox">
 							<dl>
-									<dt>원산지</dt>
-									<dd><p>${product.origin}</p></dd>
+								<dt>원산지</dt>
+								<dd><p>${product.origin}</p></dd>
 							</dl>
 						</div>
 						
 						<div class="border_tbbox">
 							<dl>
-							
-									<dt style="line-height: 30px;">옵션</dt>
-									<dd style="height: 40px;">
-									
-									<select class="proselect_option" name="proselect_option">
-									<option value="0" SELECTED>옵션선택</option>   
-		       						<c:forEach items="${option}" var="data" varStatus="status">
-		       						<option class="on" value="${status.count}">${data.optionName } &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.price}원</option>
-		       						</c:forEach></select></dd>	  
-		        		
-		        	
+								<dt style="line-height: 30px;">옵션</dt>
+								<dd style="height: 40px;">
+								
+								<select class="proselect_option" name="proselect_option">
+								<option value="0" SELECTED>옵션선택</option>   
+	       						<c:forEach items="${option}" var="data" varStatus="status">
+	       						<option class="on" value="${status.count}">${data.optionName } &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.price}원</option>
+	       						</c:forEach></select></dd> 
 							</dl>
 						</div>
-			
 					</div>
 				</dd>
 			</dl>
 			
-			
 			<form class="option_form" method="post">
 				<div id="detail_option">
-					
 				</div>
 			</form>
 			
 			<div class="sum_price">
 				<strong>총 상품금액</strong>
-	
 				<div class="left_price"><p>총 수량 1개</p><fmt:formatNumber value="${sumvar}" pattern="#,###"/><em>0</em><span>원</span>
 			</div>
-			
 			<button class="buy_button"><img src="/img/main/buy_icon.png" width="20px;"><span>구매하기</span></button>
 			<button class="addcart_button">장바구니 담기</button>
 			<button class="talk_button" onclick="popupOpen2();">판매자에게 쪽지</button>
 			</div>
-		
 		</div>
-	
 	</div>
-	
 	<div class="item_info">
 		<a>상품 후기
 			<span class="open_comment" id="open_comment">열기</span>
@@ -448,10 +436,7 @@ function popupOpen2(){
 				<span class="img_kakaofarmer ico_arr"></span></a>
 		</div>
 		</div>
-		
-		
 	</div>
-	
 	<div class="item_info">
 		<a>상품 고시 정보
 			<span class="open_icon">열기</span>
@@ -527,9 +512,5 @@ function popupOpen2(){
 </div>
 <!--main부분 foot ver1부분  -->
 <jsp:include page="/WEB-INF/views/tile/footer/mainfoot.jsp" flush="false"/>
-		
-
-
 </body>
-
 </html>

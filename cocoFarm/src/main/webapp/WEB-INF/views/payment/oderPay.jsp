@@ -193,6 +193,17 @@ function requestPayment() {
 	/*수령장소  */
 	var mem_deliver=$(".mem_deliver").val();
 	
+	/*주소  */
+	var postcodify_address=$(".postcodify_address").val();
+	
+	var postcodify_details=$(".postcodify_details").val();
+	/*우편주소  */
+	var area=$(".postcodify_postcode5").val();
+
+	var phone_a=$(".phone_a").val();
+	var phone_b=$(".phone_b").val();
+	var phone_c=$(".phone_c").val();
+	
 	console.log(optionlist);
 	JSON.stringify(optionlist);
 	var dff=JSON.stringify(optionlist);
@@ -231,10 +242,10 @@ function requestPayment() {
 				name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 				amount : ${allsum}, //결제금액 - 필수항목
 				buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-				buyer_name : '${sessionScope.name}', //주문자명 - 선택항목
-				buyer_tel : '010-1234-5678', //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
-				buyer_addr : '서울특별시 강남구 삼성동', //주문자주소 - 선택항목
-				buyer_postcode : '123-456', //주문자우편번호 - 선택항목
+				buyer_name : ${account.name}, //주문자명 - 선택항목
+				buyer_tel : phone_a+phone_b+phone_c, //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
+				buyer_addr :postcodify_address+postcodify_details, //주문자주소 - 선택항목
+				buyer_postcode :area, //주문자우편번호 - 선택항목
 				m_redirect_url : 'https://www.yourdomain.com/payments/complete' //모바일결제후 이동페이지 - 선택항목, 모바일에서만 동작
 			}, function(rsp) { // callback - 결제 이후 호출됨, 이곳에서 DB에 저장하는 로직을 작성한다
 					if ( rsp.success ) { // 결제 성공 로직
@@ -369,12 +380,9 @@ $(function() {
 					</tr>
 				</thead>
 				<tbody>
-					
-				<c:forEach items="${pro}" var="pro_dasta" varStatus="status1">					
-					<tr>
 				
-				 
-				 
+				<c:forEach items="${pro}" var="pro_data" varStatus="status1">					
+					<tr>
 						<td class="product_info">
 							<a href="" >
 							<img src="/proimg/${pro_data.faceImg}" style="width: 92px">
@@ -401,8 +409,6 @@ $(function() {
 								</div>
 							</div>
 						</td>
-						
-						
 						<td>
 						<a class="who_parmer" href="">${pro_data.name}</a>
 						</td>
@@ -432,24 +438,21 @@ $(function() {
 					<span class="reap">
 					배송지선택
 					</span>
-					<input type="radio"  class="radio_r1" name="deliver_radio" value="1"/><label for="r1">신규배송지</label>
-					<input type="radio"  class="radio_r1" name="deliver_radio" value="2" checked="checked"/><label for="r2">김환민</label>
+					<input type="radio"  class="radio_r1" name="deliver_radio" value="1"/><label for="r1">신규 배송지</label>
+					<input type="radio"  class="radio_r1" name="deliver_radio" value="2" checked="checked"/><label for="r2">${account.name}</label>
 				</div>
 				<div class="delive_reci new_reci">
 					<span class="reap ">
 					수령인
 					</span>
 					<input type="text" class="mem_name" value="" placeholder="수령인을 입력해주세요."> 
-				
 				</div>
 				<div class="delive_reci">
 					<span class="reap">
 					배송지명
 					</span>
 					<input type="text" class="mem_deliver" value="" placeholder="배송지명을 입력해주세요"> 
-				
 				</div>
-				
 				<div class="delive_reci">
 					<div class="cellphone_group">
 					<span class="reap">
@@ -477,25 +480,18 @@ $(function() {
 					배송 메모
 					</span>
 					<input type="text" class="deliver_memo" value="" placeholder="필요한 배송 사항 메모" > 
-				
 				</div>	
 				<p class="extra_info">
 				<span class="ico_ext"></span><strong>2016년 8월 1일부터는 5자리 우편번호 사용이 의무화</strong>됩니다.
 				<br>도로명주소+5자리 우편번호로 등록하셔서 코코팜 이용에 불편함이 없도록 하시길 바랍니다.</p>
             	<p class="extra_info">
 				<span class="ico_ext"></span>도서산간 지역의 경우 추후 수령 시 추가 배송비가 과금될 수 있습니다.</p>
-				
-			
 			</div>
-			
-			
 			<div class="price_sum">
-			
 				<h1>결제 금액</h1>
 				<div class="price_group">
 				<span class="price_sum_num"></span><p class="unit">원</p>
 				</div>
-				
 				<ul class="price_list">
 					<li><strong>총 상품금액</strong><p>(+)<em class="sum_total"></em>원</p></li>
 					<li><strong>배송비</strong><p>(+) <em>0</em>원</p></li>
@@ -504,9 +500,7 @@ $(function() {
 			<!-- <button id="pay11" name="pay11">통신하기</button> -->
 			</div>
 		</div>
-	
 	</div>
-	
 </div>
 </body>
 </html>

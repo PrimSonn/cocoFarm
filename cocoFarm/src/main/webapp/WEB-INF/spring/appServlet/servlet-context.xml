@@ -38,6 +38,16 @@
 			<exclude-mapping path="/login/login.do"/>
 			<beans:bean class="cocoFarm.interceptor.loginInterceptor" />
 		</interceptor>
+		<interceptor>
+			<mapping path="/auction/**" />
+			<exclude-mapping path="/auction/auction_list.do"/>
+			<beans:bean class="cocoFarm.interceptor.loginInterceptor" />
+		</interceptor>
+		<interceptor>
+			<mapping path="/auction/auction_register.do" />
+			<exclude-mapping path="/main/cocomain.do"/>
+			<beans:bean class="cocoFarm.interceptor.typeInterceptor" />
+		</interceptor>
 	</interceptors>
 	
 <!-- 	<beans:bean id='download' class='board.view.DownloadView' /> --><!-- 나중에 다운로드 클래스 만들면 'class'에 추가 -->

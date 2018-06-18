@@ -13,7 +13,7 @@ public class TestRunner implements Runnable{
 		while (i<5) {
 			try {
 				wait(5000L);
-				System.out.println(new SimpleDateFormat("YYYY/MM/dd HH:mm:ss").format(new Date().getTime()));
+//				System.out.println(new SimpleDateFormat("YYYY/MM/dd HH:mm:ss").format(new Date().getTime()));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

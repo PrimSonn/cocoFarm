@@ -32,7 +32,6 @@ public class Auction_ServiceImpl implements Auction_Service {
 		if(file != null && !file.isEmpty()) {
 			// 파일 업로드
 			String path = context.getRealPath("/resources/img/auction_img");
-			System.out.println(path);
 			String filename = UUID.randomUUID().toString().split("-")[0]+"_"+file.getOriginalFilename();
 			File dest = new File(path, filename);
 
@@ -47,14 +46,6 @@ public class Auction_ServiceImpl implements Auction_Service {
 			// DB 기록
 			auction.setItem_img(filename);
 			auctionDao.write(auction);
-			System.out.println(dest);
-//			
-//			BoardFile boardFile = new BoardFile();
-//			boardFile.setBoardno(board.getBoardno());
-//			boardFile.setOriginal_filename(file.getOriginalFilename());
-//			boardFile.setStored_filename(filename);
-//			
-//			boardDao.insertFile(boardFile);
 		}
 	}
 
@@ -180,6 +171,11 @@ public class Auction_ServiceImpl implements Auction_Service {
 		@Override
 		public List getReceiptPagingList(Admin_Auction_Paging paging) {
 			return auctionDao.admingetReceiptPagingList(paging);
+		}
+
+		@Override
+		public List getauctionReceipt(Account account) {
+			return auctionDao.getauctionReceipt(account);
 		}
 
 }

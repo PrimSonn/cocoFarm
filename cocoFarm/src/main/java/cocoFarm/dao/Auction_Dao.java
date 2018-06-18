@@ -200,5 +200,14 @@ public interface Auction_Dao {
 		 * @return - 페이지별 게시물
 		 */
 		public List admingetReceiptPagingList(Admin_Auction_Paging paging);
+		
+		
+		/**
+		 * 개인 경매 결제 리스트
+		 * 
+		 * @param account - 로그인 idx
+		 * @return - 개인 경매 결제 리스트
+		 */
+		public List getauctionReceipt(Account account);
 	
 }

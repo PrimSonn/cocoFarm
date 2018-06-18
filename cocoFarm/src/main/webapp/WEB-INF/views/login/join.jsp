@@ -183,11 +183,11 @@
 				</div>
 				<div class="form-group">
 					<label for="pw" class="control-label col-xs-2">비밀번호 : </label>
-					<div class="col-xs-8"><input type="text" id="pw" name="pw" placeholder="비밀번호 입력" class="form-control"/></div>
+					<div class="col-xs-8"><input type="password" id="pw" name="pw" placeholder="비밀번호 입력" class="form-control"/></div>
 				</div>
 				<div class="form-group">
 					<label for="pwCheck" class="control-label col-xs-2">비밀번호 확인 : </label>
-					<div class="col-xs-8"><input type="text" id="pwCheck" name="pwCheck" placeholder="비밀번호 확인" class="form-control"/></div>
+					<div class="col-xs-8"><input type="password" id="pwCheck" name="pwCheck" placeholder="비밀번호 확인" class="form-control"/></div>
 				</div>
 				<div class="form-group">
 					<label for="name" class="control-label col-xs-2">이름 : </label>

@@ -16,7 +16,25 @@
 
 
 <script type="text/javascript">
+$(document).ready(function() {	
+$(".mypage_navbody").on("click", ".nav-link", function() {
+	var page = $(this).children().attr("href");
+	console.log(page);
+	
+	$(".mypage_page01").load(page);
+	
+	return false;
+});
 
+$(".mail_box").on("click", ".nav-link", function() {
+	var page = $(this).attr("href");
+	console.log(page);
+	
+	$(".mypage_page01").load(page);
+	
+	return false;
+});
+});
 </script>
 
 
@@ -58,7 +76,9 @@
 					
 					
 					<tbody>
-					
+						<c:if test="${empty list }">
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"> 거래 품목이 존재하지 않습니다. </td>
+						</c:if>
 						<c:forEach items="${list}" var="auctionReceiptList" varStatus="status">
 						<tr>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;">${status.count}</td>
@@ -70,7 +90,7 @@
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="red" style="font-weight: bold;">미입금</font></td>
 							</c:if>
 							<c:if test="${auctionReceiptList.state_code == 1}">
-							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="blue" style="font-weight: bold;">거래 완료</font></td>
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="blue" style="font-weight: bold;">결제 완료</font></td>
 							</c:if>
 							<c:if test="${auctionReceiptList.state_code == 2}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="orange" style="font-weight: bold;">임시 대기중(취소)</font></td>

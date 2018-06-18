@@ -128,8 +128,6 @@ $(document).ready(function () {
 	
 	<button id="btnNo">거절</button>
 	
-	<button><a href="javascript:history.back()">돌아가기</a></button>
-
 </div>
 
 </body>

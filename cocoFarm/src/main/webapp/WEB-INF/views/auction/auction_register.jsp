@@ -16,10 +16,7 @@
 <script type="text/javascript"
  src="/resources/smarteditor/js/service/HuskyEZCreator.js"></script>
 
-
 <script type="text/javascript">
-
-
 
 $(document).ready(function() {
 	/*페이지 로드  */
@@ -41,8 +38,6 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	
-
 	/* 글자수 제한  */
 	var textCountLimit = 15;
 	var textCountLimit2=40;
@@ -60,8 +55,6 @@ $(document).ready(function() {
     });
 });
 
-
-
 $(document).ready(function() {
 	//페이지 첫 진입 시 제목란에 포커스
 	$("#title").focus();
@@ -74,8 +67,6 @@ $(document).ready(function() {
 		}
 	});
 });
-
-
 
 /*숫자 입력 금액 한글로 변환 스크립트*/
  function fn_change_hangul_money(txt_id)
@@ -99,14 +90,10 @@ $(document).ready(function() {
 			//입력받은 값이 숫자인지 판별
             if(isNaN(num_value) == true)
                   return;
-
- 
-
+			
             var han_value = "";
             var man_count = 0;      // 만단위 0이 아닌 금액 카운트.
-
- 
-
+            
             for(i=0; i < num_value.length; i++)
             {
                   // 1단위의 문자로 표시.. (0은 제외)
@@ -145,14 +132,7 @@ $(document).ready(function() {
          elClickedObj.form.submit();
      } catch(e) {}
  }
-
-
-
-
-
 </script>
-
-
 </head>
 <body>
 <div id="mypageheader">
@@ -215,8 +195,6 @@ $(document).ready(function() {
 							</div>
 							</td>
 						</tr>
-						
-						
 						
 						</table>
 						
