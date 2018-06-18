@@ -67,9 +67,11 @@ a#MOVE_TOP_BTN {
     z-index: 999;
 }
 .slide_img {
- 	width: 100%; 
-	height: 560px;
+ 	width:  100%; 
+	height:550px;
+	background-size: 1920px 1500px;
 	position: absolute;
+	background-position:center -370px;}
 }
 </style>
 
@@ -78,9 +80,9 @@ a#MOVE_TOP_BTN {
 <div id="header">
 <div id="slider" style="overflow: hidden; margin: 0 auto;">
 <img alt="배경" src="/img/backgroundimg/mainbackground_01.jpg" class="slide_img" >
-<img alt="배경" src="/img/backgroundimg/bono1.jpg" class="slide_img" >
-<img alt="배경" src="/img/backgroundimg/bono2.jpg" class="slide_img" >
-<img alt="배경" src="/img/backgroundimg/images.jpg" class="slide_img" >
+<img alt="배경" src="/img/backgroundimg/minjo1.jpg" class="slide_img" >
+<img alt="배경" src="/img/backgroundimg/minjo2.jpg" class="slide_img" >
+<!-- <img alt="배경" src="/img/backgroundimg/minjo3.jpg" class="slide_img" > -->
 </div>
 	<div id="header_top">
 	<div class="container">
