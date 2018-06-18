@@ -67,7 +67,14 @@
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionList.start_price }"/> 원</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatNumber type="number" value="${auctionList.highest_bid }"/> 원<br>(+<fmt:formatNumber type="number" value="${auctionList.highest_bid - auctionList.start_price}"/> 원)</td>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionList.reg_time }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionList.reg_time }" pattern="aa HH:mm"/></td>							
+							<c:choose>
+							<c:when test="${auctionList.state_code == 9}">
+							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"></td>							
+							</c:when>
+							<c:otherwise>
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><fmt:formatDate value="${auctionList.time_window }" pattern="yyyy-MM-dd"/><br><fmt:formatDate value="${auctionList.time_window }" pattern="aa HH:mm"/></td>							
+							</c:otherwise>
+							</c:choose>
 							<c:if test="${auctionList.state_code == 1}">
 							<td style="padding: 1px; border:1px solid; text-align: center; border-color: #9e9e9e;"><font color="black" style="font-weight: bold;">진행중</font></td>
 							</c:if>

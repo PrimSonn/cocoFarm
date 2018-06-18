@@ -15,6 +15,8 @@
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
+
+
     function call_postcode() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -58,6 +60,11 @@
     }
     
     $(document).ready(function() {
+    	$('#phone').keyup(function () { 
+    	    this.value = this.value.replace(/[^0-9]/g,'');
+    	});
+    	
+    	
     	$("#idCheckBtn").click(function() {
     		if( !$("#id").val() ) {
     			alert("아이디를 입력해주세요");
@@ -192,7 +199,7 @@
 				</div>
 				<div class="form-group">
 					<label for="phone" class="control-label col-xs-2">전화번호 : </label>
-					<div class="col-xs-8"><input type="text" id="phone" name="phone" placeholder="전화번호 입력" class="form-control"/></div>
+					<div class="col-xs-8"><input type="text" id="phone" name="phone" placeholder="'-'를 제외한 전화번호 입력" class="form-control"/></div>
 				</div>
 				<div class="form-group">
 					<label for="postnum" class="control-label col-xs-2">주소 : </label>
