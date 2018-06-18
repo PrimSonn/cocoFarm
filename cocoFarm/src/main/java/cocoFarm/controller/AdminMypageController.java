@@ -58,7 +58,7 @@ public class AdminMypageController {
 		
 	}
 	
-	@RequestMapping(value="/mypage/licenseView.do", method=RequestMethod.POST)
+	@RequestMapping(value="/mypage/licenseView.do", method=RequestMethod.GET)
 	public void licenseView(LicenseDto license, Model model) {
 		
 		model.addAttribute("licenseView", adminMypageService.licenseView(license));
@@ -73,7 +73,7 @@ public class AdminMypageController {
 		adminMypageService.licenseOk(acc_idx);
 		adminMypageService.licenseOkMsg(acc_idx);
 		
-		return "redirect:/mypage/licenseList.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/licenseNo.do", method=RequestMethod.POST)
@@ -83,7 +83,7 @@ public class AdminMypageController {
 		
 		adminMypageService.licenseNoMsg(acc_idx);
 		
-		return "redirect:/mypage/licenseList.do";
+		return "redirect:/mypageIntro.do";
 	}
 	
 	@RequestMapping(value="/mypage/selectPayAll.do", method=RequestMethod.GET)

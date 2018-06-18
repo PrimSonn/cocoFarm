@@ -12,18 +12,21 @@
 
 function licenseView(idx) {
 	
-	var $form = $("<form>").attr({
-		method:"post"
-		, action:"/mypage/licenseView.do"
-	});
-	var $input = $("<input>").attr({
-		type:"hidden"
-		, name:"idx"
-		, value:idx
-	});
-	$form.append( $input ).appendTo( $(document.body) );
+	var page = "/mypage/licenseView.do?idx="+idx;
+	$(".mypage_page01").load(page);
+
+// 	var $form = $("<form>").attr({
+// 		method:"post"
+// 		, action:"/mypage/licenseView.do"
+// 	});
+// 	var $input = $("<input>").attr({
+// 		type:"hidden"
+// 		, name:"idx"
+// 		, value:idx
+// 	});
+// 	$form.append( $input ).appendTo( $(document.body) );
 	
-	$form.submit();
+// 	$form.submit();
 	
 }
 

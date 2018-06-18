@@ -14,11 +14,7 @@ $(document).ready(function(){
 			$("#alarm").after("<span>"+data.alarmCnt+"</span>");
 		},
 	   error : function(e) {
-<<<<<<< HEAD
 // 		   alert("실패"); 
-=======
-		   //alert("실패"); 
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 	   }
 	});
 	</c:if>
@@ -35,7 +31,36 @@ function submit() {
 }
 
 
+$(function() {
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 500) {
+            $('#MOVE_TOP_BTN').fadeIn();
+        } else {
+            $('#MOVE_TOP_BTN').fadeOut();
+        }
+    });
+    
+    $("#MOVE_TOP_BTN").click(function() {
+        $('html, body').animate({
+            scrollTop : 0
+        }, 400);
+        return false;
+    });
+});
 </script>
+
+<style type="text/css">
+a#MOVE_TOP_BTN {
+    position: fixed;
+    right: 5%;
+    bottom: 500px;
+    display: none;
+    z-index: 999;
+}
+</style>
+
+<div id="TOP_BTN_BOX"><a id="MOVE_TOP_BTN" href="#">TOP</a></div>
+
 <div id="header_top">
 	<div class="container">
 		<ul class="rigth_list">
@@ -71,18 +96,14 @@ function submit() {
 			<li><a href="/login/login.do">로그인</a></li>
 			<li><a href="/login/join.do">회원가입</a></li>
 			</c:if>
-<<<<<<< HEAD
-			<li><a href="" id="alarm">알림</a></li>	
-=======
-			<c:if test="${sessionScope.idx ne null }">
+	<c:if test="${sessionScope.idx ne null }">
 			<li><a href="/mypage/message.do" id="alarm">알림</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx ne null }">
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 			<li><a href="/mypageIntro.do">마이페이지</a></li>	
 			</c:if>
 			<c:if test="${sessionScope.idx eq null }">
-			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;"">마이페이지</a></li>	
+			<li><a style="cursor:pointer" onclick="javascript:alert('로그인이 필요합니다.');return false;">마이페이지</a></li>	
 			</c:if>
 		</ul>
 	</div>

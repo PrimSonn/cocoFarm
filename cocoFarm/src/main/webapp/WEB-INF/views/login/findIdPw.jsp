@@ -40,8 +40,11 @@ $(document).ready(function(){
     			, dataType:"json"
     			, success:function(res) {
     				console.log("ajax 성공");
-    				
-    				alert("회원님의 아이디는 : "+res.result+" 입니다.");
+    				if(){
+	    				alert("회원님의 아이디가 존재하지 않습니다.");
+    				} else {
+	    				alert("회원님의 아이디는 : "+res.result+" 입니다.");
+    				}
     			}
     			, error:function() {
     				console.log("ajax 실패");

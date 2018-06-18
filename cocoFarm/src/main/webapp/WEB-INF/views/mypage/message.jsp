@@ -49,10 +49,7 @@ $(document).ready(function() {
 });
 
 </script>
-<<<<<<< HEAD
 
-=======
->>>>>>> 7e113e02bb422ef4dc41862f4d17f236ad8e731b
 </head>
 <body>
 
