@@ -98,8 +98,6 @@ public class ProductController {
 		int idx = (int)session.getAttribute("idx");
 		Account account = loginService.selectAll(idx);
 		model.addAttribute("account", account);
-				
-		
 		
 		return "mypage/seller/productInsert";
 	}
@@ -201,36 +199,6 @@ public class ProductController {
 		product.setFaceImg(destAr[0]);
 		product.setMainImg(destAr[1]);
 		
-		/*
-		// 이미지를 새로 등록
-		List<MultipartFile> list = f.getUpload();
-		
-		// 파일이 저장될 이름
-		String stored1 = "0" + list.get(0).getOriginalFilename() + "_" + uID;
-		String stored2 = "1" + list.get(1).getOriginalFilename() + "_" + uID;
-		
-		File dest1 = new File(realpath, stored1);
-		File dest2 = new File(realpath, stored2);
-		
-		// 실제 파일 업로드
-		try {
-			list.get(0).transferTo(dest1);
-			list.get(1).transferTo(dest2);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		product.setFaceImg(stored1);
-		product.setMainImg(stored2);
-		*/
-		
-		// 대표이미지, 상세설명이미지가 하나라도 등록되면 실행
-//		if(list.get(0).getOriginalFilename().length()!=0
-//				|| list.get(1).getOriginalFilename().length()!=0) {
-//		}
-		
 		productService.update(product);
 		
 		// 쿼리스트링을 통해 받은 idx (Product) ( = saleIdx (SaleOption) )
@@ -292,7 +260,6 @@ public class ProductController {
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
-		logger.info("/product/cart.do POST !!!");
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
 		
@@ -317,8 +284,6 @@ public class ProductController {
 		Gson gson = new Gson();
 		List list = gson.fromJson(cart, List.class);
 
-		System.out.println(list.get(0));
-		
 		Cart c = new Cart();
 		for(int i=0; i<list.size(); i++) {
 			Map<String, Integer> map = (Map) list.get(i);

@@ -82,7 +82,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/login/join.do", method=RequestMethod.POST)
 	public String joinProc(Account account){
-		System.out.println(account);
+
 		loginService.join(account);
 		
 		return "redirect:/main/cocomain.do"; 
@@ -112,7 +112,6 @@ public class LoginController {
 
 		account.setIdx(idx);
 		
-		System.out.println(account);
 		loginService.updateAccount(account);
 		
 		return "redirect:/mypageIntro.do";
@@ -155,15 +154,12 @@ public class LoginController {
 	@RequestMapping(value="/mypage/deleteAccProc.do", method=RequestMethod.POST)
 	public @ResponseBody Map<Object,Object> deleteAccProc(Account account, HttpSession session) {
 		
-		System.out.println(account.toString());
 		int count;
 		boolean check;
 		count = loginService.checkPw(account);
-		System.out.println(count);
 		Map<Object,Object> map = new HashMap<Object, Object>();
 		
 		if( count == 1 ) {
-			System.out.println(account);
 			loginService.deleteAcc(account);
 			session.invalidate();
 			check = true;

@@ -62,7 +62,6 @@ public class Auction_Controller {
 			return "auction/auction_register";
 		}
 		auctionService.write(auction);
-		System.out.println(auction);
 		
 		return "redirect:/auction/auction_list.do";
 	}
@@ -71,7 +70,6 @@ public class Auction_Controller {
 	@RequestMapping(value="/auction/auction_auctionCheck.do", method=RequestMethod.GET)
 	public void auctionCheck(Auction auction, HttpSession session, Model model) {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
-		System.out.println(auctionService.getauctionList(auction));
 		model.addAttribute("auctionList", auctionService.getauctionList(auction));
 	}
 	
@@ -81,7 +79,6 @@ public class Auction_Controller {
 		auction.setWritter_idx((Integer) session.getAttribute("idx"));
 		
 		auctionService.auctionCancel(auction);
-		System.out.println(auction);
 		
 		return "redirect:/auction/auction_auctionCheck.do";
 	}
@@ -169,10 +166,6 @@ public class Auction_Controller {
 				model.addAttribute("bidderList",auctionService.getBidderList(viewAuction));
 				model.addAttribute("inquireList",auctionService.getInquireList(viewAuction));
 				
-				
-//				System.out.println(viewAuction);
-//				System.out.println(auctionInquire);
-//				System.out.println(auctionService.getInquireList(viewAuction));
 				return "auction/auction_view";
 	}
 	
@@ -180,7 +173,6 @@ public class Auction_Controller {
 	@RequestMapping(value="/auction/auction_inquire.do", method=RequestMethod.POST)
 	public String insertInquire(Auction_Inquire inquire) {
 		
-//		System.out.println(inquire);
 		auctionService.insertInquire(inquire);
 		return "redirect:/auction/auction_view.do?idx="+inquire.getAuction_idx();
 	}
@@ -188,7 +180,6 @@ public class Auction_Controller {
 	@RequestMapping(value="/auction/auction_answer.do", method=RequestMethod.POST)
 	public String insertAnswer(Auction_Inquire inquire) {
 		
-//		System.out.println(inquire);
 		auctionService.updateAnswer(inquire);
 		
 		return "redirect:/auction/auction_view.do?idx="+inquire.getAuction_idx();
@@ -202,8 +193,6 @@ public class Auction_Controller {
 	@RequestMapping(value="/auction/auctionBid.do", method=RequestMethod.POST)
 	public String auctionBid(Auction auction,Model model, BidDto bid, HttpSession session) {
 		bid.setBidder_idx((Integer) session.getAttribute("idx"));
-//		System.out.println(bid);
-//		System.out.println(auction);
 		auctionService.putBid(bid);
 		
 		if(bid.getAmount()==null) {
@@ -237,7 +226,6 @@ public class Auction_Controller {
 	
 	@RequestMapping(value="/auction/bidPopup.do", method=RequestMethod.GET)
 	public void bidPopup(Auction auction, Model model) { 
-//		System.out.println(auction);
 		model.addAttribute("bid", auction);
 		}
 	
@@ -249,7 +237,6 @@ public class Auction_Controller {
 	public String bidCheck(HttpSession session, Account account, BidDto bid, Model model) {
 		session.getAttribute("idx");
 		account.setIdx((Integer)session.getAttribute("idx"));
-//		System.out.println(account);
 		model.addAttribute("memberBidList",auctionService.getMemberBid(account));
 		
 		//2018년 06월 15일 작업
@@ -277,7 +264,6 @@ public class Auction_Controller {
 		bid.setBidder_idx((Integer) session.getAttribute("idx"));
 		
 		auctionService.cancelBid(bid);
-//		System.out.println(bid);
 		return "redirect:/auction/auction_bidCheck.do";
 	}
 	
@@ -288,7 +274,6 @@ public class Auction_Controller {
 		
 		Gson gson=new Gson();
 		List list = gson.fromJson(auctionData, List.class);
-		System.out.println(bid);
 		
 		RecptCallParamHolder result=null;
 		if(session.getAttribute("idx")!=null) {
@@ -296,17 +281,8 @@ public class Auction_Controller {
 		}else {
 			//return to errpage
 		}
-		if(result!=null) {
-			System.out.println("======== got Result =========");
-			System.out.println("isDone: "+result.getIsDone());
-			System.out.println("MainRcpt: "+result.getArg3());
-		}else {
-			System.out.println("failed!!!!");
-		}
 		
 		return "{\"MainRcpt\":\""+result.getArg3()+"\",\"isDone\":\""+result.getIsDone()+"\"}";
-//		
-//	}
 	}
 	
 }
