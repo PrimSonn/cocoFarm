@@ -51,7 +51,6 @@ public class ProductController {
 		return "main/mainseller/sellermain";
 	}
 	
-	
 	//판매 상세 정보
 	@RequestMapping(value="/seller.do",method=RequestMethod.POST)
 	public String searchviewList(Product product, Model model) {
@@ -59,7 +58,6 @@ public class ProductController {
 		model.addAttribute("seller",(productService.getSerchList(product)));
 		return "main/mainseller/sellermain";
 	}
-	
 	
 	//판매 디테일 뷰
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
@@ -105,7 +103,15 @@ public class ProductController {
 	// 판매 상품 등록
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product, Option opt, FileDto f, HttpSession session) {
-
+		
+		System.out.println(product);
+		
+		System.out.println(opt);
+		for(SaleOption s : opt.getSaleOptions()) {
+			System.out.println(s);
+		}
+		
+		System.out.println("------------------");
 		List<MultipartFile> list = f.getUpload();
 		
 		// 고유 식별자
@@ -307,7 +313,6 @@ public class ProductController {
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment, String sale_idx) {
-		logger.info("viewComment.do POST!!");
 				
 		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
 		Map<String, Object> item = new HashMap<>();
