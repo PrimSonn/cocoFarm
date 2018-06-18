@@ -119,6 +119,7 @@
 		LEFT JOIN MAIN_RECEIPT M ON SE.MAIN_RECPT_IDX = M.IDX
 		LEFT JOIN ACCOUNT A ON M.BUYER_IDX = A.IDX
 		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
+		ORDER BY last_edited DESC
 	</select>
 	
 	<select id="selectProductByReceipt" parameterType="String"
