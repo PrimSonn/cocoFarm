@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import cocoFarm.dto.Product;
 import cocoFarm.service.Auction_Service;
@@ -24,8 +25,13 @@ public class MainController {
 	 *빈 URL -> 메인 
 	 */
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String emptytUrl() {
-		return "main/cocomain";
+	public ModelAndView emptytUrl(ModelAndView mav) {
+		
+		mav.addObject("seller",productService.getProViewMainList());
+		mav.addObject("farm",boardService.getboardMainList());
+		mav.addObject("auction",auctionService.getMainAuctionList());
+		mav.setViewName("main/cocomain");
+		return mav;
 	}
 	
 	//2018 06월 11일 main 넣은것
