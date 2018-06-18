@@ -256,10 +256,14 @@ public class ProductController {
 	}
 	
 	// 장바구니 담기
-	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+	@RequestMapping(value="/product/cartInsert.do", method=RequestMethod.POST)
 	public String insertBasket(Option option
 							, HttpSession session
 							, Model model) {
+		
+		System.out.println(option.equals(null));
+		System.out.println(option.getSaleOptions().equals(null));
+		
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
 		int idx = (int)session.getAttribute("idx");
@@ -291,7 +295,7 @@ public class ProductController {
 			Map<String, Integer> map = (Map) list.get(i);
 //			c.setSaleOptionIdx(map.get("saleOptionIdx"));
 //			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
-//			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
+//			c.setCount( ((Double)map.get("saleOptionIdx")).intValue() );
 			productService.updateCart(map);
 		}
 		List items = productService.selectCart((Integer)session.getAttribute("idx"));
@@ -302,79 +306,51 @@ public class ProductController {
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public List<HashMap<String, Object>> comment(Comment comment, String insertComm) {
-		
-		Gson gson = new Gson();
-		List list = gson.fromJson(insertComm, List.class);
-		
-		if(list.get(0) != null) {
-			for(int i=0; i<list.size(); i++) {
-				Map<String, Object> map = (Map) list.get(i);
-				Comment comm = new Comment();
-				comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
-				comm.setScore(5);
-				comm.setTitle( (String) map.get("title") );
-				comm.setContent( (String) map.get("content") );
+	public List<HashMap<String, Object>> comment(Comment comment, String sale_idx) {
+		logger.info("viewComment.do POST!!");
 				
-				productService.insertComment(comm);
-			}
-		}
-		
 		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
 		Map<String, Object> item = new HashMap<>();
-//		item = productService.getCommentList(comment.getSale_idx());
-//		Comment comm = productService.getCommentList(comment.getSale_idx());
 		
-//		item.put("score", comm.getScore());
-//		item.put("content", comm.getContent());
-//		item.put("accName", comm.getAcc_name());
-		
-//		items.add(item);
 		items = productService.getCommentList(comment.getSale_idx());
 		
 		return items;
 	}
 	
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
-	public void comm() {
-	}
+	public void comm() {	}
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> insertComment(String comment, HttpSession session) {
-//											@RequestBody: 요청 데이터를 그대로 받음
-//											@RequestBody List comment,
-//											Comment comment,
-//		List<Map<String, Object>> resultMap = new ArrayList<Map<String,Object>>();
-//		resultMap = JsonArray.fromObject(comment);
-		
-		Gson gson = new Gson();
-		List list = gson.fromJson(comment, List.class);
-		
-		Map<String, Object> map = (Map<String, Object>) list.get(0);
-		Comment comm = new Comment();
-		comm.setSale_idx( ((Double)map.get("saleIdx")).intValue() );
-		comm.setScore(5);
-		comm.setTitle( (String) map.get("title") );
-		comm.setContent( (String) map.get("content") );
-		
-		productService.insertComment(comm);
+	public boolean insertComment(Comment comment
+								, String title
+								, String insertComm
+								, HttpSession session) {
 
-		map.put("score", comm.getScore());
-		map.put("content", comm.getContent());
+		Gson gson = new Gson();
+		List list = gson.fromJson(insertComm, List.class);
 		
-		return map;
-	}
-	
-	@RequestMapping(value="/product/payNee.do", method=RequestMethod.GET)
-	public String procPaynee(HttpSession session, Model model) {
+		Product product = productService.selectProductByReceipt(title);
 		
-		int accIdx = (int) session.getAttribute("idx");
+		if(list.get(0) != null) {
+			for(int i=0; i<list.size(); i++) {
+				Map<String, String> map = (Map) list.get(i);
+				System.out.println(map.get("main_recpt_idx"));
+				String str = map.get("main_recpt_idx");
+				
+				Comment comm = new Comment();
+				
+				comm.setSale_idx(product.getIdx());
+				comm.setScore(5);
+				comm.setTitle(product.getTitle());
+				comm.setMain_recpt_idx( Integer.parseInt(map.get("main_recpt_idx")) );
+				comm.setContent( (String) map.get("content") );
+				
+				productService.insertComment(comm);
+			}
+		}
 		
-		model.addAttribute("procPaynee", productService.procPayNee(accIdx));
-		
-		return "mypage/common/procPaynee";
-		
+		return true;
 	}
 }

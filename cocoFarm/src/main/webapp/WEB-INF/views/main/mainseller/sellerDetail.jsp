@@ -221,40 +221,22 @@ $(document).ready( function() {
 function viewComment() {
 	var productIdx = ${product.idx };
 	
-	var arr = new Array();
-	var obj = new Object();
-	
-	var cont = $("#commentContent").val();
-	
-	if(cont === "") {
-		arr.push(null);
-	} else {
-		obj.saleIdx = ${product.idx };
-		obj.title = "${product.title }";
-		obj.content = cont;
-		arr.push(obj);
-	}
-	// JSON.stringify(__) - 문자열로 바꾸는 것! string화!
-	console.log("request: " + JSON.stringify(arr));
-	
 	$.ajax({
 		type: "POST"
 			, url: "/product/viewComment.do"
 			, dataType: "json"
 			, data: {
 				sale_idx: productIdx
-				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
-				console.log(data);
 				var result = data;
 				var str = "";
 				$.each(result, function(idx, val) {
-					console.log(idx + ": " + val);
-
+					
+					console.log(idx);
 					str += '<span class="wrap_profile">'
-						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span>'
-						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'
+						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span><br/>'
+// 						+ '<br/><span class="comm_starImg">'+ result[idx].score+'</span>점'
 						+ '<div class="wrap_cont"><span class="txt_prod">${product.title }</span>'
 						+ '<p class="desc_cmt"><span><span class="comm_content">'+ result[idx].content +'</span></span></p>'
 						+ '</div>';
@@ -266,9 +248,17 @@ function viewComment() {
 
 /* 장바구니 버튼 눌렀을 때 */
 function insertCart() {
+	
 	$(".addcart_button").click(function() {
-		$(".option_form").attr("action", "/product/cart.do");
-		$(".option_form").submit();
+		
+		if($(".proselect_option option:selected").val()==0) {
+			  alert("상품 옵션을 선택해주세요.");
+			  return false;
+			} else {
+			
+			$(".option_form").attr("action", "/product/cartInsert.do");
+			$(".option_form").submit();
+		}
 	});
 }
 		
@@ -395,24 +385,13 @@ function popupOpen2(){
 			<span class="open_comment" id="open_comment">열기</span>
 		</a>
 		
-		<div class="comment_cmt">
 		<!-- 상품 후기 등록 -->
-		<div class="form-inline text-cefnter" id="commentList">
-		
-			<input type="text" size="7" class="form-control"
-				id="commentWriter"
-				value="${sessionScope.name }" readonly="readonly"/>
-			<textarea rows="3" cols="60"
-				class="form-control" id="commentContent"></textarea>
-			
-			<button class="insertComm_button"
-						onclick="viewComment();">상품평 등록</button>
-		</div>
+		<div class="comment_cmt">
 		
 		<div class="cont_cmt">
 			<ul class="list_cmt">
 				<li>
-					<div class="cmt_cont" id="comment_items">
+					<div class="cmt_cont" id="comment_items" style="padding-left: 20px;">
 						<span class="wrap_profile">
 <!-- 							<img src="계정이미지" width="32" height="32" class="thumb_g" alt=""> -->
 							<span class="comm_accName">계정 아이디</span>
@@ -432,8 +411,7 @@ function popupOpen2(){
 					</div>
 				</li>
 		
-			</ul><a href="/product/93/review" class="btn_all #review_all"><!-- react-text: 59 -->상품평 전체보기<!-- /react-text -->
-				<span class="img_kakaofarmer ico_arr"></span></a>
+			</ul>
 		</div>
 		</div>
 	</div>

@@ -19,7 +19,14 @@ public class ReceiptDto {
 	private int price;				//단위당 가격
 	private String sale_title;		//경매글 제목
 	
+	private int main_recpt_idx;
 	
+	public int getMain_recpt_idx() {
+		return main_recpt_idx;
+	}
+	public void setMain_recpt_idx(int main_recpt_idx) {
+		this.main_recpt_idx = main_recpt_idx;
+	}
 	public String getIdx() {
 		return idx;
 	}

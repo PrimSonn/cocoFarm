@@ -18,8 +18,93 @@
 <script type="text/javascript">
 /* 장바구니 옵션 변경 버튼 */
 $(".td_update").click(function() {
+<<<<<<< HEAD
+   var arr = [];
+   var obj = {};
+
+   // 판매 상품 idx
+   var saleIdx = $(this).attr('value');
+   
+   // 판매 상품 옵션 idx
+   var cart = "${cart[4].saleOptionIdx }";
+//      console.log(cart);
+
+   // 판매 상품에 해당하는 옵션 idx
+
+   var init;
+   <c:if test="${empty optionCart }">
+      init = 0;
+   </c:if>
+   <c:if test="${!empty optionCart }">
+      init = ${optionCart[0].idx };
+   </c:if>
+   
+   
+   
+   // saleIdx가 동일한 개수만 size 체크
+   // product.idx === optionCart.saleIdx
+   
+   var size = 0;
+   var count = ${optionCart.size() };
+//      for(var i=0; i<count; i++) {
+      if(saleIdx === "${optionCart[0].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[1].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[2].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[3].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[4].saleIdx }" ) {
+         size++;
+      }
+//      }
+   
+//      var size = ${optionCart.size() };
+//      for(var i=init; i<init+size; i++) {
+//            obj.count = $("#amount"+i).val();
+//            arr.push(obj);
+//            console.log(obj.count);
+//            console.log(arr);
+//            obj = {};
+//      }
+   
+   //==========================================================
+      
+      
+   var result = [];
+   
+   <c:forEach items="${cart }" var="cart">
+      var json = {};
+      json.saleOptionIdx = "${cart.saleOptionIdx }";
+      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+      result.push(json);
+   </c:forEach>
+   
+   console.log(JSON.stringify(result));
+   
+   $.ajax({
+      type: "POST"
+      , url: "/product/updateCart.do"
+      , data: {
+         cart: JSON.stringify(result)
+      }
+      , dataType: "json"
+      , success: function(data) {
+         console.log(data);   
+      }
+   })
+});
+
+
+=======
 	var arr = [];
 	var obj = {};
+>>>>>>> abc559b80c0513681bee2665e757b9fcc1d9def9
 
 	// 판매 상품 idx
 	var saleIdx = $(this).attr('value');
@@ -129,7 +214,10 @@ $(document).ready(function() {
 		$(".option_form").submit(); 
 	});	
 	
+<<<<<<< HEAD
+=======
 	
+>>>>>>> abc559b80c0513681bee2665e757b9fcc1d9def9
 	
 	/* 장바구니 삭제 */
 	$(".basket_delete").click(function() {
@@ -404,7 +492,7 @@ function cartItems() {
 						<tr class="tr_payment">
 							<td id="border_payment" style="width: 440px;"></td>
 							<td class="name_price" id="border_payment">배송비</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment">무료</td>
 						</tr>
 					</table>
 					
