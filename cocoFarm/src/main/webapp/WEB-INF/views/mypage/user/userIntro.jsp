@@ -30,18 +30,6 @@ function onlyNumber(obj){
 }
 
 $(document).ready(function() {
-	/* 장바구니 옵션 변경 버튼 */
-	$.ajax({
-		type: "POST"
-		, url: "/product/cart.do"
-		, data: {
-			// 장바구니 상품
-		}
-		, dataType: "json"
-		, success: function(data) {
-			
-		}
-	})
 
 	$("#messageCate").change(function() {
 
@@ -132,15 +120,6 @@ $(document).ready(function() {
       return false;
 		}
 		
-		// 옵션 여러 개 보내기 기능 구현할 때 json 형식으로 담아봄
-// 		var option = {
-// 			optionName: $("textarea[name=optionName]").val(),
-// 			startAmount: $("textarea[name=startAmount]").val(),
-// 			unit: $("textarea[name=unit]").val(),
-// 			price: $("textarea[name=price]").val()
-// 		};
-// 		alert(option.optionName);
-		
 		submitContents($(this));
 	});
 	
@@ -186,19 +165,11 @@ function submitContents(elClickedObj) {
 		<div class="container">
 			<!--Mypage부분  검색 로고부분 -->
 			<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
-	
 			<div class="mypage_box">
-					
 				<!--Mypage부분  판매자 인트로부분 -->
 				<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
-				
-				
 			<div class="mypage_page01">
-				
 				<jsp:include page="/WEB-INF/views/tile/message/message.jsp" flush="false"/>
-		
-		
-		
 			</div>
 		</div>
 	</div>	
