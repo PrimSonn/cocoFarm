@@ -222,12 +222,10 @@ function requestPayment() {
 		console.log('data.MainRcpt: '+data.MainRcpt);
 			Main_Rcpt=data.MainRcpt;
 			is_Done = data.isDone;
-			alert("성공");
 	   },
 	   error : function(e) {
 		  console.log(e.responseText);
-		   
-		   alert("실패"); 
+		  alert("실패"); 
 	   }
 	});
 	console.log('--------------------');
@@ -242,7 +240,7 @@ function requestPayment() {
 				name : '주문명:결제테스트', //주문명 - 선택항목, 결제정보 확인을 위한 입력, 16자 이내로 작성
 				amount : ${allsum}, //결제금액 - 필수항목
 				buyer_email : 'iamport@siot.do', //주문자Email - 선택항목
-				buyer_name : ${account.name}, //주문자명 - 선택항목
+				buyer_name : '${account.name}', //주문자명 - 선택항목
 				buyer_tel : phone_a+phone_b+phone_c, //주문자연락처 - 필수항목, 누락되면 PG사전송 시 오류 발생
 				buyer_addr :postcodify_address+postcodify_details, //주문자주소 - 선택항목
 				buyer_postcode :area, //주문자우편번호 - 선택항목

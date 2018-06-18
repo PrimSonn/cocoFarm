@@ -178,13 +178,11 @@ public class Paging {
 
 	public int getMessageCate() {
 		
-		System.out.println("getMessageCate : " + messageCate);
 		return messageCate;
 	}
 
 	public void setMessageCate(int messageCate) {
 		
 		this.messageCate = messageCate;
-		System.out.println("getMessageCate : " + this.messageCate);
 	}
 }

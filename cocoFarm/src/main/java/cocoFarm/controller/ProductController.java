@@ -104,14 +104,6 @@ public class ProductController {
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product, Option opt, FileDto f, HttpSession session) {
 		
-		System.out.println(product);
-		
-		System.out.println(opt);
-		for(SaleOption s : opt.getSaleOptions()) {
-			System.out.println(s);
-		}
-		
-		System.out.println("------------------");
 		List<MultipartFile> list = f.getUpload();
 		
 		// 고유 식별자
@@ -187,7 +179,6 @@ public class ProductController {
 		int j=-1;
 		for(MultipartFile m: f.getUpload()) {
 			++j;
-			System.out.println("j: "+j);
 			if(m.isEmpty())continue;
 			try {
 				destAr[j] = new StringBuilder()
@@ -341,7 +332,6 @@ public class ProductController {
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
 				Map<String, String> map = (Map) list.get(i);
-				System.out.println(map.get("main_recpt_idx"));
 				String str = map.get("main_recpt_idx");
 				
 				Comment comm = new Comment();
