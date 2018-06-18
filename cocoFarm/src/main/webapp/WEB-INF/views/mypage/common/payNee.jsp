@@ -11,18 +11,20 @@
 
 <script type="text/javascript">
 /* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
-function insertComment() {
-	var productTitle = "${paynee[1].name }";
+$(".insertComm_button").click(function() {
+	var productTitle = $(this).parent().parent().find("#product_title").text();
 	console.log(productTitle);
 	
 	var arr = new Array();
 	var obj = new Object();
 	
 	var cont = $("#commentContent").val();
+	
 	if(cont === "") {
 		arr.push(null);
 	} else {
-		obj.main_recpt_idx = ${paynee[1].main_recpt_idx };
+		obj.main_recpt_idx = $(this).val();
+		console.log($(this).val());
 		obj.content = cont;
 		arr.push(obj);
 	}
@@ -40,7 +42,8 @@ function insertComment() {
 				$("#commentContent").val("");
 			}
 	});
-}
+
+});
 </script>
 </head>
 <body>
@@ -66,9 +69,9 @@ function insertComment() {
       <colgroup>
 					<col width="100px">
 					<col width="100px">
-					<col width="120px">
-					<col width="50px">
 					<col width="200px">
+					<col width="50px">
+<%-- 					<col width="200px"> --%>
 					<col width="90px">
 					<col width="100px">
 					<col width="110px">
@@ -82,7 +85,7 @@ function insertComment() {
             <th class="message_th">판매자 이름</th>
             <th class="message_th">구매한 옵션</th>
             <th class="message_th">수량</th>
-            <th class="message_th">판매글 제목</th>
+<!--             <th class="message_th">판매글 제목</th> -->
             <th class="message_th">옵션 단가</th>
             <!-- <th class="message_th">옵션 단위</th> -->
             <th class="message_th">총결제금액</th>
@@ -92,20 +95,20 @@ function insertComment() {
       </thead>
       <tbody>
       <c:forEach items="${paynee }" var="paynee">
-         <tr>
+				<tr class="message">
          	<td class="message_td">${paynee.idx}</td>
          	<td class="message_td">${paynee.seller }</td>
-        	<td class="message_td">${paynee.name }</td> <!--구매한 옵션  -->
-           <td class="message_td">${paynee.amount }</td> <!--수량  -->
-           <td class="message_td">${paynee.sale_title }</td><!--판매글제목 -->
-           <td class="message_td">${paynee.price }</td>
+        	<td class="message_td" id="product_title">${paynee.name }</td> <!--구매한 옵션  -->
+					<td class="message_td">${paynee.amount }</td> <!--수량  -->
+<%--           <td class="message_td">${paynee.sale_title }</td> <!--판매글제목 --> --%>
+          <td class="message_td">${paynee.price }</td>
             
             <%-- <td class="message_td">${paynee.unit }</td> --%>
             
-            <td class="message_td">${paynee.money_amount }</td>
-            <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
-         		<td class="message_td">
-         			<button class="insertComm_button"	onclick="insertComment();">등록</button></td>
+          <td class="message_td">${paynee.money_amount }</td>
+          <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
+         	<td class="message_td">
+         		<button class="insertComm_button"	value="${paynee.main_recpt_idx }">등록</button></td>
          </tr>
       </c:forEach>
       </tbody>

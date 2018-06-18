@@ -399,22 +399,11 @@ function popupOpen2(){
 		
 		<!-- 상품 후기 등록 -->
 		<div class="comment_cmt">
-<!-- 		<div class="form-inline text-cefnter" id="commentList"> -->
-		
-<!-- 			<input type="text" size="7" class="form-control" -->
-<!-- 				id="commentWriter" -->
-<%-- 				value="${sessionScope.name }" readonly="readonly"/> --%>
-<!-- 			<textarea rows="3" cols="60" -->
-<!-- 				class="form-control" id="commentContent"></textarea> -->
-			
-<!-- 			<button class="insertComm_button" -->
-<!-- 						onclick="viewComment();">상품평 등록</button> -->
-<!-- 		</div> -->
 		
 		<div class="cont_cmt">
 			<ul class="list_cmt">
 				<li>
-					<div class="cmt_cont" id="comment_items">
+					<div class="cmt_cont" id="comment_items" style="padding-left: 20px;">
 						<span class="wrap_profile">
 <!-- 							<img src="계정이미지" width="32" height="32" class="thumb_g" alt=""> -->
 							<span class="comm_accName">계정 아이디</span>
@@ -434,8 +423,7 @@ function popupOpen2(){
 					</div>
 				</li>
 		
-			</ul><a href="/product/93/review" class="btn_all #review_all"><!-- react-text: 59 -->상품평 전체보기<!-- /react-text -->
-				<span class="img_kakaofarmer ico_arr"></span></a>
+			</ul>
 		</div>
 		</div>
 		

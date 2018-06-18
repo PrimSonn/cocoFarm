@@ -293,7 +293,7 @@ public class ProductController {
 			Map<String, Integer> map = (Map) list.get(i);
 //			c.setSaleOptionIdx(map.get("saleOptionIdx"));
 //			c.setSaleOptionIdx( ((Double)map.get("saleOptionIdx")).intValue() );
-//			c.setCount( ((Double)map.get("sa	leOptionIdx")).intValue() );
+//			c.setCount( ((Double)map.get("saleOptionIdx")).intValue() );
 			productService.updateCart(map);
 		}
 		List items = productService.selectCart((Integer)session.getAttribute("idx"));
@@ -304,8 +304,7 @@ public class ProductController {
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
-	public List<HashMap<String, Object>> comment(Comment comment
-												, String sale_idx) {
+	public List<HashMap<String, Object>> comment(Comment comment, String sale_idx) {
 		logger.info("viewComment.do POST!!");
 				
 		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
@@ -317,16 +316,15 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
-	public void comm() {
-	}
+	public void comm() {	}
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public boolean insertComment(Comment comment
-											, String title
-											, String insertComm
-											, HttpSession session) {
+								, String title
+								, String insertComm
+								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
@@ -335,14 +333,16 @@ public class ProductController {
 		
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
-				Map<String, Object> map = (Map) list.get(i);
+				Map<String, String> map = (Map) list.get(i);
+				System.out.println(map.get("main_recpt_idx"));
+				String str = map.get("main_recpt_idx");
 				
 				Comment comm = new Comment();
 				
 				comm.setSale_idx(product.getIdx());
 				comm.setScore(5);
 				comm.setTitle(product.getTitle());
-				comm.setMain_recpt_idx( ((Double)map.get("main_recpt_idx")).intValue() );
+				comm.setMain_recpt_idx( Integer.parseInt(map.get("main_recpt_idx")) );
 				comm.setContent( (String) map.get("content") );
 				
 				productService.insertComment(comm);
