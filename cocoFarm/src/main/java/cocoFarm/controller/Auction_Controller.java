@@ -270,7 +270,32 @@ public class Auction_Controller {
 		
 	}
 	
+//	==================================개인 결제 확인==============================================
+	@RequestMapping(value="/auction/auction_receiptCheck.do", method=RequestMethod.GET)
+	public void receiptCheck(HttpSession session, Account account, BidDto bid, Model model) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
+		
+		account.setIdx((Integer)session.getAttribute("idx"));
+		
+		model.addAttribute("receipt",auctionService.getauctionReceipt(account));
+	}
 	
+	
+//	==================================판매자 결제 확인==============================================
+	@RequestMapping(value="/auction/auction_seller_receiptCheck.do", method=RequestMethod.GET)
+	public void sellerreceiptCheck(HttpSession session, Account account, BidDto bid, Model model) {
+		
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
+		
+		account.setIdx((Integer)session.getAttribute("idx"));
+		
+		model.addAttribute("receipt",auctionService.getauctionReceipt(account));
+	}
 	
 //	==================================개인 입찰 취소==============================================
 	@RequestMapping(value="/auction/auction_bidCancel.do", method=RequestMethod.GET)

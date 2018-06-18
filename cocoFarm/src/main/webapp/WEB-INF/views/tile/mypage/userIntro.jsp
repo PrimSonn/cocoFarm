@@ -17,6 +17,7 @@
 						<li class="nav-link"><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
 						<li class="nav-link"><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
 						<li class="nav-link"><a href="/mypage/license.do">사업자 등록하기</a></li>
+						
 					</ul>
 					
 					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
@@ -30,7 +31,8 @@
 					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
 					<ul>
 						
-						<li><a href="/auction/auction_bidCheck.do">경매 상품 조회하기</a></li>
+						<li><a href="/auction/auction_bidCheck.do">입찰 상품 조회하기</a></li>
+						<li><a href="/auction/auction_receiptCheck.do">결제 상품 조회하기</a></li>
 					</ul>
 					
 					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>

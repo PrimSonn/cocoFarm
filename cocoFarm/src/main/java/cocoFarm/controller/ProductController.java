@@ -262,7 +262,9 @@ public class ProductController {
 							, Model model) {
 		// 상품을 등록하는 사람의 idx
 		productService.insertCart(option, (Integer)session.getAttribute("idx"));
-		
+		int idx = (int)session.getAttribute("idx");
+		Account accountone = loginService.selectAll(idx);
+		model.addAttribute("account",accountone);
 		return "redirect:/product/cart.do";
 	}
 	

@@ -163,7 +163,7 @@
 	<select id="getauctionList" parameterType="cocoFarm.dto.Auction" resultType="cocoFarm.dto.Auction">
 		SELECT ac.*, adq.time_window 
 		FROM auction ac 
-		INNER JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
+		LEFT JOIN auction_due_que adq ON (adq.auction_idx = ac.idx) 
 		WHERE writter_idx = #{writter_idx} ORDER BY time_window
 	</select>
 	
@@ -250,6 +250,14 @@
 			ORDER BY rnum
 		) R
 		WHERE rnum BETWEEN #{startNo } AND #{endNo }
+	 </select>
+	 
+	 <select id="getauctionReceipt" resultType="cocoFarm.dto.AuctionReceipt">
+	 	SELECT mr.*,bcr.title 
+	 	FROM main_receipt mr 
+	 	INNER JOIN bid_contract_receipt bcr 
+	 	ON (mr.idx = bcr.main_recpt_idx)
+	 	WHERE buyer_idx = #{idx}
 	 </select>
 
 </mapper>
