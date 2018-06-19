@@ -208,7 +208,9 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
-	public void basketList() {	}
+	public String basket() {
+		return "redirect:/product/cart.do";
+	}
 
 	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)

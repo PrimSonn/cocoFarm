@@ -75,132 +75,128 @@ $(document).ready(function() {
 		$form.submit();
 	});
 	
+
+
+	/* 플러스 버튼 눌렀을때 */
+	$(".option_count").on("click", ".button_plus", function() {
+		// 옵션 개수 최대값
+		if(Number($(this).parent().find(".pronum_text").val())==99) {
+			alert("최대 99개까지 선택 가능합니다.");
+			return;
+		}
+		
+		// 옵션 개수
+		var num = Number($(this).parent().find(".pronum_text").val())+1;
+		Number($(this).parent().find(".pronum_text").val(num));
+		
+		// 옵션 가격 계산
+		var option_price = Number($(this).val());
+		
+		// 옵션별 가격
+		$(this).parent().find(".item_price").val(comma(option_price*num));
+		
+		calcTotalPrice();
+		
+	});
+
+	/* 마이너스 버튼 눌렀을때 */
+	$(".option_count").on("click",".button_minus", function() {
+		// 옵션 개수 최소값
+		if(Number($(this).parent().find(".pronum_text").val())==1) {
+			alert("최소 1개부터 선택 가능합니다.");
+			return;
+		}
+		
+		// 옵션 개수
+		var num = Number($(this).parent().find(".pronum_text").val())-1;
+//	 	Number($(this).parent().find(".pronum_text").val(num));
+		$(this).parent().find(".pronum_text").val(num);
+		
+		// 옵션 가격 계산
+		var option_price = Number($(this).val());
+		
+		// 옵션별 가격
+		$(this).parent().find(".item_price").val(comma(option_price*num));
+				
+		calcTotalPrice();
+	});
+	
+
+	/* 장바구니 옵션 변경 버튼 */
+	$(".td_update").click(function() {
+	   var arr = [];
+	   var obj = {};
+
+	   // 판매 상품 idx
+	   var saleIdx = $(this).attr('value');
+	   
+	   // 판매 상품 옵션 idx
+	   var cart = "${cart[4].saleOptionIdx }";
+//	      console.log(cart);
+
+	   // 판매 상품에 해당하는 옵션 idx
+	   
+	   // saleIdx가 동일한 개수만 size 체크
+	   // product.idx === optionCart.saleIdx
+	   
+	   var size = 0;
+	   var count = ${optionCart.size() };
+//	      for(var i=0; i<count; i++) {
+	      if(saleIdx === "${optionCart[0].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[1].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[2].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[3].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[4].saleIdx }" ) {
+	         size++;
+	      }
+//	      }
+	   
+//	      var size = ${optionCart.size() };
+//	      for(var i=init; i<init+size; i++) {
+//	            obj.count = $("#amount"+i).val();
+//	            arr.push(obj);
+//	            console.log(obj.count);
+//	            console.log(arr);
+//	            obj = {};
+//	      }
+	   
+	   //==========================================================
+	      
+	      
+	   var result = [];
+	   
+	   <c:forEach items="${cart }" var="cart">
+	      var json = {};
+	      json.saleOptionIdx = "${cart.saleOptionIdx }";
+	      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+	      result.push(json);
+	   </c:forEach>
+	   
+	   console.log(JSON.stringify(result));
+	   
+	   $.ajax({
+	      type: "POST"
+	      , url: "/product/updateCart.do"
+	      , data: {
+	         cart: JSON.stringify(result)
+	      }
+	      , dataType: "json"
+	      , success: function(data) {
+	         console.log(data);   
+	      }
+	   })
+	});
+	
 });
 
-
-
-/* 장바구니 옵션 변경 버튼 */
-$(".td_update").click(function() {
-   var arr = [];
-   var obj = {};
-
-   // 판매 상품 idx
-   var saleIdx = $(this).attr('value');
-   
-   // 판매 상품 옵션 idx
-   var cart = "${cart[4].saleOptionIdx }";
-//      console.log(cart);
-
-   // 판매 상품에 해당하는 옵션 idx
-
-   var init;
-   <c:if test="${empty optionCart }">
-      init = 0;
-   </c:if>
-   <c:if test="${!empty optionCart }">
-      init = ${optionCart[0].idx };
-   </c:if>
-   
-   // saleIdx가 동일한 개수만 size 체크
-   // product.idx === optionCart.saleIdx
-   
-   var size = 0;
-   var count = ${optionCart.size() };
-//      for(var i=0; i<count; i++) {
-      if(saleIdx === "${optionCart[0].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[1].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[2].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[3].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[4].saleIdx }" ) {
-         size++;
-      }
-//      }
-   
-//      var size = ${optionCart.size() };
-//      for(var i=init; i<init+size; i++) {
-//            obj.count = $("#amount"+i).val();
-//            arr.push(obj);
-//            console.log(obj.count);
-//            console.log(arr);
-//            obj = {};
-//      }
-   
-   //==========================================================
-      
-      
-   var result = [];
-   
-   <c:forEach items="${cart }" var="cart">
-      var json = {};
-      json.saleOptionIdx = "${cart.saleOptionIdx }";
-      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
-      result.push(json);
-   </c:forEach>
-   
-   console.log(JSON.stringify(result));
-   
-   $.ajax({
-      type: "POST"
-      , url: "/product/updateCart.do"
-      , data: {
-         cart: JSON.stringify(result)
-      }
-      , dataType: "json"
-      , success: function(data) {
-         console.log(data);   
-      }
-   })
-});
-
-/* 플러스 버튼 눌렀을때 */
-$(".option_count").on("click", ".button_plus", function() {
-	// 옵션 개수 최대값
-	if(Number($(this).parent().find(".pronum_text").val())==99) {
-		alert("최대 99개까지 선택 가능합니다.");
-		return;
-	}
-	
-	// 옵션 개수
-	var num = Number($(this).parent().find(".pronum_text").val())+1;
-	Number($(this).parent().find(".pronum_text").val(num));
-	
-	// 옵션 가격 계산
-	var option_price = Number($(this).val());
-	
-	// 옵션별 가격
-	$(this).parent().find(".item_price").val(comma(option_price*num));
-	
-	calcTotalPrice();
-});
-
-/* 마이너스 버튼 눌렀을때 */
-$(".option_count").on("click",".button_minus", function() {
-	// 옵션 개수 최소값
-	if(Number($(this).parent().find(".pronum_text").val())==1) {
-		alert("최소 1개부터 선택 가능합니다.");
-		return;
-	}
-	
-	// 옵션 개수
-	var num = Number($(this).parent().find(".pronum_text").val())-1;
-	Number($(this).parent().find(".pronum_text").val(num));
-	
-	// 옵션 가격 계산
-	var option_price = Number($(this).val());
-	
-	// 옵션별 가격
-	$(this).parent().find(".item_price").val(comma(option_price*num));
-			
-	calcTotalPrice();
-});
 
 /* 상품금액 계산 */
 function calcPrice() {
@@ -292,7 +288,7 @@ function onlyNumber(obj){
 						
 						
 						
-						<form class="option_form" method="post">
+<!-- 						<form class="option_form" method="post"> -->
 						
 						<c:forEach items="${productCart }" var="product" varStatus="st">
 						<tr class="tr_back" id="tr_cartItem${st.index }"	align="center">
@@ -334,7 +330,7 @@ function onlyNumber(obj){
 						</tr>
 						</c:forEach>
 						
-						</form>
+<!-- 						</form> -->
 						
 						<tr class="tr_back"	align="center">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
