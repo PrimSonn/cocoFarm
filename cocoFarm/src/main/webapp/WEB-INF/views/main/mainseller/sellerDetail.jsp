@@ -254,8 +254,7 @@ function insertCart() {
 		if($(".proselect_option option:selected").val()==0) {
 			  alert("상품 옵션을 선택해주세요.");
 			  return false;
-			} else {
-			
+		} else {
 			$(".option_form").attr("action", "/product/cartInsert.do");
 			$(".option_form").submit();
 		}
