@@ -337,7 +337,7 @@ public class ProductController {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
-		/*
+		
 		Product product = productService.selectProductByReceipt2(title);
 		
 		if(list.get(0) != null) {
@@ -356,7 +356,7 @@ public class ProductController {
 				productService.insertComment(comm);
 			}
 		}
-		*/
+		
 		return true;
 	}
 }

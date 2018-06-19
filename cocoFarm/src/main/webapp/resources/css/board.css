@@ -380,7 +380,8 @@
 .td_productName {
 	font-family: 'Jeju Gothic';
 	font-size: 14px;
-	width: 370px;
+/* 	width: 370px; 상품금액 제거 */
+	width: 460px;
 	display: inline-block;
 	text-align: left;
 	margin-top: 7px;
