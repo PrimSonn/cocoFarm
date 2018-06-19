@@ -294,10 +294,10 @@ function onlyNumber(obj){
 									<div class="td_optionName">${option.optionName }
 									
 										<div class="option_count">
-										<button class="button_minus" value="${option.price }">-</button>
-										<input type="text" class="pronum_text" id="amount${option.idx }"
-													 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-										<button class="button_plus" value="${option.price }">+</button>
+											<button class="button_minus" value="${option.price }">-</button>
+											<input type="text" class="pronum_text" id="amount${option.idx }"
+														 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+											<button class="button_plus" value="${option.price }">+</button>
 										</div>
 									</div>
 									

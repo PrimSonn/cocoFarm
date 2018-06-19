@@ -49,87 +49,6 @@ $(document).ready(function() {
 		$(".option_form").submit(); 
 	});	
 	
-	/* 장바구니 옵션 변경 버튼 */
-	$(".td_update").click(function() {
-	   var arr = [];
-	   var obj = {};
-
-	   // 판매 상품 idx
-	   var saleIdx = $(this).attr('value');
-	   
-	   // 판매 상품 옵션 idx
-	   var cart = "${cart[4].saleOptionIdx }";
-//	      console.log(cart);
-
-	   // 판매 상품에 해당하는 옵션 idx
-
-	   var init;
-	   <c:if test="${empty optionCart }">
-	      init = 0;
-	   </c:if>
-	   <c:if test="${!empty optionCart }">
-	      init = ${optionCart[0].idx };
-	   </c:if>
-	   
-	   // saleIdx가 동일한 개수만 size 체크
-	   // product.idx === optionCart.saleIdx
-	   
-	   var size = 0;
-	   var count = ${optionCart.size() };
-//	      for(var i=0; i<count; i++) {
-	      if(saleIdx === "${optionCart[0].saleIdx }" ) {
-	         size++;
-	      }
-	      if(saleIdx === "${optionCart[1].saleIdx }" ) {
-	         size++;
-	      }
-	      if(saleIdx === "${optionCart[2].saleIdx }" ) {
-	         size++;
-	      }
-	      if(saleIdx === "${optionCart[3].saleIdx }" ) {
-	         size++;
-	      }
-	      if(saleIdx === "${optionCart[4].saleIdx }" ) {
-	         size++;
-	      }
-//	      }
-	   
-//	      var size = ${optionCart.size() };
-//	      for(var i=init; i<init+size; i++) {
-//	            obj.count = $("#amount"+i).val();
-//	            arr.push(obj);
-//	            console.log(obj.count);
-//	            console.log(arr);
-//	            obj = {};
-//	      }
-	   
-	   //==========================================================
-	      
-	      
-	   var result = [];
-	   
-	   <c:forEach items="${cart }" var="cart">
-	      var json = {};
-	      json.saleOptionIdx = "${cart.saleOptionIdx }";
-	      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
-	      result.push(json);
-	   </c:forEach>
-	   
-	   console.log(JSON.stringify(result));
-	   
-	   $.ajax({
-	      type: "POST"
-	      , url: "/product/updateCart.do"
-	      , data: {
-	         cart: JSON.stringify(result)
-	      }
-	      , dataType: "json"
-	      , success: function(data) {
-	         console.log(data);   
-	      }
-	   })
-	});
-	
 	/* 장바구니 삭제 */
 	$(".basket_delete").click(function() {
 		// 선택된 체크박스
@@ -156,6 +75,89 @@ $(document).ready(function() {
 		$form.submit();
 	});
 	
+});
+
+
+
+/* 장바구니 옵션 변경 버튼 */
+$(".td_update").click(function() {
+   var arr = [];
+   var obj = {};
+
+   // 판매 상품 idx
+   var saleIdx = $(this).attr('value');
+   
+   // 판매 상품 옵션 idx
+   var cart = "${cart[4].saleOptionIdx }";
+//      console.log(cart);
+
+   // 판매 상품에 해당하는 옵션 idx
+
+   var init;
+   <c:if test="${empty optionCart }">
+      init = 0;
+   </c:if>
+   <c:if test="${!empty optionCart }">
+      init = ${optionCart[0].idx };
+   </c:if>
+   
+   // saleIdx가 동일한 개수만 size 체크
+   // product.idx === optionCart.saleIdx
+   
+   var size = 0;
+   var count = ${optionCart.size() };
+//      for(var i=0; i<count; i++) {
+      if(saleIdx === "${optionCart[0].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[1].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[2].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[3].saleIdx }" ) {
+         size++;
+      }
+      if(saleIdx === "${optionCart[4].saleIdx }" ) {
+         size++;
+      }
+//      }
+   
+//      var size = ${optionCart.size() };
+//      for(var i=init; i<init+size; i++) {
+//            obj.count = $("#amount"+i).val();
+//            arr.push(obj);
+//            console.log(obj.count);
+//            console.log(arr);
+//            obj = {};
+//      }
+   
+   //==========================================================
+      
+      
+   var result = [];
+   
+   <c:forEach items="${cart }" var="cart">
+      var json = {};
+      json.saleOptionIdx = "${cart.saleOptionIdx }";
+      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+      result.push(json);
+   </c:forEach>
+   
+   console.log(JSON.stringify(result));
+   
+   $.ajax({
+      type: "POST"
+      , url: "/product/updateCart.do"
+      , data: {
+         cart: JSON.stringify(result)
+      }
+      , dataType: "json"
+      , success: function(data) {
+         console.log(data);   
+      }
+   })
 });
 
 /* 플러스 버튼 눌렀을때 */
@@ -284,7 +286,7 @@ function onlyNumber(obj){
 						<tr class="tr_back">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
 							<th class="th_inform">상품정보</th>
-							<th class="th_price">상품금액</th>
+<!-- 							<th class="th_price">상품금액</th> -->
 							<th class="th_delivery">배송비</th>
 						</tr>
 						
@@ -310,12 +312,13 @@ function onlyNumber(obj){
 										
 											<div class="option_count">
 												<button class="button_minus" value=${option.price }>-</button>
-												<input type="text" name="saleOptions[${status.index }].proAmount"
-															 class="pronum_text" id="amount${option.idx }"
-															 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-												<button class="button_plus" value=${option.price }>+</button>
-												<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
-												<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
+													<input type="text" name="saleOptions[${status.index }].proAmount"
+																 class="pronum_text" id="amount${option.idx }"
+																 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+													<button class="button_plus" value=${option.price }>+</button>
+													
+													<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
+													<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
 											</div>
 											
 										</div>
@@ -326,7 +329,7 @@ function onlyNumber(obj){
 								
 							</td>
 							
-							<td><span class="product_price" id="product_price${st.index }"></span>원</td>
+<%-- 							<td><span class="product_price" id="product_price${st.index }"></span>원</td> --%>
 							<td class="delivery_price">무료</td>
 						</tr>
 						</c:forEach>
