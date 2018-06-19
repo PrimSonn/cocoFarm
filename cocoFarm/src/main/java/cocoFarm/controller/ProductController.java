@@ -206,6 +206,9 @@ public class ProductController {
 		
 		return "redirect:/product";
 	}
+	
+	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+	public void basketList() {	}
 
 	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -276,6 +279,12 @@ public class ProductController {
 			int saleIdx = Integer.parseInt(productIdx);
 			productService.deleteCart(saleIdx);
 		}
+		return "redirect:/product/cart.do";
+	}
+	
+	// 장바구니 옵션 수정
+	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.GET)
+	public String updateCart() {
 		return "redirect:/product/cart.do";
 	}
 	

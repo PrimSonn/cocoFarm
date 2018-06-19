@@ -6,6 +6,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>장바구니 조회</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css">
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
 <script type="text/javascript">
 (function() {
 	var tableEl = document.querySelector('.tr_cartItem');
@@ -73,47 +81,93 @@ $(document).ready(function() {
 		return false;
 	});
 	/* 장바구니 옵션 변경 버튼 */
-// 	$.ajax({
-// 		type: "POST"
-// 		, url: "/product/cart.do"
-// 		, data: {
-// 			// 장바구니 상품
+	$(".td_update").click(function() {
+		var arr = [];
+		var obj = {};
+
+		// 판매 상품 idx
+		var saleIdx = $(this).attr('value');
+		
+		// 판매 상품 옵션 idx
+		var cart = "${cart[4].saleOptionIdx }";
+// 		console.log(cart);
+
+		// 판매 상품에 해당하는 옵션 idx
+		
+		var init = ${optionCart[0].idx };
+		
+		// saleIdx가 동일한 개수만 size 체크
+		// product.idx === optionCart.saleIdx
+		
+		var size = 0;
+		var count = ${optionCart.size() };
+// 		for(var i=0; i<count; i++) {
+			if(saleIdx === "${optionCart[0].saleIdx }" ) {
+				size++;
+			}
+			if(saleIdx === "${optionCart[1].saleIdx }" ) {
+				size++;
+			}
+			if(saleIdx === "${optionCart[2].saleIdx }" ) {
+				size++;
+			}
+			if(saleIdx === "${optionCart[3].saleIdx }" ) {
+				size++;
+			}
+			if(saleIdx === "${optionCart[4].saleIdx }" ) {
+				size++;
+			}
 // 		}
-// 		, dataType: "json"
-// 		, success: function(data) {
+		
+// 		var size = ${optionCart.size() };
+// 		for(var i=init; i<init+size; i++) {
+// 				obj.count = $("#amount"+i).val();
+// 				arr.push(obj);
+// 				console.log(obj.count);
+// 				console.log(arr);
+// 				obj = {};
+// 		}
+		
+		//==========================================================
 			
-// 		}
-// 	})
-	// 선택체크 삭제
+			
+		var result = [];
+		
+		<c:forEach items="${cart }" var="cart">
+			var json = {};
+			json.saleOptionIdx = "${cart.saleOptionIdx }";
+			json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+			result.push(json);
+		</c:forEach>
+		
+		console.log(JSON.stringify(result));
+		
+		$.ajax({
+			type: "POST"
+			, url: "/product/updateCart.do"
+			, data: {
+				cart: JSON.stringify(result)
+			}
+			, dataType: "json"
+			, success: function(data) {
+				console.log(data);	
+			}
+		})
+	});
+	
+	/* 장바구니 삭제 */
 	$(".basket_delete").click(function() {
 
 		// 선택된 체크박스
 		var $checkboxes
 		 = $("input:checkbox[name='checkRow']:checked");
 		
-		//방법1
-// 		체크된 대상들을 하나씩 꺼내서 문자열로 합치기
-// 		var productIdx = "";
-// 		var len = $checkboxes.length;
-// 		$checkboxes.each( function(idx) {
-// 			productIdx += $(this).val();
-			
-// 			if( len-1 != idx ) {
-// 				productIdx += ",";
-// 			}
-// 		});
-// 		console.log(productIdx);
-			
 		var map = $checkboxes.map(function() {
 			return $(this).val();
 		});
 		var productIdx = map.get().join(",");
 		console.log("productIdx : " + productIdx);
 		
-// 		console.log( "map:" + map );	// 맵
-// 		console.log( "map->array : " + map.get() );	// 맵->배열
-// 		console.log( "array tostring : " + map.get().join(",") ); // toString
-
 		// 전송 폼
 		var $form = $("<form>")
 			.attr("action", "/product/deleteCart.do")
@@ -127,10 +181,8 @@ $(document).ready(function() {
 		$(document.body).append($form);
 		$form.submit();
 	});
-	
 
-
-	/*플러스 버튼 눌렀을때  */
+	/* 플러스 버튼 눌렀을때 */
 	$(".option_count").on("click", ".button_plus", function() {
 		// 옵션 개수 최대값
 		if(Number($(this).parent().find(".pronum_text").val())==99) {
@@ -139,18 +191,19 @@ $(document).ready(function() {
 		
 		var num=Number($(this).parent().find(".pronum_text").val())+1;
 		
-		console.log("optionCount: " + num);
+		// 옵션 가격 계산
+// 		console.log("optionCount: " + num);
 		var text_num=Number($(this).parent().find(".pronum_text").val(num));
 		
 		var original_price=Number($(this).parent().find(".num_option_price").data("unit"));
 		
-		console.log(original_price);
+// 		console.log(original_price);
 		$(this).parent().find(".num_option_price").text(comma(original_price*num));
 		
 		price=0;
 		calcPrice();
-		
 	});
+	
 	/* 마이너스 버튼 눌렀을때 */
 	$(".option_count").on("click",".button_minus", function() {
 		
@@ -213,7 +266,7 @@ function onlyNumber(obj){
 </head>
 <body>
 	
-		
+		<div class="mypage_page01">
 				<div class="border">
 					<h1>장바구니 조회 </h1>
 					
@@ -241,19 +294,23 @@ function onlyNumber(obj){
 									<div class="td_optionName">${option.optionName }
 									
 										<div class="option_count">
-										<button class="button_minus">-</button>
-										<input type="text" name="saleOptions[${status.index}].proAmount" class="pronum_text" id="tt"
+										<button class="button_minus" value="${option.price }">-</button>
+										<input type="text" class="pronum_text" id="amount${option.idx }"
 													 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-										<button class="button_plus">+</button>
+										<button class="button_plus" value="${option.price }">+</button>
 										</div>
 									</div>
+									
+									<input type="hidden" class="items_price">${option.price }
+									
 								</c:if>
 								</c:forEach>
 								
 								<div style="float: right;"><button class="td_update">옵션 변경</button></div>
+								
 							</td>
-							<td>41,900원</td>
-							<td>무료</td>
+							<td><span class="product_price"></span>원</td>
+							<td class="delivery_price">무료</td>
 						</tr>
 						</c:forEach>
 						
@@ -273,12 +330,12 @@ function onlyNumber(obj){
 						<tr class="tr_payment">
 							<td class="name_price">총 주문금액</td>
 							<td class="name_price" id="border_payment">총 상품금액</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment"><span class="products_total">19,900</span>원</td>
 						</tr>
 						<tr class="tr_payment">
 							<td id="border_payment" style="width: 440px;"></td>
 							<td class="name_price" id="border_payment">배송비</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment">무료</td>
 						</tr>
 					</table>
 					
@@ -286,7 +343,7 @@ function onlyNumber(obj){
 						<tr class="tr_payment">
 							<td class="name_total" id="border_payment">결제 예상금액</td>
 							<td id="border_payment"></td>
-							<td class="real_total" id="border_payment">0원</td>
+							<td class="real_total" id="border_payment">22,400원</td>
 						</tr>
 					</table>
 					
