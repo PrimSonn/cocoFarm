@@ -42,7 +42,6 @@ $(document).ready(function() {
 				console.log('data.MainRcpt: '+data.MainRcpt);
 					Main_Rcpt=data.MainRcpt;
 					is_Done = data.isDone;
-					alert("성공");
 			   },
 			   error : function(e) {
 				  console.log(e.responseText);
@@ -50,10 +49,10 @@ $(document).ready(function() {
 				   alert("실패"); 
 			   }
 			});
-			console.log('--------------------');
-			console.log('Main_Rcpt: '+Main_Rcpt);
-			console.log('is_Done: '+is_Done);
-			console.log('--------------------');
+// 			console.log('--------------------');
+// 			CONSOLE.LOG('MAIN_RCPT: '+MAIN_RCPT);
+// 			CONSOLE.LOG('IS_DONE: '+IS_DONE);
+// 			CONSOLE.LOG('--------------------');
 			if(is_Done != 0) {
 				IMP.request_pay({
 						pg : 'danal', //PG사 - 'kakao':카카오페이, 'html5_inicis':이니시스(웹표준결제), 'nice':나이스페이, 'jtnet':제이티넷, 'uplus':LG유플러스, 'danal':다날, 'payco':페이코, 'syrup':시럽페이, 'paypal':페이팔
