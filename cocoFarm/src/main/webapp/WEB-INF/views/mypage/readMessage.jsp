@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 function closeLayer( obj ) {
 	$(obj).parent().parent().hide();
-	$(obj).parent().parent().parent().hide();
+// 	$(obj).parent().parent().parent().hide();
 }
 var idx;
 $(function(){

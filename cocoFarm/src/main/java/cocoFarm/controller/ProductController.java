@@ -347,8 +347,6 @@ public class ProductController {
 			}
 		}
 		*/
-		
-//		return productService.insertEval(main_receipt_idx, sale_idx, insertComm);
 		return true;
 	}
 }

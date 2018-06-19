@@ -25,9 +25,6 @@ public final class RunnerManager {
 			if(interfc.isAssignableFrom(TimerDao.class)) {
 				for(Method method: interfc.getMethods()) {
 					if(method.isAnnotationPresent(Run.class)) {
-						Run run = method.getAnnotation(Run.class);
-						Long maxSleep = run.maxSleep();
-						Long minSleep = run.minSleep();
 						try {
 							Thread wasThere = 
 								member.put(method, new Thread( new CocoRunner( () ->{
@@ -40,7 +37,7 @@ public final class RunnerManager {
 												}
 												return null;
 												}
-											, method.getName(), maxSleep, minSleep )
+											, method.getName() )
 										)
 									);
 							if(wasThere!=null&&wasThere.isAlive()) wasThere.stop();//--만약 쓰레드가 등록이 미리 되어있는 것이 있었다면 정지시킴.(나중에 없애야 할 코드)
