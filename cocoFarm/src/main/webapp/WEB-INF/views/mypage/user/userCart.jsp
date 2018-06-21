@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>장바구니 조회</title>
+<title>코코팜에 오신 걸 환영합니다.</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
@@ -263,7 +263,7 @@ function onlyNumber(obj){
 		<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
 
 		<div class="mypage_box">
-			<!--Mypage부분  판매자 인트로부분 -->
+			<!--Mypage부분  일반 회원 인트로부분 -->
 			<div class="mypage_nav">
 				<div class="mypage_topbusiness">
 					<div class="mypagetitle03"><h2>일반 회원</h2><h1>마이페이지</h1></div>
@@ -402,7 +402,7 @@ function onlyNumber(obj){
 					
 					<div class="save_group">
 						<button class="return">쇼핑 계속하기</button>
-<!-- 						<button class="purchase">구매하기</button> -->
+						<button class="purchase">구매하기</button>
 					</div>
 					
 				</div>

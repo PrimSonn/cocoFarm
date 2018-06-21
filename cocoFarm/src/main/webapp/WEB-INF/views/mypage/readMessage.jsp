@@ -12,6 +12,7 @@ $(document).ready(function() {
 function closeLayer( obj ) {
 	$(obj).parent().parent().hide();
 // 	$(obj).parent().parent().parent().hide();
+	location.reload();
 }
 var idx;
 $(function(){
