@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/board.css">
+<link rel="stylesheet" type="text/css" href="/css/message.css">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
@@ -34,98 +35,29 @@ $(document).ready(function() {
 		return false;
 	});
 	
-});
-
-
-(function() {
-	var tableEl = document.querySelector('.tr_cartItem');
-	var mainHtml = tableEl.innerHTML;
-	var routerMap = {
-		'' : function() {
-			tableEl.innerHTML = mainHtml;
-		}
-	}
+	calcTotalPrice();
 	
-	function otherwise() {
-		tableEl.innerHTML =
-	    'Not Found';
-	}
-
-})
-
-function List() {
-	this.elements = {};
-}
-
-/* 장바구니 조회 연습... */
-function cartItems() {
-	var productSize = "${productCart.size() }";
-	var optionName = "${optionCart[0].optionName }";
-	var optionSaleIdx = "${optionCart[0].saleIdx }";
-	var optionCart = new Array();
-	console.log("optionName: " + optionName);
-	console.log(optionCart);
-	console.log("size: " + productSize);
+	$(".return").click(function() {
+		location.href = "/seller.do";
+	});
 	
-	var str = "";
-	for(var i=0; i<productSize; i++) {
-		str += '<div>'
-					+ '<img src="/proimg/${productCart[0].faceImg }" class="td_productImg" align="left" width="140px" height="140px" />'
-					+ '<div class="td_productName">${productCart[0].title }</div>'
-	}
-// 	document.getElementById("productCart").innerHTML = str;
+	$(".purchase").click(function() {
+		$(".option_form").attr("action", "/orderpay.do");
+		$(".option_form").submit(); 
+	});	
 	
-// 	for(var i=0; i<productSize; i++) {
-// 		var productImg = "/proimg/${productCart[0].faceImg }";
-// 		$(".td_productImg").attr("src", "productImg");
-// 	}
-// 	$(".td_productName").text("${productCart[0].title }");
-	
-}
-
-$(document).ready(function() {
-	/* 장바구니 옵션 변경 버튼 */
-// 	$.ajax({
-// 		type: "POST"
-// 		, url: "/product/cart.do"
-// 		, data: {
-// 			// 장바구니 상품
-// 		}
-// 		, dataType: "json"
-// 		, success: function(data) {
-			
-// 		}
-// 	})
-	// 선택체크 삭제
+	/* 장바구니 삭제 */
 	$(".basket_delete").click(function() {
-
 		// 선택된 체크박스
 		var $checkboxes
 		 = $("input:checkbox[name='checkRow']:checked");
 		
-		//방법1
-// 		체크된 대상들을 하나씩 꺼내서 문자열로 합치기
-// 		var productIdx = "";
-// 		var len = $checkboxes.length;
-// 		$checkboxes.each( function(idx) {
-// 			productIdx += $(this).val();
-			
-// 			if( len-1 != idx ) {
-// 				productIdx += ",";
-// 			}
-// 		});
-// 		console.log(productIdx);
-			
 		var map = $checkboxes.map(function() {
 			return $(this).val();
 		});
 		var productIdx = map.get().join(",");
 		console.log("productIdx : " + productIdx);
 		
-// 		console.log( "map:" + map );	// 맵
-// 		console.log( "map->array : " + map.get() );	// 맵->배열
-// 		console.log( "array tostring : " + map.get().join(",") ); // toString
-
 		// 전송 폼
 		var $form = $("<form>")
 			.attr("action", "/product/deleteCart.do")
@@ -140,49 +72,155 @@ $(document).ready(function() {
 		$form.submit();
 	});
 	
-
-
-	/*플러스 버튼 눌렀을때  */
+	/* 플러스 버튼 눌렀을때 */
 	$(".option_count").on("click", ".button_plus", function() {
 		// 옵션 개수 최대값
 		if(Number($(this).parent().find(".pronum_text").val())==99) {
+			alert("최대 99개까지 선택 가능합니다.");
 			return;
-		}	
+		}
 		
-		var num=Number($(this).parent().find(".pronum_text").val())+1;
+		// 옵션 개수
+		var num = Number($(this).parent().find(".pronum_text").val())+1;
+		Number($(this).parent().find(".pronum_text").val(num));
 		
-		console.log("optionCount: " + num);
-		var text_num=Number($(this).parent().find(".pronum_text").val(num));
+		// 옵션 가격 계산
+		var option_price = Number($(this).val());
 		
-		var original_price=Number($(this).parent().find(".num_option_price").data("unit"));
+		// 옵션별 가격
+		$(this).parent().find(".item_price").val(comma(option_price*num));
 		
-		console.log(original_price);
-		$(this).parent().find(".num_option_price").text(comma(original_price*num));
-		
-		price=0;
-		calcPrice();
+		calcTotalPrice();
 		
 	});
 
 	/* 마이너스 버튼 눌렀을때 */
 	$(".option_count").on("click",".button_minus", function() {
-		
+		// 옵션 개수 최소값
 		if(Number($(this).parent().find(".pronum_text").val())==1) {
+			alert("최소 1개부터 선택 가능합니다.");
 			return;
 		}
+		
+		// 옵션 개수
 		var num = Number($(this).parent().find(".pronum_text").val())-1;
-		var text_num = Number($(this).parent().find(".pronum_text").val(num));
+//	 	Number($(this).parent().find(".pronum_text").val(num));
+		$(this).parent().find(".pronum_text").val(num);
 		
-		var original_price=$(this).parent().find(".num_option_price").data("unit");
-		$(this).parent().find(".num_option_price").text(comma(original_price*num));
-		price=0;
-		calcPrice();
+		// 옵션 가격 계산
+		var option_price = Number($(this).val());
 		
+		// 옵션별 가격
+		$(this).parent().find(".item_price").val(comma(option_price*num));
+				
+		calcTotalPrice();
 	});
+	
+
+	/* 장바구니 옵션 변경 버튼 */
+	$(".td_update").click(function() {
+	   var arr = [];
+	   var obj = {};
+
+	   // 판매 상품 idx
+	   var saleIdx = $(this).attr('value');
+	   
+	   // 판매 상품 옵션 idx
+	   var cart = "${cart[4].saleOptionIdx }";
+//	      console.log(cart);
+
+	   // 판매 상품에 해당하는 옵션 idx
+	   
+	   // saleIdx가 동일한 개수만 size 체크
+	   // product.idx === optionCart.saleIdx
+	   
+	   var size = 0;
+	   var count = ${optionCart.size() };
+//	      for(var i=0; i<count; i++) {
+	      if(saleIdx === "${optionCart[0].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[1].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[2].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[3].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[4].saleIdx }" ) {
+	         size++;
+	      }
+//	      }
+	   
+//	      var size = ${optionCart.size() };
+//	      for(var i=init; i<init+size; i++) {
+//	            obj.count = $("#amount"+i).val();
+//	            arr.push(obj);
+//	            console.log(obj.count);
+//	            console.log(arr);
+//	            obj = {};
+//	      }
+	   
+	   //==========================================================
+	      
+	      
+	   var result = [];
+	   
+	   <c:forEach items="${cart }" var="cart">
+	      var json = {};
+	      json.saleOptionIdx = "${cart.saleOptionIdx }";
+	      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+	      result.push(json);
+	   </c:forEach>
+	   
+	   console.log(JSON.stringify(result));
+	   
+	   $.ajax({
+	      type: "POST"
+	      , url: "/product/updateCart.do"
+	      , data: {
+	         cart: JSON.stringify(result)
+	      }
+	      , dataType: "json"
+	      , success: function(data) {
+	         alert("옵션이 변경되었습니다.");  
+	      }
+	   })
+	});
+	
 });
 
-function checkDelete() {
+
+/* 상품금액 계산 */
+function calcPrice() {
+	let price = 0;
+
+	// 판매 상품에 대한 옵션 금액만 합산
+	// 판매 상품 saleIdx가 동일할 경우 add
+	// 1 : 0, 1, 2 / 2 : 3, 4 / 3 : 5, 6, 7 /...
+	price += Number($("#tr_cartItem1").find("#priceof3").val());
+// 	$("#product_price0").text(price);
 	
+	$(".product_price").text(price);
+}
+
+/* 총 주문금액 계산  */
+function calcTotalPrice() {
+	let price = 0;
+	
+	$(".option_count .item_price").each(function(idx) {
+		price += Number($("#priceof" + idx).val().replace(/,/g, ''));
+	});
+	
+	$(".products_total").text(comma(price));
+}
+
+//콤마찍기
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 }
 
 //전체 체크/해제
@@ -206,15 +244,6 @@ function checkAll() {
 	}
 }
 
-/* 옵션 합산 계산  */
-function calcPrice(){
-	$(".option_count .num_option_price").each(function(idx) {
-		price += Number($(this).text().replace(/,/g, ''));
-	});
-// 	 $(".left_price em").text(price);
-	console.log(price);
-}
-
 /* 숫자만 입력 */
 function onlyNumber(obj){
     val=obj.value;
@@ -235,8 +264,48 @@ function onlyNumber(obj){
 
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
-			<jsp:include page="/WEB-INF/views/tile/mypage/adminIntro.jsp" flush="false"/>
+			<div class="mypage_nav">
+				<div class="mypage_topbusiness">
+					<div class="mypagetitle03"><h2>일반 회원</h2><h1>마이페이지</h1></div>
+					<div class="mypageimg"><img src="/img/profile/${account.thumb_loc}" ></div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp;</span>환영합니다.</div>
+					<div class="mail_box"><a class="nav-link" href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
+				</div>
 			
+				<div class="mypage_navbody">
+					
+					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
+					
+					<ul>
+						<li class="nav-link"><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
+						<li class="nav-link"><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
+						<li class="nav-link"><a href="/mypage/license.do">사업자 등록하기</a></li>
+						
+					</ul>
+					
+					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
+					
+					<ul>
+					
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/payNee.do">결제 내역 조회 </a></li>
+						
+					</ul>
+					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
+					<ul>
+						
+						<li><a href="/auction/auction_bidCheck.do">입찰 상품 조회하기</a></li>
+						<li><a href="/auction/auction_receiptCheck.do">결제 상품 조회하기</a></li>
+					</ul>
+					
+					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
+					<ul>
+						<li class="nav-link"><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
+					</ul>
+					
+				</div>
+			
+			</div>
 			
 			<div class="mypage_page01">
 				<div class="border">
@@ -248,39 +317,55 @@ function onlyNumber(obj){
 						<tr class="tr_back">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
 							<th class="th_inform">상품정보</th>
-							<th class="th_price">상품금액</th>
+<!-- 							<th class="th_price">상품금액</th> -->
 							<th class="th_delivery">배송비</th>
 						</tr>
 						
-						<c:forEach items="${productCart }" var="product">
-						<tr class="tr_back" id="tr_cartItem"	align="center">
+						
+						
+<!-- 						<form class="option_form" method="post"> -->
+						
+						<c:forEach items="${productCart }" var="product" varStatus="st">
+						<tr class="tr_back" id="tr_cartItem${st.index }"	align="center">
 							<td class="td_checkbox"><input type="checkbox" id="checkRow" name="checkRow" value="${product.idx }"></td>
 							<td>
 								<div id="productCart">
-								<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
-								<div class="td_productName">${product.title }</div>
+									<img src="/proimg/${product.faceImg }" class="td_productImg" align="left" width="140px" height="140px" />
+									<div class="td_productName">${product.title }</div>
 								</div><br>
+							
 							
 								<c:forEach items="${optionCart }" var="option" varStatus="status">
 								<c:if test="${option.saleIdx eq product.idx }">
-									<div class="td_optionName">${option.optionName }
+								
 									
-										<div class="option_count">
-										<button class="button_minus">-</button>
-										<input type="text" name="saleOptions[${status.index}].proAmount" class="pronum_text" id="tt"
-													 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-										<button class="button_plus">+</button>
+										<div class="td_optionName"><span style="margin: 4px;"></span>${option.optionName } - ${option.price }원
+										
+											<div class="option_count">
+												<button class="button_minus" value=${option.price }>-</button>
+													<input type="text" name="saleOptions[${status.index }].proAmount"
+																 class="pronum_text" id="amount${option.idx }"
+																 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+													<button class="button_plus" value=${option.price }>+</button>
+													
+													<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
+													<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
+											</div>
+											
 										</div>
-									</div>
 								</c:if>
 								</c:forEach>
 								
-								<div style="float: right;"><button class="td_update">옵션 변경</button></div>
+								<div style="float: right;"><button class="td_update" value="${product.idx }">옵션 변경</button></div>
+								
 							</td>
-							<td>41,900원</td>
-							<td>무료</td>
+							
+<%-- 							<td><span class="product_price" id="product_price${st.index }"></span>원</td> --%>
+							<td class="delivery_price">무료</td>
 						</tr>
 						</c:forEach>
+						
+<!-- 						</form> -->
 						
 						<tr class="tr_back"	align="center">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
@@ -298,12 +383,12 @@ function onlyNumber(obj){
 						<tr class="tr_payment">
 							<td class="name_price">총 주문금액</td>
 							<td class="name_price" id="border_payment">총 상품금액</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment"><span class="products_total">0</span>원</td>
 						</tr>
 						<tr class="tr_payment">
 							<td id="border_payment" style="width: 440px;"></td>
 							<td class="name_price" id="border_payment">배송비</td>
-							<td class="real_price" id="border_payment">0원</td>
+							<td class="real_price" id="border_payment">무료</td>
 						</tr>
 					</table>
 					
@@ -311,19 +396,19 @@ function onlyNumber(obj){
 						<tr class="tr_payment">
 							<td class="name_total" id="border_payment">결제 예상금액</td>
 							<td id="border_payment"></td>
-							<td class="real_total" id="border_payment">0원</td>
+							<td class="real_total" id="border_payment"><span class="products_total">0</span>원</td>
 						</tr>
 					</table>
 					
 					<div class="save_group">
 						<button class="return">쇼핑 계속하기</button>
-						<button class="purchase">구매하기</button>
+<!-- 						<button class="purchase">구매하기</button> -->
 					</div>
 					
 				</div>
 			</div>
 
-			</div>
+		</div>
 	</div>
 </div>	
 </body>
