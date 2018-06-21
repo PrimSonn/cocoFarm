@@ -14,6 +14,7 @@ function closeLayer( obj ) {
 }
 function closePop( obj ) {
 	$(obj).parent().parent().hide();
+	location.reload();
 }
 var idx;
 $(function(){
