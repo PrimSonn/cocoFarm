@@ -206,14 +206,9 @@ public class PayController {
 		int accIdx = (int) session.getAttribute("idx");
 		
 		List<ReceiptDto> list = receiptSvc.paynee(accIdx);
-		list.stream().forEach((s)->System.out.println(s.getIdx()));
-		
 		model.addAttribute("paynee", receiptSvc.paynee(accIdx));
 		
 		return "mypage/common/payNee";
 	}
-	
-	
-	
 	
 }

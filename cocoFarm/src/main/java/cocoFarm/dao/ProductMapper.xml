@@ -121,12 +121,11 @@
 		WHERE SE.sale_idx = ${_parameter } AND SE.isdel = 0
 		ORDER BY last_edited DESC
 	</select>
-	
-	<select id="selectProductByReceipt" parameterType="String"
-					resultMap="ProductResult">
-		select S.* from sale_option so
-			left join sale S on S.idx = so.sale_idx
-		where so.name = #{value }
+	 
+	<select id="selectProductByReceipt" parameterType="int" resultMap="ProductResult">
+		select S.* from SALE_RECEIPT SR
+    	left join SALE S ON S.idx = SR.sale_idx
+		where main_recpt_idx = #{value }
 	</select>
 
 	<!-- ==================================================================================== -->
@@ -201,11 +200,5 @@ on S.IDX = SO.SALE_IDX where S.ISDEL =0
    			left join SALE S on SOR.SALE_IDX = S.IDX
    			left join ACCOUNT A on M.BUYER_IDX = A.IDX
 		WHERE S.ACC_IDX = #{accIdx }
-	</select>
-	 
-	<select id="selectProductByReceipt2" parameterType="String" resultMap="ProductResult">
-		select S.* from sale_option so
-			inner join sale S on S.idx = so.sale_idx
-		where so.name = #{value }
 	</select>
 </mapper>

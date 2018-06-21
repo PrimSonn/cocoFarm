@@ -10,10 +10,9 @@
 <link rel="stylesheet" type="text/css" href="/css/paynee.css">
 
 <script type="text/javascript">
-/* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
+/* 상품평 등록 버튼 눌렀을 때 */
 $(".insertComm_button").click(function() {
-	var productTitle = $(this).parent().parent().find("#product_title").text();
-	console.log(productTitle);
+	var receipt_idx = $(this).parent().parent().find("#receipt_idx").text();
 	
 	var arr = new Array();
 	var obj = new Object();
@@ -24,7 +23,6 @@ $(".insertComm_button").click(function() {
 		arr.push(null);
 	} else {
 		obj.main_recpt_idx = $(this).val();
-		console.log($(this).val());
 		obj.content = cont;
 		arr.push(obj);
 	}
@@ -34,7 +32,7 @@ $(".insertComm_button").click(function() {
 			, url: "/product/insertComment.do"
 			, dataType: "json"
 			, data: {
-				title: productTitle
+				receiptIdx: receipt_idx
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
@@ -96,7 +94,7 @@ $(".insertComm_button").click(function() {
       <tbody>
       <c:forEach items="${paynee }" var="paynee">
 				<tr class="message">
-         	<td class="message_td">${paynee.idx}</td>
+         	<td class="message_td" id="receipt_idx">${paynee.idx}</td>
          	<td class="message_td">${paynee.seller }</td>
         	<td class="message_td" id="product_title">${paynee.name }</td> <!--구매한 옵션  -->
 					<td class="message_td">${paynee.amount }</td> <!--수량  -->

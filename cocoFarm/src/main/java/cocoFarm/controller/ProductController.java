@@ -310,6 +310,9 @@ public class ProductController {
 		
 		return items;
 	}
+
+	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
+	public void comm() {	}
 	
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
@@ -324,21 +327,21 @@ public class ProductController {
 		return items;
 	}
 	
-	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
-	public void comm() {	}
+	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.GET)
+	public void insertComm() {	}
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public boolean insertComment(Comment comment
-								, String title
+								, int receiptIdx
 								, String insertComm
 								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		Product product = productService.selectProductByReceipt2(title);
+		Product product = productService.selectProductByReceipt(receiptIdx);
 		
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
