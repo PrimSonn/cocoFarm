@@ -335,13 +335,14 @@ public class ProductController {
 	@ResponseBody
 	public boolean insertComment(Comment comment
 								, int receiptIdx
+								, int optionIdx
 								, String insertComm
 								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		Product product = productService.selectProductByReceipt(receiptIdx);
+		Product product = productService.selectProductByReceipt(receiptIdx, optionIdx);
 		
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {

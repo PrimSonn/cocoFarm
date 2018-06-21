@@ -13,6 +13,8 @@
 /* 상품평 등록 버튼 눌렀을 때 */
 $(".insertComm_button").click(function() {
 	var receipt_idx = $(this).parent().parent().find("#receipt_idx").text();
+	var sale_option_idx = $(this).parent().parent().find("#option_idx").val();
+	console.log(sale_option_idx);
 	
 	var arr = new Array();
 	var obj = new Object();
@@ -27,12 +29,15 @@ $(".insertComm_button").click(function() {
 		arr.push(obj);
 	}
 	
+	console.log(arr);
+	
 	$.ajax({
 		type: "POST"
 			, url: "/product/insertComment.do"
 			, dataType: "json"
 			, data: {
 				receiptIdx: receipt_idx
+				, optionIdx: sale_option_idx
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
@@ -107,6 +112,7 @@ $(".insertComm_button").click(function() {
           <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
          	<td class="message_td">
          		<button class="insertComm_button"	value="${paynee.main_recpt_idx }">등록</button></td>
+         	<input type="hidden" id="option_idx" value="${paynee.sale_option_idx }">
          </tr>
       </c:forEach>
       </tbody>

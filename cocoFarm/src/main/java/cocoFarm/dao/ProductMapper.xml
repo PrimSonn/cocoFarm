@@ -122,10 +122,10 @@
 		ORDER BY last_edited DESC
 	</select>
 	 
-	<select id="selectProductByReceipt" parameterType="int" resultMap="ProductResult">
-		select S.* from SALE_RECEIPT SR
-    	left join SALE S ON S.idx = SR.sale_idx
-		where main_recpt_idx = #{value }
+	<select id="selectProductByReceipt" parameterType="java.util.HashMap" resultMap="ProductResult">
+		select S.* from SALE_OPTION_RECEIPT SOR
+		    left join SALE S ON S.idx = SOR.sale_idx
+		where SOR.main_recpt_idx = #{param1 } and SOR.sale_option_idx = #{param2 }
 	</select>
 
 	<!-- ==================================================================================== -->

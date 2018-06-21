@@ -123,13 +123,14 @@
 	</select>
 -->	
 
-	<!-- 06.17 손승용 수정사항: 판매쪽 결제내역만 조회되게 바꿈. -->
+	<!-- 06.21 원지은 수정사항: SALE_OPTION_RECEIPT 중복되어 조회되는 것을 유일한 행이 나오도록 수정. -->
 	<select id="paynee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
 		select M.*,A.NAME seller, SOR.* from MAIN_RECEIPT M
 			inner join SALE_RECEIPT SR on M.IDX = SR.MAIN_RECPT_IDX
 			left join SALE S on SR.SALE_IDX = S.IDX
 			left join ACCOUNT A on S.ACC_IDX = A.IDX
 			left join SALE_OPTION_RECEIPT SOR on SR.MAIN_RECPT_IDX = SOR.MAIN_RECPT_IDX
+                                        and S.idx = SOR.sale_idx
 		where
 		M.STATE_CODE !=0 and
 		M.BUYER_IDX = #{idx} order by M.IDX desc

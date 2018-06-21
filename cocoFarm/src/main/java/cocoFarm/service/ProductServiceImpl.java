@@ -187,8 +187,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public Product selectProductByReceipt(int receiptIdx) {
-		return productDao.selectProductByReceipt(receiptIdx);
+	public Product selectProductByReceipt(int receiptIdx, int optionIdx) {
+		return productDao.selectProductByReceipt(receiptIdx, optionIdx);
 	}
 	
 	/* ==================================================================================== */
