@@ -19,16 +19,14 @@ public class ReceiptDto {
 	private int price;				//단위당 가격
 	private String sale_title;		//경매글 제목
 //	private Integer sale_option_idx;
-//	private Integer Sale_idx;
-//	private String insertComm;
+	private Integer Sale_idx;
+	private String insertComm;
 //	private String main_recpt_idx;
 	
 	private String main_recpt_idx;	//영수증 번호//
 	private int sale_option_idx;	//옵션 번호//
 	
-	public int getSale_option_idx() {
-		return sale_option_idx;
-	}
+
 	public void setSale_option_idx(int sale_option_idx) {
 		this.sale_option_idx = sale_option_idx;
 	}
@@ -126,13 +124,17 @@ public class ReceiptDto {
 		return sale_option_idx;
 	}public void setSale_option_idx(Integer sale_option_idx) {
 		this.sale_option_idx = sale_option_idx;
-	}public Integer getSale_idx() {
+	}
+	public Integer getSale_idx() {
 		return Sale_idx;
-	}public void setSale_idx(Integer sale_idx) {
+	}
+	public void setSale_idx(Integer sale_idx) {
 		Sale_idx = sale_idx;
-	}public String getInsertComm() {
+	}
+	public String getInsertComm() {
 		return insertComm;
-	}public void setInsertComm(String insertComm) {
+	}
+	public void setInsertComm(String insertComm) {
 		this.insertComm = insertComm;
 	}
 	

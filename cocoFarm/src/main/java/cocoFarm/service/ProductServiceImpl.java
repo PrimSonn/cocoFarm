@@ -246,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
 	public List procPayNee(int accIdx) {
 		return productDao.procPayNee(accIdx);
 	}
-
+/*
 	@Override
 	public boolean insertEval(String main_receipt_idx, String sale_idx, String insertComm) {
 		
@@ -258,5 +258,6 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.evaluation(recpt);
 		
 	}
+	*/
 	
 }
