@@ -21,7 +21,14 @@ public class ReceiptDto {
 	
 	private String main_recpt_idx;	//영수증 번호
 	private int sale_option_idx;	//옵션 번호
+	private int comm;				//상품후기 여부 (0: 등록X, 1: 등록O)
 	
+	public int getComm() {
+		return comm;
+	}
+	public void setComm(int comm) {
+		this.comm = comm;
+	}
 	public int getSale_option_idx() {
 		return sale_option_idx;
 	}

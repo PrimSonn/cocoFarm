@@ -1,29 +1,24 @@
-/* @charset "UTF-8";
+/*
+@charset "UTF-8";
 
 .message_table{
 	text-align: center;
 	font-size: 11px;
 }
 
-
 .message_num{
 	width: 120px;
 	overflow: hidden;
-	
 }
 .message_table table{
-    width: 100%;
+	width: 100%;
 }
 
 td {
-    max-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+	margin: 20px auto;
+	max-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
-td.columnA {
-    width: 30%;
-}
-td.columnB {
-    width: 70%;
-} */
+*/
