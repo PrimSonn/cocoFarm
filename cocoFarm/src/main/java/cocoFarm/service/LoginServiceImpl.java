@@ -25,8 +25,6 @@ public class LoginServiceImpl implements LoginService {
 	public boolean login(Account account, HttpSession session) {
 		if( loginDao.loginCheck(account) > 0) {
 			account = loginDao.login(account);
-			
-			System.out.println("loginDao : " + account);
 			session.setAttribute("idx", account.getIdx());
 			session.setAttribute("type", account.getAccount_type());
 			session.setAttribute("name", account.getName());

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Comment {
 	private int sale_idx;
-	private int main_recpt_idx;
+	private String main_recpt_idx;
 	private int score;
 	private String title;
 	private String content;
@@ -26,10 +26,10 @@ public class Comment {
 	public void setSale_idx(int sale_idx) {
 		this.sale_idx = sale_idx;
 	}
-	public int getMain_recpt_idx() {
+	public String getMain_recpt_idx() {
 		return main_recpt_idx;
 	}
-	public void setMain_recpt_idx(int main_recpt_idx) {
+	public void setMain_recpt_idx(String main_recpt_idx) {
 		this.main_recpt_idx = main_recpt_idx;
 	}
 	public int getScore() {

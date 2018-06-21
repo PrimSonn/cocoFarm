@@ -259,5 +259,10 @@ public class ProductServiceImpl implements ProductService {
 		
 	}
 	*/
+
+	@Override
+	public Product selectProductByReceipt2(String receiptIdx, int optionIdx) {
+		return productDao.selectProductByReceipt2(receiptIdx, optionIdx);
+	}
 	
 }

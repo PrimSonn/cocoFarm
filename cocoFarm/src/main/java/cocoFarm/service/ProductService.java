@@ -138,6 +138,8 @@ public interface ProductService {
 
 	public Product selectProductByReceipt(int receiptIdx, int optionIdx);//
 	
+	public Product selectProductByReceipt2(String receiptIdx, int optionIdx);
+	
 	/* ==================================================================================== */
 	
 	//2018_05_26 hwanmin work

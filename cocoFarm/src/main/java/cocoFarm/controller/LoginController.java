@@ -44,7 +44,6 @@ public class LoginController {
 	
 	@RequestMapping(value="/login/login.do", method=RequestMethod.POST)
 	public String loginProc(HttpSession session, Account account, Model model){
-		System.out.println(account);
 		
 		if(loginService.login(account, session)) {
 			return "redirect:/main/cocomain.do";

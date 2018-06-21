@@ -29,6 +29,8 @@ public interface ProductDao {
 	
 	public Product selectProductByReceipt(int receiptIdx, int optionIdx);
 	
+	public Product selectProductByReceipt2(String receiptIdx, int optionIdx);
+	
 	public boolean evaluation(ReceiptDto recpt);
 	
 	/* ==================================================================================== */
