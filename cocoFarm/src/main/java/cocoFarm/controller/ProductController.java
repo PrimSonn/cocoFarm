@@ -340,7 +340,7 @@ public class ProductController {
 
 //		Gson gson = new Gson();
 //		List list = gson.fromJson(insertComm, List.class);
-		System.out.println("receiptIdx: "+receiptIdx+", optionIdx: "+optionIdx);
+//		System.out.println("receiptIdx: "+receiptIdx+", optionIdx: "+optionIdx);
 		
 		
 		Product product = productService.selectProductByReceipt2(receiptIdx, Integer.parseInt(optionIdx));
