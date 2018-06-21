@@ -123,9 +123,11 @@
 	</select>
 -->	
 
-	<!-- 06.21 원지은 수정사항: SALE_OPTION_RECEIPT 중복되어 조회되는 것을 유일한 행이 나오도록 수정. -->
+	<!-- 06.21 원지은 수정사항: SALE_OPTION_RECEIPT 중복되어 조회되는 것을 유일한 행이 나오도록 수정, comm 추가 -->
 	<select id="paynee" parameterType="int" resultType="cocoFarm.dto.ReceiptDto">
-		select M.*,A.NAME seller,SOR.* from MAIN_RECEIPT M
+		select M.*, A.NAME seller, SOR.*
+					,( select count(*) from sale_evaluation where sale_idx=S.idx and main_recpt_idx=SR.MAIN_RECPT_IDX ) comm
+		from MAIN_RECEIPT M
 			inner join SALE_RECEIPT SR on M.IDX = SR.MAIN_RECPT_IDX
 			left join SALE S on SR.SALE_IDX = S.IDX
 			left join ACCOUNT A on S.ACC_IDX = A.IDX

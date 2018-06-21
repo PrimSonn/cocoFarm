@@ -9,7 +9,7 @@
 	cursor: pointer;
 }
 .save_group div {
-   display:inline;
+	display:inline;
 }
 .save_group .save_button {
 	color:#fff;
@@ -42,9 +42,8 @@
 	cursor: pointer;
 }
 
-
 .product_list table {
-	margin: 20px auto;
+	margin: 25px auto;
 	width: 740px;
 	border-collapse: collapse;
 	border-spacing: 0px;
@@ -52,6 +51,7 @@
 
 .product_list tr:first-child {
 	border-top: 0px;
+	font-size: 13px;
 }
 
 .product_list tr {
@@ -422,7 +422,7 @@ input[id="checkAll"], input[id="checkRow"] {
 .name_price {
 	padding: 10px 15px;
 	font-family: 'Jeju Gothic';
-	font-size: 15px;
+	font-size: 17px;
 	width: 250px;
 }
 
@@ -579,7 +579,25 @@ input[id="checkAll"], input[id="checkRow"] {
 }
 
 /* 결제 내역 */
+.payCheck_table {
+/* 	table-layout:fixed; */
+	text-align:center;
+	border-bottom:1px solid #ddd;
+	border-collapse: collapse;
+}
+
+.payCheck_menu {
+	border-bottom: 1px solid #ddd;
+	font-size: 14px;
+	height: 50px;
+}
+
 .message_num {
 	width: 10px;
 	overflow: hidden;
+}
+
+.payCheck_cont {
+	height: 50px;
+	font-size: 13px;
 }

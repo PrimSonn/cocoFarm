@@ -402,7 +402,7 @@ function onlyNumber(obj){
 					
 					<div class="save_group">
 						<button class="return">쇼핑 계속하기</button>
-						<button class="purchase">구매하기</button>
+<!-- 						<button class="purchase">구매하기</button> -->
 					</div>
 					
 				</div>
