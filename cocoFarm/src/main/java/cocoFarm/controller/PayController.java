@@ -210,7 +210,4 @@ public class PayController {
 		return "mypage/common/payNee";
 	}
 	
-	
-	
-	
 }

@@ -16,173 +16,6 @@
 	src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 <script type="text/javascript">
-/* 장바구니 옵션 변경 버튼 */
-$(".td_update").click(function() {
-<<<<<<< HEAD
-   var arr = [];
-   var obj = {};
-
-   // 판매 상품 idx
-   var saleIdx = $(this).attr('value');
-   
-   // 판매 상품 옵션 idx
-   var cart = "${cart[4].saleOptionIdx }";
-//      console.log(cart);
-
-   // 판매 상품에 해당하는 옵션 idx
-
-   var init;
-   <c:if test="${empty optionCart }">
-      init = 0;
-   </c:if>
-   <c:if test="${!empty optionCart }">
-      init = ${optionCart[0].idx };
-   </c:if>
-   
-   
-   
-   // saleIdx가 동일한 개수만 size 체크
-   // product.idx === optionCart.saleIdx
-   
-   var size = 0;
-   var count = ${optionCart.size() };
-//      for(var i=0; i<count; i++) {
-      if(saleIdx === "${optionCart[0].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[1].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[2].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[3].saleIdx }" ) {
-         size++;
-      }
-      if(saleIdx === "${optionCart[4].saleIdx }" ) {
-         size++;
-      }
-//      }
-   
-//      var size = ${optionCart.size() };
-//      for(var i=init; i<init+size; i++) {
-//            obj.count = $("#amount"+i).val();
-//            arr.push(obj);
-//            console.log(obj.count);
-//            console.log(arr);
-//            obj = {};
-//      }
-   
-   //==========================================================
-      
-      
-   var result = [];
-   
-   <c:forEach items="${cart }" var="cart">
-      var json = {};
-      json.saleOptionIdx = "${cart.saleOptionIdx }";
-      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
-      result.push(json);
-   </c:forEach>
-   
-   console.log(JSON.stringify(result));
-   
-   $.ajax({
-      type: "POST"
-      , url: "/product/updateCart.do"
-      , data: {
-         cart: JSON.stringify(result)
-      }
-      , dataType: "json"
-      , success: function(data) {
-         console.log(data);   
-      }
-   })
-});
-
-
-=======
-	var arr = [];
-	var obj = {};
->>>>>>> abc559b80c0513681bee2665e757b9fcc1d9def9
-
-	// 판매 상품 idx
-	var saleIdx = $(this).attr('value');
-	
-	// 판매 상품 옵션 idx
-	var cart = "${cart[4].saleOptionIdx }";
-//		console.log(cart);
-
-	// 판매 상품에 해당하는 옵션 idx
-
-	var init;
-	<c:if test="${empty optionCart }">
-		init = 0;
-	</c:if>
-	<c:if test="${!empty optionCart }">
-		init = ${optionCart[0].idx };
-	</c:if>
-	
-	
-	
-	// saleIdx가 동일한 개수만 size 체크
-	// product.idx === optionCart.saleIdx
-	
-	var size = 0;
-	var count = ${optionCart.size() };
-//		for(var i=0; i<count; i++) {
-		if(saleIdx === "${optionCart[0].saleIdx }" ) {
-			size++;
-		}
-		if(saleIdx === "${optionCart[1].saleIdx }" ) {
-			size++;
-		}
-		if(saleIdx === "${optionCart[2].saleIdx }" ) {
-			size++;
-		}
-		if(saleIdx === "${optionCart[3].saleIdx }" ) {
-			size++;
-		}
-		if(saleIdx === "${optionCart[4].saleIdx }" ) {
-			size++;
-		}
-//		}
-	
-//		var size = ${optionCart.size() };
-//		for(var i=init; i<init+size; i++) {
-//				obj.count = $("#amount"+i).val();
-//				arr.push(obj);
-//				console.log(obj.count);
-//				console.log(arr);
-//				obj = {};
-//		}
-	
-	//==========================================================
-		
-		
-	var result = [];
-	
-	<c:forEach items="${cart }" var="cart">
-		var json = {};
-		json.saleOptionIdx = "${cart.saleOptionIdx }";
-		json.count = $("#amount"+"${cart.saleOptionIdx }").val();
-		result.push(json);
-	</c:forEach>
-	
-	console.log(JSON.stringify(result));
-	
-	$.ajax({
-		type: "POST"
-		, url: "/product/updateCart.do"
-		, data: {
-			cart: JSON.stringify(result)
-		}
-		, dataType: "json"
-		, success: function(data) {
-			console.log(data);	
-		}
-	})
-});
 $(document).ready(function() {	
 	$(".mypage_navbody").on("click", ".nav-link", function() {
 		var page = $(this).children().attr("href");
@@ -204,7 +37,6 @@ $(document).ready(function() {
 	
 	calcTotalPrice();
 	
-	
 	$(".return").click(function() {
 		location.href = "/seller.do";
 	});
@@ -213,11 +45,6 @@ $(document).ready(function() {
 		$(".option_form").attr("action", "/orderpay.do");
 		$(".option_form").submit(); 
 	});	
-	
-<<<<<<< HEAD
-=======
-	
->>>>>>> abc559b80c0513681bee2665e757b9fcc1d9def9
 	
 	/* 장바구니 삭제 */
 	$(".basket_delete").click(function() {
@@ -244,7 +71,7 @@ $(document).ready(function() {
 		$(document.body).append($form);
 		$form.submit();
 	});
-
+	
 	/* 플러스 버튼 눌렀을때 */
 	$(".option_count").on("click", ".button_plus", function() {
 		// 옵션 개수 최대값
@@ -264,6 +91,7 @@ $(document).ready(function() {
 		$(this).parent().find(".item_price").val(comma(option_price*num));
 		
 		calcTotalPrice();
+		
 	});
 
 	/* 마이너스 버튼 눌렀을때 */
@@ -276,7 +104,8 @@ $(document).ready(function() {
 		
 		// 옵션 개수
 		var num = Number($(this).parent().find(".pronum_text").val())-1;
-		Number($(this).parent().find(".pronum_text").val(num));
+//	 	Number($(this).parent().find(".pronum_text").val(num));
+		$(this).parent().find(".pronum_text").val(num);
 		
 		// 옵션 가격 계산
 		var option_price = Number($(this).val());
@@ -286,7 +115,83 @@ $(document).ready(function() {
 				
 		calcTotalPrice();
 	});
+	
+
+	/* 장바구니 옵션 변경 버튼 */
+	$(".td_update").click(function() {
+	   var arr = [];
+	   var obj = {};
+
+	   // 판매 상품 idx
+	   var saleIdx = $(this).attr('value');
+	   
+	   // 판매 상품 옵션 idx
+	   var cart = "${cart[4].saleOptionIdx }";
+//	      console.log(cart);
+
+	   // 판매 상품에 해당하는 옵션 idx
+	   
+	   // saleIdx가 동일한 개수만 size 체크
+	   // product.idx === optionCart.saleIdx
+	   
+	   var size = 0;
+	   var count = ${optionCart.size() };
+//	      for(var i=0; i<count; i++) {
+	      if(saleIdx === "${optionCart[0].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[1].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[2].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[3].saleIdx }" ) {
+	         size++;
+	      }
+	      if(saleIdx === "${optionCart[4].saleIdx }" ) {
+	         size++;
+	      }
+//	      }
+	   
+//	      var size = ${optionCart.size() };
+//	      for(var i=init; i<init+size; i++) {
+//	            obj.count = $("#amount"+i).val();
+//	            arr.push(obj);
+//	            console.log(obj.count);
+//	            console.log(arr);
+//	            obj = {};
+//	      }
+	   
+	   //==========================================================
+	      
+	      
+	   var result = [];
+	   
+	   <c:forEach items="${cart }" var="cart">
+	      var json = {};
+	      json.saleOptionIdx = "${cart.saleOptionIdx }";
+	      json.count = $("#amount"+"${cart.saleOptionIdx }").val();
+	      result.push(json);
+	   </c:forEach>
+	   
+	   console.log(JSON.stringify(result));
+	   
+	   $.ajax({
+	      type: "POST"
+	      , url: "/product/updateCart.do"
+	      , data: {
+	         cart: JSON.stringify(result)
+	      }
+	      , dataType: "json"
+	      , success: function(data) {
+	         alert("옵션이 변경되었습니다.");  
+	      }
+	   })
+	});
+	
 });
+
 
 /* 상품금액 계산 */
 function calcPrice() {
@@ -309,17 +214,13 @@ function calcTotalPrice() {
 		price += Number($("#priceof" + idx).val().replace(/,/g, ''));
 	});
 	
-	$(".products_total").text(price);
+	$(".products_total").text(comma(price));
 }
 
 //콤마찍기
 function comma(str) {
     str = String(str);
     return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-}
-
-function checkDelete() {
-	
 }
 
 //전체 체크/해제
@@ -349,52 +250,6 @@ function onlyNumber(obj){
     re=/[^0-9]/gi;
     obj.value=val.replace(re,"");
 }
-
-(function() {
-	var tableEl = document.querySelector('.tr_cartItem');
-	var mainHtml = tableEl.innerHTML;
-	var routerMap = {
-		'' : function() {
-			tableEl.innerHTML = mainHtml;
-		}
-	}
-	
-	function otherwise() {
-		tableEl.innerHTML =
-	    'Not Found';
-	}
-
-})
-
-function List() {
-	this.elements = {};
-}
-
-/* 장바구니 조회 연습... */
-function cartItems() {
-	var productSize = "${productCart.size() }";
-	var optionName = "${optionCart[0].optionName }";
-	var optionSaleIdx = "${optionCart[0].saleIdx }";
-	var optionCart = new Array();
-	console.log("optionName: " + optionName);
-	console.log(optionCart);
-	console.log("size: " + productSize);
-	
-	var str = "";
-	for(var i=0; i<productSize; i++) {
-		str += '<div>'
-					+ '<img src="/proimg/${productCart[0].faceImg }" class="td_productImg" align="left" width="140px" height="140px" />'
-					+ '<div class="td_productName">${productCart[0].title }</div>'
-	}
-// 	document.getElementById("productCart").innerHTML = str;
-	
-// 	for(var i=0; i<productSize; i++) {
-// 		var productImg = "/proimg/${productCart[0].faceImg }";
-// 		$(".td_productImg").attr("src", "productImg");
-// 	}
-// 	$(".td_productName").text("${productCart[0].title }");
-	
-}
 </script>
 
 </head>
@@ -409,8 +264,48 @@ function cartItems() {
 
 		<div class="mypage_box">
 			<!--Mypage부분  판매자 인트로부분 -->
-			<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
+			<div class="mypage_nav">
+				<div class="mypage_topbusiness">
+					<div class="mypagetitle03"><h2>일반 회원</h2><h1>마이페이지</h1></div>
+					<div class="mypageimg"><img src="/img/profile/${account.thumb_loc}" ></div>
+					<div class="mypagewho"><span><strong>${sessionScope.name}</strong>님&nbsp;</span>환영합니다.</div>
+					<div class="mail_box"><a class="nav-link" href="/mypage/message.do"><img src="/img/mypage/mypageicon/mess.png" alt="쪽지" >쪽지함 확인</a></div>
+				</div>
 			
+				<div class="mypage_navbody">
+					
+					<p class="navtitle_01"><img alt="" src="/img/mypage/mypageicon/mypage_info.png">개인정보 관리</p>
+					
+					<ul>
+						<li class="nav-link"><a href="/mypage/user/updateAccount.do">개인정보 수정</a></li>
+						<li class="nav-link"><a href="/mypage/deleteAcc.do">회원 탈퇴</a></li>
+						<li class="nav-link"><a href="/mypage/license.do">사업자 등록하기</a></li>
+						
+					</ul>
+					
+					<p class="navtitle_02"><img alt="" src="/img/mypage/mypageicon/mypage_sale.png">상품보기</p>
+					
+					<ul>
+					
+						<li><a href="/product/cart.do">장바구니 조회</a></li>
+						<li class="nav-link"><a href="/payNee.do">결제 내역 조회 </a></li>
+						
+					</ul>
+					<p class="navtitle_03"><img alt="" src="/img/mypage/mypageicon/mypage_aution.png">경매</p>
+					<ul>
+						
+						<li><a href="/auction/auction_bidCheck.do">입찰 상품 조회하기</a></li>
+						<li><a href="/auction/auction_receiptCheck.do">결제 상품 조회하기</a></li>
+					</ul>
+					
+					<p class="navtitle_04"><img alt="" src="/img/mypage/mypageicon/mypage_service.png">고객센터</p>
+					<ul>
+						<li class="nav-link"><a href="/mypage/writeInquiry.do">관리자에게 문의하기</a></li>
+					</ul>
+					
+				</div>
+			
+			</div>
 			
 			<div class="mypage_page01">
 				<div class="border">
@@ -422,13 +317,13 @@ function cartItems() {
 						<tr class="tr_back">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
 							<th class="th_inform">상품정보</th>
-							<th class="th_price">상품금액</th>
+<!-- 							<th class="th_price">상품금액</th> -->
 							<th class="th_delivery">배송비</th>
 						</tr>
 						
 						
 						
-						<form class="option_form" method="post">
+<!-- 						<form class="option_form" method="post"> -->
 						
 						<c:forEach items="${productCart }" var="product" varStatus="st">
 						<tr class="tr_back" id="tr_cartItem${st.index }"	align="center">
@@ -448,12 +343,13 @@ function cartItems() {
 										
 											<div class="option_count">
 												<button class="button_minus" value=${option.price }>-</button>
-												<input type="text" name="saleOptions[${status.index }].proAmount"
-															 class="pronum_text" id="amount${option.idx }"
-															 value="${option.proAmount }" onkeyup="onlyNumber(this)">
-												<button class="button_plus" value=${option.price }>+</button>
-												<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
-												<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
+													<input type="text" name="saleOptions[${status.index }].proAmount"
+																 class="pronum_text" id="amount${option.idx }"
+																 value="${option.proAmount }" onkeyup="onlyNumber(this)">
+													<button class="button_plus" value=${option.price }>+</button>
+													
+													<input type="hidden" name="saleOptions[${status.index }].idx" value="${option.idx }">
+													<input type="hidden" class="item_price" id="priceof${status.index }" value="${option.price*option.proAmount }">
 											</div>
 											
 										</div>
@@ -464,12 +360,12 @@ function cartItems() {
 								
 							</td>
 							
-							<td><span class="product_price" id="product_price${st.index }"></span>원</td>
+<%-- 							<td><span class="product_price" id="product_price${st.index }"></span>원</td> --%>
 							<td class="delivery_price">무료</td>
 						</tr>
 						</c:forEach>
 						
-						</form>
+<!-- 						</form> -->
 						
 						<tr class="tr_back"	align="center">
 							<th class="th_checkbox"><input type="checkbox" id="checkAll" onclick="checkAll();"></th>
@@ -512,7 +408,7 @@ function cartItems() {
 				</div>
 			</div>
 
-			</div>
+		</div>
 	</div>
 </div>	
 </body>

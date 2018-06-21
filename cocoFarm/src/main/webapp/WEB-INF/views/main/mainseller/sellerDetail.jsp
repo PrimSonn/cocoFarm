@@ -229,10 +229,12 @@ function viewComment() {
 				sale_idx: productIdx
 			}
 			, success: function(data) {
+				if(data=="") {
+					alert("등록된 상품 후기가 없습니다.");
+				} else {
 				var result = data;
 				var str = "";
 				$.each(result, function(idx, val) {
-					
 					console.log(idx);
 					str += '<span class="wrap_profile">'
 						+	'<span class="comm_accName">'+ result[idx].acc_name +'</span></span><br/>'
@@ -242,6 +244,7 @@ function viewComment() {
 						+ '</div>';
 				});
 				document.getElementById("comment_items").innerHTML = str;
+				}
 			}
 	});
 }
@@ -254,8 +257,7 @@ function insertCart() {
 		if($(".proselect_option option:selected").val()==0) {
 			  alert("상품 옵션을 선택해주세요.");
 			  return false;
-			} else {
-			
+		} else {
 			$(".option_form").attr("action", "/product/cartInsert.do");
 			$(".option_form").submit();
 		}
@@ -392,22 +394,22 @@ function popupOpen2(){
 			<ul class="list_cmt">
 				<li>
 					<div class="cmt_cont" id="comment_items" style="padding-left: 20px;">
-						<span class="wrap_profile">
+<!-- 						<span class="wrap_profile"> -->
 <!-- 							<img src="계정이미지" width="32" height="32" class="thumb_g" alt=""> -->
-							<span class="comm_accName">계정 아이디</span>
-						</span>
-						<br/><span class="comm_starImg"></span>점
-						<div class="wrap_cont">
+<!-- 							<span class="comm_accName">계정 아이디</span> -->
+<!-- 						</span> -->
+<!-- 						<br/><span class="comm_starImg"></span>점 -->
+<!-- 						<div class="wrap_cont"> -->
 <!-- 							<span class="info_score"> -->
 <!-- 								<span class="img_kakaofarmer bg_star"> -->
 <!-- 									<span class="img_kakaofarmer bar_star" style="width: 100%;">5점</span> -->
 <!-- 								</span> -->
 <!-- 							</span> -->
-							<span class="txt_prod">${product.title }</span>
-							<p class="desc_cmt">
-								<span><span class="comm_content"></span></span>
-							</p>
-						</div>
+<%-- 							<span class="txt_prod">${product.title }</span> --%>
+<!-- 							<p class="desc_cmt"> -->
+<!-- 								<span><span class="comm_content"></span></span> -->
+<!-- 							</p> -->
+<!-- 						</div> -->
 					</div>
 				</li>
 		

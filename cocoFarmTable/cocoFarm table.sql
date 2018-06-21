@@ -154,6 +154,8 @@ where TC.TABLE_TYPE = 'TABLE' and TC.OWNER = 'COCOFARM' order by TABLE_NAME;
 	
 -------------------------------------------------------------*/
 
+drop procedure LOG_CLEAR;
+
 drop procedure TEMP_RECPT_CLEAR;
 
 drop procedure CANCEL_TEMP_RECPT;
@@ -4543,6 +4545,30 @@ end;
 /
 
 --drop procedure TEMP_RECPT_CLEAR;
+
+
+------------------------------------------- 로그 정리 --------------------------------------------------------------
+
+create procedure LOG_CLEAR (DBTIME out timestamp, NEXTCHECK out timestamp)
+is
+	err_code			number;
+	err_message			varchar2(255);
+begin
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('LOG_CLEAR', 1, 'LOG_CLEAR');
+	delete PLOGGER where TIME < SYSTIMESTAMP - numtodsinterval(1,'DAY');
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(30, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+exception when OTHERS then
+	err_code := sqlcode;
+	err_message := substr(sqlerrm, 1, 255);
+	
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT, err_code, err_message) values ('TEMP_RECPT_CLEAR', 0, 'ERROR', err_code, err_message);
+	commit;
+	select SYSTIMESTAMP, SYSTIMESTAMP + numtodsinterval(30, 'MINUTE') into DBTIME, NEXTCHECK from DUAL;
+end;
+/
+
+
+--drop procedure LOG_CLEAR;
 
 
 -------------------------------------------------- 더미 예시 (시퀀스 주의)  ---------------------------------------------------

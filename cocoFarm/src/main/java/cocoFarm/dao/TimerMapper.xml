@@ -23,4 +23,10 @@
 			,#{nextCheck,jdbcType=TIMESTAMP,mode=OUT}
 		)}
 	</select>
+	<select id='logClear' resultMap='getTime' statementType='CALLABLE'>
+		{call LOG_CLEAR (
+			#{dbTime,jdbcType=TIMESTAMP,mode=OUT}
+			,#{nextCheck,jdbcType=TIMESTAMP,mode=OUT}
+		)}
+	</select>
 </mapper>

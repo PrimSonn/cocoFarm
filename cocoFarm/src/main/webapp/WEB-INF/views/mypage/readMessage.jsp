@@ -10,8 +10,10 @@ $(document).ready(function() {
 });
 
 function closeLayer( obj ) {
+	$(obj).parent().parent().parent().hide();
+}
+function closePop( obj ) {
 	$(obj).parent().parent().hide();
-// 	$(obj).parent().parent().parent().hide();
 }
 var idx;
 $(function(){
@@ -172,7 +174,7 @@ $("#btnDelete").click(function() {
 <div class="popupLayer">
 	<a id="writeMessageBtn">쪽지 보내기</a><br>
 	<div>
-		<a onClick="closeLayer(this)" style="cursor:pointer;" title="닫기">취소</a>
+		<a onClick="closePop(this)" style="cursor:pointer;" title="닫기">취소</a>
 	</div>
 </div>
 

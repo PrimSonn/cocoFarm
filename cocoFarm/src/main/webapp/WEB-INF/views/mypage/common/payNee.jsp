@@ -10,12 +10,16 @@
 <link rel="stylesheet" type="text/css" href="/css/paynee.css">
 
 <script type="text/javascript">
-/* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
+/* 상품평 등록 버튼 눌렀을 때 */
 $(".insertComm_button").click(function() {
-	var productTitle = $(this).parent().parent().find("#product_title").text();
-	var mainRecptIdx = $(this).parent().parent().find("#main_receipt_idx").text();
-	var saleIdx = $(this).parent().parent().find("#sale_idx").text();
-	console.log(productTitle);
+//	var productTitle = $(this).parent().parent().find("#product_title").text();
+//	var mainRecptIdx = $(this).parent().parent().find("#main_receipt_idx").text();
+//	var saleIdx = $(this).parent().parent().find("#sale_idx").text();
+//	console.log(productTitle);
+
+	var receipt_idx = $(this).parent().parent().find("#receipt_idx").text();//
+	var sale_option_idx = $(this).parent().parent().find("#option_idx").val();//
+	console.log(sale_option_idx);//
 	
 	var arr = new Array();
 	var obj = new Object();
@@ -26,18 +30,21 @@ $(".insertComm_button").click(function() {
 		arr.push(null);
 	} else {
 		obj.main_recpt_idx = $(this).val();
-		console.log($(this).val());
 		obj.content = cont;
 		arr.push(obj);
 	}
+	
+	console.log(arr);
 	
 	$.ajax({
 		type: "POST"
 			, url: "/product/insertComment.do"
 			, dataType: "json"
 			, data: {
-				sale_idx: saleIdx
-				, main_receipt_idx: mainRecptIdx
+//				sale_idx: saleIdx
+//				, main_receipt_idx: mainRecptIdx
+				receiptIdx: receipt_idx//
+				, optionIdx: sale_option_idx//
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
@@ -101,18 +108,26 @@ $(".insertComm_button").click(function() {
       <tbody>
       <c:forEach items="${paynee }" var="paynee">
 				<tr class="message">
-         	<td class="message_td" id='main_receipt_idx'>${paynee.idx}</td>
-         	<td class="message_td" id='sale_idx'>${paynee.sale_idx}</td>
+<!--         	<td class="message_td" id='main_receipt_idx'>${paynee.idx}</td>
+         	<td class="message_td" id='sale_idx'>${paynee.sale_idx}</td>	-->
+         	<td class="message_td" id="receipt_idx">${paynee.idx}</td><!---->
          	<td class="message_td">${paynee.seller }</td>
         	<td class="message_td" id="product_title">${paynee.name }</td> <!--구매한 옵션  -->
 			<td class="message_td">${paynee.amount }</td> <!--수량  -->
 <%--           <td class="message_td">${paynee.sale_title }</td> <!--판매글제목 --> --%>
 			<td class="message_td">${paynee.price }</td>
             <%-- <td class="message_td">${paynee.unit }</td> --%>
-			<td class="message_td">${paynee.money_amount }</td>
+<!--			<td class="message_td">${paynee.money_amount }</td>
 			<td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
          	<td class="message_td"><button class="insertComm_button" value="${paynee.main_recpt_idx }">등록</button></td>
-         	</tr>
+         	</tr>-->
+            
+          <td class="message_td">${paynee.money_amount }</td><!---->
+          <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
+         	<td class="message_td">
+         		<button class="insertComm_button"	value="${paynee.main_recpt_idx }">등록</button></td>
+         	<input type="hidden" id="option_idx" value="${paynee.sale_option_idx }">
+         </tr><!---->
       </c:forEach>
       </tbody>
    </table>

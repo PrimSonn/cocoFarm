@@ -10,8 +10,8 @@ import cocoFarm.dto.TimerDto;
 
 public final class RunnerManager {
 
-	public static volatile boolean SHOULDRUN = true;
-	private static Hashtable<Method,Thread> member = new Hashtable<Method,Thread>();
+	public static  volatile boolean SHOULDRUN = true;
+	private static Hashtable<String,Thread> member = new Hashtable<String,Thread>();
 	private static TimerDao timerDao;
 	
 	private RunnerManager() {}
@@ -27,7 +27,7 @@ public final class RunnerManager {
 					if(method.isAnnotationPresent(Run.class)) {
 						try {
 							Thread wasThere = 
-								member.put(method, new Thread( new CocoRunner( () ->{
+								member.put(method.getName(), new Thread( new CocoRunner( () ->{
 												try {
 													TimerDto timer = new TimerDto();
 													method.invoke(timerDao, timer);
@@ -53,22 +53,22 @@ public final class RunnerManager {
 		startRun();
 	}//method declaration ends;
 	
-	public static void restart() {
+	public static synchronized void restart() {
 		RunnerManager.SHOULDRUN =true;
 		init(timerDao);
 	}
 	
-	private static void startRun() {//---------------등록한 쓰레드들 중 시작하지 않은 쓰레드들을 시작.
+	private static synchronized void startRun() {//---------------등록한 쓰레드들 중 시작하지 않은 쓰레드들을 시작.
 		member.values().stream()
 		.filter(runner -> !runner.isAlive())
 		.forEach(runner -> runner.start());
 	}
 	
-	public static boolean isAllRunning() {
+	public static synchronized boolean isAllRunning() {
 		return member.values().stream().allMatch(runner -> runner.isAlive());
 	}
 	
-	public static HashMap<String,String> getStatus(){
+	public static synchronized HashMap<String,String> getStatus(){
 		return member.keySet().stream()
 			.collect(HashMap<String,String>::new
 					, (res,ele)->{ res.put(ele.toString(), String.valueOf(member.get(ele).isAlive()) ); }
@@ -76,7 +76,7 @@ public final class RunnerManager {
 					);
 	}
 	
-	public static void finish() {
+	public static synchronized void finish() {
 		SHOULDRUN = false;
 		killAll(); //------ 테스트 환경에서 타이머가 몇분이고 몇날이고 잠들어있는 것을 방지. 개발이 끝나면 삭제해야 함.
 	}

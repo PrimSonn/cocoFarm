@@ -18,11 +18,20 @@ public class ReceiptDto {
 	private String unit;			//단위
 	private int price;				//단위당 가격
 	private String sale_title;		//경매글 제목
-	private Integer sale_option_idx;
-	private Integer Sale_idx;
-	private String insertComm;
-	private String main_recpt_idx;
+//	private Integer sale_option_idx;
+//	private Integer Sale_idx;
+//	private String insertComm;
+//	private String main_recpt_idx;
 	
+	private String main_recpt_idx;	//영수증 번호//
+	private int sale_option_idx;	//옵션 번호//
+	
+	public int getSale_option_idx() {
+		return sale_option_idx;
+	}
+	public void setSale_option_idx(int sale_option_idx) {
+		this.sale_option_idx = sale_option_idx;
+	}
 	public String getMain_recpt_idx() {
 		return main_recpt_idx;
 	}

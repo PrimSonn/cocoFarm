@@ -206,6 +206,11 @@ public class ProductController {
 		
 		return "redirect:/product";
 	}
+	
+	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+	public String basket() {
+		return "redirect:/product/cart.do";
+	}
 
 	// 장바구니 조회
 	@RequestMapping(value="/product/cart.do", method=RequestMethod.GET)
@@ -280,6 +285,12 @@ public class ProductController {
 	}
 	
 	// 장바구니 옵션 수정
+	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.GET)
+	public String updateCart() {
+		return "redirect:/product/cart.do";
+	}
+	
+	// 장바구니 옵션 수정
 	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List updateCart(String cart, HttpSession session) {
@@ -299,6 +310,9 @@ public class ProductController {
 		
 		return items;
 	}
+
+	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
+	public void comm() {	}
 	
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
@@ -313,20 +327,24 @@ public class ProductController {
 		return items;
 	}
 	
-	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
-	public void comm() {	}
+	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.GET)
+	public void insertComm() {	}
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public boolean insertComment(Comment comment
-								, String sale_idx
-								, String main_receipt_idx
+								//, String sale_idx
+								//, String main_receipt_idx
+								, int receiptIdx//
+								, int optionIdx//
 								, String insertComm
 								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
+		
+		Product product = productService.selectProductByReceipt(receiptIdx, optionIdx);//
 		
 		/*
 		Product product = productService.selectProductByReceipt(title);
@@ -346,7 +364,7 @@ public class ProductController {
 				productService.insertComment(comm);
 			}
 		}
-		*/
+		
 		return true;
 	}
 }

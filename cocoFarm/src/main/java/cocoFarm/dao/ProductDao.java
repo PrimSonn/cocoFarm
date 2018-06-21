@@ -27,7 +27,7 @@ public interface ProductDao {
 	
 	public List<HashMap<String, Object>> selectAllComment(int sale_idx);
 	
-	public Product selectProductByReceipt(String title);
+	public Product selectProductByReceipt(int receiptIdx, int optionIdx);
 	
 	public boolean evaluation(ReceiptDto recpt);
 	
@@ -53,7 +53,5 @@ public interface ProductDao {
 
 //	2018년 06월 14일 판매자 결제내역조회
 	public List procPayNee(int accIdx);
-	
-	public Product selectProductByReceipt2(String title);
 	
 }

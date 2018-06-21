@@ -40,7 +40,7 @@ $(document).ready(function(){
     			, dataType:"json"
     			, success:function(res) {
     				console.log("ajax 성공");
-    				if(){
+    				if(res.result==null||res.result=='null'||res.result==''){
 	    				alert("회원님의 아이디가 존재하지 않습니다.");
     				} else {
 	    				alert("회원님의 아이디는 : "+res.result+" 입니다.");
@@ -65,17 +65,20 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type:"post"
-    			, url:"/login/findPw.do"
-    			, data:{id: $("#id").val(), phone: $("#phone2").val()}
-    			, dataType:"json"
-    			, success:function(res) {
-    				console.log("ajax 성공");
-    				
-    				alert("회원님의 비밀번호는 : "+res.result+" 입니다.");
-    			}
-    			, error:function() {
-    				console.log("ajax 실패");
-    			}
+			, url:"/login/findPw.do"
+			, data:{id: $("#id").val(), phone: $("#phone2").val()}
+			, dataType:"json"
+			, success:function(res) {
+			        console.log("ajax 성공");
+			        if(res.result =="" ||res.result =="null" || res.result ==null ){
+			                alert("회원님의 비밀번호가 존재하지 않습니다.");
+			        } else {
+			                alert("회원님의 비밀번호는 : "+res.result+" 입니다.");
+			        }
+			}
+			, error:function() {
+			        console.log("ajax 실패");
+			}
 		});
 	});
 });

@@ -132,9 +132,11 @@ public interface ProductService {
 	
 	public List<HashMap<String, Object>> getCommentList(int saleIdx);
 	
-	public Product selectProductByReceipt(String title);
+//	public Product selectProductByReceipt(String title);
 	
-	public boolean insertEval(String main_receipt_idx, String sale_idx, String insertComm);
+//	public boolean insertEval(String main_receipt_idx, String sale_idx, String insertComm);
+
+	public Product selectProductByReceipt(int receiptIdx, int optionIdx);//
 	
 	/* ==================================================================================== */
 	
