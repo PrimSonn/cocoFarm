@@ -281,6 +281,7 @@ function onlyNumber(obj){
 			<!--Mypage부분  검색 로고부분 -->
 			<jsp:include page="/WEB-INF/views/tile/head/mypageSearch.jsp" flush="false"/>
 			<div class="mypage_box">
+			
 				<!--Mypage부분  판매자 인트로부분 -->
 				<jsp:include page="/WEB-INF/views/tile/mypage/userIntro.jsp" flush="false"/>
 			<div class="mypage_page01">
