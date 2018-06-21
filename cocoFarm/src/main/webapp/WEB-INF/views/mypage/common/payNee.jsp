@@ -40,7 +40,8 @@ $(".insertComm_button").click(function() {
 			, data: {
 				receiptIdx: receipt_idx
 				, optionIdx: sale_option_idx
-				, insertComm: JSON.stringify(arr)
+// 				, content: JSON.stringify(arr)
+				,content: cont
 			}
 			, success: function(data) {
 				alert("상품평이 등록되었습니다.");

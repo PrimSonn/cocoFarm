@@ -336,30 +336,30 @@ public class ProductController {
 	public boolean insertComment(Comment comment
 								, int receiptIdx
 								, int optionIdx
-								, String insertComm
+								, String content
 								, HttpSession session) {
 
-		Gson gson = new Gson();
-		List list = gson.fromJson(insertComm, List.class);
+//		Gson gson = new Gson();
+//		List list = gson.fromJson(insertComm, List.class);
 		
 		Product product = productService.selectProductByReceipt(receiptIdx, optionIdx);
 		
-		if(list.get(0) != null) {
-			for(int i=0; i<list.size(); i++) {
-				Map<String, String> map = (Map) list.get(i);
-				String str = map.get("main_recpt_idx");
+//		if(list.get(0) != null) {
+//			for(int i=0; i<list.size(); i++) {
+//				Map<String, String> map = (Map) list.get(i);
+//				String str = map.get("main_recpt_idx");
 				
 				Comment comm = new Comment();
 				
 				comm.setSale_idx(product.getIdx());
 				comm.setScore(5);
 				comm.setTitle(product.getTitle());
-				comm.setMain_recpt_idx( Integer.parseInt(map.get("main_recpt_idx")) );
-				comm.setContent( (String) map.get("content") );
+				comm.setMain_recpt_idx(receiptIdx);
+				comm.setContent(content);
 				
 				productService.insertComment(comm);
-			}
-		}
+//			}
+//		}
 		
 		return true;
 	}
