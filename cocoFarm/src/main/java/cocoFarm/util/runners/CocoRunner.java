@@ -28,6 +28,7 @@ public class CocoRunner implements Runnable{
 		LocalDateTime wakeTime = null;
 		
 		while (RunnerManager.SHOULDRUN) {
+			System.out.println("name: "+name +", get Started.");
 			TimerDto timer = timerSupplier.get();
 			
 			sleepLength = timer == null ? sleepLength : (ChronoUnit.MILLIS.between(timer.getDbTime().toLocalDateTime(), timer.getNextCheck().toLocalDateTime()));

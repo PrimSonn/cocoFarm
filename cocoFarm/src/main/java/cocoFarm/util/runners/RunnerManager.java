@@ -10,9 +10,9 @@ import cocoFarm.dto.TimerDto;
 
 public final class RunnerManager {
 
-	public static  volatile boolean SHOULDRUN = true;
-	private static Hashtable<String,Thread> member = new Hashtable<String,Thread>();
-	private static TimerDao timerDao;
+	public static volatile boolean SHOULDRUN = true;
+	private static volatile Hashtable<String,Thread> member = new Hashtable<String,Thread>();
+	private static volatile TimerDao timerDao;
 	
 	private RunnerManager() {}
 
@@ -22,6 +22,8 @@ public final class RunnerManager {
 		RunnerManager.timerDao = timerDao;
 
 		for(Class interfc : timerDao.getClass().getInterfaces()) {//--- TimerDao 의 메소드를 동적으로 불러와서 CocoRunner 에 넣고 쓰레드를 만듦.
+			System.out.println(interfc.getName()+" is TimerDao? : " + interfc.equals(TimerDao.class));
+			System.out.println(interfc.getName()+" is AssignedFrom TimerDao? : "+interfc.isAssignableFrom(TimerDao.class));
 			if(interfc.isAssignableFrom(TimerDao.class)) {
 				for(Method method: interfc.getMethods()) {
 					if(method.isAnnotationPresent(Run.class)) {
