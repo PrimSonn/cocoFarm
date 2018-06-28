@@ -3593,7 +3593,7 @@ begin
 			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 			no_bid_cnt := no_bid_cnt+1;
 
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. no ALIVE_BID found on AUCTION.IDX: '||AUCTION_ROW.IDX);
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_loop',1,'successful. no ALIVE_BID found on AUCTION.IDX: '||AUCTION_ROW.IDX);
 
 		else ----- 입찰금 지불 기간에 대한 기준 필요. 현재 테스트용 4번 코드 지정중.
 			insert into BID_CONTRACT_QUE (AUCTION_IDX, BID_AMOUNT, CONTRACT_T_WIN_CODE) values (AUCTION_ROW.IDX, AUCTION_ROW.HIGHEST_BID, AUCTION_ROW.TIME_WINDOW_CODE);
@@ -3612,7 +3612,7 @@ begin
 			update AUCTION set STATE_CODE = 5, CLOSED_WHEN = SYSTIMESTAMP where current of AUCT_CUR;
 			delete AUCTION_DUE_QUE where AUCTION_IDX = AUCTION_ROW.IDX;
 			
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK',1,'successful. found ALIVE_BID on AUCTION.IDX: '||AUCTION_ROW.IDX||' is bidder: '||bidder||', AMOUNT: '||AUCTION_ROW.HIGHEST_BID);
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('AUCTION_DUE_CHECK_loop',1,'successful. found ALIVE_BID on AUCTION.IDX: '||AUCTION_ROW.IDX||' is bidder: '||bidder||', AMOUNT: '||AUCTION_ROW.HIGHEST_BID);
 		end if;
 
 	end loop;
@@ -3623,11 +3623,15 @@ begin
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , least(min(TIME_WINDOW),(select min(TIME_WINDOW)+SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE )) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
+		select SYSTIMESTAMP , least(min(TIME_WINDOW), (select min(TIME_WINDOW) +SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
+		if (has_next_time>0) then
+			select SYSTIMESTAMP, SYSTIMESTAMP +min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
 	end if;
-	
 	
 exception when OTHERS then
 	
@@ -3641,11 +3645,11 @@ exception when OTHERS then
 	
 	select count(1) into has_next_time from AUCTION_DUE_QUE;
 	if (has_next_time >0) then
-		select SYSTIMESTAMP , min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
+		select SYSTIMESTAMP , least(min(TIME_WINDOW), (select min(TIME_WINDOW) +SYSTIMESTAMP from AUCTION_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from AUCTION_DUE_QUE group by SYSTIMESTAMP;
 	else
 		select count(1) into has_next_time from AUCTION_TIME_WINDOW_TYPE;
 		if (has_next_time >0) then
-			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
+			select SYSTIMESTAMP, SYSTIMESTAMP +min(TIME_WINDOW) into DBTIME, NEXTCHECK from AUCTION_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
@@ -3729,7 +3733,7 @@ begin
 			insert into MESSAGE (SENDER_IDX, RECEIVER_IDX, TITLE, CONTENT, TYPE_CODE) values (0, auct_writter, '신청하신 경매 '''||auct_title||''' 의 대금 납부를 입찰인이 거부하였습니다.','해당 경매의 최고 입찰자가 낙찰 대금을 지불기한 내 지불을 하지 않아, 차등위 입찰로 낙찰 권한이 이양되었습니다. 차등위 입찰의 입찰금: '||next_bid_amount||'원', 1);
 			was_lesser_bid := was_lesser_bid +1;
 
-			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK',1, 'successful. found NEXT_BID on AUCTION.IDX: '||BID_ROW.AUCTION_IDX||', next_bid_amount: '||next_bid_amount||', next_bid_bidder: '||next_bid_bidder);
+			insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK_loop',1, 'successful. found NEXT_BID on AUCTION.IDX: '||BID_ROW.AUCTION_IDX||', next_bid_amount: '||next_bid_amount||', next_bid_bidder: '||next_bid_bidder);
 
 		else
 			update AUCTION set STATE_CODE = 7, FINISHED_WHEN = SYSTIMESTAMP where IDX = BID_ROW.AUCTION_IDX;
@@ -3746,15 +3750,20 @@ begin
 
 	end loop;
 	
-	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK', 1, 'BID_DUE_CHECK done. (no_lesser_bid: '||no_lesser_bid||', was_lesser_bid: '||was_lesser_bid||')');
+	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('BID_DUE_CHECK_loop', 1, 'BID_DUE_CHECK done. (no_lesser_bid: '||no_lesser_bid||', was_lesser_bid: '||was_lesser_bid||')');
 	
 	commit;
 
-	select count(1) into next_bid_check from BID_CONTRACT_QUE;--시간
+	select count(1) into next_bid_check from BID_CONTRACT_QUE;
 	if (next_bid_check >0 ) then
-		select SYSTIMESTAMP, least(PAYMENT_DUE, (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE group by SYSTIMESTAMP;
+		select SYSTIMESTAMP, least(min(PAYMENT_DUE), (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE group by SYSTIMESTAMP;
 	else
-		select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
+		if (next_bid_check >0) then
+			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
+		else
+			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
+		end if;
 	end if;
 	
 exception when others then
@@ -3769,15 +3778,14 @@ exception when others then
 	
 	select count(1) into next_bid_check from BID_CONTRACT_QUE;
 	if (next_bid_check >0 ) then
-		select SYSTIMESTAMP, PAYMENT_DUE into DBTIME, NEXTCHECK from BID_CONTRACT_QUE;
+		select SYSTIMESTAMP, least(min(PAYMENT_DUE), (select min(TIME_WINDOW) +SYSTIMESTAMP from CONTRACT_TIME_WINDOW_TYPE)) into DBTIME, NEXTCHECK from BID_CONTRACT_QUE group by SYSTIMESTAMP;
 	else
 		select count(1) into next_bid_check from CONTRACT_TIME_WINDOW_TYPE;
-		if (next_bid_check >0) then 
+		if (next_bid_check >0) then
 			select SYSTIMESTAMP, SYSTIMESTAMP + min(TIME_WINDOW) into DBTIME, NEXTCHECK from CONTRACT_TIME_WINDOW_TYPE group by SYSTIMESTAMP;
 		else
 			select SYSTIMESTAMP, SYSTIMESTAMP into DBTIME, NEXTCHECK from DUAL;
 		end if;
-		
 	end if;
 	
 end;
@@ -4490,7 +4498,7 @@ end;
 
 /*================= 5. 임시 영수증 정리 ====================
 
-		타이머를 이용, 매 시간 마다 5분 이상 지난 임시 영수증을 정리함.
+		타이머를 이용, 매 (3분) 마다 5분 이상 지난 임시 영수증을 정리함.
 
 ===========================================================*/
 
@@ -4548,6 +4556,7 @@ end;
 
 
 ------------------------------------------- 로그 정리 --------------------------------------------------------------
+-- 30분 마다 로그 정리
 
 create procedure LOG_CLEAR (DBTIME out timestamp, NEXTCHECK out timestamp)
 is
