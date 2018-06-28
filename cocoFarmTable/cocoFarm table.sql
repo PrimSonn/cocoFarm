@@ -4514,23 +4514,29 @@ begin
 	list := '';
 	
 	select count(1) into cnt from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0;
-	recpt_idx_arr.extend(cnt +50);
-	select T.IDX bulk collect into recpt_idx_arr 
-		from (select IDX, ROWNUM R from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0) T
-	where T.R<=100;
 	
-	delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
-	delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
-	delete SALE_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
-	delete MAIN_RECEIPT where IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
-	
-	if(recpt_idx_arr.last>0) then
+	if (cnt >0) then
+		recpt_idx_arr := holder();
+		recpt_idx_arr.extend(cnt +50);
+		select T.IDX bulk collect into recpt_idx_arr 
+			from (select IDX, ROWNUM R from MAIN_RECEIPT where CONTRACT_TIME < SYSTIMESTAMP - numtodsinterval(5,'MINUTE') and STATE_CODE =0) T
+		where T.R<= (cnt +50);
+		
+		delete BID_CONTRACT_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+		delete SALE_OPTION_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+		delete SALE_RECEIPT where MAIN_RECPT_IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+		delete MAIN_RECEIPT where IDX in (select COLUMN_VALUE from table (recpt_idx_arr));
+		
+		if(recpt_idx_arr.last>0) then
 		for i in 1..(recpt_idx_arr.last-1) loop
 			list := list || recpt_idx_arr(i) || ', ';
 		end loop;
-		list := list || recpt_idx_arr(recpt_idx_arr.last);
+			list := list || recpt_idx_arr(recpt_idx_arr.last);
+		else
+			list := 'nothing selected';
+		end if;
 	else
-		list := 'nothing selected';
+		list := 'nothing counted';
 	end if;
 	
 	insert into PLOGGER (NAME, RESULTCODE, CONTENT) values ('TEMP_RECPT_CLEAR', 1, 'recpt_idx_arr: '||list);
@@ -4555,8 +4561,11 @@ end;
 --drop procedure TEMP_RECPT_CLEAR;
 
 
-------------------------------------------- 로그 정리 --------------------------------------------------------------
--- 30분 마다 로그 정리
+/*================= 6. 로그 정리 ====================
+
+		타이머를 이용, 매 (30분) 마다 (1일) 이상 지난 로그를 정리함.
+
+===========================================================*/
 
 create procedure LOG_CLEAR (DBTIME out timestamp, NEXTCHECK out timestamp)
 is
