@@ -28,7 +28,7 @@ public class DataResolver {
 		if (st.length()>2000) {
 			return null;
 		}else {
-			return resolve(target1) + resolve(target2);
+			return st;
 		}
 	}
 	
@@ -39,7 +39,7 @@ public class DataResolver {
 		if (st.length()>2000) {
 			return null;
 		}else {
-			return st+resolve(target1, target2);
+			return st;
 		}
 	}
 	

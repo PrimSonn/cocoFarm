@@ -12,13 +12,20 @@ public class CocoRunner implements Runnable{
 	
 	Supplier<TimerDto> timerSupplier;
 	String name;
+	final long maxSleep;
+	final long minSleep;
 	
 	@SuppressWarnings("unused")
-	private CocoRunner() {}
-	
-	public CocoRunner(Supplier<TimerDto> timerSupplier, String name) {
+	private CocoRunner() {
+		maxSleep = 21600000L;
+		minSleep = 60000L;
+	}
+		
+	public CocoRunner(Supplier<TimerDto> timerSupplier, String name, long maxSleep, long minSleep) {
 		this.timerSupplier = timerSupplier;
 		this.name = name;
+		this.maxSleep = maxSleep;
+		this.minSleep = minSleep;
 	}
 	
 	@Override
@@ -34,10 +41,10 @@ public class CocoRunner implements Runnable{
 			sleepLength = timer == null ? sleepLength : (ChronoUnit.MILLIS.between(timer.getDbTime().toLocalDateTime(), timer.getNextCheck().toLocalDateTime()));
 			timer = null;//Mybatis 특성상 새 인스턴스를 계속해서 넣어야 하기 때문에 매번 생성하고 다시 없애야 함.
 			
-			if (sleepLength > 21600000L) {
-				sleepLength = 21600000L;
-			} else if (sleepLength < 60000L ) {
-				sleepLength = 60000L;
+			if (sleepLength > maxSleep) {
+				sleepLength = maxSleep;
+			} else if (sleepLength < minSleep ) {
+				sleepLength = minSleep;
 			}
 			
 			try {

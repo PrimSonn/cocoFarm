@@ -22,12 +22,11 @@ public final class RunnerManager {
 		RunnerManager.timerDao = timerDao;
 
 		for(Class interfc : timerDao.getClass().getInterfaces()) {//--- TimerDao 의 메소드를 동적으로 불러와서 CocoRunner 에 넣고 쓰레드를 만듦.
-			System.out.println(interfc.getName()+" is TimerDao? : " + interfc.equals(TimerDao.class));
-			System.out.println(interfc.getName()+" is AssignedFrom TimerDao? : "+interfc.isAssignableFrom(TimerDao.class));
 			if(interfc.isAssignableFrom(TimerDao.class)) {
 				for(Method method: interfc.getMethods()) {
 					if(method.isAnnotationPresent(Run.class)) {
 						try {
+							Run anno = method.getDeclaredAnnotation(Run.class);
 							Thread wasThere = 
 								member.put(method.getName(), new Thread( new CocoRunner( () ->{
 												try {
@@ -39,7 +38,10 @@ public final class RunnerManager {
 												}
 												return null;
 												}
-											, method.getName() )
+											, method.getName()
+											, anno.maxSleep()
+											, anno.minSleep()
+											)
 										)
 									);
 							if(wasThere!=null&&wasThere.isAlive()) wasThere.stop();//--만약 쓰레드가 등록이 미리 되어있는 것이 있었다면 정지시킴.(나중에 없애야 할 코드)
